@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="common\datetime.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\modules.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="network\CNet.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\CNetClient.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\CNetDistributor.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\CNetPool.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\CNetServer.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\CNetTools.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\common.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="request\request.cpp">
+      <Filter>request</Filter>
+    </ClCompile>
+    <ClCompile Include="request\request.pb.cc">
+      <Filter>request</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="common">
+      <UniqueIdentifier>{2069bcca-3edb-498c-b098-8cfb55be3627}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network">
+      <UniqueIdentifier>{aa090b69-2abb-4463-adad-f6804a5e1bc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="request">
+      <UniqueIdentifier>{a7b5d06b-72bd-4f35-8589-d8c6718c1951}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common\datetime.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\ISingleton.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\modules.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\utility.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="network\CNet.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\CNetClient.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\CNetDistributor.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\CNetPool.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\CNetRouter.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\CNetServer.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\CNetTools.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\common.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="request\request.h">
+      <Filter>request</Filter>
+    </ClInclude>
+    <ClInclude Include="request\request.pb.h">
+      <Filter>request</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
