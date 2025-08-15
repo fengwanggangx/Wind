@@ -29,6 +29,7 @@ namespace net
 	template<class _Ty>
 	CNetDistributor<_Ty>::CNetDistributor()
 	{
+
 	}
 
 	template<class _Ty>

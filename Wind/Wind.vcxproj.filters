@@ -35,6 +35,24 @@
     <ClCompile Include="request\request.pb.cc">
       <Filter>request</Filter>
     </ClCompile>
+    <ClCompile Include="database\CDBEngine.cpp">
+      <Filter>database</Filter>
+    </ClCompile>
+    <ClCompile Include="database\CMySQL.cpp">
+      <Filter>database</Filter>
+    </ClCompile>
+    <ClCompile Include="database\CODBC.cpp">
+      <Filter>database</Filter>
+    </ClCompile>
+    <ClCompile Include="database\COracle.cpp">
+      <Filter>database</Filter>
+    </ClCompile>
+    <ClCompile Include="database\CSQLite3.cpp">
+      <Filter>database</Filter>
+    </ClCompile>
+    <ClCompile Include="database\common.cpp">
+      <Filter>database</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -45,6 +63,12 @@
     </Filter>
     <Filter Include="request">
       <UniqueIdentifier>{a7b5d06b-72bd-4f35-8589-d8c6718c1951}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="database">
+      <UniqueIdentifier>{9bf96648-bd0f-464d-86a0-81b1e6ff865a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="business">
+      <UniqueIdentifier>{f50ec8ea-f829-4773-8521-3130e9e0ac20}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +113,33 @@
     </ClInclude>
     <ClInclude Include="request\request.pb.h">
       <Filter>request</Filter>
+    </ClInclude>
+    <ClInclude Include="database\CDBEngine.h">
+      <Filter>database</Filter>
+    </ClInclude>
+    <ClInclude Include="database\CMySQL.h">
+      <Filter>database</Filter>
+    </ClInclude>
+    <ClInclude Include="database\CODBC.h">
+      <Filter>database</Filter>
+    </ClInclude>
+    <ClInclude Include="database\COracle.h">
+      <Filter>database</Filter>
+    </ClInclude>
+    <ClInclude Include="database\CSQLite3.h">
+      <Filter>database</Filter>
+    </ClInclude>
+    <ClInclude Include="database\IDataBase.h">
+      <Filter>database</Filter>
+    </ClInclude>
+    <ClInclude Include="database\common.h">
+      <Filter>database</Filter>
+    </ClInclude>
+    <ClInclude Include="common\defines.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="business\RequestCenter.h">
+      <Filter>business</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
