@@ -1,6 +1,10 @@
 #ifndef __COMMON_DEFINES_H__
 #define __COMMON_DEFINES_H__
 
+#include "../thread/CThreadPool.h"
+
+#define ThreadPoolPtr CThreadPool::InstancePtr(2, 3)
+
 #define RETURN_EMTPTY_IFNULLPTR(...) \
 		if ((__VA_ARGS__) == nullptr) \
 		{	\

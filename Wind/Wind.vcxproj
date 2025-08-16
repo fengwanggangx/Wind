@@ -84,6 +84,8 @@
     </LibraryPath>
   </PropertyGroup>
   <ItemGroup>
+    <ClCompile Include="basic\CDistributor.cpp" />
+    <ClCompile Include="business\RequestCenter.cpp" />
     <ClCompile Include="common\datetime.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\include\release\libevent;.\include\release\protobuf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -91,21 +93,22 @@
     <ClCompile Include="database\CDBEngine.cpp" />
     <ClCompile Include="database\CMySQL.cpp" />
     <ClCompile Include="database\CODBC.cpp" />
-    <ClCompile Include="database\common.cpp" />
+    <ClCompile Include="database\dbcommon.cpp" />
     <ClCompile Include="database\COracle.cpp" />
     <ClCompile Include="database\CSQLite3.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="network\CNet.cpp" />
     <ClCompile Include="network\CNetClient.cpp" />
-    <ClCompile Include="network\CNetDistributor.cpp" />
     <ClCompile Include="network\CNetPool.cpp" />
     <ClCompile Include="network\CNetServer.cpp" />
     <ClCompile Include="network\CNetTools.cpp" />
-    <ClCompile Include="network\common.cpp" />
+    <ClCompile Include="network\netcommon.cpp" />
     <ClCompile Include="request\request.cpp" />
     <ClCompile Include="request\request.pb.cc" />
+    <ClCompile Include="thread\CThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="basic\CDistributor.h" />
     <ClInclude Include="business\RequestCenter.h" />
     <ClInclude Include="common\datetime.h" />
     <ClInclude Include="common\defines.h" />
@@ -115,20 +118,21 @@
     <ClInclude Include="database\CDBEngine.h" />
     <ClInclude Include="database\CMySQL.h" />
     <ClInclude Include="database\CODBC.h" />
-    <ClInclude Include="database\common.h" />
+    <ClInclude Include="database\dbcommon.h" />
     <ClInclude Include="database\COracle.h" />
     <ClInclude Include="database\CSQLite3.h" />
     <ClInclude Include="database\IDataBase.h" />
     <ClInclude Include="network\CNet.h" />
     <ClInclude Include="network\CNetClient.h" />
-    <ClInclude Include="network\CNetDistributor.h" />
     <ClInclude Include="network\CNetPool.h" />
     <ClInclude Include="network\CNetRouter.h" />
     <ClInclude Include="network\CNetServer.h" />
     <ClInclude Include="network\CNetTools.h" />
-    <ClInclude Include="network\common.h" />
+    <ClInclude Include="network\netcommon.h" />
     <ClInclude Include="request\request.h" />
     <ClInclude Include="request\request.pb.h" />
+    <ClInclude Include="thread\CThreadPool.h" />
+    <ClInclude Include="thread\defines.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

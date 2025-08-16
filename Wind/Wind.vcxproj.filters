@@ -14,9 +14,6 @@
     <ClCompile Include="network\CNetClient.cpp">
       <Filter>network</Filter>
     </ClCompile>
-    <ClCompile Include="network\CNetDistributor.cpp">
-      <Filter>network</Filter>
-    </ClCompile>
     <ClCompile Include="network\CNetPool.cpp">
       <Filter>network</Filter>
     </ClCompile>
@@ -26,7 +23,7 @@
     <ClCompile Include="network\CNetTools.cpp">
       <Filter>network</Filter>
     </ClCompile>
-    <ClCompile Include="network\common.cpp">
+    <ClCompile Include="network\netcommon.cpp">
       <Filter>network</Filter>
     </ClCompile>
     <ClCompile Include="request\request.cpp">
@@ -50,8 +47,17 @@
     <ClCompile Include="database\CSQLite3.cpp">
       <Filter>database</Filter>
     </ClCompile>
-    <ClCompile Include="database\common.cpp">
+    <ClCompile Include="database\dbcommon.cpp">
       <Filter>database</Filter>
+    </ClCompile>
+    <ClCompile Include="basic\CDistributor.cpp">
+      <Filter>basic</Filter>
+    </ClCompile>
+    <ClCompile Include="thread\CThreadPool.cpp">
+      <Filter>thread</Filter>
+    </ClCompile>
+    <ClCompile Include="business\RequestCenter.cpp">
+      <Filter>business</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +75,12 @@
     </Filter>
     <Filter Include="business">
       <UniqueIdentifier>{f50ec8ea-f829-4773-8521-3130e9e0ac20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="basic">
+      <UniqueIdentifier>{581f3253-c1e7-4eea-b5f2-477b1b68f585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thread">
+      <UniqueIdentifier>{9d251405-776e-4f22-a98a-a3bb136d59a7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -90,9 +102,6 @@
     <ClInclude Include="network\CNetClient.h">
       <Filter>network</Filter>
     </ClInclude>
-    <ClInclude Include="network\CNetDistributor.h">
-      <Filter>network</Filter>
-    </ClInclude>
     <ClInclude Include="network\CNetPool.h">
       <Filter>network</Filter>
     </ClInclude>
@@ -105,7 +114,7 @@
     <ClInclude Include="network\CNetTools.h">
       <Filter>network</Filter>
     </ClInclude>
-    <ClInclude Include="network\common.h">
+    <ClInclude Include="network\netcommon.h">
       <Filter>network</Filter>
     </ClInclude>
     <ClInclude Include="request\request.h">
@@ -132,7 +141,7 @@
     <ClInclude Include="database\IDataBase.h">
       <Filter>database</Filter>
     </ClInclude>
-    <ClInclude Include="database\common.h">
+    <ClInclude Include="database\dbcommon.h">
       <Filter>database</Filter>
     </ClInclude>
     <ClInclude Include="common\defines.h">
@@ -140,6 +149,15 @@
     </ClInclude>
     <ClInclude Include="business\RequestCenter.h">
       <Filter>business</Filter>
+    </ClInclude>
+    <ClInclude Include="basic\CDistributor.h">
+      <Filter>basic</Filter>
+    </ClInclude>
+    <ClInclude Include="thread\CThreadPool.h">
+      <Filter>thread</Filter>
+    </ClInclude>
+    <ClInclude Include="thread\defines.h">
+      <Filter>thread</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

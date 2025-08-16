@@ -9,11 +9,12 @@
 #include "common.h"
 #include "CNetPool.h"
 #include "../request/request.h"
+#include "../basic/CDistributor.h"
 
 namespace net
 {
 
-	CNetServer::CNetServer(int nPort) : m_nPort(nPort)
+	CNetServer::CNetServer(int nPort) : m_nPort(nPort), m_dispatcher(std::make_unique<CDistributor<CRequest>>(true))
 	{
 		m_buffer_recv.reserve(4096);
 		m_buffer_send.reserve(4096);
@@ -83,5 +84,10 @@ namespace net
 
 		//evconnlistener_set_error_cb(pListener, ListenerErrorCallback);
 		return 0;
+	}
+
+	void CNetServer::RegisterHandler(std::function<int(const CRequest&)>&& func)
+	{
+		m_dispatcher->RegisterHandler(std::move(func));
 	}
 }

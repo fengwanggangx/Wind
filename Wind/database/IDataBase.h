@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "common.h"
+#include "dbcommon.h"
 
 namespace db
 {

@@ -2,15 +2,13 @@
 #include "CNetTools.h"
 #include <unordered_map>
 #include <event2/buffer.h>
-#include "common.h"
+#include "netcommon.h"
 #include <iostream>
 #include "../request/request.h"
 //#include "../log/Defines.h"
 #include "CNetPool.h"
-#include "CNetDistributor.h"
+#include "../basic/CDistributor.h"
 #include <string.h>
-
-#define RequestDisptcher net::CNetDistributor<CRequest>::InstancePtr()
 
 namespace net
 {
@@ -26,7 +24,7 @@ namespace net
 		std::size_t nCount = net::utility::RequestFromBuffer(reqs, pEvent, m_buffer_recv);
 		for (const auto& req : reqs)
 		{
-			RequestDisptcher->AddRequest(req);
+			
 		}
 		return nCount;
 	}

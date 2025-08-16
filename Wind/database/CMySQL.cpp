@@ -1,7 +1,7 @@
 #include "CMySQL.h"
 #include <unordered_map>
 #include <mysql/mysql.h>
-#include "common.h"
+#include "dbcommon.h"
 #include <memory>
 
 namespace db

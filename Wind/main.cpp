@@ -3,11 +3,11 @@
 #include <vector>
 #include "./network/CNetServer.h"
 #include "./database/CDBEngine.h"
-#include "./network/CNetDistributor.h"
-#include "./request/request.h"
-net::CNetServer* pServer = nullptr;
+#include "./business/RequestCenter.h"
+
 int main()
 {
+	net::CNetServer* pServer = nullptr;
 	if (nullptr == pServer)
 	{
 		pServer = new net::CNetServer(9877);
@@ -16,6 +16,8 @@ int main()
 	}
 
 	CDBEngine::InstancePtr()->Initialize();
-	net::CNetDistributor<CRequest>::InstancePtr()->RegisterHandler(nullptr);
+	pServer->RegisterHandler(Query);
+	pServer->RegisterHandler(Update);
+	pServer->RegisterHandler(Auth);
 	return 0;
 }

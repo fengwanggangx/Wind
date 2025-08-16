@@ -47,7 +47,9 @@ namespace utility
 
 	bool s2n(const std::string& str, require_number auto& val)
 	{
-		decltype(val) temp = 0;
+		using _Ty = decltype(val);
+		using _Tyx = std::remove_reference_t<_Ty>;
+		_Tyx temp = 0;
 		const char* first = str.data();
 		const char* last = str.data() + str.size();
 		auto [p, ex] = std::from_chars(first, last, temp);
