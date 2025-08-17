@@ -90,6 +90,7 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\include\release\libevent;.\include\release\protobuf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="common\modules.cpp" />
+    <ClCompile Include="common\utility.cpp" />
     <ClCompile Include="database\CDBEngine.cpp" />
     <ClCompile Include="database\CMySQL.cpp" />
     <ClCompile Include="database\CODBC.cpp" />

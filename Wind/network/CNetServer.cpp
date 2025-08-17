@@ -11,10 +11,11 @@
 #include "../request/request.h"
 #include "../basic/CDistributor.h"
 
+
 namespace net
 {
 
-	CNetServer::CNetServer(int nPort) : m_nPort(nPort), m_dispatcher(std::make_unique<CDistributor<CRequest>>(true))
+	CNetServer::CNetServer(int nPort) : m_nPort(nPort), m_dispatcher(std::make_unique<_TyDistributor>())
 	{
 		m_buffer_recv.reserve(4096);
 		m_buffer_send.reserve(4096);
@@ -91,7 +92,7 @@ namespace net
 		return 0;
 	}
 
-	void CNetServer::RegisterHandler(std::function<int(const CRequest&)>&& func)
+	void CNetServer::RegisterHandler(_TyHandler&& func)
 	{
 		m_dispatcher->RegisterHandler(std::move(func));
 	}

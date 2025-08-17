@@ -2,23 +2,23 @@
 #include "../request/request.h"
 #include <string>
 
-int Query(const CRequest& req)
+int Query(const std::unique_ptr<CRequest>& req)
 {
-	std::string s = req.GetCmd();
-	std::string s1 = req.GetExtraData("retmsg");
+	std::string s = req->GetCmd();
+	std::string s1 = req->GetExtraData("retmsg");
 	return 0;
 }
 
-int Update(const CRequest& req)
+int Update(const std::unique_ptr<CRequest>& req)
 {
-	std::string s = req.GetCmd();
-	std::string s1 = req.GetExtraData("retmsg");
+	std::string s = req->GetCmd();
+	std::string s1 = req->GetExtraData("retmsg");
 	return 0;
 }
 
-int Auth(const CRequest& req)
+int Auth(const std::unique_ptr<CRequest>& req)
 {
-	std::string s = req.GetCmd();
-	std::string s1 = req.GetExtraData("retmsg");
+	std::string s = req->GetCmd();
+	std::string s1 = req->GetExtraData("retmsg");
 	return 0;
 }

@@ -6,7 +6,7 @@
 #include <functional>
 #include "CNet.h"
 #include "CNetRouter.h"
-template<class _Ty>
+template<bool bAsyn, class _Ty, class _TyHandler>
 class CDistributor;
 
 class CRequest;
@@ -15,6 +15,9 @@ namespace net
 {
 	class CNetServer final : public CNet, public CNetRouter<CNetServer>
 	{
+		using _TyData = std::unique_ptr<CRequest>;
+		using _TyHandler = std::function<int(const _TyData&)>;
+		using _TyDistributor = CDistributor<true, std::vector<_TyData>, _TyHandler>;
 	public:
 		explicit CNetServer(int nPort);
 		~CNetServer() = default;
@@ -24,7 +27,7 @@ namespace net
 
 		int Initialize();
 
-		void RegisterHandler(std::function<int(const CRequest&)>&& func);
+		void RegisterHandler(_TyHandler&& func);
 
 	public:
 		void OnConnAccept(struct evconnlistener* pListener, evutil_socket_t fd, struct sockaddr* pAddr, int nLength) override;
@@ -35,7 +38,7 @@ namespace net
 		int	m_nPort{ -1 };
 		std::vector<char> m_buffer_recv;
 		std::vector<char> m_buffer_send;
-		std::unique_ptr<CDistributor<CRequest>> m_dispatcher;
+		std::unique_ptr<_TyDistributor> m_dispatcher;
 	};
 }
 #endif

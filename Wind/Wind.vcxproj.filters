@@ -59,6 +59,9 @@
     <ClCompile Include="business\RequestCenter.cpp">
       <Filter>business</Filter>
     </ClCompile>
+    <ClCompile Include="common\utility.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
