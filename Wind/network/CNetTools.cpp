@@ -26,7 +26,7 @@ namespace net
 			return n;
 		}
 
-		std::size_t RequestFromBuffer(std::vector<CRequest*>& reqs, struct bufferevent* pEvent, std::vector<char>& buffer)
+		std::size_t RequestFromBuffer(std::vector<std::unique_ptr<CRequest>>& reqs, struct bufferevent* pEvent, std::vector<char>& buffer)
 		{
 			std::size_t nReqCount = 0;
 			std::size_t nBufferLength = net::utility::BufferEventReader(pEvent, buffer);
@@ -49,10 +49,10 @@ namespace net
 				const char* pszData = buffer.data() + nHeaderLength;
 				std::string strData(pszData, nDataLength);
 
-				CRequest* pRequest = new CRequest;
-				if (pRequest->Deserialize(strData))
+				std::unique_ptr<CRequest> req = std::make_unique<CRequest>();
+				if (req->Deserialize(strData))
 				{
-					reqs.emplace_back(pRequest);
+					reqs.emplace_back(std::move(req));
 					++nReqCount;
 				}
 				else

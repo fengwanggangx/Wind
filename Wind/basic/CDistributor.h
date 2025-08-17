@@ -9,7 +9,7 @@
 template<class _Ty>
 class CDistributor final
 {
-	using _TyPointer = _Ty*;
+	using _TyPointer = std::unique_ptr<_Ty>;
 	using _TyConstRef = const _Ty&;
 	using _TyHandler = std::function<int(_TyConstRef)>;
 	using _TyDataContainer = std::vector<std::unique_ptr<_Ty>>;
@@ -30,13 +30,34 @@ public:
 		{
 			{
 				std::unique_lock<std::shared_mutex> lock(m_mtx_data);
-				m_data.emplace_back(ptr);
+				m_data.emplace_back(std::move(ptr));
 			}
-			ThreadPoolPtr->PushTask([this]() { AsyncExecute(); });
+			ThreadPoolPtr->PushTask(task_priority::em_normal, 0, [this]() { AsyncExecute(); });
 		}
 		else
 		{
-			Execute(ptr);
+			Execute(*ptr);
+		}
+	}
+
+	void Dispatch(_TyDataContainer&& data)
+	{
+		if (m_bAsync)
+		{
+			{
+				std::unique_lock<std::shared_mutex> lock(m_mtx_data);
+				m_data.reserve(m_data.size() + data.size());
+				m_data.insert(
+					m_data.end(),
+					std::make_move_iterator(data.begin()),
+					std::make_move_iterator(data.end())
+				);
+			}
+			ThreadPoolPtr->PushTask(task_priority::em_normal, 0, [this]() { AsyncExecute(); });
+		}
+		else
+		{
+			Execute(std::forward<_TyDataContainer>(data));
 		}
 	}
 
@@ -57,13 +78,35 @@ private:
 
 		for (const auto& item : data)
 		{
-			Execute(item);
+			Execute(*item);
 		}
+	}
+
+	int Execute(_TyDataContainer&& data)
+	{
+		std::shared_lock<std::shared_mutex> lock(m_mtx_handler);
+		int nOK = ((1 << m_handler.size()) - 1);
+		
+		std::size_t sz = data.size();
+		int ret = ((1 << sz) - 1);
+		for (std::size_t i = 0; i < sz; ++i)
+		{
+			if (ExecuteA(*data.at(i)) != nOK)
+			{
+				ret &= ~(1 << i);
+			}
+		}
+		return ret;
 	}
 
 	int Execute(_TyConstRef data)
 	{
 		std::shared_lock<std::shared_mutex> lock(m_mtx_handler);
+		return ExecuteA(data);
+	}
+
+	int ExecuteA(_TyConstRef data)
+	{
 		std::size_t sz = m_handler.size();
 		int ret = ((1 << sz) - 1);
 		for (std::size_t i = 0; i < sz; ++i)
@@ -76,6 +119,7 @@ private:
 		}
 		return ret;
 	}
+
 private:
 
 	std::shared_mutex m_mtx_data;

@@ -11,13 +11,14 @@ int main()
 	if (nullptr == pServer)
 	{
 		pServer = new net::CNetServer(9877);
+		pServer->RegisterHandler(Query);
+		pServer->RegisterHandler(Update);
+		pServer->RegisterHandler(Auth);
+
 		pServer->Initialize();
 		pServer->Start(true);
 	}
 
-	CDBEngine::InstancePtr()->Initialize();
-	pServer->RegisterHandler(Query);
-	pServer->RegisterHandler(Update);
-	pServer->RegisterHandler(Auth);
+	//CDBEngine::InstancePtr()->Initialize();
 	return 0;
 }

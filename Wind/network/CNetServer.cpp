@@ -6,7 +6,7 @@
 #include <event2/listener.h>
 #include <chrono>
 #include <thread>
-#include "common.h"
+#include "netcommon.h"
 #include "CNetPool.h"
 #include "../request/request.h"
 #include "../basic/CDistributor.h"
@@ -45,8 +45,13 @@ namespace net
 
 	std::size_t CNetServer::OnRead(struct bufferevent* pEvent)
 	{
-		std::vector<CRequest*> reqs;
-		return net::utility::RequestFromBuffer(reqs, pEvent, m_buffer_recv);
+		std::vector<std::unique_ptr<CRequest>> reqs;
+		std::size_t sz = net::utility::RequestFromBuffer(reqs, pEvent, m_buffer_recv);
+		if (m_dispatcher)
+		{
+			m_dispatcher->Dispatch(std::move(reqs));
+		}
+		return sz;
 	}
 
 	void CNetServer::OnEvent(struct bufferevent* pEvent, short events)

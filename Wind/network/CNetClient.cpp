@@ -20,13 +20,7 @@ namespace net
 
 	std::size_t CNetClient::OnRead(struct bufferevent* pEvent)
 	{
-		std::vector<CRequest*> reqs;
-		std::size_t nCount = net::utility::RequestFromBuffer(reqs, pEvent, m_buffer_recv);
-		for (const auto& req : reqs)
-		{
-			
-		}
-		return nCount;
+		return 0;
 	}
 
 	void CNetClient::OnConnected(bufferevent* pEvent)
