@@ -89,6 +89,7 @@
     <ClCompile Include="common\datetime.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\include\release\libevent;.\include\release\protobuf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="common\defines.cpp" />
     <ClCompile Include="common\modules.cpp" />
     <ClCompile Include="common\utility.cpp" />
     <ClCompile Include="database\CDBEngine.cpp" />
@@ -133,7 +134,6 @@
     <ClInclude Include="request\request.h" />
     <ClInclude Include="request\request.pb.h" />
     <ClInclude Include="thread\CThreadPool.h" />
-    <ClInclude Include="thread\defines.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

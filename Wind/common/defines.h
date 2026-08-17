@@ -1,10 +1,6 @@
 #ifndef __COMMON_DEFINES_H__
 #define __COMMON_DEFINES_H__
 
-#include "../thread/CThreadPool.h"
-
-#define ThreadPoolPtr CThreadPool::InstancePtr(2, 3)
-
 #define RETURN_EMTPTY_IFNULLPTR(...) \
 		if ((__VA_ARGS__) == nullptr) \
 		{	\
@@ -53,5 +49,11 @@
 		ClassName(ClassName&&) = default;\
 		ClassName& operator=(const ClassName&) = default;\
 		ClassName& operator=(ClassName&&) = default;
+
+
+#include "../thread/CThreadPool.h"
+CThreadPool* GetThreadPool();
+
+#define ThreadPoolPtr GetThreadPool()
 
 #endif

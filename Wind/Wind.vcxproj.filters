@@ -62,6 +62,9 @@
     <ClCompile Include="common\utility.cpp">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="common\defines.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -157,9 +160,6 @@
       <Filter>basic</Filter>
     </ClInclude>
     <ClInclude Include="thread\CThreadPool.h">
-      <Filter>thread</Filter>
-    </ClInclude>
-    <ClInclude Include="thread\defines.h">
       <Filter>thread</Filter>
     </ClInclude>
   </ItemGroup>
