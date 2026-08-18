@@ -1,99 +1,615 @@
 #include "CHttpServer.h"
-#include <event2/buffer.h>  // 主要头文件
-#include "CNetTools.h"
-#include <iostream>
-#include <event2/thread.h>
-#include <event2/listener.h>
-#include <chrono>
-#include <thread>
-#include "netcommon.h"
-#include "CNetPool.h"
-#include "../request/request.h"
-#include "../basic/CDistributor.h"
 
+#include <algorithm>
+#include <atomic>
+#include <cctype>
+#include <cstdlib>
+#include <deque>
+#include <event2/buffer.h>
+#include <event2/event.h>
+#include <event2/http.h>
+#include <event2/http_struct.h>
+#include <event2/keyvalq_struct.h>
+#include <utility>
+
+namespace
+{
+	std::string ToLower(std::string strVal)
+	{
+		std::transform(strVal.begin(), strVal.end(), strVal.begin(), [](unsigned char ch) {
+			return static_cast<char>(std::tolower(ch));
+		});
+		return strVal;
+	}
+
+	std::string MethodName(net::HttpMethod method)
+	{
+		switch (method)
+		{
+		case net::HttpMethod::GET: return "GET";
+		case net::HttpMethod::POST: return "POST";
+		case net::HttpMethod::PUT: return "PUT";
+		case net::HttpMethod::DELETE: return "DELETE";
+		case net::HttpMethod::OPTIONS: return "OPTIONS";
+		case net::HttpMethod::PATCH: return "PATCH";
+		default: return "UNKNOWN";
+		}
+	}
+
+	std::string RouteKey(net::HttpMethod method, const std::string& strPath)
+	{
+		return MethodName(method) + " " + strPath;
+	}
+
+	net::HttpMethod ParseMethod(evhttp_cmd_type method)
+	{
+		switch (method)
+		{
+		case EVHTTP_REQ_GET: return net::HttpMethod::GET;
+		case EVHTTP_REQ_POST: return net::HttpMethod::POST;
+		case EVHTTP_REQ_PUT: return net::HttpMethod::PUT;
+		case EVHTTP_REQ_DELETE: return net::HttpMethod::DELETE;
+		case EVHTTP_REQ_OPTIONS: return net::HttpMethod::OPTIONS;
+		case EVHTTP_REQ_PATCH: return net::HttpMethod::PATCH;
+		default: return net::HttpMethod::UNKNOWN;
+		}
+	}
+
+	std::string UriDecode(const std::string& strVal)
+	{
+		size_t nSize = 0;
+		char* pDecoded = evhttp_uridecode(strVal.c_str(), 1, &nSize);
+		if (nullptr == pDecoded)
+		{
+			return strVal;
+		}
+		std::string strRet(pDecoded, nSize);
+		free(pDecoded);
+		return strRet;
+	}
+
+	void ParseQuery(const char* pQuery, std::unordered_map<std::string, std::string>& queries)
+	{
+		if ((nullptr == pQuery) || ('\0' == *pQuery))
+		{
+			return;
+		}
+		std::string strQuery(pQuery);
+		std::size_t nBegin = 0;
+		while (nBegin <= strQuery.size())
+		{
+			std::size_t nEnd = strQuery.find('&', nBegin);
+			std::string strItem = strQuery.substr(nBegin, nEnd - nBegin);
+			std::size_t nEqual = strItem.find('=');
+			std::string strKey = UriDecode(strItem.substr(0, nEqual));
+			std::string strVal = (std::string::npos == nEqual) ? std::string() : UriDecode(strItem.substr(nEqual + 1));
+			if (!strKey.empty())
+			{
+				queries[strKey] = strVal;
+			}
+			if (std::string::npos == nEnd)
+			{
+				break;
+			}
+			nBegin = nEnd + 1;
+		}
+	}
+
+	std::string EncodeSSE(const std::string& strEvent, const std::string& strData)
+	{
+		std::string strRet;
+		if (!strEvent.empty())
+		{
+			strRet += "event: " + strEvent + "\n";
+		}
+		std::size_t nBegin = 0;
+		do
+		{
+			std::size_t nEnd = strData.find('\n', nBegin);
+			std::string strLine = strData.substr(nBegin, nEnd - nBegin);
+			if (!strLine.empty() && ('\r' == strLine.back()))
+			{
+				strLine.pop_back();
+			}
+			strRet += "data: " + strLine + "\n";
+			if (std::string::npos == nEnd)
+			{
+				break;
+			}
+			nBegin = nEnd + 1;
+		} while (nBegin <= strData.size());
+		strRet += "\n";
+		return strRet;
+	}
+}
 
 namespace net
 {
-
-	CHttpServer::CHttpServer(int nPort) : m_nPort(nPort), m_dispatcher(std::make_unique<_TyDistributor>())
+	struct CHttpStream::State
 	{
-		m_buffer_recv.reserve(4096);
-		m_buffer_send.reserve(4096);
-	}
+		struct CloseContext { std::shared_ptr<State> state; };
+		struct DrainContext { std::shared_ptr<State> state; };
 
-	void CHttpServer::OnListenerError(struct evconnlistener* pListener)
-	{
+		event_base* base{ nullptr };
+		evhttp_request* request{ nullptr };
+		evhttp_connection* connection{ nullptr };
+		std::mutex mutex;
+		std::deque<std::string> messages;
+		std::function<void()> closeHandler;
+		CloseContext* closeContext{ nullptr };
+		std::weak_ptr<State> self;
+		bool scheduled{ false };
+		bool closeRequested{ false };
+		bool closed{ false };
 
-	}
-
-	void CHttpServer::OnConnAccept(struct evconnlistener* pListener, evutil_socket_t fd, struct sockaddr* pAddr, int nLength)
-	{
-		if (nullptr == GetNet())
+		static void ConnectionClose_Callback(evhttp_connection*, void* pArg)
 		{
-			return;
+			std::unique_ptr<CloseContext> context(static_cast<CloseContext*>(pArg));
+			if (context && context->state)
+			{
+				context->state->OnConnectionClosed(context.get());
+			}
 		}
 
-		struct bufferevent* pBuffer = CNetPool::InstancePtr()->RegisterConnect(fd, GetNet(), pAddr, nLength, CHttpServer::Read_Callback, nullptr, CHttpServer::Event_Callback, this);
+		static void Drain_Callback(evutil_socket_t, short, void* pArg)
+		{
+			std::unique_ptr<DrainContext> context(static_cast<DrainContext*>(pArg));
+			if (context && context->state)
+			{
+				context->state->Drain();
+			}
+		}
+
+		bool Schedule()
+		{
+			auto state = self.lock();
+			if (!state)
+			{
+				return false;
+			}
+			DrainContext* pContext = new DrainContext{ std::move(state) };
+			timeval timeout{ 0, 0 };
+			if (0 != event_base_once(base, -1, EV_TIMEOUT, Drain_Callback, pContext, &timeout))
+			{
+				delete pContext;
+				std::lock_guard<std::mutex> lock(mutex);
+				scheduled = false;
+				return false;
+			}
+			return true;
+		}
+
+		bool Queue(std::string&& strMessage)
+		{
+			bool bSchedule = false;
+			{
+				std::lock_guard<std::mutex> lock(mutex);
+				if (closed || closeRequested)
+				{
+					return false;
+				}
+				messages.emplace_back(std::move(strMessage));
+				if (!scheduled)
+				{
+					scheduled = true;
+					bSchedule = true;
+				}
+			}
+			return !bSchedule || Schedule();
+		}
+
+		void RequestClose()
+		{
+			bool bSchedule = false;
+			{
+				std::lock_guard<std::mutex> lock(mutex);
+				if (closed || closeRequested)
+				{
+					return;
+				}
+				closeRequested = true;
+				if (!scheduled)
+				{
+					scheduled = true;
+					bSchedule = true;
+				}
+			}
+			if (bSchedule)
+			{
+				Schedule();
+			}
+		}
+
+		void Drain()
+		{
+			std::deque<std::string> pending;
+			bool bClose = false;
+			{
+				std::lock_guard<std::mutex> lock(mutex);
+				if (closed)
+				{
+					scheduled = false;
+					return;
+				}
+				pending.swap(messages);
+				bClose = closeRequested;
+				scheduled = false;
+			}
+			for (const auto& strMessage : pending)
+			{
+				evbuffer* pBuffer = evbuffer_new();
+				if (nullptr != pBuffer)
+				{
+					evbuffer_add(pBuffer, strMessage.data(), strMessage.size());
+					evhttp_send_reply_chunk(request, pBuffer);
+					evbuffer_free(pBuffer);
+				}
+			}
+			if (bClose)
+			{
+				CloseOnEventThread();
+			}
+		}
+
+		void CloseOnEventThread()
+		{
+			CloseContext* pCloseContext = nullptr;
+			std::function<void()> func;
+			evhttp_request* pRequest = nullptr;
+			{
+				std::lock_guard<std::mutex> lock(mutex);
+				if (closed)
+				{
+					return;
+				}
+				closed = true;
+				pCloseContext = closeContext;
+				closeContext = nullptr;
+				pRequest = request;
+				request = nullptr;
+				func = std::move(closeHandler);
+			}
+			if (nullptr != connection)
+			{
+				evhttp_connection_set_closecb(connection, nullptr, nullptr);
+			}
+			delete pCloseContext;
+			if (nullptr != pRequest)
+			{
+				evhttp_send_reply_end(pRequest);
+				evhttp_request_free(pRequest);
+			}
+			if (func)
+			{
+				func();
+			}
+		}
+
+		void OnConnectionClosed(CloseContext* pContext)
+		{
+			std::function<void()> func;
+			evhttp_request* pRequest = nullptr;
+			{
+				std::lock_guard<std::mutex> lock(mutex);
+				if (closeContext == pContext)
+				{
+					closeContext = nullptr;
+				}
+				if (closed)
+				{
+					return;
+				}
+				closed = true;
+				messages.clear();
+				pRequest = request;
+				request = nullptr;
+				func = std::move(closeHandler);
+			}
+			if (nullptr != pRequest)
+			{
+				evhttp_request_free(pRequest);
+			}
+			if (func)
+			{
+				func();
+			}
+		}
+	};
+
+	struct CHttpResponse::State
+	{
+		event_base* base{ nullptr };
+		evhttp_request* request{ nullptr };
+		CHttpServer* server{ nullptr };
+		int status{ HTTP_OK };
+		std::unordered_map<std::string, std::string> headers;
+		std::atomic_int mode{ 0 };
+	};
+
+	HttpMethod CHttpRequest::GetMethod() const { return m_method; }
+	const std::string& CHttpRequest::GetPath() const { return m_strPath; }
+	const std::string& CHttpRequest::GetUri() const { return m_strUri; }
+	const std::string& CHttpRequest::GetBody() const { return m_strBody; }
+
+	std::string CHttpRequest::GetHeader(const std::string& strName) const
+	{
+		auto iter = m_headers.find(ToLower(strName));
+		return (m_headers.end() == iter) ? std::string() : iter->second;
+	}
+
+	std::string CHttpRequest::GetQuery(const std::string& strName) const
+	{
+		auto iter = m_queries.find(strName);
+		return (m_queries.end() == iter) ? std::string() : iter->second;
+	}
+
+	CHttpStream::CHttpStream(std::shared_ptr<State> state) : m_state(std::move(state)) {}
+
+	bool CHttpStream::Send(const std::string& strData) { return Send(std::string(), strData); }
+
+	bool CHttpStream::Send(const std::string& strEvent, const std::string& strData)
+	{
+		return (nullptr != m_state) && m_state->Queue(EncodeSSE(strEvent, strData));
+	}
+
+	void CHttpStream::Close()
+	{
+		if (nullptr != m_state)
+		{
+			m_state->RequestClose();
+		}
+	}
+
+	void CHttpStream::SetCloseHandler(std::function<void()>&& func)
+	{
+		if (nullptr != m_state)
+		{
+			std::lock_guard<std::mutex> lock(m_state->mutex);
+			if (!m_state->closed)
+			{
+				m_state->closeHandler = std::move(func);
+			}
+		}
+	}
+
+	CHttpResponse::CHttpResponse(std::shared_ptr<State> state) : m_state(std::move(state)) {}
+
+	void CHttpResponse::SetStatus(int nStatus)
+	{
+		if ((nullptr != m_state) && (0 == m_state->mode.load()))
+		{
+			m_state->status = nStatus;
+		}
+	}
+
+	void CHttpResponse::SetHeader(const std::string& strName, const std::string& strValue)
+	{
+		if ((nullptr != m_state) && (0 == m_state->mode.load()) && !strName.empty())
+		{
+			m_state->headers[strName] = strValue;
+		}
+	}
+
+	bool CHttpResponse::Send(const std::string& strBody)
+	{
+		if (nullptr == m_state)
+		{
+			return false;
+		}
+		int nExpected = 0;
+		if (!m_state->mode.compare_exchange_strong(nExpected, 1))
+		{
+			return false;
+		}
+		evkeyvalq* pHeaders = evhttp_request_get_output_headers(m_state->request);
+		for (const auto& item : m_state->headers)
+		{
+			evhttp_add_header(pHeaders, item.first.c_str(), item.second.c_str());
+		}
+		evbuffer* pBuffer = evbuffer_new();
 		if (nullptr != pBuffer)
 		{
-			CRequest* pReq = new CRequest;
-			pReq->SetType(CRequest::Type::QUERY_AUTH);
-			pReq->SetCmd("connet_build");
-			pReq->SetExtraData("retmsg", "connect_ok_hahhahahahhahaha");
-			net::utility::SendRequest(pReq, pBuffer, m_buffer_send);
+			evbuffer_add(pBuffer, strBody.data(), strBody.size());
 		}
+		evhttp_send_reply(m_state->request, m_state->status, nullptr, pBuffer);
+		if (nullptr != pBuffer)
+		{
+			evbuffer_free(pBuffer);
+		}
+		return true;
 	}
 
-	std::size_t CHttpServer::OnRead(struct bufferevent* pEvent)
+	bool CHttpResponse::SendJson(const std::string& strBody)
 	{
-		std::vector<std::unique_ptr<CRequest>> reqs;
-		std::size_t sz = net::utility::RequestFromBuffer(reqs, pEvent, m_buffer_recv);
-		if (m_dispatcher)
-		{
-			m_dispatcher->Dispatch(std::move(reqs));
-		}
-		return sz;
+		SetHeader("Content-Type", "application/json; charset=utf-8");
+		return Send(strBody);
 	}
 
-	void CHttpServer::OnEvent(struct bufferevent* pEvent, short events)
+	std::shared_ptr<CHttpStream> CHttpResponse::BeginSSE()
 	{
-		if (nullptr == pEvent)
+		if (nullptr == m_state)
 		{
-			return;
+			return nullptr;
 		}
-		evutil_socket_t fd = bufferevent_getfd(pEvent);
-		if (fd < 0)
+		int nExpected = 0;
+		if (!m_state->mode.compare_exchange_strong(nExpected, 2))
 		{
-			bufferevent_free(pEvent);
-			pEvent = nullptr;
+			return nullptr;
 		}
-		//BEV_EVENT_EOF:onnection closed   BEV_EVENT_ERROR:some other error  BEV_EVENT_TIMEOUT:
-		CNetPool::InstancePtr()->CloseAConnection(fd);
+		evkeyvalq* pHeaders = evhttp_request_get_output_headers(m_state->request);
+		for (const auto& item : m_state->headers)
+		{
+			evhttp_add_header(pHeaders, item.first.c_str(), item.second.c_str());
+		}
+		evhttp_add_header(pHeaders, "Content-Type", "text/event-stream; charset=utf-8");
+		evhttp_add_header(pHeaders, "Cache-Control", "no-cache");
+		evhttp_add_header(pHeaders, "Connection", "keep-alive");
+		evhttp_add_header(pHeaders, "X-Accel-Buffering", "no");
+		evhttp_request_own(m_state->request);
+		evhttp_send_reply_start(m_state->request, m_state->status, nullptr);
+
+		auto state = std::make_shared<CHttpStream::State>();
+		state->self = state;
+		state->base = m_state->base;
+		state->request = m_state->request;
+		state->connection = evhttp_request_get_connection(m_state->request);
+		state->closeContext = new CHttpStream::State::CloseContext{ state };
+		if (nullptr != state->connection)
+		{
+			evhttp_connection_set_closecb(state->connection, CHttpStream::State::ConnectionClose_Callback, state->closeContext);
+		}
+		if (nullptr != m_state->server)
+		{
+			m_state->server->RegisterStream(state);
+		}
+		return std::shared_ptr<CHttpStream>(new CHttpStream(std::move(state)));
 	}
+
+	bool CHttpResponse::IsHandled() const
+	{
+		return (nullptr != m_state) && (0 != m_state->mode.load());
+	}
+
+	CHttpServer::CHttpServer(int nPort) : m_nPort(nPort) {}
+	CHttpServer::~CHttpServer() { Release(); }
 
 	int CHttpServer::Initialize()
 	{
-		if (nullptr == GetNet())
+		if ((nullptr == GetNet()) || (nullptr != m_pHttp) || (m_nPort < 0) || (m_nPort > 65535))
 		{
 			return -1;
 		}
-		struct sockaddr_in svr;
-		bool bRet = FmtAddress(svr, m_nPort);
-		struct evconnlistener* pListener = evconnlistener_new_bind(
-			GetNet(), 
-			CNetServer::ConnAccept_Callback,
-			this,
-			LEV_OPT_CLOSE_ON_FREE | LEV_OPT_REUSEABLE,
-			-1,
-			(struct sockaddr*)&svr, 
-			sizeof(svr));
-
-		//evconnlistener_set_error_cb(pListener, ListenerErrorCallback);
+		m_pHttp = evhttp_new(GetNet());
+		if (nullptr == m_pHttp)
+		{
+			return -2;
+		}
+		evhttp_set_gencb(m_pHttp, CHttpServer::Request_Callback, this);
+		m_pListener = evhttp_bind_socket_with_handle(m_pHttp, "0.0.0.0", static_cast<ev_uint16_t>(m_nPort));
+		if (nullptr == m_pListener)
+		{
+			evhttp_free(m_pHttp);
+			m_pHttp = nullptr;
+			return -3;
+		}
 		return 0;
 	}
 
-	void CHttpServer::RegisterHandler(_TyHandler&& func)
+	void CHttpServer::RegisterHandler(HttpMethod method, const std::string& strPath, _TyHandler&& func)
 	{
-		m_dispatcher->RegisterHandler(std::move(func));
+		if ((HttpMethod::UNKNOWN != method) && !strPath.empty() && func)
+		{
+			m_handlers[RouteKey(method, strPath)] = std::move(func);
+		}
+	}
+
+	void CHttpServer::Request_Callback(struct evhttp_request* pRequest, void* pArg)
+	{
+		CHttpServer* pInstance = static_cast<CHttpServer*>(pArg);
+		if ((nullptr != pInstance) && (nullptr != pRequest))
+		{
+			pInstance->OnRequest(pRequest);
+		}
+	}
+
+	void CHttpServer::OnRequest(struct evhttp_request* pRequest)
+	{
+		CHttpRequest request;
+		request.m_method = ParseMethod(evhttp_request_get_command(pRequest));
+		const char* pUri = evhttp_request_get_uri(pRequest);
+		request.m_strUri = (nullptr == pUri) ? std::string() : pUri;
+		evhttp_uri* pParsedUri = evhttp_uri_parse(request.m_strUri.c_str());
+		if (nullptr != pParsedUri)
+		{
+			const char* pPath = evhttp_uri_get_path(pParsedUri);
+			request.m_strPath = ((nullptr == pPath) || ('\0' == *pPath)) ? "/" : UriDecode(pPath);
+			ParseQuery(evhttp_uri_get_query(pParsedUri), request.m_queries);
+			evhttp_uri_free(pParsedUri);
+		}
+		else
+		{
+			request.m_strPath = request.m_strUri;
+		}
+
+		evkeyvalq* pHeaders = evhttp_request_get_input_headers(pRequest);
+		for (evkeyval* pHeader = pHeaders->tqh_first; nullptr != pHeader; pHeader = pHeader->next.tqe_next)
+		{
+			if ((nullptr != pHeader->key) && (nullptr != pHeader->value))
+			{
+				request.m_headers[ToLower(pHeader->key)] = pHeader->value;
+			}
+		}
+		evbuffer* pInput = evhttp_request_get_input_buffer(pRequest);
+		std::size_t nLength = evbuffer_get_length(pInput);
+		request.m_strBody.resize(nLength);
+		if (nLength > 0)
+		{
+			evbuffer_copyout(pInput, request.m_strBody.data(), nLength);
+		}
+
+		auto state = std::make_shared<CHttpResponse::State>();
+		state->base = GetNet();
+		state->request = pRequest;
+		state->server = this;
+		CHttpResponse response(state);
+		auto iter = m_handlers.find(RouteKey(request.m_method, request.m_strPath));
+		if (m_handlers.end() != iter)
+		{
+			iter->second(request, response);
+			if (!response.IsHandled())
+			{
+				response.SetStatus(HTTP_INTERNAL);
+				response.Send("Internal Server Error");
+			}
+			return;
+		}
+
+		bool bPathExists = false;
+		const std::string strSuffix = " " + request.m_strPath;
+		for (const auto& item : m_handlers)
+		{
+			if ((item.first.size() >= strSuffix.size()) && (0 == item.first.compare(item.first.size() - strSuffix.size(), strSuffix.size(), strSuffix)))
+			{
+				bPathExists = true;
+				break;
+			}
+		}
+		response.SetStatus(bPathExists ? HTTP_BADMETHOD : HTTP_NOTFOUND);
+		response.Send(bPathExists ? "Method Not Allowed" : "Not Found");
+	}
+
+	void CHttpServer::RegisterStream(const std::shared_ptr<CHttpStream::State>& state)
+	{
+		std::lock_guard<std::mutex> lock(m_mutex_streams);
+		m_streams.erase(std::remove_if(m_streams.begin(), m_streams.end(), [](const auto& item) {
+			return item.expired();
+		}), m_streams.end());
+		m_streams.emplace_back(state);
+	}
+
+	void CHttpServer::Release()
+	{
+		std::vector<std::shared_ptr<CHttpStream::State>> streams;
+		{
+			std::lock_guard<std::mutex> lock(m_mutex_streams);
+			for (const auto& item : m_streams)
+			{
+				if (auto state = item.lock())
+				{
+					streams.emplace_back(std::move(state));
+				}
+			}
+			m_streams.clear();
+		}
+		for (const auto& state : streams)
+		{
+			state->CloseOnEventThread();
+		}
+		m_pListener = nullptr;
+		if (nullptr != m_pHttp)
+		{
+			evhttp_free(m_pHttp);
+			m_pHttp = nullptr;
+		}
 	}
 }
