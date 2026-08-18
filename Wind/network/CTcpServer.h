@@ -1,5 +1,5 @@
-#ifndef __CNetServer_H__
-#define __CNetServer_H__
+#ifndef __CTCPSERVER_H__
+#define __CTCPSERVER_H__
 
 #include <memory>
 #include <vector>
@@ -13,14 +13,14 @@ class CRequest;
 
 namespace net
 {
-	class CNetServer final : public CNet, public CNetRouter<CNetServer>
+	class CTcpServer final : public CNet, public CNetRouter<CTcpServer>
 	{
 		using _TyData = std::unique_ptr<CRequest>;
 		using _TyHandler = std::function<int(const _TyData&)>;
 		using _TyDistributor = CDistributor<true, std::vector<_TyData>, _TyHandler>;
 	public:
-		explicit CNetServer(int nPort);
-		~CNetServer() = default;
+		explicit CTcpServer(int nPort);
+		~CTcpServer() = default;
 
 	public:
 		void OnListenerError(struct evconnlistener* pListener);

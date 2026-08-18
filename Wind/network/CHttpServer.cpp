@@ -1,4 +1,4 @@
-#include "CNetServer.h"
+#include "CHttpServer.h"
 #include <event2/buffer.h>  // 主要头文件
 #include "CNetTools.h"
 #include <iostream>
@@ -15,25 +15,25 @@
 namespace net
 {
 
-	CNetServer::CNetServer(int nPort) : m_nPort(nPort), m_dispatcher(std::make_unique<_TyDistributor>())
+	CHttpServer::CHttpServer(int nPort) : m_nPort(nPort), m_dispatcher(std::make_unique<_TyDistributor>())
 	{
 		m_buffer_recv.reserve(4096);
 		m_buffer_send.reserve(4096);
 	}
 
-	void CNetServer::OnListenerError(struct evconnlistener* pListener)
+	void CHttpServer::OnListenerError(struct evconnlistener* pListener)
 	{
 
 	}
 
-	void CNetServer::OnConnAccept(struct evconnlistener* pListener, evutil_socket_t fd, struct sockaddr* pAddr, int nLength)
+	void CHttpServer::OnConnAccept(struct evconnlistener* pListener, evutil_socket_t fd, struct sockaddr* pAddr, int nLength)
 	{
 		if (nullptr == GetNet())
 		{
 			return;
 		}
 
-		struct bufferevent* pBuffer = CNetPool::InstancePtr()->RegisterConnect(fd, GetNet(), pAddr, nLength, CNetServer::Read_Callback, nullptr, CNetServer::Event_Callback, this);
+		struct bufferevent* pBuffer = CNetPool::InstancePtr()->RegisterConnect(fd, GetNet(), pAddr, nLength, CHttpServer::Read_Callback, nullptr, CHttpServer::Event_Callback, this);
 		if (nullptr != pBuffer)
 		{
 			CRequest* pReq = new CRequest;
@@ -44,7 +44,7 @@ namespace net
 		}
 	}
 
-	std::size_t CNetServer::OnRead(struct bufferevent* pEvent)
+	std::size_t CHttpServer::OnRead(struct bufferevent* pEvent)
 	{
 		std::vector<std::unique_ptr<CRequest>> reqs;
 		std::size_t sz = net::utility::RequestFromBuffer(reqs, pEvent, m_buffer_recv);
@@ -55,7 +55,7 @@ namespace net
 		return sz;
 	}
 
-	void CNetServer::OnEvent(struct bufferevent* pEvent, short events)
+	void CHttpServer::OnEvent(struct bufferevent* pEvent, short events)
 	{
 		if (nullptr == pEvent)
 		{
@@ -71,7 +71,7 @@ namespace net
 		CNetPool::InstancePtr()->CloseAConnection(fd);
 	}
 
-	int CNetServer::Initialize()
+	int CHttpServer::Initialize()
 	{
 		if (nullptr == GetNet())
 		{
@@ -92,7 +92,7 @@ namespace net
 		return 0;
 	}
 
-	void CNetServer::RegisterHandler(_TyHandler&& func)
+	void CHttpServer::RegisterHandler(_TyHandler&& func)
 	{
 		m_dispatcher->RegisterHandler(std::move(func));
 	}

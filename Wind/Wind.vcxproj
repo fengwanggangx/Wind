@@ -99,10 +99,11 @@
     <ClCompile Include="database\COracle.cpp" />
     <ClCompile Include="database\CSQLite3.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="network\CHttpServer.cpp" />
     <ClCompile Include="network\CNet.cpp" />
     <ClCompile Include="network\CNetClient.cpp" />
     <ClCompile Include="network\CNetPool.cpp" />
-    <ClCompile Include="network\CNetServer.cpp" />
+    <ClCompile Include="network\CTcpServer.cpp" />
     <ClCompile Include="network\CNetTools.cpp" />
     <ClCompile Include="network\netcommon.cpp" />
     <ClCompile Include="request\request.cpp" />
@@ -124,11 +125,12 @@
     <ClInclude Include="database\COracle.h" />
     <ClInclude Include="database\CSQLite3.h" />
     <ClInclude Include="database\IDataBase.h" />
+    <ClInclude Include="network\CHttpServer.h" />
     <ClInclude Include="network\CNet.h" />
     <ClInclude Include="network\CNetClient.h" />
     <ClInclude Include="network\CNetPool.h" />
     <ClInclude Include="network\CNetRouter.h" />
-    <ClInclude Include="network\CNetServer.h" />
+    <ClInclude Include="network\CTcpServer.h" />
     <ClInclude Include="network\CNetTools.h" />
     <ClInclude Include="network\netcommon.h" />
     <ClInclude Include="request\request.h" />

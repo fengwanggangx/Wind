@@ -17,7 +17,7 @@
     <ClCompile Include="network\CNetPool.cpp">
       <Filter>network</Filter>
     </ClCompile>
-    <ClCompile Include="network\CNetServer.cpp">
+    <ClCompile Include="network\CTcpServer.cpp">
       <Filter>network</Filter>
     </ClCompile>
     <ClCompile Include="network\CNetTools.cpp">
@@ -64,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="common\defines.cpp">
       <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="network\CHttpServer.cpp">
+      <Filter>network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -114,7 +117,7 @@
     <ClInclude Include="network\CNetRouter.h">
       <Filter>network</Filter>
     </ClInclude>
-    <ClInclude Include="network\CNetServer.h">
+    <ClInclude Include="network\CTcpServer.h">
       <Filter>network</Filter>
     </ClInclude>
     <ClInclude Include="network\CNetTools.h">
@@ -161,6 +164,9 @@
     </ClInclude>
     <ClInclude Include="thread\CThreadPool.h">
       <Filter>thread</Filter>
+    </ClInclude>
+    <ClInclude Include="network\CHttpServer.h">
+      <Filter>network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
