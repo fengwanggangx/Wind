@@ -9,6 +9,87 @@
 #include <vector>
 #include "CNet.h"
 
+/*
+ * HTTP 请求格式示例：
+ *
+ * POST /api/users/100?source=pc&debug=1 HTTP/1.1
+ * Host: example.com:8080
+ * Content-Type: application/json; charset=utf-8
+ * Authorization: Bearer abc123
+ * User-Agent: WindClient/1.0
+ * Accept: application/json
+ * Content-Length: 23
+ * Connection: keep-alive
+ *
+ * {"name":"Tom","age":20}
+ *
+ * HTTP 请求由以下部分组成：
+ *
+ * 1. 请求行（Request Line）
+ *
+ *    POST /api/users/100?source=pc&debug=1 HTTP/1.1
+ *
+ *    Method  = POST
+ *    URI     = /api/users/100?source=pc&debug=1
+ *    Path    = /api/users/100
+ *    Query   = source=pc&debug=1
+ *    Version = HTTP/1.1
+ *
+ * 2. 请求头（Request Headers）
+ *
+ *    Host          = example.com:8080
+ *    Content-Type  = application/json; charset=utf-8
+ *    Authorization = Bearer abc123
+ *    User-Agent    = WindClient/1.0
+ *    Accept        = application/json
+ *    Content-Length= 23
+ *    Connection    = keep-alive
+ *
+ * 3. 空行
+ *
+ *    请求头与请求体之间必须使用空行分隔。
+ *    HTTP 协议中实际使用 "\r\n\r\n" 表示请求头结束。
+ *
+ * 4. 请求体（Request Body）
+ *
+ *    {"name":"Tom","age":20}
+ *
+ * libevent 接口与字段的对应关系：
+ *
+ *    evhttp_request_get_command(request)
+ *        -> EVHTTP_REQ_POST
+ *
+ *    evhttp_request_get_uri(request)
+ *        -> "/api/users/100?source=pc&debug=1"
+ *
+ *    evhttp_uri_get_path(parsedUri)
+ *        -> "/api/users/100"
+ *
+ *    evhttp_uri_get_query(parsedUri)
+ *        -> "source=pc&debug=1"
+ *
+ *    evhttp_request_get_input_headers(request)
+ *        -> 请求头集合
+ *
+ *    evhttp_request_get_input_buffer(request)
+ *        -> 请求体数据
+ *
+ * 解析为 CHttpRequest 后：
+ *
+ *    m_method  = HttpMethod::POST
+ *    m_strUri  = "/api/users/100?source=pc&debug=1"
+ *    m_strPath = "/api/users/100"
+ *
+ *    m_queries["source"] = "pc"
+ *    m_queries["debug"]  = "1"
+ *
+ *    m_headers["host"]          = "example.com:8080"
+ *    m_headers["content-type"]  = "application/json; charset=utf-8"
+ *    m_headers["authorization"] = "Bearer abc123"
+ *
+ *    m_strBody = "{\"name\":\"Tom\",\"age\":20}"
+ */
+
 struct evhttp;
 struct evhttp_bound_socket;
 struct evhttp_request;
@@ -37,7 +118,7 @@ namespace net
 	private:
 		HttpMethod m_method{ HttpMethod::UNKNOWN };
 		std::string m_strPath;
-		std::string m_strUri;
+		std::string m_strURI;
 		std::string m_strBody;
 		std::unordered_map<std::string, std::string> m_headers;
 		std::unordered_map<std::string, std::string> m_queries;
@@ -104,7 +185,7 @@ namespace net
 		struct evhttp* m_pHttp{ nullptr };
 		struct evhttp_bound_socket* m_pListener{ nullptr };
 		std::unordered_map<std::string, _TyHandler> m_handlers;
-		std::mutex m_mutex_streams;
+		std::mutex m_mtx_streams;
 		std::vector<std::weak_ptr<CHttpStream::State>> m_streams;
 	};
 }

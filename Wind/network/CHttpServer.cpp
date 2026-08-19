@@ -1,4 +1,5 @@
 #include "CHttpServer.h"
+#include "../common/defines.h"
 
 #include <algorithm>
 #include <atomic>
@@ -14,15 +15,7 @@
 
 namespace
 {
-	std::string ToLower(std::string strVal)
-	{
-		std::transform(strVal.begin(), strVal.end(), strVal.begin(), [](unsigned char ch) {
-			return static_cast<char>(std::tolower(ch));
-		});
-		return strVal;
-	}
-
-	std::string MethodName(net::HttpMethod method)
+	std::string GetMethodName(net::HttpMethod method)
 	{
 		switch (method)
 		{
@@ -36,12 +29,7 @@ namespace
 		}
 	}
 
-	std::string RouteKey(net::HttpMethod method, const std::string& strPath)
-	{
-		return MethodName(method) + " " + strPath;
-	}
-
-	net::HttpMethod ParseMethod(evhttp_cmd_type method)
+	net::HttpMethod Cmd2Method(evhttp_cmd_type method)
 	{
 		switch (method)
 		{
@@ -55,16 +43,21 @@ namespace
 		}
 	}
 
-	std::string UriDecode(const std::string& strVal)
+	std::string FmtRouteKey(net::HttpMethod method, const std::string& strPath)
 	{
-		size_t nSize = 0;
-		char* pDecoded = evhttp_uridecode(strVal.c_str(), 1, &nSize);
-		if (nullptr == pDecoded)
+		return GetMethodName(method) + " " + strPath;
+	}
+
+	std::string DecodeURI(const std::string& strVal)
+	{
+		size_t sz = 0;
+		char* p = evhttp_uridecode(strVal.c_str(), 1, &sz);
+		if (nullptr == p)
 		{
 			return strVal;
 		}
-		std::string strRet(pDecoded, nSize);
-		free(pDecoded);
+		std::string strRet(p, sz);
+		free(p);
 		return strRet;
 	}
 
@@ -81,8 +74,8 @@ namespace
 			std::size_t nEnd = strQuery.find('&', nBegin);
 			std::string strItem = strQuery.substr(nBegin, nEnd - nBegin);
 			std::size_t nEqual = strItem.find('=');
-			std::string strKey = UriDecode(strItem.substr(0, nEqual));
-			std::string strVal = (std::string::npos == nEqual) ? std::string() : UriDecode(strItem.substr(nEqual + 1));
+			std::string strKey = DecodeURI(strItem.substr(0, nEqual));
+			std::string strVal = (std::string::npos == nEqual) ? std::string() : DecodeURI(strItem.substr(nEqual + 1));
 			if (!strKey.empty())
 			{
 				queries[strKey] = strVal;
@@ -326,14 +319,26 @@ namespace net
 		std::atomic_int mode{ 0 };
 	};
 
-	HttpMethod CHttpRequest::GetMethod() const { return m_method; }
-	const std::string& CHttpRequest::GetPath() const { return m_strPath; }
-	const std::string& CHttpRequest::GetUri() const { return m_strUri; }
-	const std::string& CHttpRequest::GetBody() const { return m_strBody; }
+	HttpMethod CHttpRequest::GetMethod() const 
+	{ 
+		return m_method;
+	}
+	const std::string& CHttpRequest::GetPath() const 
+	{ 
+		return m_strPath;
+	}
+	const std::string& CHttpRequest::GetUri() const
+	{
+		return m_strURI;
+	}
+	const std::string& CHttpRequest::GetBody() const
+	{
+		return m_strBody;
+	}
 
 	std::string CHttpRequest::GetHeader(const std::string& strName) const
 	{
-		auto iter = m_headers.find(ToLower(strName));
+		auto iter = m_headers.find(utility::lower(strName));
 		return (m_headers.end() == iter) ? std::string() : iter->second;
 	}
 
@@ -471,7 +476,11 @@ namespace net
 	}
 
 	CHttpServer::CHttpServer(int nPort) : m_nPort(nPort) {}
-	CHttpServer::~CHttpServer() { Release(); }
+	CHttpServer::~CHttpServer()
+	{ 
+		Release();
+
+	}
 
 	int CHttpServer::Initialize()
 	{
@@ -515,20 +524,24 @@ namespace net
 	void CHttpServer::OnRequest(struct evhttp_request* pRequest)
 	{
 		CHttpRequest request;
-		request.m_method = ParseMethod(evhttp_request_get_command(pRequest));
-		const char* pUri = evhttp_request_get_uri(pRequest);
-		request.m_strUri = (nullptr == pUri) ? std::string() : pUri;
-		evhttp_uri* pParsedUri = evhttp_uri_parse(request.m_strUri.c_str());
-		if (nullptr != pParsedUri)
+		request.m_method = Cmd2Method(evhttp_request_get_command(pRequest));
+
+		//统一资源标识符 Uniform Resource Identifier
+		const char* pURI = evhttp_request_get_uri(pRequest);
+		request.m_strURI = (nullptr == pURI) ? std::string() : pURI;
+
+		//结构化Uri
+		evhttp_uri* pFmtURI = evhttp_uri_parse(request.m_strURI.c_str());
+		if (nullptr != pFmtURI)
 		{
-			const char* pPath = evhttp_uri_get_path(pParsedUri);
-			request.m_strPath = ((nullptr == pPath) || ('\0' == *pPath)) ? "/" : UriDecode(pPath);
-			ParseQuery(evhttp_uri_get_query(pParsedUri), request.m_queries);
-			evhttp_uri_free(pParsedUri);
+			const char* pPath = evhttp_uri_get_path(pFmtURI);
+			request.m_strPath = ((nullptr == pPath) || ('\0' == *pPath)) ? "/" : DecodeURI(pPath);
+			ParseQuery(evhttp_uri_get_query(pFmtURI), request.m_queries);
+			evhttp_uri_free(pFmtURI);
 		}
 		else
 		{
-			request.m_strPath = request.m_strUri;
+			request.m_strPath = request.m_strURI;
 		}
 
 		evkeyvalq* pHeaders = evhttp_request_get_input_headers(pRequest);
@@ -536,7 +549,7 @@ namespace net
 		{
 			if ((nullptr != pHeader->key) && (nullptr != pHeader->value))
 			{
-				request.m_headers[ToLower(pHeader->key)] = pHeader->value;
+				request.m_headers[utility::lower(pHeader->key)] = pHeader->value;
 			}
 		}
 		evbuffer* pInput = evhttp_request_get_input_buffer(pRequest);
@@ -580,7 +593,7 @@ namespace net
 
 	void CHttpServer::RegisterStream(const std::shared_ptr<CHttpStream::State>& state)
 	{
-		std::lock_guard<std::mutex> lock(m_mutex_streams);
+		std::lock_guard<std::mutex> lock(m_mtx_streams);
 		m_streams.erase(std::remove_if(m_streams.begin(), m_streams.end(), [](const auto& item) {
 			return item.expired();
 		}), m_streams.end());
@@ -591,7 +604,7 @@ namespace net
 	{
 		std::vector<std::shared_ptr<CHttpStream::State>> streams;
 		{
-			std::lock_guard<std::mutex> lock(m_mutex_streams);
+			std::lock_guard<std::mutex> lock(m_mtx_streams);
 			for (const auto& item : m_streams)
 			{
 				if (auto state = item.lock())
