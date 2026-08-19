@@ -163,10 +163,17 @@ namespace net
 		std::shared_ptr<State> m_state;
 	};
 
+	struct CHttpResponseData
+	{
+		int m_nStatus{ 200 };
+		std::unordered_map<std::string, std::string> m_headers;
+		std::string m_strBody;
+	};
+
 	class CHttpServer final : public CNet
 	{
 		friend class CHttpResponse;
-		using _TyHandler = std::function<void(const CHttpRequest&, CHttpResponse&)>;
+		using _TyHandler = std::function<std::unique_ptr<CHttpResponseData>(const CHttpRequest&)>;
 
 	public:
 		explicit CHttpServer(int nPort);
@@ -176,6 +183,7 @@ namespace net
 
 	private:
 		static void Request_Callback(struct evhttp_request* pRequest, void* pArg);
+		static int ParseRequest(struct evhttp_request* pRequest, CHttpRequest& request);
 		void OnRequest(struct evhttp_request* pRequest);
 		void Release();
 		void RegisterStream(const std::shared_ptr<CHttpStream::State>& state);

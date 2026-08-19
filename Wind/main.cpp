@@ -1,16 +1,16 @@
 #include <iostream>
 #include <ranges>
 #include <vector>
-#include "./network/CNetServer.h"
+#include "./network/CTcpServer.h"
 #include "./database/CDBEngine.h"
 #include "./business/RequestCenter.h"
 
 int main()
 {
-	net::CNetServer* pServer = nullptr;
+	net::CTcpServer* pServer = nullptr;
 	if (nullptr == pServer)
 	{
-		pServer = new net::CNetServer(9877);
+		pServer = new net::CTcpServer(9877);
 		pServer->RegisterHandler(Query);
 		pServer->RegisterHandler(Update);
 		pServer->RegisterHandler(Auth);

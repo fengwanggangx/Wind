@@ -113,10 +113,13 @@
   <ItemGroup>
     <ClInclude Include="basic\CDistributor.h" />
     <ClInclude Include="business\RequestCenter.h" />
+    <ClInclude Include="common\container.h" />
+    <ClInclude Include="common\container_traits.h" />
     <ClInclude Include="common\datetime.h" />
     <ClInclude Include="common\defines.h" />
     <ClInclude Include="common\ISingleton.h" />
     <ClInclude Include="common\modules.h" />
+    <ClInclude Include="common\traits.h" />
     <ClInclude Include="common\utility.h" />
     <ClInclude Include="database\CDBEngine.h" />
     <ClInclude Include="database\CMySQL.h" />

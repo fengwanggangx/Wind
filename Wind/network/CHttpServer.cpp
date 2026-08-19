@@ -1,5 +1,4 @@
 #include "CHttpServer.h"
-#include "../common/defines.h"
 
 #include <algorithm>
 #include <atomic>
@@ -12,6 +11,8 @@
 #include <event2/http_struct.h>
 #include <event2/keyvalq_struct.h>
 #include <utility>
+#include "../common/defines.h"
+#include "../common/utility.h"
 
 namespace
 {
@@ -113,6 +114,52 @@ namespace
 		} while (nBegin <= strData.size());
 		strRet += "\n";
 		return strRet;
+	}
+
+	struct AsyncResponseContext
+	{
+		evhttp_request* m_pRequest{ nullptr };
+		std::unique_ptr<net::CHttpResponseData> m_response;
+	};
+
+	void AsyncResponse_Callback(evutil_socket_t, short, void* pArg)
+	{
+		std::unique_ptr<AsyncResponseContext> context(static_cast<AsyncResponseContext*>(pArg));
+		if ((nullptr == context) || (nullptr == context->m_pRequest) || (nullptr == context->m_response))
+		{
+			return;
+		}
+
+		auto Deletor = [](evhttp_request* pRequest) { evhttp_request_free(pRequest); };
+		std::unique_ptr<evhttp_request, decltype(Deletor)> request(context->m_pRequest, Deletor);
+		evkeyvalq* pHeaders = evhttp_request_get_output_headers(request.get());
+		for (const auto& item : context->m_response->m_headers)
+		{
+			evhttp_add_header(pHeaders, item.first.c_str(), item.second.c_str());
+		}
+
+		evbuffer* pBuffer = evbuffer_new();
+		if (nullptr != pBuffer)
+		{
+			evbuffer_add(pBuffer, context->m_response->m_strBody.data(), context->m_response->m_strBody.size());
+		}
+		evhttp_send_reply(request.get(), context->m_response->m_nStatus, nullptr, pBuffer);
+		if (nullptr != pBuffer)
+		{
+			evbuffer_free(pBuffer);
+		}
+	}
+
+	bool PostAsyncResponse(event_base* pBase, evhttp_request* pRequest, std::unique_ptr<net::CHttpResponseData>&& response)
+	{
+		auto* pContext = new AsyncResponseContext{ pRequest, std::move(response) };
+		timeval timeout{ 0, 0 };
+		if (0 != event_base_once(pBase, -1, EV_TIMEOUT, AsyncResponse_Callback, pContext, &timeout))
+		{
+			delete pContext;
+			return false;
+		}
+		return true;
 	}
 }
 
@@ -493,6 +540,7 @@ namespace net
 		{
 			return -2;
 		}
+		evhttp_set_max_body_size(m_pHttp, 4 * 1024 * 1024);
 		evhttp_set_gencb(m_pHttp, CHttpServer::Request_Callback, this);
 		m_pListener = evhttp_bind_socket_with_handle(m_pHttp, "0.0.0.0", static_cast<ev_uint16_t>(m_nPort));
 		if (nullptr == m_pListener)
@@ -508,7 +556,7 @@ namespace net
 	{
 		if ((HttpMethod::UNKNOWN != method) && !strPath.empty() && func)
 		{
-			m_handlers[RouteKey(method, strPath)] = std::move(func);
+			m_handlers[FmtRouteKey(method, strPath)] = std::move(func);
 		}
 	}
 
@@ -521,14 +569,21 @@ namespace net
 		}
 	}
 
-	void CHttpServer::OnRequest(struct evhttp_request* pRequest)
+	int CHttpServer::ParseRequest(struct evhttp_request* pRequest, CHttpRequest& request)
 	{
-		CHttpRequest request;
+		if (nullptr == pRequest)
+		{
+			return HTTP_BADREQUEST;
+		}
 		request.m_method = Cmd2Method(evhttp_request_get_command(pRequest));
 
 		//统一资源标识符 Uniform Resource Identifier
 		const char* pURI = evhttp_request_get_uri(pRequest);
-		request.m_strURI = (nullptr == pURI) ? std::string() : pURI;
+		if (nullptr == pURI)
+		{
+			return HTTP_BADREQUEST;
+		}
+		request.m_strURI = pURI;
 
 		//结构化Uri
 		evhttp_uri* pFmtURI = evhttp_uri_parse(request.m_strURI.c_str());
@@ -541,39 +596,89 @@ namespace net
 		}
 		else
 		{
-			request.m_strPath = request.m_strURI;
+			return HTTP_BADREQUEST;
 		}
 
 		evkeyvalq* pHeaders = evhttp_request_get_input_headers(pRequest);
-		for (evkeyval* pHeader = pHeaders->tqh_first; nullptr != pHeader; pHeader = pHeader->next.tqe_next)
+		if (nullptr != pHeaders)
 		{
-			if ((nullptr != pHeader->key) && (nullptr != pHeader->value))
+			for (evkeyval* pHeader = pHeaders->tqh_first; nullptr != pHeader; pHeader = pHeader->next.tqe_next)
 			{
-				request.m_headers[utility::lower(pHeader->key)] = pHeader->value;
+				if ((nullptr != pHeader->key) && (nullptr != pHeader->value))
+				{
+					request.m_headers[utility::lower(pHeader->key)] = pHeader->value;
+				}
 			}
 		}
 		evbuffer* pInput = evhttp_request_get_input_buffer(pRequest);
+		if (nullptr == pInput)
+		{
+			return HTTP_BADREQUEST;
+		}
 		std::size_t nLength = evbuffer_get_length(pInput);
 		request.m_strBody.resize(nLength);
 		if (nLength > 0)
 		{
-			evbuffer_copyout(pInput, request.m_strBody.data(), nLength);
+			const ev_ssize_t nCopied = evbuffer_copyout(pInput, request.m_strBody.data(), nLength);
+			if ((nCopied < 0) || (static_cast<std::size_t>(nCopied) != nLength))
+			{
+				request.m_strBody.clear();
+				return HTTP_BADREQUEST;
+			}
+		}
+		return 0;
+	}
+
+	void CHttpServer::OnRequest(struct evhttp_request* pRequest)
+	{
+		CHttpRequest request;
+		const int nRet = ParseRequest(pRequest, request);
+		if (0 != nRet)
+		{
+			evhttp_send_reply(pRequest, nRet, nullptr, nullptr);
+			return;
 		}
 
-		auto state = std::make_shared<CHttpResponse::State>();
-		state->base = GetNet();
-		state->request = pRequest;
-		state->server = this;
-		CHttpResponse response(state);
-		auto iter = m_handlers.find(RouteKey(request.m_method, request.m_strPath));
-		if (m_handlers.end() != iter)
+		const std::string strRouteKey = FmtRouteKey(request.m_method, request.m_strPath);
+		const auto mIter = m_handlers.find(strRouteKey);
+		if (m_handlers.end() != mIter)
 		{
-			iter->second(request, response);
-			if (!response.IsHandled())
+			auto* pThreadPool = ThreadPoolPtr;
+			if (nullptr == pThreadPool)
 			{
-				response.SetStatus(HTTP_INTERNAL);
-				response.Send("Internal Server Error");
+				evhttp_send_reply(pRequest, HTTP_SERVUNAVAIL, nullptr, nullptr);
+				return;
 			}
+
+			//确定要异步处理后才取得所有权。
+			evhttp_request_own(pRequest);
+			event_base* pBase = GetNet();
+			_TyHandler handler = mIter->second;
+			pThreadPool->PushTask(task_priority::em_normal, 0, [pBase, pRequest, handler = std::move(handler), request = std::move(request)]() mutable
+				{
+					std::unique_ptr<CHttpResponseData> response;
+					try
+					{
+						response = handler(request);
+						if (nullptr == response)
+						{
+							response = std::make_unique<CHttpResponseData>();
+							response->m_nStatus = HTTP_INTERNAL;
+							response->m_strBody = "Internal Server Error";
+						}
+					}
+					catch (...)
+					{
+						response = std::make_unique<CHttpResponseData>();
+						response->m_nStatus = HTTP_INTERNAL;
+						response->m_strBody = "Internal Server Error";
+					}
+
+					if (!PostAsyncResponse(pBase, pRequest, std::move(response)))
+					{
+						evhttp_request_free(pRequest);
+					}
+				});
 			return;
 		}
 
@@ -587,8 +692,7 @@ namespace net
 				break;
 			}
 		}
-		response.SetStatus(bPathExists ? HTTP_BADMETHOD : HTTP_NOTFOUND);
-		response.Send(bPathExists ? "Method Not Allowed" : "Not Found");
+		evhttp_send_reply(pRequest, bPathExists ? HTTP_BADMETHOD : HTTP_NOTFOUND, nullptr, nullptr);
 	}
 
 	void CHttpServer::RegisterStream(const std::shared_ptr<CHttpStream::State>& state)

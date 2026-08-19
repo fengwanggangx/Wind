@@ -168,5 +168,14 @@
     <ClInclude Include="network\CHttpServer.h">
       <Filter>network</Filter>
     </ClInclude>
+    <ClInclude Include="common\container.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\traits.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\container_traits.h">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

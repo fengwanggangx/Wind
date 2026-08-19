@@ -30,6 +30,15 @@ struct Typer<_Ty, std::enable_if_t<IsContainer<_Ty>>>
 
 namespace utility
 {
+	std::string lower(const std::string& strVal)
+	{
+		std::transform(strVal.begin(), strVal.end(), strVal.begin(), [](unsigned char ch)
+			{
+				return static_cast<char>(std::tolower(ch));
+			});
+		return strVal;
+	}
+
 	size_t stringsplit(const std::string& s, std::vector<std::string>& vc, char delim, bool bEmpty = false);
 	bool s2n(const std::string& str, IsNumber auto& val)
 	{
