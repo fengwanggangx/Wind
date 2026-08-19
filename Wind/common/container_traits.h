@@ -3,6 +3,9 @@
 #define _CONTAINER_TRAITS_H_
 #include <set>
 #include <deque>
+#include <map>
+#include <list>
+#include <unordered_set>
 
 /*
 //SFINAE 版本，非正式的采用编译重载决议的取巧实现，不同编译器可能行为表现不一致，不推荐

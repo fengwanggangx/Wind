@@ -81,7 +81,7 @@ namespace net
 		bool bRet = FmtAddress(svr, m_nPort);
 		struct evconnlistener* pListener = evconnlistener_new_bind(
 			GetNet(), 
-			CNetServer::ConnAccept_Callback,
+			CTcpServer::ConnAccept_Callback,
 			this,
 			LEV_OPT_CLOSE_ON_FREE | LEV_OPT_REUSEABLE,
 			-1,

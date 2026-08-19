@@ -13,6 +13,7 @@
 #include <utility>
 #include "../common/defines.h"
 #include "../common/utility.h"
+#include "../common/container.h"
 
 namespace
 {
@@ -385,14 +386,12 @@ namespace net
 
 	std::string CHttpRequest::GetHeader(const std::string& strName) const
 	{
-		auto iter = m_headers.find(utility::lower(strName));
-		return (m_headers.end() == iter) ? std::string() : iter->second;
+		return container::vfind(m_headers, utility::lower(strName));
 	}
 
 	std::string CHttpRequest::GetQuery(const std::string& strName) const
 	{
-		auto iter = m_queries.find(strName);
-		return (m_queries.end() == iter) ? std::string() : iter->second;
+		return container::vfind(m_queries, strName);
 	}
 
 	CHttpStream::CHttpStream(std::shared_ptr<State> state) : m_state(std::move(state)) {}

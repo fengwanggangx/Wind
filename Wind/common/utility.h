@@ -4,6 +4,7 @@
 #include <vector>
 #include <string.h>
 #include <charconv>
+#include <algorithm>
 
 template <typename _Ty>
 concept IsNumber = std::is_arithmetic_v<_Ty>;
@@ -30,7 +31,7 @@ struct Typer<_Ty, std::enable_if_t<IsContainer<_Ty>>>
 
 namespace utility
 {
-	std::string lower(const std::string& strVal)
+	std::string lower(std::string strVal)
 	{
 		std::transform(strVal.begin(), strVal.end(), strVal.begin(), [](unsigned char ch)
 			{
