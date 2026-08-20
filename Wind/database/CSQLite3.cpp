@@ -30,7 +30,8 @@ namespace db
 
 	const _TyTableInfo& CSQLite3::ExecQuery(const std::string& strSQL)
 	{
-		return {};
+		static _TyTableInfo t;
+		return t;
 	}
 
 	bool CSQLite3::BeginTransaction()

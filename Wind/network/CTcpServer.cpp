@@ -78,7 +78,10 @@ namespace net
 			return -1;
 		}
 		struct sockaddr_in svr;
-		bool bRet = FmtAddress(svr, m_nPort);
+		if (!FmtAddress(svr, m_nPort))
+		{
+			return -1;
+		}
 		struct evconnlistener* pListener = evconnlistener_new_bind(
 			GetNet(), 
 			CTcpServer::ConnAccept_Callback,
@@ -88,6 +91,10 @@ namespace net
 			(struct sockaddr*)&svr, 
 			sizeof(svr));
 
+		if (nullptr == pListener)
+		{
+			return -1;
+		}
 		//evconnlistener_set_error_cb(pListener, ListenerErrorCallback);
 		return 0;
 	}

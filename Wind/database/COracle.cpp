@@ -30,7 +30,8 @@ namespace db
 
 	const _TyTableInfo& COracle::ExecQuery(const std::string& strSQL)
 	{
-		return {};
+		static _TyTableInfo t;
+		return t;
 	}
 
 	bool COracle::BeginTransaction()
