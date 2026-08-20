@@ -131,9 +131,11 @@ namespace
 			return;
 		}
 
-		auto Deletor = [](evhttp_request* pRequest) { evhttp_request_free(pRequest); };
-		std::unique_ptr<evhttp_request, decltype(Deletor)> request(context->m_pRequest, Deletor);
-		evkeyvalq* pHeaders = evhttp_request_get_output_headers(request.get());
+		// evhttp_send_reply() 会在响应数据写完后通过 evhttp_send_done()
+		// 自动释放 request。这里不能再用 unique_ptr/evhttp_request_free()，
+		// 否则会在事件循环中形成二次释放。
+		evhttp_request* pRequest = context->m_pRequest;
+		evkeyvalq* pHeaders = evhttp_request_get_output_headers(pRequest);
 		for (const auto& item : context->m_response->m_headers)
 		{
 			evhttp_add_header(pHeaders, item.first.c_str(), item.second.c_str());
@@ -144,7 +146,7 @@ namespace
 		{
 			evbuffer_add(pBuffer, context->m_response->m_strBody.data(), context->m_response->m_strBody.size());
 		}
-		evhttp_send_reply(request.get(), context->m_response->m_nStatus, nullptr, pBuffer);
+		evhttp_send_reply(pRequest, context->m_response->m_nStatus, nullptr, pBuffer);
 		if (nullptr != pBuffer)
 		{
 			evbuffer_free(pBuffer);
@@ -318,7 +320,7 @@ namespace net
 			if (nullptr != pRequest)
 			{
 				evhttp_send_reply_end(pRequest);
-				evhttp_request_free(pRequest);
+				// evhttp_send_reply_end() 完成发送后由 libevent 释放 request。
 			}
 			if (func)
 			{
@@ -525,7 +527,6 @@ namespace net
 	CHttpServer::~CHttpServer()
 	{ 
 		Release();
-
 	}
 
 	int CHttpServer::Initialize()

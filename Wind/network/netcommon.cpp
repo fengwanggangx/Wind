@@ -32,7 +32,7 @@ namespace net
 #else
 		if (evthread_use_pthreads() != 0) {
 			std::cerr << "Failed to enable pthreads support" << std::endl;
-			return -1;
+			return false;
 		}
 #endif
 		return true;
