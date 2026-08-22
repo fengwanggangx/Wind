@@ -87,7 +87,11 @@ void HttpTest()
 
 int main()
 {
-	BootLoader();
+	if (0 != BootLoader())
+	{
+		return -1;
+	}
+
 	HttpTest();
 	return 0;
 }
