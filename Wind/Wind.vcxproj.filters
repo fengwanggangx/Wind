@@ -23,7 +23,7 @@
     <ClCompile Include="network\CNetTools.cpp">
       <Filter>network</Filter>
     </ClCompile>
-    <ClCompile Include="network\netcommon.cpp">
+    <ClCompile Include="network\common_net.cpp">
       <Filter>network</Filter>
     </ClCompile>
     <ClCompile Include="request\request.cpp">
@@ -47,7 +47,10 @@
     <ClCompile Include="database\CSQLite3.cpp">
       <Filter>database</Filter>
     </ClCompile>
-    <ClCompile Include="database\dbcommon.cpp">
+    <ClCompile Include="database\common_db.cpp">
+      <Filter>database</Filter>
+    </ClCompile>
+    <ClCompile Include="database\IDataBase.cpp">
       <Filter>database</Filter>
     </ClCompile>
     <ClCompile Include="basic\CDistributor.cpp">
@@ -67,6 +70,9 @@
     </ClCompile>
     <ClCompile Include="network\CHttpServer.cpp">
       <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="system\CBootLoader.cpp">
+      <Filter>system</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +96,9 @@
     </Filter>
     <Filter Include="thread">
       <UniqueIdentifier>{9d251405-776e-4f22-a98a-a3bb136d59a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system">
+      <UniqueIdentifier>{0cd3262f-a988-4777-b436-7b5541db40ab}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -123,7 +132,7 @@
     <ClInclude Include="network\CNetTools.h">
       <Filter>network</Filter>
     </ClInclude>
-    <ClInclude Include="network\netcommon.h">
+    <ClInclude Include="network\common_net.h">
       <Filter>network</Filter>
     </ClInclude>
     <ClInclude Include="request\request.h">
@@ -150,7 +159,7 @@
     <ClInclude Include="database\IDataBase.h">
       <Filter>database</Filter>
     </ClInclude>
-    <ClInclude Include="database\dbcommon.h">
+    <ClInclude Include="database\common_db.h">
       <Filter>database</Filter>
     </ClInclude>
     <ClInclude Include="common\defines.h">
@@ -176,6 +185,9 @@
     </ClInclude>
     <ClInclude Include="common\container_traits.h">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="system\CBootLoader.h">
+      <Filter>system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

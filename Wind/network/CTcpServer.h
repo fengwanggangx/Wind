@@ -5,6 +5,7 @@
 #include <vector>
 #include <functional>
 #include "CNet.h"
+#include "common_net.h"
 #include "CNetRouter.h"
 template<bool bAsyn, class _Ty, class _TyHandler>
 class CDistributor;
@@ -15,12 +16,11 @@ namespace net
 {
 	class CTcpServer final : public CNet, public CNetRouter<CTcpServer>
 	{
-		using _TyData = std::unique_ptr<CRequest>;
-		using _TyHandler = std::function<int(const _TyData&)>;
-		using _TyDistributor = CDistributor<true, std::vector<_TyData>, _TyHandler>;
+		using _TyHandler = std::function<int(const CNetEvent&)>;
+		using _TyDistributor = CDistributor<true, std::vector<CNetEvent>, _TyHandler>;
 	public:
 		explicit CTcpServer(int nPort);
-		~CTcpServer() = default;
+		~CTcpServer() override;
 
 	public:
 		void OnListenerError(struct evconnlistener* pListener);
@@ -30,7 +30,7 @@ namespace net
 		void RegisterHandler(_TyHandler&& func);
 
 	public:
-		void OnConnAccept(struct evconnlistener* pListener, evutil_socket_t fd, struct sockaddr* pAddr, int nLength) override;
+		void OnConnAccept(struct evconnlistener* pListener, _TyConnectionId id, struct sockaddr* pAddr, int nLength) override;
 		std::size_t OnRead(struct bufferevent* pEvent) override;
 		void OnEvent(struct bufferevent* pEvent, short events) override;
 

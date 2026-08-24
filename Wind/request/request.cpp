@@ -1,28 +1,27 @@
 #include "request.pb.h"
 #include "request.h"
 
-
-static request::RequestType ToProtoType(CRequest::Type type) 
+static request::RequestType ToProtoType(CRequest::Type type)
 {
-	static std::unordered_map<CRequest::Type, request::RequestType> s_map
+	switch (type)
 	{
-		{CRequest::Type::UNKNOWN, request::RequestType::UNKNOWN},
-		{CRequest::Type::QUERY_AUTH, request::RequestType::QUERY_AUTH},
-		{CRequest::Type::QUERY_USERINFO, request::RequestType::QUERY_USERINFO},
-		{CRequest::Type::UPDATE_AUTH, request::RequestType::UPDATE_AUTH},
-		{CRequest::Type::UPDAT_PRODUCT, request::RequestType::UPDAT_PRODUCT}
-	};
-	const auto& mIter = s_map.find(type);
-	return s_map.end() == mIter ? request::RequestType::UNKNOWN : mIter->second;
+	case CRequest::Type::QUERY_AUTH:
+		return request::RequestType::QUERY_AUTH;
+	case CRequest::Type::QUERY_USERINFO:
+		return request::RequestType::QUERY_USERINFO;
+	case CRequest::Type::UPDATE_AUTH:
+		return request::RequestType::UPDATE_AUTH;
+	case CRequest::Type::UPDAT_PRODUCT:
+		return request::RequestType::UPDAT_PRODUCT;
+	case CRequest::Type::UNKNOWN:
+	default:
+		return request::RequestType::UNKNOWN;
+	}
 }
 
-
-google::protobuf::Arena* CRequest::m_arena = new google::protobuf::Arena();
-
-CRequest::CRequest() 
+CRequest::CRequest() : m_arena(std::make_unique<google::protobuf::Arena>())
 {
-	google::protobuf::Arena* px = new google::protobuf::Arena();
-	m_data = google::protobuf::Arena::CreateMessage<request::RequestData>(px);
+	m_data = google::protobuf::Arena::CreateMessage<request::RequestData>(m_arena.get());
 }
 
 CRequest::~CRequest()
@@ -32,7 +31,7 @@ CRequest::~CRequest()
 
 bool CRequest::Serialize(std::string* output) const
 {
-	if (nullptr == m_data)
+	if (output == nullptr)
 	{
 		return false;
 	}
@@ -46,6 +45,16 @@ bool CRequest::Deserialize(const std::string& data)
 		return false;
 	}
 	return m_data->ParseFromString(data);
+}
+
+void CRequest::SetConnectionId(net::_TyConnectionId id)
+{
+	m_connection_id = id;
+}
+
+net::_TyConnectionId CRequest::GetConnectionId() const
+{
+	return m_connection_id;
 }
 
 void CRequest::SetType(CRequest::Type type)

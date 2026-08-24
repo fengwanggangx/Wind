@@ -6,10 +6,9 @@
 #include <memory>
 #include <vector>
 #include <functional>
-#include <mutex>
-#include "dbcommon.h"
+#include <shared_mutex>
+#include "common_db.h"
 #include "../common/defines.h"
-
 
 namespace db
 {
@@ -19,22 +18,23 @@ namespace db
 	using _TyDBReleasor = std::function<void(IDataBase*)>;
 	using _TyDBPtr = std::unique_ptr<IDataBase, _TyDBReleasor>;
 
-	using _TyPool = std::vector<IDataBase*>;
+	struct CPoolState;
 
 	class CODBC final
 	{
-		DECLARE_ONLY_CUSTOM_CONSTRUCT(CODBC)
-	public:
-		int Connect(db::database ty, const CConnectParam& param, int nCount);
-		int Close();
-		int Close(db::database ty);
+			DECLARE_ONLY_CUSTOM_CONSTRUCT(CODBC)
+		public:
+			int Connect(db::em_database t, const CConnectParam& param, std::size_t nCount);
+			int Close();
+			int Close(db::em_database t);
 
-		_TyDBPtr GetADataBase(db::database ty);
-	private:
-		std::mutex m_mtx;
-		std::unordered_map<db::database, _TyPool> m_database;
-		_TyDBReleasor m_Releasor{ nullptr };
+			_TyDBPtr GetADataBase(db::em_database t);
+			std::size_t Count(db::em_database t) const;
+
+		private:
+			mutable std::shared_mutex m_mtx_pool;
+			std::unordered_map<em_database, std::vector<std::unique_ptr<IDataBase>>> m_pool;
 	};
 
-}
+} // namespace db
 #endif

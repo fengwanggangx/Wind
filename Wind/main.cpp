@@ -3,39 +3,22 @@
 #include <string>
 #include <utility>
 #include "./network/CTcpServer.h"
-#include "./database/CDBEngine.h"
-#include "./business/RequestCenter.h"
 #include "./network/CHttpServer.h"
-#include "./network/netcommon.h"
+#include "./network/common_net.h"
+#include "./system/CBootLoader.h"
 
-int BootLoader()
-{
-	// 必须在 CHttpServer 构造、event_base 创建之前调用。
-	net::EnvInitialize();
-	if (!net::IsThreadEnable())
-	{
-		std::cerr << "Failed to enable libevent thread support" << std::endl;
-		return -1;
-	}
-	return 0;
-}
 
-net::CTcpServer* pTcpServer = nullptr;
-void TcpTest()
+void TcpTest(net::CTcpServer* pTcpServer)
 {
-	if (nullptr != pTcpServer)
+	if (nullptr == pTcpServer)
 	{
 		return;
 	}
-	pTcpServer = new net::CTcpServer(9877);
-	pTcpServer->RegisterHandler(Query);
-	pTcpServer->RegisterHandler(Update);
-	pTcpServer->RegisterHandler(Auth);
+// 	pTcpServer->RegisterHandler(Query);
+// 	pTcpServer->RegisterHandler(Update);
+// 	pTcpServer->RegisterHandler(Auth);
 
-	pTcpServer->Initialize();
-	pTcpServer->Start(true);
 }
-
 
 std::unique_ptr<net::CHttpResponseData> MakeResponse(int nStatus, std::string strBody, const std::string& strContentType = "text/plain; charset=utf-8")
 {
@@ -46,14 +29,14 @@ std::unique_ptr<net::CHttpResponseData> MakeResponse(int nStatus, std::string st
 	return response;
 }
 
-net::CHttpServer* pHttpServer = nullptr;
-void HttpTest()
+
+void HttpTest(net::CHttpServer* pHttpServer)
 {
-	if (nullptr != pHttpServer)
+	if (nullptr == pHttpServer)
 	{
 		return;
 	}
-	pHttpServer = new net::CHttpServer(8080);
+
 	// GET http://server-ip:8080/health
 	pHttpServer->RegisterHandler(net::HttpMethod::GET, "/health", [](const net::CHttpRequest&) {
 			return MakeResponse(200, R"({"status":"ok"})", "application/json; charset=utf-8");
@@ -75,23 +58,24 @@ void HttpTest()
 			return MakeResponse(200, request.GetBody(),
 				strContentType.empty() ? "application/octet-stream" : strContentType);
 		});
-
-	const int nRet = pHttpServer->Initialize();
-	if (0 != nRet)
-	{
-		std::cerr << "CHttpServer initialize failed, error=" << nRet << std::endl;
-		return;
-	}
-	pHttpServer->Start(true);
 }
 
 int main()
 {
-	if (0 != BootLoader())
+	CBootLoader boot;
+	if (!boot.Initialize())
 	{
-		return -1;
+		std::cerr << boot.GetLastError() << '\n';
+		return boot.GetErrorCode();
 	}
+	TcpTest(&boot.GetTcpServer());
+	HttpTest(&boot.GetHttpServer());
 
-	HttpTest();
+	if (!boot.Run())
+	{
+		std::cerr << boot.GetLastError() << '\n';
+		return boot.GetErrorCode();
+	}
+	boot.Finalize();
 	return 0;
 }

@@ -95,9 +95,10 @@
     <ClCompile Include="database\CDBEngine.cpp" />
     <ClCompile Include="database\CMySQL.cpp" />
     <ClCompile Include="database\CODBC.cpp" />
-    <ClCompile Include="database\dbcommon.cpp" />
+    <ClCompile Include="database\common_db.cpp" />
     <ClCompile Include="database\COracle.cpp" />
     <ClCompile Include="database\CSQLite3.cpp" />
+    <ClCompile Include="database\IDataBase.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="network\CHttpServer.cpp" />
     <ClCompile Include="network\CNet.cpp" />
@@ -105,10 +106,11 @@
     <ClCompile Include="network\CNetPool.cpp" />
     <ClCompile Include="network\CTcpServer.cpp" />
     <ClCompile Include="network\CNetTools.cpp" />
-    <ClCompile Include="network\netcommon.cpp" />
+    <ClCompile Include="network\common_net.cpp" />
     <ClCompile Include="request\request.cpp" />
     <ClCompile Include="request\request.pb.cc" />
     <ClCompile Include="thread\CThreadPool.cpp" />
+    <ClCompile Include="system\CBootLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basic\CDistributor.h" />
@@ -124,7 +126,7 @@
     <ClInclude Include="database\CDBEngine.h" />
     <ClInclude Include="database\CMySQL.h" />
     <ClInclude Include="database\CODBC.h" />
-    <ClInclude Include="database\dbcommon.h" />
+    <ClInclude Include="database\common_db.h" />
     <ClInclude Include="database\COracle.h" />
     <ClInclude Include="database\CSQLite3.h" />
     <ClInclude Include="database\IDataBase.h" />
@@ -135,10 +137,11 @@
     <ClInclude Include="network\CNetRouter.h" />
     <ClInclude Include="network\CTcpServer.h" />
     <ClInclude Include="network\CNetTools.h" />
-    <ClInclude Include="network\netcommon.h" />
+    <ClInclude Include="network\common_net.h" />
     <ClInclude Include="request\request.h" />
     <ClInclude Include="request\request.pb.h" />
     <ClInclude Include="thread\CThreadPool.h" />
+    <ClInclude Include="system\CBootLoader.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

@@ -3,54 +3,67 @@
 
 #include <string>
 #include <unordered_map>
-#include <memory> 
+#include <memory>
+#include "../network/common_net.h"
 
-namespace request {
+namespace request
+{
 	class RequestData;
 }
 
-namespace google {
-	namespace protobuf {
+namespace google
+{
+	namespace protobuf
+	{
 		class Arena;
 	}
-}
-
+} // namespace google
 
 class CRequest
 {
-public:
-	CRequest();
-	~CRequest();
+	public:
+		CRequest();
+		~CRequest();
+		CRequest(const CRequest&) = delete;
+		CRequest& operator=(const CRequest&) = delete;
+		CRequest(CRequest&&) = delete;
+		CRequest& operator=(CRequest&&) = delete;
 
-	enum class Type {
-		UNKNOWN = 0,
-		QUERY_AUTH = 1,
-		QUERY_USERINFO = 2,
-		UPDATE_AUTH = 3,
-		UPDAT_PRODUCT = 4
-	};
+		enum class Type
+		{
+			UNKNOWN = 0,
+			QUERY_AUTH = 1,
+			QUERY_USERINFO = 2,
+			UPDATE_AUTH = 3,
+			UPDAT_PRODUCT = 4
+		};
 
+	public:
+		CRequest::Type GetType() const;
+		void SetType(CRequest::Type type);
 
-public:
-	void SetType(CRequest::Type type);
-	void SetCmd(const std::string& strCmd);
-	void SetExtraData(const std::string& strKey, const std::string& strVal);
-	void SetReturnData(const std::string& strKey, const std::string& strVal);
+		std::string GetCmd() const;
+		void SetCmd(const std::string& strCmd);
 
-	CRequest::Type GetType() const;
-	std::string GetCmd() const;
-	std::string GetExtraData(const std::string& strKey) const;
-	std::string GetReturnData(const std::string& strKey) const;
-	std::unordered_map<std::string, std::string> GetExtraData() const;
-	std::unordered_map<std::string, std::string> GetReturnData() const;
+		std::string GetExtraData(const std::string& strKey) const;
+		std::unordered_map<std::string, std::string> GetExtraData() const;
+		void SetExtraData(const std::string& strKey, const std::string& strVal);
 
-public:
-	bool Serialize(std::string* output) const;
-	bool Deserialize(const std::string& data);
+		std::string GetReturnData(const std::string& strKey) const;
+		std::unordered_map<std::string, std::string> GetReturnData() const;
+		void SetReturnData(const std::string& strKey, const std::string& strVal);
 
-private:
-	request::RequestData* m_data{ nullptr };
-	static google::protobuf::Arena* m_arena;
+		net::_TyConnectionId GetConnectionId() const;
+		void SetConnectionId(net::_TyConnectionId id);
+
+	public:
+		bool Serialize(std::string* output) const;
+		bool Deserialize(const std::string& data);
+
+	private:
+		std::unique_ptr<google::protobuf::Arena> m_arena;
+		request::RequestData* m_data{nullptr};
+		net::_TyConnectionId m_connection_id{-1};
 };
 
 #endif

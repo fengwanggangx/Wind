@@ -1,23 +1,37 @@
 #include "CNet.h"
-#include "netcommon.h"
+#include "common_net.h"
 #include <iostream>
 #include <event2/thread.h>
 #include <arpa/inet.h>
 #include <string.h>
 #include <event2/util.h>
+#include "../request/request.h"
 
 namespace net
 {
+	CNetEvent::CNetEvent(em_event event) : m_event(event)
+	{
+	}
 
-	std::string GetErrorStringx(int errorCode) {
+	CNetEvent::CNetEvent(em_event event, _TyConnectionId id) : m_event(event), m_connection_id(id)
+	{
+	}
+
+	CNetEvent::~CNetEvent() = default;
+	CNetEvent::CNetEvent(CNetEvent&&) noexcept = default;
+	CNetEvent& CNetEvent::operator=(CNetEvent&&) noexcept = default;
+
+	std::string GetErrorStringx(int errorCode)
+	{
 #ifdef _MSC_VER
 		char buffer[256];
-		if (strerror_s(buffer, sizeof(buffer), errorCode) != 0) {
+		if (strerror_s(buffer, sizeof(buffer), errorCode) != 0)
+		{
 			return "Unknown error";
 		}
 		return buffer;
 #else
-		return std::to_string(errorCode);	
+		return std::to_string(errorCode);
 #endif
 	}
 
@@ -30,7 +44,8 @@ namespace net
 			return false;
 		}
 #else
-		if (evthread_use_pthreads() != 0) {
+		if (evthread_use_pthreads() != 0)
+		{
 			std::cerr << "Failed to enable pthreads support" << std::endl;
 			return false;
 		}
@@ -38,7 +53,7 @@ namespace net
 		return true;
 	}
 
-	std::atomic_bool bThreadEnable{ false };
+	std::atomic_bool bThreadEnable{false};
 
 	void EnvInitialize()
 	{
@@ -54,7 +69,7 @@ namespace net
 		return bThreadEnable.load();
 	}
 
-	bool FmtAddress(struct ::sockaddr_in& addr, int nPort, const std::string& strAddr/* = ""*/)
+	bool FmtAddress(struct ::sockaddr_in& addr, int nPort, const std::string& strAddr /* = ""*/)
 	{
 		memset(&addr, 0, sizeof(addr));
 		addr.sin_family = AF_INET;
@@ -122,7 +137,7 @@ namespace net
 
 		if (AF_INET6 == addr.ss_family)
 		{
-			char buffer[INET6_ADDRSTRLEN] = { 0 };
+			char buffer[INET6_ADDRSTRLEN] = {0};
 			const auto* pAddr = reinterpret_cast<const struct sockaddr_in6*>(&addr);
 			if (!inet_ntop(AF_INET6, &pAddr->sin6_addr, buffer, INET6_ADDRSTRLEN))
 			{
@@ -136,38 +151,36 @@ namespace net
 		return "unkown sa_family";
 	}
 
-
 	bool CheckSockAddress(struct sockaddr* pAddr, int nLength)
 	{
 		if (nullptr == pAddr)
 		{
 			return false;
 		}
-		//IPv4地址
-		if ((pAddr->sa_family == AF_INET) && (nLength == sizeof(struct sockaddr_in))) 
+		// IPv4地址
+		if ((pAddr->sa_family == AF_INET) && (nLength == sizeof(struct sockaddr_in)))
 		{
 			return true;
 		}
-		
-		//IPv6地址
-		if (pAddr->sa_family == AF_INET6 && nLength == sizeof(struct sockaddr_in6)) 
+
+		// IPv6地址
+		if (pAddr->sa_family == AF_INET6 && nLength == sizeof(struct sockaddr_in6))
 		{
 			return true;
 		}
 		return false;
 	}
 
-
 	bool SockAddrSafeCopy(struct sockaddr& dst, const struct sockaddr& src)
 	{
 		memset(&dst, 0, sizeof(dst));
-		if (src.sa_family == AF_INET) 
+		if (src.sa_family == AF_INET)
 		{
 			memcpy(&dst, &src, sizeof(struct sockaddr_in));
 			return true;
 		}
-		
-		if (src.sa_family == AF_INET6) 
+
+		if (src.sa_family == AF_INET6)
 		{
 			memcpy(&dst, &src, sizeof(struct sockaddr_in6));
 			return true;
@@ -194,4 +207,4 @@ namespace net
 		return false;
 	}
 
-}
+} // namespace net

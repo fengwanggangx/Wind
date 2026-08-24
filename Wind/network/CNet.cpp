@@ -74,4 +74,4 @@ namespace net
 
 		m_bRunning.store(false);
 	}
-}
+} // namespace net

@@ -1,123 +1,205 @@
 #include "CODBC.h"
-#include <unordered_map>
-#include "CSQLite3.h"
 #include "CMySQL.h"
 #include "COracle.h"
-
-
+#include "CSQLite3.h"
+#include <mutex>
+#include <utility>
 
 namespace db
 {
-	IDataBase* CreateDB(db::database ty)
+	namespace
 	{
-		switch (ty)
+		IDataBase* CreateDB(em_database t)
 		{
-		case db::database::sqlite:
-			return new CSQLite3();
-		case db::database::mysql:
-			return new CMySQL();
-		case db::database::oracle:
-			return new COracle();
-		default:
-			break;
+			switch (t)
+			{
+			case em_database::sqlite:
+			{
+				return new CSQLite3();
+			}
+			case em_database::mysql:
+			{
+				return new CMySQL();
+			}
+			case em_database::oracle:
+			{
+				return new COracle();
+			}
+			default:
+			{
+				return nullptr;
+			}
+			}
 		}
-		return nullptr;
+
+		int CloseDataBases(std::vector<std::unique_ptr<IDataBase>>& dbs)
+		{
+			int nResult = 0;
+			for (const auto& v : dbs)
+			{
+				if ((nullptr != v) && (0 != v->Close()))
+				{
+					nResult = -1;
+				}
+			}
+			return nResult;
+		}
 	}
 
 	CODBC::CODBC()
 	{
-		m_Releasor = [this](IDataBase* pDB)
-			{
-				if (nullptr != pDB)
-				{
-					std::lock_guard<std::mutex> lck(m_mtx);
-					pDB->m_status = status::free;
-				}
-
-			};
 	}
 
 	CODBC::~CODBC()
 	{
-
+		Close();
 	}
 
-	int CODBC::Connect(db::database ty, const CConnectParam& param, int nCount)
+	int CODBC::Connect(em_database t, const CConnectParam& param, std::size_t nCount)
 	{
-		std::lock_guard<std::mutex> lck(m_mtx);
-		auto& pool = m_database[ty];
-		for (int i = 0; i < nCount; ++i)
+		if ((em_database::unknown == t) || (0 >= nCount))
 		{
-			IDataBase* pDB = CreateDB(ty);
-			pDB->Connect(param);
-			pool.emplace_back(pDB);
+			return -1;
+		}
+
+		std::vector<std::unique_ptr<IDataBase>> dbs;
+		dbs.reserve(nCount);
+
+		for (std::size_t i = 0; i < nCount; ++i)
+		{
+			std::unique_ptr<IDataBase> db(CreateDB(t));
+			if ((nullptr == db) || (0 != db->Connect(param)))
+			{
+				CloseDataBases(dbs);
+				return -1;
+			}
+			dbs.emplace_back(std::move(db));
+		}
+
+		std::unique_lock<std::shared_mutex> lck(m_mtx_pool);
+		auto& pool = m_pool[t];
+		pool.reserve(pool.size() + dbs.size());
+		for (auto& v : dbs)
+		{
+			pool.emplace_back(std::move(v));
 		}
 		return 0;
 	}
 
 	int CODBC::Close()
 	{
-		std::lock_guard<std::mutex> lck(m_mtx);
-		for (const auto& data : m_database)
+		std::vector<std::unique_ptr<IDataBase>> dbs;
+		bool bBusy = false;
 		{
-			for (const auto& item : data.second)
+			std::unique_lock<std::shared_mutex> lock(m_mtx_pool);
+			for (auto& item : m_pool)
 			{
-				if (nullptr != item)
+				auto& pool = item.second;
+				for (auto vIter = pool.begin(); vIter != pool.end();)
 				{
-					item->Close();
-					delete item;
+					auto& v = *vIter;
+					if ((nullptr != v) && (status::busy == v->m_status))
+					{
+						bBusy = true;
+						++vIter;
+						continue;
+					}
+					dbs.emplace_back(std::move(v));
+					vIter = pool.erase(vIter);
+				}
+			}
+			for (auto mIter = m_pool.begin(); mIter != m_pool.end();)
+			{
+				if (mIter->second.empty())
+				{
+					mIter = m_pool.erase(mIter);
+				}
+				else
+				{
+					++mIter;
 				}
 			}
 		}
-		m_database.clear();
-		return 0;
+
+		int nResult = CloseDataBases(dbs);
+		return bBusy ? -1 : nResult;
 	}
 
-	int CODBC::Close(db::database ty)
+	int CODBC::Close(em_database t)
 	{
-		std::lock_guard<std::mutex> lck(m_mtx);
-		const auto& mIter = m_database.find(ty);
-		if (m_database.end() == mIter)
+		std::vector<std::unique_ptr<IDataBase>> dbs;
+		bool bBusy = false;
 		{
-			return 0;
-		}
-		for (const auto& item : mIter->second)
-		{
-			if (nullptr != item)
+			std::unique_lock<std::shared_mutex> lock(m_mtx_pool);
+			auto mIter = m_pool.find(t);
+			if (m_pool.end() == mIter)
 			{
-				item->Close();
-				delete item;
+				return 0;
+			}
+
+			auto& pool = mIter->second;
+			for (auto iter = pool.begin(); iter != pool.end();)
+			{
+				if ((nullptr != *iter) && (status::busy == (*iter)->m_status))
+				{
+					bBusy = true;
+					++iter;
+					continue;
+				}
+				dbs.emplace_back(std::move(*iter));
+				iter = pool.erase(iter);
+			}
+			if (pool.empty())
+			{
+				m_pool.erase(mIter);
 			}
 		}
-		m_database.erase(ty);
-		return 0;
+
+		int nResult = CloseDataBases(dbs);
+		return bBusy ? -1 : nResult;
 	}
 
-	_TyDBPtr CODBC::GetADataBase(db::database ty)
+	_TyDBPtr CODBC::GetADataBase(em_database t)
 	{
-		std::lock_guard<std::mutex> lck(m_mtx);
-		const auto& mIter = m_database.find(ty);
-		if (m_database.end() == mIter)
+		IDataBase* pDB = nullptr;
+		{
+			std::unique_lock<std::shared_mutex> lock(m_mtx_pool);
+			const auto mIter = m_pool.find(t);
+			if (m_pool.end() != mIter)
+			{
+				for (const auto& v : mIter->second)
+				{
+					if ((nullptr != v) && (status::free == v->m_status))
+					{
+						v->m_status = status::busy;
+						pDB = v.get();
+						break;
+					}
+				}
+			}
+		}
+
+		if (nullptr == pDB)
 		{
 			return nullptr;
 		}
 
-		_TyPool& pool = mIter->second;
-		for (const auto& item : pool)
+		_TyDBReleasor releasor = [this](IDataBase* pDatabase)
 		{
-			if (nullptr == item)
+			if (nullptr == pDatabase)
 			{
-				continue;
+				return;
 			}
-			if (item->m_status != db::status::free)
-			{
-				continue;
-			}
-
-			item->m_status = db::status::busy;
-			return _TyDBPtr(item, m_Releasor);
-		}
-		return nullptr;
+			std::unique_lock<std::shared_mutex> lck(m_mtx_pool);
+			pDatabase->m_status = status::free;
+		};
+		return _TyDBPtr(pDB, std::move(releasor));
 	}
 
-}
+	std::size_t CODBC::Count(em_database t) const
+	{
+		std::shared_lock<std::shared_mutex> lck(m_mtx_pool);
+		const auto mIter = m_pool.find(t);
+		return m_pool.end() == mIter ? 0 : mIter->second.size();
+	}
+} // namespace db
