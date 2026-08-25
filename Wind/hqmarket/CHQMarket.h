@@ -35,7 +35,7 @@ class CHQMarket final
 		bool IsAuthenticated() const;
 
 	private:
-		int OnNetEvent(const net::CNetEvent& event);
+		int OnNetEvent(const net::CNetEvent& ev);
 		void OnData(const std::string& data);
 		bool BuildEnvelope(const CRequest& request, hqmarket::market::v1::MarketEnvelope& envelope);
 		bool SendEnvelope(const hqmarket::market::v1::MarketEnvelope& envelope);

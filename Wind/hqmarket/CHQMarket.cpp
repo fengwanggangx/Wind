@@ -101,9 +101,9 @@ bool CHQMarket::Initialize(const std::string& strToken)
 		return false;
 	}
 	m_strToken = strToken;
-	m_pTcpClient->RegisterHandler([this](const net::CNetEvent& event)
+	m_pTcpClient->RegisterHandler([this](const net::CNetEvent& ev)
 	{
-		return OnNetEvent(event);
+		return OnNetEvent(ev);
 	});
 	return true;
 }
@@ -223,20 +223,23 @@ bool CHQMarket::SendEnvelope(const wire::MarketEnvelope& envelope)
 	return (nullptr != m_pTcpClient) && m_pTcpClient->Send(frame.data(), frame.size());
 }
 
-int CHQMarket::OnNetEvent(const net::CNetEvent& event)
+int CHQMarket::OnNetEvent(const net::CNetEvent& ev)
 {
-	if (net::em_event::connected == event.m_event)
+	if (net::em_event::connected == ev.m_event)
 	{
 		m_bConnected = true;
 		SendAuthRequest();
 		return 1;
 	}
-	if (net::em_event::request == event.m_event)
+	if (net::em_event::request == ev.m_event)
 	{
-		OnData(event.m_payload);
+		if (nullptr != ev.m_request)
+		{
+			OnData(ev.m_request->GetReturnData("payload"));
+		}
 		return 1;
 	}
-	if ((net::em_event::disconnected != event.m_event) && (net::em_event::error != event.m_event) && (net::em_event::timeout != event.m_event))
+	if ((net::em_event::disconnected != ev.m_event) && (net::em_event::error != ev.m_event) && (net::em_event::timeout != ev.m_event))
 	{
 		return 0;
 	}
