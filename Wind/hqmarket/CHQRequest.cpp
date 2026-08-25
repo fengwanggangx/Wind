@@ -7,7 +7,7 @@ CRequest* CHQRequest::Create(const std::string& strCommand, std::uint64_t nReque
 	request->SetCmd(strCommand);
 	if (nRequestId != 0)
 	{
-		request->SetExtraData("request_id", std::to_string(nRequestId));
+		request->SetId(nRequestId);
 	}
 	return request;
 }

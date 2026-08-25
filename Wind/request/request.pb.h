@@ -342,6 +342,7 @@ class RequestData final : public ::google::protobuf::Message
     kExtraFieldNumber = 3,
     kRetFieldNumber = 4,
     kCmdFieldNumber = 2,
+    kIdFieldNumber = 5,
     kTypeFieldNumber = 1,
   };
   // map<string, string> extra = 3;
@@ -390,6 +391,16 @@ class RequestData final : public ::google::protobuf::Message
   std::string* _internal_mutable_cmd();
 
   public:
+  // uint64 id = 5;
+  void clear_id() ;
+  ::uint64_t id() const;
+  void set_id(::uint64_t value);
+
+  private:
+  ::uint64_t _internal_id() const;
+  void _internal_set_id(::uint64_t value);
+
+  public:
   // .request.RequestType type = 1;
   void clear_type() ;
   ::request::RequestType type() const;
@@ -405,7 +416,7 @@ class RequestData final : public ::google::protobuf::Message
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      1, 4, 2,
+      3, 5, 2,
       39, 2>
       _table_;
 
@@ -432,6 +443,7 @@ class RequestData final : public ::google::protobuf::Message
                       ::google::protobuf::internal::WireFormatLite::TYPE_STRING>
         ret_;
     ::google::protobuf::internal::ArenaStringPtr cmd_;
+    ::uint64_t id_;
     int type_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -584,6 +596,28 @@ inline ::google::protobuf::Map<std::string, std::string>* RequestData::_internal
 inline ::google::protobuf::Map<std::string, std::string>* RequestData::mutable_ret() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   // @@protoc_insertion_point(field_mutable_map:request.RequestData.ret)
   return _internal_mutable_ret();
+}
+
+// uint64 id = 5;
+inline void RequestData::clear_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.id_ = ::uint64_t{0u};
+}
+inline ::uint64_t RequestData::id() const {
+  // @@protoc_insertion_point(field_get:request.RequestData.id)
+  return _internal_id();
+}
+inline void RequestData::set_id(::uint64_t value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:request.RequestData.id)
+}
+inline ::uint64_t RequestData::_internal_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.id_;
+}
+inline void RequestData::_internal_set_id(::uint64_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.id_ = value;
 }
 
 #ifdef __GNUC__

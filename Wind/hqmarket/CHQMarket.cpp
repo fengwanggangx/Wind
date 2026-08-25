@@ -11,12 +11,12 @@ namespace
 		{
 			return nullptr;
 		}
-		auto result = std::make_unique<CRequest>();
-		if (!result->Deserialize(data))
+		auto req = std::make_unique<CRequest>();
+		if (!req->Deserialize(data))
 		{
 			return nullptr;
 		}
-		return result;
+		return req;
 	}
 
 	bool IsAccepted(const CRequest& request)
@@ -83,10 +83,6 @@ bool CHQMarket::SendRequest(CRequest* pRequest)
 	{
 		return false;
 	}
-	if (request->GetExtraData("request_id").empty())
-	{
-		request->SetExtraData("request_id", std::to_string(++m_nRequestId));
-	}
 	return m_pTcpClient->SendRequest(request.get());
 }
 
@@ -129,7 +125,6 @@ void CHQMarket::SendAuthRequest()
 	request.SetType(CRequest::Type::HQMARKET);
 	request.SetCmd("auth");
 	request.SetExtraData("token", m_strToken);
-	request.SetExtraData("request_id", std::to_string(++m_nRequestId));
 	m_pTcpClient->SendRequest(&request);
 }
 

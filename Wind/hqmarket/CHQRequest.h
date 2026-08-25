@@ -13,7 +13,7 @@ class CHQRequest final
 	public:
 		// 组装实时行情订阅请求。
 		// strInstrument为“证券代码.交易所”格式，例如“600519.SSE”；
-		// strChannel支持“quote”或“depth”；nRequestId为0时由CHQMarket自动生成请求号。
+		// strChannel支持“quote”或“depth”；nRequestId为0时保留CRequest构造时自动生成的请求号。
 		static CRequest* Subscribe(const std::string& strInstrument, const std::string& strChannel, std::uint64_t nRequestId = 0);
 
 		// 组装实时行情退订请求。

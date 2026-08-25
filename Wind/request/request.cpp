@@ -1,5 +1,6 @@
 #include "request.pb.h"
 #include "request.h"
+#include <atomic>
 
 static request::RequestType ToProtoType(CRequest::Type type)
 {
@@ -23,7 +24,9 @@ static request::RequestType ToProtoType(CRequest::Type type)
 
 CRequest::CRequest() : m_arena(std::make_unique<google::protobuf::Arena>())
 {
+	static std::atomic_uint64_t s_id{ 1 };
 	m_data = google::protobuf::Arena::CreateMessage<request::RequestData>(m_arena.get());
+	m_data->set_id(s_id.fetch_add(1, std::memory_order_relaxed));
 }
 
 CRequest::~CRequest()
@@ -57,6 +60,19 @@ void CRequest::SetConnectionId(net::_TyConnectionId id)
 net::_TyConnectionId CRequest::GetConnectionId() const
 {
 	return m_connection_id;
+}
+
+std::uint64_t CRequest::GetId() const
+{
+	return (nullptr == m_data) ? 0 : m_data->id();
+}
+
+void CRequest::SetId(std::uint64_t nId)
+{
+	if (nullptr != m_data)
+	{
+		m_data->set_id(nId);
+	}
 }
 
 void CRequest::SetType(CRequest::Type type)

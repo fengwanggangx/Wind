@@ -45,7 +45,6 @@ class CHQMarket final
 		_TyHandler m_handler;
 		std::atomic_bool m_bConnected{false};
 		std::atomic_bool m_bAuthenticated{false};
-		std::atomic_uint64_t m_nRequestId{0};
 };
 
 #endif

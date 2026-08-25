@@ -1,6 +1,7 @@
 #ifndef __REQUEST_H__
 #define __REQUEST_H__
 
+#include <cstdint>
 #include <string>
 #include <unordered_map>
 #include <memory>
@@ -40,6 +41,9 @@ class CRequest
 		};
 
 	public:
+		std::uint64_t GetId() const;
+		void SetId(std::uint64_t nId);
+
 		CRequest::Type GetType() const;
 		void SetType(CRequest::Type type);
 
