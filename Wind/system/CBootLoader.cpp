@@ -2,6 +2,7 @@
 #include "../network/CHttpServer.h"
 #include "../network/CTcpServer.h"
 #include "../network/CTcpClient.h"
+#include "../ini/CINIHandler.h"
 #include <cstdlib>
 
 namespace net
@@ -26,6 +27,13 @@ bool CBootLoader::Initialize()
 
 	m_nErrorCode = 0;
 	m_strLastError.clear();
+	m_strHQMarketToken = ini::CINIHandler::InstancePtr()->GetValue(ini::cfgs::system, "HQMarket", "token", std::string());
+	if (m_strHQMarketToken.empty())
+	{
+		m_nErrorCode = 2;
+		m_strLastError = "HQMarket token is missing in ini/system.ini [HQMarket] token";
+		return false;
+	}
 	net::EnvInitialize();
 	if (!net::IsThreadEnable())
 	{
@@ -119,6 +127,11 @@ net::CTcpClient& CBootLoader::GetTcpClient()
 net::CHttpServer& CBootLoader::GetHttpServer()
 {
 	return *m_pHttpServer;
+}
+
+const std::string& CBootLoader::GetHQMarketToken() const
+{
+	return m_strHQMarketToken;
 }
 
 const std::string& CBootLoader::GetLastError() const

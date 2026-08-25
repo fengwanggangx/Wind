@@ -99,6 +99,8 @@
     <ClCompile Include="database\COracle.cpp" />
     <ClCompile Include="database\CSQLite3.cpp" />
     <ClCompile Include="database\IDataBase.cpp" />
+	<ClCompile Include="ini\CIniFile.cpp" />
+	<ClCompile Include="ini\CINIHandler.cpp" />
     <ClCompile Include="hqmarket\CHQMarket.cpp" />
     <ClCompile Include="hqmarket\CHQRequest.cpp" />
     <ClCompile Include="hqmarket\v1\market.pb.cc" />
@@ -133,6 +135,8 @@
     <ClInclude Include="database\COracle.h" />
     <ClInclude Include="database\CSQLite3.h" />
     <ClInclude Include="database\IDataBase.h" />
+	<ClInclude Include="ini\CIniFile.h" />
+	<ClInclude Include="ini\CINIHandler.h" />
     <ClInclude Include="hqmarket\CHQMarket.h" />
     <ClInclude Include="hqmarket\CHQRequest.h" />
     <ClInclude Include="hqmarket\v1\market.pb.h" />
@@ -149,6 +153,9 @@
     <ClInclude Include="thread\CThreadPool.h" />
     <ClInclude Include="system\CBootLoader.h" />
   </ItemGroup>
+	<ItemGroup>
+	  <None Include="ini\system.ini" />
+	</ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>./include/debug/libevent;./include/debug/protobuf;./include/debug/mysql;%(ClCompile.AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

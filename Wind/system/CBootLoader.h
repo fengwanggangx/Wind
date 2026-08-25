@@ -26,11 +26,13 @@ class CBootLoader final
 		net::CTcpServer& GetTcpServer();
 		net::CTcpClient& GetTcpClient();
 		net::CHttpServer& GetHttpServer();
+		const std::string& GetHQMarketToken() const;
 		const std::string& GetLastError() const;
 		int GetErrorCode() const;
 
 	private:
 		std::string m_strLastError;
+		std::string m_strHQMarketToken;
 		int m_nErrorCode{ 0 };
 		bool m_bInitialized{ false };
 

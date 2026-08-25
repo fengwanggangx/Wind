@@ -74,6 +74,12 @@
     <ClCompile Include="system\CBootLoader.cpp">
       <Filter>system</Filter>
     </ClCompile>
+	<ClCompile Include="ini\CIniFile.cpp">
+	  <Filter>ini</Filter>
+	</ClCompile>
+	<ClCompile Include="ini\CINIHandler.cpp">
+	  <Filter>ini</Filter>
+	</ClCompile>
 	<ClCompile Include="hqmarket\CHQMarket.cpp">
 	  <Filter>hqmarket</Filter>
 	</ClCompile>
@@ -109,6 +115,9 @@
     <Filter Include="system">
       <UniqueIdentifier>{0cd3262f-a988-4777-b436-7b5541db40ab}</UniqueIdentifier>
     </Filter>
+	<Filter Include="ini">
+	  <UniqueIdentifier>{355a3106-79fa-438c-b69e-c77cb45d6425}</UniqueIdentifier>
+	</Filter>
 	<Filter Include="hqmarket">
 	  <UniqueIdentifier>{a2bcf128-1849-4f30-94f0-7feab82104c1}</UniqueIdentifier>
 	</Filter>
@@ -201,6 +210,12 @@
     <ClInclude Include="system\CBootLoader.h">
       <Filter>system</Filter>
     </ClInclude>
+	<ClInclude Include="ini\CIniFile.h">
+	  <Filter>ini</Filter>
+	</ClInclude>
+	<ClInclude Include="ini\CINIHandler.h">
+	  <Filter>ini</Filter>
+	</ClInclude>
 	<ClInclude Include="hqmarket\CHQMarket.h">
 	  <Filter>hqmarket</Filter>
 	</ClInclude>
@@ -211,4 +226,9 @@
 	  <Filter>hqmarket</Filter>
 	</ClInclude>
   </ItemGroup>
+	<ItemGroup>
+	  <None Include="ini\system.ini">
+		<Filter>ini</Filter>
+	  </None>
+	</ItemGroup>
 </Project>

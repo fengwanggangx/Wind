@@ -251,7 +251,7 @@ ABSL_CONST_INIT extern thread_local ThreadIdentity* thread_identity_ptr;
 // that `CurrentThreadIdentityIfPresent` is declared above so we can exclude
 // this entire inline definition.
 #if !defined(__APPLE__) && !defined(ABSL_BUILD_DLL) && \
-    !defined(ABSL_CONSUME_DLL)
+    !1
 #define ABSL_INTERNAL_INLINE_CURRENT_THREAD_IDENTITY_IF_PRESENT 1
 #endif
 
