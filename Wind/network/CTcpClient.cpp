@@ -81,6 +81,15 @@ namespace net
 		return (nullptr != m_pEvent) && (0 == bufferevent_write(m_pEvent.get(), pData, nLength));
 	}
 
+	bool CTcpClient::SendRequest(CRequest* pRequest)
+	{
+		if ((nullptr == pRequest) || !m_bConnected || (nullptr == m_pEvent))
+		{
+			return false;
+		}
+		return net::utility::SendRequest(pRequest, m_pEvent.get(), m_buffer_send);
+	}
+
 	void CTcpClient::RegisterHandler(_TyHandler&& handler)
 	{
 		if (nullptr != m_dispatcher)

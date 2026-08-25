@@ -86,9 +86,6 @@
 	<ClCompile Include="hqmarket\CHQRequest.cpp">
 	  <Filter>hqmarket</Filter>
 	</ClCompile>
-	<ClCompile Include="hqmarket\v1\market.pb.cc">
-	  <Filter>hqmarket</Filter>
-	</ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -220,9 +217,6 @@
 	  <Filter>hqmarket</Filter>
 	</ClInclude>
 	<ClInclude Include="hqmarket\CHQRequest.h">
-	  <Filter>hqmarket</Filter>
-	</ClInclude>
-	<ClInclude Include="hqmarket\v1\market.pb.h">
 	  <Filter>hqmarket</Filter>
 	</ClInclude>
   </ItemGroup>

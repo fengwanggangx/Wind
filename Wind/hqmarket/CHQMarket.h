@@ -2,13 +2,11 @@
 #define WIND_HQMARKET_CHQMARKET_H
 
 #include "../request/request.h"
-#include "v1/market.pb.h"
 #include <atomic>
 #include <functional>
 #include <memory>
 #include <mutex>
 #include <string>
-#include <vector>
 
 namespace net
 {
@@ -36,18 +34,14 @@ class CHQMarket final
 
 	private:
 		int OnNetEvent(const net::CNetEvent& ev);
-		void OnData(const std::string& data);
-		bool BuildEnvelope(const CRequest& request, hqmarket::market::v1::MarketEnvelope& envelope);
-		bool SendEnvelope(const hqmarket::market::v1::MarketEnvelope& envelope);
-		void HandleEnvelope(const hqmarket::market::v1::MarketEnvelope& envelope);
 		void SendAuthRequest();
+		void HandleRequest(const CRequest& request);
 		void Dispatch(std::unique_ptr<CRequest> request);
 
 	private:
 		mutable std::mutex m_mtx_state;
 		net::CTcpClient* m_pTcpClient{nullptr};
 		std::string m_strToken;
-		std::vector<unsigned char> m_buffer;
 		_TyHandler m_handler;
 		std::atomic_bool m_bConnected{false};
 		std::atomic_bool m_bAuthenticated{false};

@@ -23,14 +23,21 @@ namespace net
 			explicit CTcpClient(const std::string& strAddr, int nPort);
 			~CTcpClient() override;
 			int Initialize();
-			void Release();
-			bool Send(const void* pData, std::size_t nLength);
-			void RegisterHandler(_TyHandler&& handler);
-			void ClearHandlers();
+
 			bool IsConnected() const;
+			
+			bool SendRequest(CRequest* pRequest);
+
+			void ClearHandlers();
+			void RegisterHandler(_TyHandler&& handler);
+
+			void Release();
+		
+		private:
+			bool Send(const void* pData, std::size_t nLength);
+			void OnConnected(bufferevent* pEvent) override;
 			std::size_t OnRead(bufferevent* pEvent) override;
 			void OnEvent(bufferevent* pEvent, short nEvents) override;
-			void OnConnected(bufferevent* pEvent) override;
 
 		private:
 			struct CBufferEventDeleter
