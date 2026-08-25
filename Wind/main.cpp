@@ -6,6 +6,8 @@
 #include "./network/CHttpServer.h"
 #include "./network/common_net.h"
 #include "./system/CBootLoader.h"
+#include "./hqmarket/CHQMarket.h"
+#include <cstdlib>
 
 
 void TcpTest(net::CTcpServer* pTcpServer)
@@ -70,12 +72,20 @@ int main()
 	}
 	TcpTest(&boot.GetTcpServer());
 	HttpTest(&boot.GetHttpServer());
+	CHQMarket hqMarket(&boot.GetTcpClient());
+	const char* pszHQMarketToken = std::getenv("HQMARKET_TOKEN");
+	if ((nullptr == pszHQMarketToken) || !hqMarket.Initialize(pszHQMarketToken))
+	{
+		std::cerr << "HQMarket token is required\n";
+		return 7;
+	}
 
 	if (!boot.Run())
 	{
 		std::cerr << boot.GetLastError() << '\n';
 		return boot.GetErrorCode();
 	}
+	hqMarket.Stop();
 	boot.Finalize();
 	return 0;
 }

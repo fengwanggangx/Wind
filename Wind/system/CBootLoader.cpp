@@ -1,6 +1,7 @@
 #include "CBootLoader.h"
 #include "../network/CHttpServer.h"
 #include "../network/CTcpServer.h"
+#include "../network/CTcpClient.h"
 #include <cstdlib>
 
 namespace net
@@ -33,8 +34,17 @@ bool CBootLoader::Initialize()
 		return false;
 	}
 
-	m_pTcpServer = std::make_unique<net::CTcpServer>(9901);
-	m_pHttpServer = std::make_unique<net::CHttpServer>(9902);
+	const char* pszWindTcpPort = std::getenv("WIND_TCP_PORT");
+	const char* pszWindHttpPort = std::getenv("WIND_HTTP_PORT");
+	int nWindTcpPort = ((nullptr != pszWindTcpPort) && ('\0' != *pszWindTcpPort)) ? std::atoi(pszWindTcpPort) : 9801;
+	int nWindHttpPort = ((nullptr != pszWindHttpPort) && ('\0' != *pszWindHttpPort)) ? std::atoi(pszWindHttpPort) : 9802;
+	m_pTcpServer = std::make_unique<net::CTcpServer>(nWindTcpPort);
+	m_pHttpServer = std::make_unique<net::CHttpServer>(nWindHttpPort);
+	const char* pszHQMarketHost = std::getenv("HQMARKET_HOST");
+	const char* pszHQMarketPort = std::getenv("HQMARKET_PORT");
+	std::string strHQMarketHost = ((nullptr != pszHQMarketHost) && ('\0' != *pszHQMarketHost)) ? pszHQMarketHost : "127.0.0.1";
+	int nHQMarketPort = ((nullptr != pszHQMarketPort) && ('\0' != *pszHQMarketPort)) ? std::atoi(pszHQMarketPort) : 9901;
+	m_pTcpClient = std::make_unique<net::CTcpClient>(strHQMarketHost, nHQMarketPort);
 
 	m_bInitialized = true;
 	return true;
@@ -42,7 +52,7 @@ bool CBootLoader::Initialize()
 
 bool CBootLoader::Run()
 {
-	if (!m_bInitialized || (nullptr == m_pTcpServer) || (nullptr == m_pHttpServer))
+	if (!m_bInitialized || (nullptr == m_pTcpServer) || (nullptr == m_pTcpClient) || (nullptr == m_pHttpServer))
 	{
 		m_nErrorCode = 4;
 		m_strLastError = "Boot loader is not initialized";
@@ -60,9 +70,17 @@ bool CBootLoader::Run()
 		m_strLastError = "HTTP server initialization failed";
 		return false;
 	}
+	if (0 != m_pTcpClient->Initialize())
+	{
+		m_nErrorCode = 6;
+		m_strLastError = "HQMarket TCP client initialization failed";
+		return false;
+	}
 
-	std::jthread t([this]() { m_pTcpServer->Start(true); });
+	std::jthread tcpServerThread([this]() { m_pTcpServer->Start(true); });
+	std::jthread tcpClientThread([this]() { m_pTcpClient->Start(true); });
 	m_pHttpServer->Start(true);
+	m_pTcpClient->ShutDown();
 	m_pTcpServer->ShutDown();
 	return true;
 }
@@ -77,30 +95,25 @@ void CBootLoader::Finalize()
 	{
 		m_pTcpServer->ShutDown();
 	}
+	if (nullptr != m_pTcpClient)
+	{
+		m_pTcpClient->ShutDown();
+	}
 
 	m_pHttpServer.reset();
+	m_pTcpClient.reset();
 	m_pTcpServer.reset();
 	m_bInitialized = false;
-}
-
-const std::filesystem::path& CBootLoader::GetRoot() const
-{
-	return m_root;
-}
-
-const std::string& CBootLoader::GetToken() const
-{
-	return m_strToken;
-}
-
-CPythonRuntime& CBootLoader::GetPythonRuntime()
-{
-	return *m_pPython;
 }
 
 net::CTcpServer& CBootLoader::GetTcpServer()
 {
 	return *m_pTcpServer;
+}
+
+net::CTcpClient& CBootLoader::GetTcpClient()
+{
+	return *m_pTcpClient;
 }
 
 net::CHttpServer& CBootLoader::GetHttpServer()

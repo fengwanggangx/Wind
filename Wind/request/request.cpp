@@ -13,6 +13,8 @@ static request::RequestType ToProtoType(CRequest::Type type)
 		return request::RequestType::UPDATE_AUTH;
 	case CRequest::Type::UPDAT_PRODUCT:
 		return request::RequestType::UPDAT_PRODUCT;
+	case CRequest::Type::HQMARKET:
+		return request::RequestType::HQMARKET;
 	case CRequest::Type::UNKNOWN:
 	default:
 		return request::RequestType::UNKNOWN;

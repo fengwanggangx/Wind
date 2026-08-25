@@ -35,7 +35,8 @@ class CRequest
 			QUERY_AUTH = 1,
 			QUERY_USERINFO = 2,
 			UPDATE_AUTH = 3,
-			UPDAT_PRODUCT = 4
+			UPDAT_PRODUCT = 4,
+			HQMARKET = 5
 		};
 
 	public:

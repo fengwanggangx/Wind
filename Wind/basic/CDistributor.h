@@ -54,6 +54,12 @@ public:
 		m_handler.emplace_back(std::forward<_TyHandler>(fun));
 	}
 
+	void ClearHandlers()
+	{
+		std::unique_lock<std::shared_mutex> lock(m_mtx_handler);
+		m_handler.clear();
+	}
+
 private:
 	int AsyncExecute()
 	{

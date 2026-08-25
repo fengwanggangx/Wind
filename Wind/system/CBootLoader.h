@@ -1,16 +1,14 @@
 #ifndef HQMARKET_SYSTEM_CBOOTLOADER_H
 #define HQMARKET_SYSTEM_CBOOTLOADER_H
 
-#include <filesystem>
 #include <memory>
 #include <string>
 #include <thread>
 
-class CPythonRuntime;
-
 namespace net
 {
 	class CHttpServer;
+	class CTcpClient;
 	class CTcpServer;
 }
 
@@ -26,6 +24,7 @@ class CBootLoader final
 		bool Run();
 		void Finalize();
 		net::CTcpServer& GetTcpServer();
+		net::CTcpClient& GetTcpClient();
 		net::CHttpServer& GetHttpServer();
 		const std::string& GetLastError() const;
 		int GetErrorCode() const;
@@ -37,6 +36,7 @@ class CBootLoader final
 
 	private:
 		std::unique_ptr<net::CTcpServer> m_pTcpServer;
+		std::unique_ptr<net::CTcpClient> m_pTcpClient;
 		std::unique_ptr<net::CHttpServer> m_pHttpServer;
 };
 

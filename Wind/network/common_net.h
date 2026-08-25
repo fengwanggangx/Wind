@@ -33,6 +33,7 @@ namespace net
 		em_event m_event{ em_event::unknown };
 		_TyConnectionId m_connection_id{ -1 };
 		std::unique_ptr<CRequest> m_request{ nullptr };
+		std::string m_payload;
 		int m_error{-1};
 	};
 

@@ -155,16 +155,16 @@ const char descriptor_table_protodef_request_2eproto[] ABSL_ATTRIBUTE_SECTION_VA
     "stData.ExtraEntry\022*\n\003ret\030\004 \003(\0132\035.request"
     ".RequestData.RetEntry\032,\n\nExtraEntry\022\013\n\003k"
     "ey\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\032*\n\010RetEntry\022"
-    "\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001*b\n\013Reque"
+    "\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001*p\n\013Reque"
     "stType\022\013\n\007UNKNOWN\020\000\022\016\n\nQUERY_AUTH\020\001\022\022\n\016Q"
     "UERY_USERINFO\020\002\022\017\n\013UPDATE_AUTH\020\003\022\021\n\rUPDA"
-    "T_PRODUCT\020\004b\006proto3"
+    "T_PRODUCT\020\004\022\014\n\010HQMARKET\020\005b\006proto3"
 };
 static ::absl::once_flag descriptor_table_request_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_request_2eproto = {
     false,
     false,
-    379,
+    393,
     descriptor_table_protodef_request_2eproto,
     "request.proto",
     &descriptor_table_request_2eproto_once,
@@ -183,9 +183,9 @@ const ::google::protobuf::EnumDescriptor* RequestType_descriptor() {
   return file_level_enum_descriptors_request_2eproto[0];
 }
 PROTOBUF_CONSTINIT const uint32_t RequestType_internal_data_[] = {
-    327680u, 0u, };
+    393216u, 0u, };
 bool RequestType_IsValid(int value) {
-  return 0 <= value && value <= 4;
+  return 0 <= value && value <= 5;
 }
 // ===================================================================
 

@@ -78,6 +78,7 @@ enum RequestType : int {
   QUERY_USERINFO = 2,
   UPDATE_AUTH = 3,
   UPDAT_PRODUCT = 4,
+  HQMARKET = 5,
   RequestType_INT_MIN_SENTINEL_DO_NOT_USE_ =
       std::numeric_limits<::int32_t>::min(),
   RequestType_INT_MAX_SENTINEL_DO_NOT_USE_ =
@@ -87,8 +88,8 @@ enum RequestType : int {
 bool RequestType_IsValid(int value);
 extern const uint32_t RequestType_internal_data_[];
 constexpr RequestType RequestType_MIN = static_cast<RequestType>(0);
-constexpr RequestType RequestType_MAX = static_cast<RequestType>(4);
-constexpr int RequestType_ARRAYSIZE = 4 + 1;
+constexpr RequestType RequestType_MAX = static_cast<RequestType>(5);
+constexpr int RequestType_ARRAYSIZE = 5 + 1;
 const ::google::protobuf::EnumDescriptor*
 RequestType_descriptor();
 template <typename T>
@@ -101,7 +102,7 @@ const std::string& RequestType_Name(T value) {
 template <>
 inline const std::string& RequestType_Name(RequestType value) {
   return ::google::protobuf::internal::NameOfDenseEnum<RequestType_descriptor,
-                                                 0, 4>(
+                                                 0, 5>(
       static_cast<int>(value));
 }
 inline bool RequestType_Parse(absl::string_view name, RequestType* value) {

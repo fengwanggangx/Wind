@@ -11,7 +11,7 @@
     <ClCompile Include="network\CNet.cpp">
       <Filter>network</Filter>
     </ClCompile>
-    <ClCompile Include="network\CNetClient.cpp">
+    <ClCompile Include="network\CTcpClient.cpp">
       <Filter>network</Filter>
     </ClCompile>
     <ClCompile Include="network\CNetPool.cpp">
@@ -74,6 +74,15 @@
     <ClCompile Include="system\CBootLoader.cpp">
       <Filter>system</Filter>
     </ClCompile>
+	<ClCompile Include="hqmarket\CHQMarket.cpp">
+	  <Filter>hqmarket</Filter>
+	</ClCompile>
+	<ClCompile Include="hqmarket\CHQRequest.cpp">
+	  <Filter>hqmarket</Filter>
+	</ClCompile>
+	<ClCompile Include="hqmarket\v1\market.pb.cc">
+	  <Filter>hqmarket</Filter>
+	</ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -100,6 +109,9 @@
     <Filter Include="system">
       <UniqueIdentifier>{0cd3262f-a988-4777-b436-7b5541db40ab}</UniqueIdentifier>
     </Filter>
+	<Filter Include="hqmarket">
+	  <UniqueIdentifier>{a2bcf128-1849-4f30-94f0-7feab82104c1}</UniqueIdentifier>
+	</Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common\datetime.h">
@@ -117,7 +129,7 @@
     <ClInclude Include="network\CNet.h">
       <Filter>network</Filter>
     </ClInclude>
-    <ClInclude Include="network\CNetClient.h">
+    <ClInclude Include="network\CTcpClient.h">
       <Filter>network</Filter>
     </ClInclude>
     <ClInclude Include="network\CNetPool.h">
@@ -189,5 +201,14 @@
     <ClInclude Include="system\CBootLoader.h">
       <Filter>system</Filter>
     </ClInclude>
+	<ClInclude Include="hqmarket\CHQMarket.h">
+	  <Filter>hqmarket</Filter>
+	</ClInclude>
+	<ClInclude Include="hqmarket\CHQRequest.h">
+	  <Filter>hqmarket</Filter>
+	</ClInclude>
+	<ClInclude Include="hqmarket\v1\market.pb.h">
+	  <Filter>hqmarket</Filter>
+	</ClInclude>
   </ItemGroup>
 </Project>
