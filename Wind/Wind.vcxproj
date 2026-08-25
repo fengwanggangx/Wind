@@ -158,7 +158,7 @@
 	</ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>./include/debug/libevent;./include/debug/protobuf;./include/debug/mysql;%(ClCompile.AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/debug/libevent;./include/debug/protobuf;./include/debug/mysql;./include/debug/ini;%(ClCompile.AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppLanguageStandard>c++20</CppLanguageStandard>
       <PreprocessorDefinitions>PROTOBUF_USE_DLLS;_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
@@ -170,7 +170,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>./include/release/libevent;./include/release/protobuf;./include/release/mysql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/release/libevent;./include/release/protobuf;./include/release/mysql;./include/release/ini;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppLanguageStandard>c++20</CppLanguageStandard>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>

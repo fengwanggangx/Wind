@@ -4,7 +4,11 @@
 #include <vector>
 #include <string>
 #include <atomic>
-#include "./SimpleIni/SimpleIni.h"
+#include <memory>
+#include <shared_mutex>
+#include <SimpleIni/SimpleIni.h>
+
+
 namespace ini
 {
 	class CIniFile
@@ -42,7 +46,7 @@ namespace ini
 		bool Save() const;
 	private:
 		mutable std::shared_mutex m_mtx_parser;
-		CSimpleIniA* m_pParser{ nullptr };
+		std::unique_ptr<CSimpleIniA> m_pParser;
 		std::string m_strFileName;
 		std::atomic_bool m_bUpdated{ false };
 	};
