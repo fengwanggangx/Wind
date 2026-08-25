@@ -49,19 +49,15 @@ namespace net
 				return 0;
 			}
 			_TyConnectionId id = bufferevent_getfd(pEvent);
-			std::lock_guard<std::mutex> lock(ConnectionBuffersMutex());
-			std::unordered_map<_TyConnectionId, std::vector<char>>& connectionBuffers = ConnectionBuffers();
-			std::vector<char>& connectionBuffer = connectionBuffers[id];
-			connectionBuffer.insert(connectionBuffer.end(), received.begin(), received.end());
-			buffer.clear();
+			buffer.insert(buffer.end(), received.begin(), received.end());
 
 			std::size_t nReqCount = 0;
-			std::size_t nBufferLength = connectionBuffer.size();
+			std::size_t nBufferLength = buffer.size();
 			while (nBufferLength >= sizeof(uint32_t))
 			{
 				constexpr std::size_t nHeaderLength = sizeof(uint32_t);
 				uint32_t nDataLength = 0;
-				memcpy(&nDataLength, connectionBuffer.data(), nHeaderLength);
+				memcpy(&nDataLength, buffer.data(), nHeaderLength);
 				nDataLength = ntohl(nDataLength);
 
 				if (nBufferLength < (nHeaderLength + nDataLength))
@@ -69,7 +65,7 @@ namespace net
 					break;
 				}
 
-				const char* pszData = connectionBuffer.data() + nHeaderLength;
+				const char* pszData = buffer.data() + nHeaderLength;
 				std::string strData(pszData, nDataLength);
 
 				std::unique_ptr<CRequest> req = std::make_unique<CRequest>();
@@ -88,19 +84,15 @@ namespace net
 				std::size_t nDone = nHeaderLength + nDataLength;
 				if (nBufferLength > nDone)
 				{
-					memmove(connectionBuffer.data(), connectionBuffer.data() + nDone, nBufferLength - nDone);
-					connectionBuffer.resize(nBufferLength - nDone);
-					nBufferLength = connectionBuffer.size();
+					memmove(buffer.data(), buffer.data() + nDone, nBufferLength - nDone);
+					buffer.resize(nBufferLength - nDone);
+					nBufferLength = buffer.size();
 				}
 				else
 				{
-					connectionBuffer.clear();
+					buffer.clear();
 					break;
 				}
-			}
-			if (connectionBuffer.empty())
-			{
-				connectionBuffers.erase(id);
 			}
 			return nReqCount;
 		}

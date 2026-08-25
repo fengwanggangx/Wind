@@ -23,5 +23,6 @@ token=replace-with-your-token
 例如：`market.SendRequest(CHQRequest::Subscribe("600519.SSE", "quote"));`。
 
 响应仍以 `CRequest` 回调：`cmd` 是 HQMarket 消息类型，`ret["request_id"]`
-用于关联请求，完整 `MarketEnvelope` 位于 `ret["payload"]`；错误响应另含
-`error_code` 和 `error_message`。
+用于关联请求。`CRequest::GetData()` 返回运行期 `CData` 指针，其中 `type` 标识具体
+行情结构，`payload` 是对应 Protobuf 的序列化内容；在线路上分别存放于
+`ret["data_type"]` 和 `ret["data"]`。错误响应另含 `error_code` 和 `error_message`。

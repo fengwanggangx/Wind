@@ -47,8 +47,14 @@ namespace net
 
 	std::size_t CTcpServer::OnRead(struct bufferevent* pEvent)
 	{
+		_TyConnectionId id = bufferevent_getfd(pEvent);
+		auto ret = CNetPool::InstancePtr()->GetRecvBuffer(id);
+		if (!ret.has_value())
+		{
+			return -1;
+		}
 		std::vector<std::unique_ptr<CRequest>> reqs;
-		std::size_t sz = net::utility::RequestFromBuffer(reqs, pEvent, m_buffer_recv);
+		std::size_t sz = net::utility::RequestFromBuffer(reqs, pEvent, *ret.value());
 		if (m_dispatcher != nullptr)
 		{
 			std::vector<CNetEvent> events;

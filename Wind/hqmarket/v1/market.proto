@@ -1,7 +1,6 @@
 syntax = "proto3";
 package hqmarket.market.v1;
 
-enum MessageType { MESSAGE_TYPE_UNSPECIFIED = 0; AUTH_REQUEST = 1; AUTH_RESPONSE = 2; SUBSCRIBE_REQUEST = 3; UNSUBSCRIBE_REQUEST = 4; SUBSCRIPTION_ACK = 5; QUOTE = 6; DEPTH = 7; TRADE = 8; BAR = 9; MARKET_STATUS = 10; HEARTBEAT = 11; PROVIDER_STATUS = 12; ERROR = 13; QUERY_REQUEST = 14; QUERY_RESPONSE = 15; }
 enum Exchange { EXCHANGE_UNSPECIFIED = 0; SSE = 1; SZSE = 2; BSE = 3; HKEX = 4; CFFEX = 5; SHFE = 6; DCE = 7; CZCE = 8; INE = 9; GFEX = 10; NASDAQ = 11; NYSE = 12; CRYPTO = 13; }
 enum Channel { CHANNEL_UNSPECIFIED = 0; CHANNEL_QUOTE = 1; CHANNEL_DEPTH = 2; CHANNEL_TRADE = 3; CHANNEL_BAR_1M = 4; CHANNEL_BAR_1D = 5; CHANNEL_MARKET_STATUS = 6; }
 
@@ -23,9 +22,3 @@ message ProviderStatusData { string provider = 1; bool healthy = 2; string detai
 message ErrorData { int32 code = 1; string message = 2; }
 message QueryRequest { Instrument instrument = 1; Channel channel = 2; int64 begin_time_ms = 3; int64 end_time_ms = 4; }
 message QueryResponse { Instrument instrument = 1; Channel channel = 2; QuoteData quote = 3; repeated BarData bars = 4; bool found = 5; }
-
-message MarketEnvelope {
-  uint32 protocol_major = 1; uint32 protocol_minor = 2; MessageType type = 3;
-  uint64 request_id = 4; uint64 sequence = 5; int64 server_time_ms = 6;
-  oneof payload { AuthRequest auth_request = 20; AuthResponse auth_response = 21; SubscribeRequest subscribe_request = 22; UnsubscribeRequest unsubscribe_request = 23; SubscriptionAck subscription_ack = 24; QuoteData quote = 25; DepthData depth = 26; TradeData trade = 27; BarData bar = 28; MarketStatusData market_status = 29; HeartbeatData heartbeat = 30; ProviderStatusData provider_status = 31; ErrorData error = 32; QueryRequest query_request = 33; QueryResponse query_response = 34; }
-}

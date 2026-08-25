@@ -5,15 +5,26 @@
 #include <event2/buffer.h>
 #include <string.h>
 #include <utility>
+#include <vector>
 namespace net
 {
 	struct CNetInfo
 	{
-			_TyConnectionId m_fd{-1};
-			struct sockaddr_storage m_addr{0};
-			struct bufferevent* m_pEvent{nullptr};
-			std::string m_strAddress;
-			int m_nPort{-1};
+		CNetInfo()
+		{
+			m_buffer_recv.reserve(2048);
+			m_buffer_send.reserve(2048);
+		}
+
+		_TyConnectionId m_fd{ -1 };
+
+		int m_nPort{ -1 };
+		std::string m_strAddress;
+		struct sockaddr_storage m_addr { 0 };
+		struct bufferevent* m_pEvent{ nullptr };
+		
+		std::vector<char> m_buffer_recv;
+		std::vector<char> m_buffer_send;
 
 		void Empty()
 		{
@@ -145,7 +156,7 @@ namespace net
 		std::unique_ptr<CNetInfo> pInfo;
 		{
 			std::unique_lock<std::shared_mutex> lock(m_shared_mtx_pool);
-			std::unordered_map<_TyConnectionId, std::unique_ptr<CNetInfo>>::iterator mIter = m_pool.find(id);
+			auto mIter = m_pool.find(id);
 			if (mIter == m_pool.end())
 			{
 				return -1;
@@ -169,7 +180,7 @@ namespace net
 		_TyConnectionId id = -1;
 		{
 			std::unique_lock<std::shared_mutex> lock(m_shared_mtx_pool);
-			std::unordered_map<_TyConnectionId, std::unique_ptr<CNetInfo>>::iterator mIter = m_pool.begin();
+			auto mIter = m_pool.begin();
 			for (; mIter != m_pool.end(); ++mIter)
 			{
 				if (mIter->second->m_pEvent == pEvent)
@@ -188,6 +199,28 @@ namespace net
 
 		CloseAConnection(*pInfo);
 		return id;
+	}
+
+	std::optional<std::vector<char>*> CNetPool::GetRecvBuffer(_TyConnectionId id)
+	{
+		std::unique_lock<std::shared_mutex> lock(m_shared_mtx_pool);
+		const auto mIter = m_pool.find(id);
+		if (mIter == m_pool.end())
+		{
+			return std::nullopt;
+		}
+		return &mIter->second->m_buffer_recv;
+	}
+
+	std::optional<std::vector<char>*> CNetPool::GetSendBuffer(_TyConnectionId id)
+	{
+		std::unique_lock<std::shared_mutex> lock(m_shared_mtx_pool);
+		const auto mIter = m_pool.find(id);
+		if (mIter == m_pool.end())
+		{
+			return std::nullopt;
+		}
+		return &mIter->second->m_buffer_send;
 	}
 
 	bool CNetPool::SendData2Client(_TyConnectionId id, const char* data, size_t nLength)

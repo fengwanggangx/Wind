@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "./common/ISingleton.h"
+#include "../common/ISingleton.h"
 #include "CIniFile.h"
 #include <type_traits>
 

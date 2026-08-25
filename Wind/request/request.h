@@ -1,11 +1,24 @@
 #ifndef __REQUEST_H__
 #define __REQUEST_H__
 
-#include <cstdint>
 #include <string>
+#include <cstdint>
 #include <unordered_map>
 #include <memory>
 #include "../network/common_net.h"
+
+class CData final
+{
+	public:
+		CData(std::string type, std::string payload);
+
+		const std::string& GetType() const;
+		const std::string& GetPayload() const;
+
+	private:
+		std::string m_type;
+		std::string m_payload;
+};
 
 namespace request
 {
@@ -43,32 +56,30 @@ class CRequest
 	public:
 		std::uint64_t GetId() const;
 		void SetId(std::uint64_t nId);
-
 		CRequest::Type GetType() const;
 		void SetType(CRequest::Type type);
-
 		std::string GetCmd() const;
 		void SetCmd(const std::string& strCmd);
-
 		std::string GetExtraData(const std::string& strKey) const;
 		std::unordered_map<std::string, std::string> GetExtraData() const;
 		void SetExtraData(const std::string& strKey, const std::string& strVal);
-
 		std::string GetReturnData(const std::string& strKey) const;
 		std::unordered_map<std::string, std::string> GetReturnData() const;
 		void SetReturnData(const std::string& strKey, const std::string& strVal);
-
-		net::_TyConnectionId GetConnectionId() const;
-		void SetConnectionId(net::_TyConnectionId id);
+		void SetData(std::unique_ptr<CData> data);
+		const CData* GetData() const;
 
 	public:
 		bool Serialize(std::string* output) const;
 		bool Deserialize(const std::string& data);
+		void SetConnectionId(net::_TyConnectionId id);
+		net::_TyConnectionId GetConnectionId() const;
 
 	private:
 		std::unique_ptr<google::protobuf::Arena> m_arena;
-		request::RequestData* m_data{nullptr};
-		net::_TyConnectionId m_connection_id{-1};
+		request::RequestData* m_data{ nullptr };
+		std::unique_ptr<CData> m_cdata;
+		net::_TyConnectionId m_connection_id{ -1 };
 };
 
 #endif

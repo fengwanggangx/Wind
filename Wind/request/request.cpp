@@ -1,6 +1,27 @@
 #include "request.pb.h"
 #include "request.h"
 #include <atomic>
+#include <utility>
+
+namespace
+{
+	constexpr const char* DataTypeKey = "data_type";
+	constexpr const char* DataPayloadKey = "data";
+}
+
+CData::CData(std::string type, std::string payload) : m_type(std::move(type)), m_payload(std::move(payload))
+{
+}
+
+const std::string& CData::GetType() const
+{
+	return m_type;
+}
+
+const std::string& CData::GetPayload() const
+{
+	return m_payload;
+}
 
 static request::RequestType ToProtoType(CRequest::Type type)
 {
@@ -24,19 +45,16 @@ static request::RequestType ToProtoType(CRequest::Type type)
 
 CRequest::CRequest() : m_arena(std::make_unique<google::protobuf::Arena>())
 {
-	static std::atomic_uint64_t s_id{ 1 };
+	static std::atomic_uint64_t s_id{1};
 	m_data = google::protobuf::Arena::CreateMessage<request::RequestData>(m_arena.get());
 	m_data->set_id(s_id.fetch_add(1, std::memory_order_relaxed));
 }
 
-CRequest::~CRequest()
-{
-	m_data = nullptr;
-}
+CRequest::~CRequest() = default;
 
 bool CRequest::Serialize(std::string* output) const
 {
-	if (output == nullptr)
+	if (nullptr == output)
 	{
 		return false;
 	}
@@ -49,7 +67,21 @@ bool CRequest::Deserialize(const std::string& data)
 	{
 		return false;
 	}
-	return m_data->ParseFromString(data);
+	if (!m_data->ParseFromString(data))
+	{
+		return false;
+	}
+	google::protobuf::Map<std::string, std::string>::const_iterator type = m_data->ret().find(DataTypeKey);
+	google::protobuf::Map<std::string, std::string>::const_iterator payload = m_data->ret().find(DataPayloadKey);
+	if ((m_data->ret().end() != type) && (m_data->ret().end() != payload))
+	{
+		m_cdata = std::make_unique<CData>(type->second, payload->second);
+	}
+	else
+	{
+		m_cdata.reset();
+	}
+	return true;
 }
 
 void CRequest::SetConnectionId(net::_TyConnectionId id)
@@ -60,19 +92,6 @@ void CRequest::SetConnectionId(net::_TyConnectionId id)
 net::_TyConnectionId CRequest::GetConnectionId() const
 {
 	return m_connection_id;
-}
-
-std::uint64_t CRequest::GetId() const
-{
-	return (nullptr == m_data) ? 0 : m_data->id();
-}
-
-void CRequest::SetId(std::uint64_t nId)
-{
-	if (nullptr != m_data)
-	{
-		m_data->set_id(nId);
-	}
 }
 
 void CRequest::SetType(CRequest::Type type)
@@ -111,6 +130,41 @@ void CRequest::SetReturnData(const std::string& strKey, const std::string& strVa
 	(*(m_data->mutable_ret()))[strKey] = strVal;
 }
 
+void CRequest::SetData(std::unique_ptr<CData> data)
+{
+	m_cdata = std::move(data);
+	if (nullptr == m_data)
+	{
+		return;
+	}
+	if (nullptr == m_cdata)
+	{
+		m_data->mutable_ret()->erase(DataTypeKey);
+		m_data->mutable_ret()->erase(DataPayloadKey);
+		return;
+	}
+	(*(m_data->mutable_ret()))[DataTypeKey] = m_cdata->GetType();
+	(*(m_data->mutable_ret()))[DataPayloadKey] = m_cdata->GetPayload();
+}
+
+const CData* CRequest::GetData() const
+{
+	return m_cdata.get();
+}
+
+std::uint64_t CRequest::GetId() const
+{
+	return (nullptr == m_data) ? 0 : m_data->id();
+}
+
+void CRequest::SetId(std::uint64_t nId)
+{
+	if (nullptr != m_data)
+	{
+		m_data->set_id(nId);
+	}
+}
+
 CRequest::Type CRequest::GetType() const
 {
 	if (nullptr == m_data)
@@ -135,21 +189,21 @@ std::unordered_map<std::string, std::string> CRequest::GetExtraData() const
 	{
 		return {};
 	}
-	return { m_data->extra().begin(), m_data->extra().end() };
+	return {m_data->extra().begin(), m_data->extra().end()};
 }
 
 std::string CRequest::GetExtraData(const std::string& strKey) const
 {
-	const auto& data = GetExtraData();
-	const auto& mIter = data.find(strKey);
-	return data.end() == mIter ? "" : mIter->second;
+	std::unordered_map<std::string, std::string> data = GetExtraData();
+	std::unordered_map<std::string, std::string>::const_iterator iter = data.find(strKey);
+	return data.end() == iter ? "" : iter->second;
 }
 
 std::string CRequest::GetReturnData(const std::string& strKey) const
 {
-	const auto& data = GetReturnData();
-	const auto& mIter = data.find(strKey);
-	return data.end() == mIter ? "" : mIter->second;
+	std::unordered_map<std::string, std::string> data = GetReturnData();
+	std::unordered_map<std::string, std::string>::const_iterator iter = data.find(strKey);
+	return data.end() == iter ? "" : iter->second;
 }
 
 std::unordered_map<std::string, std::string> CRequest::GetReturnData() const
@@ -158,5 +212,5 @@ std::unordered_map<std::string, std::string> CRequest::GetReturnData() const
 	{
 		return {};
 	}
-	return { m_data->ret().begin(), m_data->ret().end() };
+	return {m_data->ret().begin(), m_data->ret().end()};
 }

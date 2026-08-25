@@ -17,6 +17,8 @@ namespace net
 {
 	class CTcpClient final : public CNet, public CNetRouter<CTcpClient>
 	{
+		friend class CNetRouter<CTcpClient>;
+
 		using _TyHandler = std::function<int(const CNetEvent&)>;
 		using _TyDistributor = CDistributor<true, std::vector<CNetEvent>, _TyHandler>;
 		public:
@@ -37,7 +39,7 @@ namespace net
 			bool Send(const void* pData, std::size_t nLength);
 			void OnConnected(bufferevent* pEvent) override;
 			std::size_t OnRead(bufferevent* pEvent) override;
-			void OnEvent(bufferevent* pEvent, short nEvents) override;
+			void OnEvent(bufferevent* pEvent, short events) override;
 
 		private:
 			struct CBufferEventDeleter

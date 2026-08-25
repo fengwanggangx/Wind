@@ -5,6 +5,8 @@
 #include <mutex>
 #include <shared_mutex>
 #include <memory>
+#include <optional>
+#include <vector>
 #include "../common/ISingleton.h"
 #include "CNet.h"
 #include "event2/bufferevent.h"
@@ -20,6 +22,8 @@ namespace net
 		public:
 			net::_TyConnectionId CloseAConnection(_TyConnectionId id);
 			net::_TyConnectionId CloseAConnection(struct bufferevent* pEvent);
+			std::optional<std::vector<char>*> GetRecvBuffer(_TyConnectionId id);
+			std::optional<std::vector<char>*> GetSendBuffer(_TyConnectionId id);
 			bool SendData2Client(_TyConnectionId id, const char* data, size_t nLength);
 			std::size_t Count() const;
 			struct bufferevent* RegisterConnect(_TyConnectionId id, struct event_base* pNet, struct sockaddr* pAddr, int nLength, bufferevent_data_cb readcb, bufferevent_data_cb writecb, bufferevent_event_cb eventcb, void* cbarg);

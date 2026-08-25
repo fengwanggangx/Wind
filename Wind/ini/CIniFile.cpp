@@ -1,4 +1,6 @@
 #include "CIniFile.h"
+#include <mutex>
+#include <fstream>
 
 namespace ini
 {

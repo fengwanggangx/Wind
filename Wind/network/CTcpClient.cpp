@@ -1,10 +1,12 @@
 #include "CTcpClient.h"
 #include "CNetTools.h"
 #include "../basic/CDistributor.h"
+#include "../request/request.h"
 #include <event2/buffer.h>
 #include <event2/bufferevent.h>
 #include <utility>
 #include <vector>
+#include "CNetPool.h"
 
 namespace net
 {
@@ -113,8 +115,14 @@ namespace net
 
 	std::size_t CTcpClient::OnRead(bufferevent* pEvent)
 	{
+		_TyConnectionId id = bufferevent_getfd(pEvent);
+		auto ret = CNetPool::InstancePtr()->GetRecvBuffer(id);
+		if (!ret.has_value())
+		{
+			return -1;
+		}
 		std::vector<std::unique_ptr<CRequest>> reqs;
-		std::size_t sz = net::utility::RequestFromBuffer(reqs, pEvent, m_buffer_recv);
+		std::size_t sz = net::utility::RequestFromBuffer(reqs, pEvent, *ret.value());
 		if (m_dispatcher != nullptr)
 		{
 			std::vector<CNetEvent> events;
@@ -141,7 +149,7 @@ namespace net
 		}
 	}
 
-	void CTcpClient::OnEvent(bufferevent*, short nEvents)
+	void CTcpClient::OnEvent(bufferevent* pEvent, short events)
 	{
 		if (pEvent == nullptr)
 		{
