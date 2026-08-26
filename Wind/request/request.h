@@ -10,14 +10,35 @@
 class CData final
 {
 	public:
-		CData(std::string type, std::string payload);
+		CData(std::string type, void* pData);
+		~CData();
+		CData(const CData&) = delete;
+		CData& operator=(const CData&) = delete;
+		CData(CData&&) = delete;
+		CData& operator=(CData&&) = delete;
 
 		const std::string& GetType() const;
-		const std::string& GetPayload() const;
+		void* GetData();
+		const void* GetData() const;
+
+		template<typename _Ty>
+		_Ty* GetDataAs()
+		{
+			return (_Ty::descriptor()->full_name() == m_type) ? static_cast<_Ty*>(m_pData) : nullptr;
+		}
+
+		template<typename _Ty>
+		const _Ty* GetDataAs() const
+		{
+			return (_Ty::descriptor()->full_name() == m_type) ? static_cast<const _Ty*>(m_pData) : nullptr;
+		}
+
+		bool Serialize(std::string* output) const;
+		static std::unique_ptr<CData> Deserialize(const std::string& type, const std::string& payload);
 
 	private:
 		std::string m_type;
-		std::string m_payload;
+		void* m_pData{ nullptr };
 };
 
 namespace request
