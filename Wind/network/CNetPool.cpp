@@ -28,15 +28,19 @@ namespace net
 
 		void Empty()
 		{
+			m_fd = -1;
 			if (m_pEvent != nullptr)
 			{
 				bufferevent_free(m_pEvent);
+				m_pEvent = nullptr;
 			}
-			m_fd = -1;
-			m_pEvent = nullptr;
-			memset(&m_addr, 0, sizeof(m_addr));
-			m_strAddress.clear();
+
 			m_nPort = -1;
+			m_strAddress.clear();
+			memset(&m_addr, 0, sizeof(m_addr));
+			
+			m_buffer_recv.clear();
+			m_buffer_send.clear();
 		}
 
 		~CNetInfo()

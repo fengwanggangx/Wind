@@ -14,21 +14,6 @@ namespace net
 {
 	namespace utility
 	{
-		namespace
-		{
-			std::mutex& ConnectionBuffersMutex()
-			{
-				static std::mutex mtxBuffers;
-				return mtxBuffers;
-			}
-
-			std::unordered_map<_TyConnectionId, std::vector<char>>& ConnectionBuffers()
-			{
-				static std::unordered_map<_TyConnectionId, std::vector<char>> connectionBuffers;
-				return connectionBuffers;
-			}
-		}
-
 		std::size_t BufferEventReader(struct bufferevent* pEvent, std::vector<char>& buffer)
 		{
 			buffer.clear();
@@ -95,12 +80,6 @@ namespace net
 				}
 			}
 			return nReqCount;
-		}
-
-		void ReleaseConnectionBuffer(_TyConnectionId id)
-		{
-			std::lock_guard<std::mutex> lock(ConnectionBuffersMutex());
-			ConnectionBuffers().erase(id);
 		}
 
 		bool SendRequest(CRequest* pRequest, struct bufferevent* pEvent, std::vector<char>& buffer)
