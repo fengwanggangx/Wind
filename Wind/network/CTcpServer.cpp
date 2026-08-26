@@ -18,8 +18,6 @@ namespace net
 
 	CTcpServer::CTcpServer(int nPort) : m_nPort(nPort), m_dispatcher(std::make_unique<_TyDistributor>())
 	{
-		m_buffer_recv.reserve(4096);
-		m_buffer_send.reserve(4096);
 	}
 
 	void CTcpServer::OnListenerError(struct evconnlistener* pListener)
@@ -41,20 +39,14 @@ namespace net
 			pReq->SetType(CRequest::Type::QUERY_AUTH);
 			pReq->SetCmd("connet_build");
 			pReq->SetExtraData("retmsg", "connect_ok_hahhahahahhahaha");
-			net::utility::SendRequest(pReq, pBuffer, m_buffer_send);
+			net::utility::SendRequest(pReq, pBuffer);
 		}
 	}
 
 	std::size_t CTcpServer::OnRead(struct bufferevent* pEvent)
 	{
-		_TyConnectionId id = bufferevent_getfd(pEvent);
-		auto ret = CNetPool::InstancePtr()->GetRecvBuffer(id);
-		if (!ret.has_value())
-		{
-			return -1;
-		}
 		std::vector<std::unique_ptr<CRequest>> reqs;
-		std::size_t sz = net::utility::RequestFromBuffer(reqs, pEvent, *ret.value());
+		std::size_t sz = net::utility::RequestFromBuffer(reqs, pEvent);
 		if (m_dispatcher != nullptr)
 		{
 			std::vector<CNetEvent> events;

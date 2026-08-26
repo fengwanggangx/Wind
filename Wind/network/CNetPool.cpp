@@ -216,6 +216,12 @@ namespace net
 		return &mIter->second->m_buffer_recv;
 	}
 
+	std::optional<std::vector<char>*> CNetPool::GetRecvBuffer(struct bufferevent* pEvent)
+	{
+		_TyConnectionId id = ;
+		return GetRecvBuffer(id);
+	}
+
 	std::optional<std::vector<char>*> CNetPool::GetSendBuffer(_TyConnectionId id)
 	{
 		std::unique_lock<std::shared_mutex> lock(m_shared_mtx_pool);
@@ -225,6 +231,12 @@ namespace net
 			return std::nullopt;
 		}
 		return &mIter->second->m_buffer_send;
+	}
+
+	std::optional<std::vector<char>*> CNetPool::GetSendBuffer(struct bufferevent* pEvent)
+	{
+		_TyConnectionId id = ;
+		return GetSendBuffer(id);
 	}
 
 	bool CNetPool::SendData2Client(_TyConnectionId id, const char* data, size_t nLength)

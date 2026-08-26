@@ -25,8 +25,14 @@ namespace net
 			return n;
 		}
 
-		std::size_t RequestFromBuffer(std::vector<std::unique_ptr<CRequest>>& reqs, struct bufferevent* pEvent, std::vector<char>& buffer)
+		std::size_t RequestFromBuffer(std::vector<std::unique_ptr<CRequest>>& reqs, struct bufferevent* pEvent)
 		{
+			auto ret = CNetPool::InstancePtr()->GetRecvBuffer(pEvent);
+			if (!ret.has_value())
+			{
+				return 0;
+			}
+			std::vector<char>& buffer = *ret.value();
 			std::vector<char> received;
 			std::size_t nReceived = net::utility::BufferEventReader(pEvent, received);
 			if (nReceived == 0)
@@ -82,7 +88,7 @@ namespace net
 			return nReqCount;
 		}
 
-		bool SendRequest(CRequest* pRequest, struct bufferevent* pEvent, std::vector<char>& buffer)
+		bool SendRequest(CRequest* pRequest, struct bufferevent* pEvent)
 		{
 			if (nullptr == pEvent)
 			{
@@ -93,6 +99,13 @@ namespace net
 			{
 				return false;
 			}
+
+			auto ret = CNetPool::InstancePtr()->GetSendBuffer(pEvent);
+			if (!ret.has_value())
+			{
+				return false;
+			}
+			std::vector<char>& buffer = *ret.value();
 
 			std::string data;
 			if (pRequest->Serialize(&data))

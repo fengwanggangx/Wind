@@ -47,9 +47,6 @@ namespace net
 				void operator()(bufferevent* pEvent) const;
 			};
 
-			std::vector<char> m_buffer_recv;
-			std::vector<char> m_buffer_send;
-
 			std::unique_ptr<bufferevent, CBufferEventDeleter> m_pEvent;
 			std::atomic_bool m_bConnected{false};
 			std::unique_ptr<_TyDistributor> m_dispatcher;

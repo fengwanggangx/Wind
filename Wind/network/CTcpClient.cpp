@@ -12,8 +12,6 @@ namespace net
 {
 	CTcpClient::CTcpClient(const std::string& strAddr, int nPort) : m_dispatcher(std::make_unique<_TyDistributor>()), m_strAddr(strAddr), m_nPort(nPort)
 	{
-		m_buffer_recv.reserve(4096);
-		m_buffer_send.reserve(4096);
 	}
 
 	CTcpClient::~CTcpClient()
@@ -89,7 +87,8 @@ namespace net
 		{
 			return false;
 		}
-		return net::utility::SendRequest(pRequest, m_pEvent.get(), m_buffer_send);
+
+		return net::utility::SendRequest(pRequest, m_pEvent.get());
 	}
 
 	void CTcpClient::RegisterHandler(_TyHandler&& handler)
@@ -115,14 +114,8 @@ namespace net
 
 	std::size_t CTcpClient::OnRead(bufferevent* pEvent)
 	{
-		_TyConnectionId id = bufferevent_getfd(pEvent);
-		auto ret = CNetPool::InstancePtr()->GetRecvBuffer(id);
-		if (!ret.has_value())
-		{
-			return -1;
-		}
 		std::vector<std::unique_ptr<CRequest>> reqs;
-		std::size_t sz = net::utility::RequestFromBuffer(reqs, pEvent, *ret.value());
+		std::size_t sz = net::utility::RequestFromBuffer(reqs, pEvent);
 		if (m_dispatcher != nullptr)
 		{
 			std::vector<CNetEvent> events;

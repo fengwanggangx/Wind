@@ -36,8 +36,6 @@ namespace net
 
 	private:
 		int	m_nPort{ -1 };
-		std::vector<char> m_buffer_recv;
-		std::vector<char> m_buffer_send;
 		std::unique_ptr<_TyDistributor> m_dispatcher;
 	};
 }
