@@ -80,24 +80,31 @@ class CRequest
 	public:
 		std::uint64_t GetId() const;
 		void SetId(std::uint64_t nId);
+
 		CRequest::Type GetType() const;
 		void SetType(CRequest::Type type);
+
 		std::string GetCmd() const;
 		void SetCmd(const std::string& strCmd);
+
 		std::string GetExtraData(const std::string& strKey) const;
 		std::unordered_map<std::string, std::string> GetExtraData() const;
+
 		void SetExtraData(const std::string& strKey, const std::string& strVal);
 		std::string GetReturnData(const std::string& strKey) const;
+
 		std::unordered_map<std::string, std::string> GetReturnData() const;
 		void SetReturnData(const std::string& strKey, const std::string& strVal);
+
 		void SetData(std::unique_ptr<CData> data);
 		const CData* GetData() const;
+
+		void SetConnectionId(net::_TyConnectionId id);
+		net::_TyConnectionId GetConnectionId() const;
 
 	public:
 		bool Serialize(std::string* output) const;
 		bool Deserialize(const std::string& data);
-		void SetConnectionId(net::_TyConnectionId id);
-		net::_TyConnectionId GetConnectionId() const;
 
 	private:
 		std::unique_ptr<google::protobuf::Arena> m_arena;
