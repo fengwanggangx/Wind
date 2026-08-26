@@ -1,46 +1,40 @@
 #include "CHQRequest.h"
 
-CRequest* CHQRequest::Create(const std::string& strCommand, std::uint64_t nRequestId)
+CRequest* CHQRequest::Create(const std::string& strCommand)
 {
 	CRequest* request = new CRequest();
 	request->SetType(CRequest::Type::HQMARKET);
 	request->SetCmd(strCommand);
-	if (nRequestId != 0)
-	{
-		request->SetId(nRequestId);
-	}
 	return request;
 }
 
-CRequest* CHQRequest::Subscribe(const std::string& strInstrument, const std::string& strChannel,
-	std::uint64_t nRequestId)
+CRequest* CHQRequest::Subscribe(const std::string& strInstrument, const std::string& strChannel)
 {
-	auto request = Create("subscribe", nRequestId);
+	auto request = Create("subscribe");
 	request->SetExtraData("instrument", strInstrument);
 	request->SetExtraData("channel", strChannel);
 	return request;
 }
 
-CRequest* CHQRequest::Unsubscribe(const std::string& strInstrument, const std::string& strChannel,
-	std::uint64_t nRequestId)
+CRequest* CHQRequest::Unsubscribe(const std::string& strInstrument, const std::string& strChannel)
 {
-	auto request = Create("unsubscribe", nRequestId);
+	auto request = Create("unsubscribe");
 	request->SetExtraData("instrument", strInstrument);
 	request->SetExtraData("channel", strChannel);
 	return request;
 }
 
-CRequest* CHQRequest::QueryQuote(const std::string& strInstrument, std::uint64_t nRequestId)
+CRequest* CHQRequest::QueryQuote(const std::string& strInstrument)
 {
-	auto request = Create("query_quote", nRequestId);
+	auto request = Create("query_quote");
 	request->SetExtraData("instrument", strInstrument);
 	return request;
 }
 
 CRequest* CHQRequest::QueryBars(const std::string& strInstrument, const std::string& strChannel,
-	std::int64_t nBeginTime, std::int64_t nEndTime, std::uint64_t nRequestId)
+	std::int64_t nBeginTime, std::int64_t nEndTime)
 {
-	auto request = Create("query_bars", nRequestId);
+	auto request = Create("query_bars");
 	request->SetExtraData("instrument", strInstrument);
 	request->SetExtraData("channel", strChannel);
 	request->SetExtraData("begin_time_ms", std::to_string(nBeginTime));
@@ -48,9 +42,9 @@ CRequest* CHQRequest::QueryBars(const std::string& strInstrument, const std::str
 	return request;
 }
 
-CRequest* CHQRequest::Heartbeat(std::int64_t nClientTime, std::uint64_t nRequestId)
+CRequest* CHQRequest::Heartbeat(std::int64_t nClientTime)
 {
-	auto request = Create("heartbeat", nRequestId);
+	auto request = Create("heartbeat");
 	request->SetExtraData("client_time_ms", std::to_string(nClientTime));
 	return request;
 }

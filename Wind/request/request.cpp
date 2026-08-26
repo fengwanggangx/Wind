@@ -128,9 +128,10 @@ static request::RequestType ToProtoType(CRequest::Type type)
 
 CRequest::CRequest() : m_arena(std::make_unique<google::protobuf::Arena>())
 {
-	static std::atomic_uint64_t s_id{1};
 	m_data = google::protobuf::Arena::CreateMessage<request::RequestData>(m_arena.get());
-	m_data->set_id(s_id.fetch_add(1, std::memory_order_relaxed));
+
+	static std::atomic_uint64_t s_id{ 1 };
+	SetId(s_id.fetch_add(1, std::memory_order_relaxed));
 }
 
 CRequest::~CRequest() = default;
