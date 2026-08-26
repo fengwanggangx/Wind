@@ -218,7 +218,7 @@ namespace net
 
 	std::optional<std::vector<char>*> CNetPool::GetRecvBuffer(struct bufferevent* pEvent)
 	{
-		_TyConnectionId id = ;
+		_TyConnectionId id = bufferevent_getfd(pEvent);
 		return GetRecvBuffer(id);
 	}
 
@@ -235,7 +235,7 @@ namespace net
 
 	std::optional<std::vector<char>*> CNetPool::GetSendBuffer(struct bufferevent* pEvent)
 	{
-		_TyConnectionId id = ;
+		_TyConnectionId id = bufferevent_getfd(pEvent);
 		return GetSendBuffer(id);
 	}
 

@@ -9,6 +9,7 @@
 #include <string.h>
 #include <mutex>
 #include <unordered_map>
+#include "CNetPool.h"
 
 namespace net
 {
