@@ -36,15 +36,23 @@ CData::CData(std::string type, void* pData) : m_type(std::move(type)), m_pData(p
 
 CData::~CData()
 {
+	Reset();
+}
+
+void CData::Reset()
+{
 #define DELETE_DATA(TypeName, DataType) \
 	if (TypeName == m_type) \
 	{ \
 		delete static_cast<DataType*>(m_pData); \
 		m_pData = nullptr; \
+		m_type.clear(); \
 		return; \
 	}
 	FOR_EACH_DATA_TYPE(DELETE_DATA)
 #undef DELETE_DATA
+	m_pData = nullptr;
+	m_type.clear();
 }
 
 const std::string& CData::GetType() const
@@ -78,7 +86,7 @@ bool CData::Serialize(std::string* output) const
 	return false;
 }
 
-std::unique_ptr<CData> CData::Deserialize(const std::string& type, const std::string& payload)
+bool CData::Deserialize(const std::string& type, const std::string& payload)
 {
 #define DESERIALIZE_DATA(TypeName, DataType) \
 	if (TypeName == type) \
@@ -86,13 +94,16 @@ std::unique_ptr<CData> CData::Deserialize(const std::string& type, const std::st
 		auto data = std::make_unique<DataType>(); \
 		if (!data->ParseFromString(payload)) \
 		{ \
-			return nullptr; \
+			return false; \
 		} \
-		return std::make_unique<CData>(type, data.release()); \
+		Reset(); \
+		m_type = type; \
+		m_pData = data.release(); \
+		return true; \
 	}
 	FOR_EACH_DATA_TYPE(DESERIALIZE_DATA)
 #undef DESERIALIZE_DATA
-	return nullptr;
+	return false;
 }
 
 static request::RequestType ToProtoType(CRequest::Type type)
@@ -157,11 +168,12 @@ bool CRequest::Deserialize(const std::string& data)
 	google::protobuf::Map<std::string, std::string>::const_iterator payload = m_data->ret().find(DataPayloadKey);
 	if ((m_data->ret().end() != type) && (m_data->ret().end() != payload))
 	{
-		m_cdata = CData::Deserialize(type->second, payload->second);
-		if (nullptr == m_cdata)
+		auto cdata = std::make_unique<CData>();
+		if (!cdata->Deserialize(type->second, payload->second))
 		{
 			return false;
 		}
+		m_cdata = std::move(cdata);
 	}
 	else
 	{

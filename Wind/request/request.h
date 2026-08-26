@@ -10,6 +10,7 @@
 class CData final
 {
 	public:
+		CData() = default;
 		CData(std::string type, void* pData);
 		~CData();
 		CData(const CData&) = delete;
@@ -34,9 +35,11 @@ class CData final
 		}
 
 		bool Serialize(std::string* output) const;
-		static std::unique_ptr<CData> Deserialize(const std::string& type, const std::string& payload);
+		bool Deserialize(const std::string& type, const std::string& payload);
 
 	private:
+		void Reset();
+
 		std::string m_type;
 		void* m_pData{ nullptr };
 };
