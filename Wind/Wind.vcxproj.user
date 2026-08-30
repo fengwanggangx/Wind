@@ -4,7 +4,7 @@
     <RemoteTarget>1932303632;172.17.93.107 (username=, port=22, authentication=Password)</RemoteTarget>
     <PreLaunchCommand>export LD_LIBRARY_PATH=$(RemoteDeployDir)/libs/debug:$LD_LIBRARY_PATH</PreLaunchCommand>
     <DebuggerFlavor>LinuxDebugger</DebuggerFlavor>
-    <RemoteDebuggingTarget>1916215094;192.168.31.102 (username=, port=22, authentication=Password)</RemoteDebuggingTarget>
+    <RemoteDebuggingTarget>1932303632;172.17.93.107 (username=, port=22, authentication=Password)</RemoteDebuggingTarget>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DebuggerFlavor>LinuxDebugger</DebuggerFlavor>

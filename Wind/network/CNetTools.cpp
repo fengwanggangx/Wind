@@ -1,4 +1,4 @@
-#include "CNetTools.h"
+
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -9,6 +9,7 @@
 #include <string.h>
 #include <mutex>
 #include <unordered_map>
+#include "CNetPool.h"
 
 namespace net
 {
