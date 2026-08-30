@@ -5,9 +5,11 @@
     <PreLaunchCommand>export LD_LIBRARY_PATH=$(RemoteDeployDir)/libs/debug:$LD_LIBRARY_PATH</PreLaunchCommand>
     <DebuggerFlavor>LinuxDebugger</DebuggerFlavor>
     <RemoteDebuggingTarget>1916215094;192.168.31.102 (username=, port=22, authentication=Password)</RemoteDebuggingTarget>
+    <RemoteDebuggerWorkingDirectory>$(RemoteOutDir)</RemoteDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DebuggerFlavor>LinuxDebugger</DebuggerFlavor>
     <PreLaunchCommand>export LD_LIBRARY_PATH=$(RemoteDeployDir)/libs/release:$LD_LIBRARY_PATH</PreLaunchCommand>
+    <RemoteDebuggerWorkingDirectory>$(RemoteOutDir)</RemoteDebuggerWorkingDirectory>
   </PropertyGroup>
 </Project>

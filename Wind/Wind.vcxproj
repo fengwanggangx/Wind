@@ -77,9 +77,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <RemoteCompileLocalCopyObjectFiles>true</RemoteCompileLocalCopyObjectFiles>
     <CopyAdditionalIncludes>true</CopyAdditionalIncludes>
+    <RemoteOutDir>$(RemoteProjectDir)exec/debug/</RemoteOutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <RemoteCompileLocalCopyObjectFiles>true</RemoteCompileLocalCopyObjectFiles>
+    <RemoteOutDir>$(RemoteProjectDir)exec/release/</RemoteOutDir>
     <LibraryPath>
     </LibraryPath>
   </PropertyGroup>
