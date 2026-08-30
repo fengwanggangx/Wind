@@ -27,7 +27,7 @@ namespace net
 
 		std::size_t RequestFromBuffer(std::vector<std::unique_ptr<CRequest>>& reqs, struct bufferevent* pEvent)
 		{
-			auto ret = CNetPool::InstancePtr()->GetRecvBuffer(pEvent);
+			auto ret = net::CNetPool::InstancePtr()->GetRecvBuffer(pEvent);
 			if (!ret.has_value())
 			{
 				return 0;
@@ -100,7 +100,7 @@ namespace net
 				return false;
 			}
 
-			auto ret = CNetPool::InstancePtr()->GetSendBuffer(pEvent);
+			auto ret = net::CNetPool::InstancePtr()->GetSendBuffer(pEvent);
 			if (!ret.has_value())
 			{
 				return false;
