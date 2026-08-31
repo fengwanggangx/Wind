@@ -1,6 +1,7 @@
 #ifndef WIND_HQMARKET_CHQMARKET_H
 #define WIND_HQMARKET_CHQMARKET_H
 
+#include "MarketTypes.h"
 #include "../request/request.h"
 #include <atomic>
 #include <functional>
@@ -26,6 +27,8 @@ class CHQMarket final
 
 		bool Initialize(const std::string& strToken);
 		void Stop();
+		// 订阅指定股票的当日实时行情。
+		bool SubscribeQuote(const std::string& strCode, market::Exchange mk);
 		// 接管request所有权，调用结束后自动释放。
 		bool SendRequest(CRequest* pRequest);
 		void RegisterHandler(_TyHandler handler);

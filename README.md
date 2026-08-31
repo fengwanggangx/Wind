@@ -20,7 +20,11 @@ HQMarket 认证 Token 从 `Wind/ini/system.ini` 读取：
 token=replace-with-your-token
 ```
 
-例如：`market.SendRequest(CHQRequest::Subscribe("600519.SSE", "quote"));`。
+订阅股票当日实时行情时，代码和交易所分开传入：
+
+```cpp
+hqMarket.SubscribeQuote("600519", market::Exchange::sse);
+```
 
 响应仍以 `CRequest` 回调：`cmd` 是 HQMarket 消息类型，`ret["request_id"]`
 用于关联请求。`CRequest::GetData()` 返回运行期 `CData` 指针，其中 `type` 标识具体

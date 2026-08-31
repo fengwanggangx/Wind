@@ -8,17 +8,9 @@ CRequest* CHQRequest::Create(const std::string& strCommand)
 	return request;
 }
 
-CRequest* CHQRequest::Subscribe(const std::string& strInstrument, const std::string& strChannel)
+CRequest* CHQRequest::GetSubscribeRequest(const std::string& strInstrument, const std::string& strChannel, bool bSub)
 {
-	auto request = Create("subscribe");
-	request->SetExtraData("instrument", strInstrument);
-	request->SetExtraData("channel", strChannel);
-	return request;
-}
-
-CRequest* CHQRequest::Unsubscribe(const std::string& strInstrument, const std::string& strChannel)
-{
-	auto request = Create("unsubscribe");
+	auto request = Create(bSub ? "subscribe" : "unsubscribe");
 	request->SetExtraData("instrument", strInstrument);
 	request->SetExtraData("channel", strChannel);
 	return request;

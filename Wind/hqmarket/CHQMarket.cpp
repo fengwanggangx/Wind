@@ -1,4 +1,5 @@
 #include "CHQMarket.h"
+#include "CHQRequest.h"
 #include "../network/CTcpClient.h"
 #include "../network/common_net.h"
 
@@ -68,6 +69,16 @@ bool CHQMarket::IsConnected() const
 bool CHQMarket::IsAuthenticated() const
 {
 	return m_bAuthenticated;
+}
+
+bool CHQMarket::SubscribeQuote(const std::string& strCode, market::Exchange mk)
+{
+	std::string strKey = FmtSecurityString(strCode, mk);
+	if (strKey.empty())
+	{
+		return false;
+	}
+	return SendRequest(CHQRequest::GetSubscribeRequest(strKey, "quote", true));
 }
 
 void CHQMarket::RegisterHandler(_TyHandler handler)
