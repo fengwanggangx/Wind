@@ -2,11 +2,12 @@
 #include <memory>
 #include <string>
 #include <utility>
+#include "./hqmarket/CHQMarket.h"
+#include "./hqmarket/v1/market.pb.h"
 #include "./network/CTcpServer.h"
 #include "./network/CHttpServer.h"
 #include "./network/common_net.h"
 #include "./system/CBootLoader.h"
-#include "./hqmarket/CHQMarket.h"
 
 
 void TcpTest(net::CTcpServer* pTcpServer)
@@ -61,6 +62,63 @@ void HttpTest(net::CHttpServer* pHttpServer)
 		});
 }
 
+void HQMarketTest(CHQMarket* pHQMarket)
+{
+	if (nullptr == pHQMarket)
+	{
+		return;
+	}
+
+	pHQMarket->RegisterHandler([pHQMarket](std::unique_ptr<CRequest> request)
+	{
+		if (nullptr == request)
+		{
+			return;
+		}
+
+		const std::string strCommand = request->GetCmd();
+		if (("auth" == strCommand) || ("auth_response" == strCommand))
+		{
+			if (!pHQMarket->IsAuthenticated())
+			{
+				std::cerr << "HQMarket authentication failed\n";
+				return;
+			}
+			if (!pHQMarket->SubscribeQuote("600010", market::Exchange::sse))
+			{
+				std::cerr << "Failed to send 600010.SSE quote subscription\n";
+			}
+			return;
+		}
+
+		if ("subscription_ack" == strCommand)
+		{
+			std::cout << "600010.SSE quote subscription accepted="
+				<< request->GetReturnData("accepted") << '\n';
+			return;
+		}
+
+		if ("quote" != strCommand)
+		{
+			return;
+		}
+		const CData* pData = request->GetData();
+		if (nullptr == pData)
+		{
+			return;
+		}
+		const hqmarket::market::v1::QuoteData* pQuote = pData->GetDataAs<hqmarket::market::v1::QuoteData>();
+		if ((nullptr == pQuote) || ("600010" != pQuote->instrument().symbol()))
+		{
+			return;
+		}
+		std::cout << "600010.SSE quote: lastPrice=" << pQuote->last_price()
+			<< ", priceScale=" << pQuote->price_scale()
+			<< ", volume=" << pQuote->volume()
+			<< ", exchangeTimeMs=" << pQuote->exchange_time_ms() << '\n';
+	});
+}
+
 int main()
 {
 	CBootLoader boot;
@@ -77,6 +135,7 @@ int main()
 		std::cerr << "HQMarket token is required\n";
 		return 7;
 	}
+	HQMarketTest(&hqMarket);
 
 	if (!boot.Run())
 	{
