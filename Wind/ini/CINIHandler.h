@@ -1,66 +1,68 @@
-#ifndef __CINIHANDLER_H__
-#define __CINIHANDLER_H__
+#ifndef HQMARKET_INI_CINIHANDLER_H
+#define HQMARKET_INI_CINIHANDLER_H
 
+#include <memory>
 #include <string>
+#include <type_traits>
 #include <unordered_map>
+#include <utility>
 
 #include "../common/ISingleton.h"
 #include "CIniFile.h"
-#include <type_traits>
 
 namespace ini
 {
-	enum class cfgs
+	enum class Config
 	{
-		system = 0,
-		ui,
-		sqlite,
-		mysql,
-		oracle
+		System = 0,
+		Ui,
+		Sqlite,
+		Mysql,
+		Oracle
 	};
 
-	class CIniFile;
 	class CINIHandler : public ISingleton<CINIHandler>
 	{
 		DECLARE_SINGLE_DFAULT(CINIHandler)
 
 	public:
-		template <class _Ty, std::enable_if_t<!std::is_convertible<_Ty, std::string>::value, int> = 0>
-		_Ty GetValue(ini::cfgs cfg, const std::string& strSection, const std::string& strKey, _Ty&& def) const
+		template <class Type, std::enable_if_t<!std::is_convertible<Type, std::string>::value, int> = 0>
+		Type GetValue(Config config, const std::string& section, const std::string& key, Type&& defaultValue) const
 		{
-			const auto& mIter = m_ini.find(cfg);
-			if ((m_ini.end() == mIter) || (nullptr == mIter->second))
+			const auto& iter = m_iniFiles.find(config);
+			if (m_iniFiles.end() == iter)
 			{
-				return def;
+				return std::forward<Type>(defaultValue);
 			}
-			return mIter->second->GetValue(strSection, strKey, std::forward<_Ty>(def));
+			return iter->second->GetValue(section, key, std::forward<Type>(defaultValue));
 		}
 
-		template <class _Ty, std::enable_if_t<std::is_convertible<_Ty, std::string>::value, int> = 0>
-		std::string GetValue(ini::cfgs cfg, const std::string& strSection, const std::string& strKey, _Ty&& def) const
+		template <class Type, std::enable_if_t<std::is_convertible<Type, std::string>::value, int> = 0>
+		std::string GetValue(Config config, const std::string& section, const std::string& key, Type&& defaultValue) const
 		{
-			const auto& mIter = m_ini.find(cfg);
-			if ((m_ini.end() == mIter) || (nullptr == mIter->second))
+			const auto& iter = m_iniFiles.find(config);
+			if (m_iniFiles.end() == iter)
 			{
-				return def;
+				return std::forward<Type>(defaultValue);
 			}
-			return	mIter->second->GetString(strSection, strKey, std::forward<_Ty>(def));
+			return iter->second->GetString(section, key, std::forward<Type>(defaultValue));
 		}
 
-		template <class _Ty>
-		bool SetValue(ini::cfgs cfg, const std::string& strSection, const std::string& strKey, _Ty&& val)
+		template <class Type>
+		bool SetValue(Config config, const std::string& section, const std::string& key, Type&& value)
 		{
-			const auto& mIter = m_ini.find(cfg);
-			if ((m_ini.end() == mIter) || (nullptr == mIter->second))
+			const auto& iter = m_iniFiles.find(config);
+			if (m_iniFiles.end() == iter)
 			{
 				return false;
 			}
-			return mIter->second->SetValue(strSection, strKey, val);
+			return iter->second->SetValue(section, key, std::forward<Type>(value));
 		}
-	
+
 		bool Load();
+
 	private:
-		std::unordered_map<ini::cfgs, CIniFile*> m_ini;
+		std::unordered_map<Config, std::unique_ptr<CIniFile>> m_iniFiles;
 	};
 }
 

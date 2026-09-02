@@ -4,6 +4,7 @@
 #include "../network/CTcpClient.h"
 #include "../ini/CINIHandler.h"
 #include <cstdlib>
+#include <utility>
 
 namespace net
 {
@@ -25,13 +26,23 @@ bool CBootLoader::Initialize()
 		return true;
 	}
 
+	m_exec = std::filesystem::current_path();
+
 	m_nErrorCode = 0;
 	m_strLastError.clear();
-	m_strHQMarketToken = ini::CINIHandler::InstancePtr()->GetValue(ini::cfgs::system, "HQMarket", "token", std::string());
-	if (m_strHQMarketToken.empty())
+	net::EnvInitialize();
+	if (!net::IsThreadEnable())
+	{
+		m_nErrorCode = 1;
+		m_strLastError = "Failed to enable libevent thread support";
+		return false;
+	}
+
+	m_strToken = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "HQMarket", "token", std::string());
+	if (m_strToken.empty())
 	{
 		m_nErrorCode = 2;
-		m_strLastError = "HQMarket token is missing in ini/system.ini [HQMarket] token";
+		m_strLastError = "HQMarket token is required in ini/system.ini";
 		return false;
 	}
 	net::EnvInitialize();
