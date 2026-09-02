@@ -71,16 +71,11 @@ void HQMarketTest(CHQMarket* pHQMarket)
 
 	pHQMarket->RegisterHandler([](const CRequest& request)
 	{
-		if (nullptr == request)
-		{
-			return;
-		}
-
-		const std::string strCommand = request->GetCmd();
+		const std::string strCommand = request.GetCmd();
 		if ("subscription_ack" == strCommand)
 		{
 			std::cout << "600010.SSE minute-bar subscription accepted="
-				<< request->GetReturnData("accepted") << '\n';
+				<< request.GetReturnData("accepted") << '\n';
 			return;
 		}
 
@@ -88,7 +83,7 @@ void HQMarketTest(CHQMarket* pHQMarket)
 		{
 			return;
 		}
-		const CData* pData = request->GetData();
+		const CData* pData = request.GetData();
 		if (nullptr == pData)
 		{
 			return;
