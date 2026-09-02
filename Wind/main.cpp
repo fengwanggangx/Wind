@@ -69,7 +69,7 @@ void HQMarketTest(CHQMarket* pHQMarket)
 		return;
 	}
 
-	pHQMarket->RegisterHandler([pHQMarket](std::unique_ptr<CRequest> request)
+	pHQMarket->RegisterHandler([](const CRequest& request)
 	{
 		if (nullptr == request)
 		{
@@ -77,28 +77,14 @@ void HQMarketTest(CHQMarket* pHQMarket)
 		}
 
 		const std::string strCommand = request->GetCmd();
-		if (("auth" == strCommand) || ("auth_response" == strCommand))
-		{
-			if (!pHQMarket->IsAuthenticated())
-			{
-				std::cerr << "HQMarket authentication failed\n";
-				return;
-			}
-			if (!pHQMarket->SubscribeQuote("600010", market::Exchange::sse))
-			{
-				std::cerr << "Failed to send 600010.SSE quote subscription\n";
-			}
-			return;
-		}
-
 		if ("subscription_ack" == strCommand)
 		{
-			std::cout << "600010.SSE quote subscription accepted="
+			std::cout << "600010.SSE minute-bar subscription accepted="
 				<< request->GetReturnData("accepted") << '\n';
 			return;
 		}
 
-		if ("quote" != strCommand)
+		if (("bar_1m" != strCommand) && ("bar" != strCommand))
 		{
 			return;
 		}
@@ -107,15 +93,18 @@ void HQMarketTest(CHQMarket* pHQMarket)
 		{
 			return;
 		}
-		const hqmarket::market::v1::QuoteData* pQuote = pData->GetDataAs<hqmarket::market::v1::QuoteData>();
-		if ((nullptr == pQuote) || ("600010" != pQuote->instrument().symbol()))
+		const hqmarket::market::v1::BarData* pBar = pData->GetDataAs<hqmarket::market::v1::BarData>();
+		if ((nullptr == pBar) || ("600010" != pBar->instrument().symbol()))
 		{
 			return;
 		}
-		std::cout << "600010.SSE quote: lastPrice=" << pQuote->last_price()
-			<< ", priceScale=" << pQuote->price_scale()
-			<< ", volume=" << pQuote->volume()
-			<< ", exchangeTimeMs=" << pQuote->exchange_time_ms() << '\n';
+		std::cout << "600010.SSE minute bar: beginTimeMs=" << pBar->begin_time_ms()
+			<< ", open=" << pBar->open_price()
+			<< ", high=" << pBar->high_price()
+			<< ", low=" << pBar->low_price()
+			<< ", close=" << pBar->close_price()
+			<< ", volume=" << pBar->volume()
+			<< ", priceScale=" << pBar->price_scale() << '\n';
 	});
 }
 

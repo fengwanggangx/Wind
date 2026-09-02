@@ -18,7 +18,7 @@ namespace net
 class CHQMarket final
 {
 	public:
-		using _TyHandler = std::function<void(std::unique_ptr<CRequest>)>;
+		using _TyHandler = std::function<void(const CRequest&)>;
 
 		explicit CHQMarket(net::CTcpClient* pTcpClient);
 		~CHQMarket();
@@ -27,11 +27,11 @@ class CHQMarket final
 
 		bool Initialize(const std::string& strToken);
 		void Stop();
-		// 订阅指定股票的当日实时行情。
-		bool SubscribeQuote(const std::string& strCode, market::Exchange mk);
+		// 订阅指定证券和数据通道的实时行情。
+		bool SubscribeQuote(const std::string& strCode, market::Exchange mk, market::Channel channel);
 		// 接管request所有权，调用结束后自动释放。
 		bool SendRequest(CRequest* pRequest);
-		void RegisterHandler(_TyHandler handler);
+		void RegisterHandler(_TyHandler&& handler);
 		bool IsConnected() const;
 		bool IsAuthenticated() const;
 
@@ -45,7 +45,7 @@ class CHQMarket final
 		mutable std::mutex m_mtx_state;
 		net::CTcpClient* m_pTcpClient{nullptr};
 		std::string m_strToken;
-		_TyHandler m_handler;
+		std::vector<_TyHandler> m_handlers;
 		std::atomic_bool m_bConnected{false};
 		std::atomic_bool m_bAuthenticated{false};
 };

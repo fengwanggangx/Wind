@@ -47,6 +47,27 @@ namespace market
 		return strCode + "." + strMarket;
 	}
 
+	std::string GetChannelString(Channel channel)
+	{
+		switch (channel)
+		{
+		case Channel::quote:
+			return "quote";
+		case Channel::depth:
+			return "depth";
+		case Channel::trade:
+			return "trade";
+		case Channel::bar_1m:
+			return "bar_1m";
+		case Channel::bar_1d:
+			return "bar_1d";
+		case Channel::market_status:
+			return "market_status";
+		default:
+			return "";
+		}
+	}
+
 	CSecurity::CSecurity(const CSecurity& arg) : m_strCode(arg.m_strCode), m_market(arg.m_market)
 	{
 	}

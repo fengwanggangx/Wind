@@ -643,18 +643,11 @@ namespace net
 		const auto mIter = m_handlers.find(strRouteKey);
 		if (m_handlers.end() != mIter)
 		{
-			auto* pThreadPool = ThreadPoolPtr;
-			if (nullptr == pThreadPool)
-			{
-				evhttp_send_reply(pRequest, HTTP_SERVUNAVAIL, nullptr, nullptr);
-				return;
-			}
-
 			//确定要异步处理后才取得所有权。
 			evhttp_request_own(pRequest);
 			event_base* pBase = GetNet();
 			_TyHandler handler = mIter->second;
-			pThreadPool->PushTask(task_priority::em_normal, 0, [pBase, pRequest, handler = std::move(handler), request = std::move(request)]() mutable
+			ThreadPoolPtr->PushTask(task_priority::em_normal, 0, [pBase, pRequest, handler = std::move(handler), request = std::move(request)]() mutable
 				{
 					std::unique_ptr<CHttpResponseData> response;
 					try

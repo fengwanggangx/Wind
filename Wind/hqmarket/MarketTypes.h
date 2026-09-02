@@ -52,6 +52,7 @@ namespace market
 	};
 
 	std::string GetMarketString(Exchange exchange);
+	std::string GetChannelString(Channel channel);
 	std::string FmtSecurityString(const std::string& strCode, Exchange mk);
 }
 

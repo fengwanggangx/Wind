@@ -71,20 +71,20 @@ bool CHQMarket::IsAuthenticated() const
 	return m_bAuthenticated;
 }
 
-bool CHQMarket::SubscribeQuote(const std::string& strCode, market::Exchange mk)
+bool CHQMarket::SubscribeQuote(const std::string& strCode, market::Exchange mk, market::Channel channel)
 {
 	std::string strKey = FmtSecurityString(strCode, mk);
-	if (strKey.empty())
+	std::string strChannel = market::GetChannelString(channel);
+	if (strKey.empty() || strChannel.empty())
 	{
 		return false;
 	}
-	return SendRequest(CHQRequest::GetSubscribeRequest(strKey, "quote", true));
+	return SendRequest(CHQRequest::GetSubscribeRequest(strKey, strChannel, true));
 }
 
-void CHQMarket::RegisterHandler(_TyHandler handler)
+void CHQMarket::RegisterHandler(_TyHandler&& handler)
 {
-	std::lock_guard<std::mutex> lck(m_mtx_state);
-	m_handler = std::move(handler);
+	m_handlers.emplace_back(std::move(handler));
 }
 
 bool CHQMarket::SendRequest(CRequest* pRequest)
@@ -144,23 +144,35 @@ void CHQMarket::HandleRequest(const CRequest& request)
 	if (("auth" == request.GetCmd()) || ("auth_response" == request.GetCmd()))
 	{
 		m_bAuthenticated = IsAccepted(request);
+		if (!m_bAuthenticated)
+		{
+			std::cerr << "HQMarket declined Authenticate\n";
+		}
+		SubscribeQuote("600010", market::Exchange::sse, market::Channel::bar_1m);
+		return;
+	}
+	
+	if (!IsAuthenticated())
+	{
+		std::cerr << "HQMarket Not Authenticated\n";
+		return;
 	}
 	Dispatch(CloneRequest(request));
 }
 
 void CHQMarket::Dispatch(std::unique_ptr<CRequest> request)
 {
-	if (nullptr == request)
+	std::vector<_TyHandler> handlers;
 	{
-		return;
+		std::lock_guard<std::mutex> lock(m_mtx_state);
+		handlers = m_handlers;
 	}
-	_TyHandler handler;
-	{
-		std::lock_guard<std::mutex> lck(m_mtx_state);
-		handler = m_handler;
-	}
-	if (handler)
-	{
-		handler(std::move(request));
-	}
+
+	ThreadPoolPtr->PushTask(task_priority::em_normal, 0, [req = std::move(request), handlers = std::move(handlers)]() {
+		for (const auto& v : handlers)
+		{
+			v(*req);
+		}
+		});
+	
 }
