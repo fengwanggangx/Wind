@@ -2,6 +2,7 @@
 #include "CHQRequest.h"
 #include "../network/CTcpClient.h"
 #include "../network/common_net.h"
+#include "../common/defines.h"
 
 namespace
 {
