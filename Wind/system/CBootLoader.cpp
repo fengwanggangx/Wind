@@ -53,17 +53,21 @@ bool CBootLoader::Initialize()
 		return false;
 	}
 
-	const char* pszWindTcpPort = std::getenv("WIND_TCP_PORT");
-	const char* pszWindHttpPort = std::getenv("WIND_HTTP_PORT");
-	int nWindTcpPort = ((nullptr != pszWindTcpPort) && ('\0' != *pszWindTcpPort)) ? std::atoi(pszWindTcpPort) : 9801;
-	int nWindHttpPort = ((nullptr != pszWindHttpPort) && ('\0' != *pszWindHttpPort)) ? std::atoi(pszWindHttpPort) : 9802;
-	m_pTcpServer = std::make_unique<net::CTcpServer>(nWindTcpPort);
-	m_pHttpServer = std::make_unique<net::CHttpServer>(nWindHttpPort);
-	const char* pszHQMarketHost = std::getenv("HQMARKET_HOST");
-	const char* pszHQMarketPort = std::getenv("HQMARKET_PORT");
-	std::string strHQMarketHost = ((nullptr != pszHQMarketHost) && ('\0' != *pszHQMarketHost)) ? pszHQMarketHost : "127.0.0.1";
-	int nHQMarketPort = ((nullptr != pszHQMarketPort) && ('\0' != *pszHQMarketPort)) ? std::atoi(pszHQMarketPort) : 9901;
-	m_pTcpClient = std::make_unique<net::CTcpClient>(strHQMarketHost, nHQMarketPort);
+	std::string strTcpPort = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "tcp_port", std::string());
+	std::string strHttpPort = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "http_port", std::string());
+	
+	int nTcpPort = strTcpPort.empty() ? std::atoi(strTcpPort) : 9801;
+	int nHttpPort = strHttpPort.empty() ? std::atoi(strHttpPort) : 9802;
+
+	m_pTcpServer = std::make_unique<net::CTcpServer>(nTcpPort);
+	m_pHttpServer = std::make_unique<net::CHttpServer>(nHttpPort);
+
+
+	std::string strHQMarketServer = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "hqmarket_server", std::string());
+	std::string strHQMarketPort = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "hqmarket_port", std::string());
+
+	int nHQMarketPort = strHQMarketPort.empty() ? std::atoi(strHQMarketPort) : 9901;
+	m_pTcpClient = std::make_unique<net::CTcpClient>(strHQMarketServer, nHQMarketPort);
 
 	m_bInitialized = true;
 	return true;
