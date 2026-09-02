@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <thread>
+#include <filesystem>
 
 namespace net
 {
@@ -24,11 +25,10 @@ class CBootLoader final
 		bool Run();
 		void Finalize();
 		const std::filesystem::path& GetRoot() const;
-		const std::string& GetToken() const;
 		net::CTcpServer& GetTcpServer();
 		net::CTcpClient& GetTcpClient();
 		net::CHttpServer& GetHttpServer();
-		const std::string& GetHQMarketToken() const;
+		const std::string& GetToken() const;
 		const std::string& GetLastError() const;
 		int GetErrorCode() const;
 

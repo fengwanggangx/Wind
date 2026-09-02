@@ -114,7 +114,7 @@ int main()
 	TcpTest(&boot.GetTcpServer());
 	HttpTest(&boot.GetHttpServer());
 	CHQMarket hqMarket(&boot.GetTcpClient());
-	if (!hqMarket.Initialize(boot.GetHQMarketToken()))
+	if (!hqMarket.Initialize(boot.GetToken()))
 	{
 		std::cerr << "HQMarket token is required\n";
 		return 7;

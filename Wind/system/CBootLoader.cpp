@@ -45,28 +45,32 @@ bool CBootLoader::Initialize()
 		m_strLastError = "HQMarket token is required in ini/system.ini";
 		return false;
 	}
-	net::EnvInitialize();
-	if (!net::IsThreadEnable())
-	{
-		m_nErrorCode = 1;
-		m_strLastError = "Failed to enable libevent thread support";
-		return false;
-	}
 
 	std::string strTcpPort = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "tcp_port", std::string());
 	std::string strHttpPort = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "http_port", std::string());
-	
-	int nTcpPort = strTcpPort.empty() ? std::atoi(strTcpPort) : 9801;
-	int nHttpPort = strHttpPort.empty() ? std::atoi(strHttpPort) : 9802;
+	if (strTcpPort.empty() || strHttpPort.empty())
+	{
+		m_nErrorCode = 3;
+		m_strLastError = "HQMarket tcp_port && http_port is required in ini/system.ini";
+		return false;
+	}
+
+	std::string strHQMarketServer = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "hqmarket_server", std::string());
+	std::string strHQMarketPort = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "hqmarket_port", std::string());
+	if (strHQMarketServer.empty() || strHQMarketPort.empty())
+	{
+		m_nErrorCode = 4;
+		m_strLastError = "HQMarket hqmarket_server && hqmarket_port is required in ini/system.ini";
+		return false;
+	}
+
+	int nTcpPort = std::atoi(strTcpPort.c_str());
+	int nHttpPort = std::atoi(strHttpPort.c_str());
 
 	m_pTcpServer = std::make_unique<net::CTcpServer>(nTcpPort);
 	m_pHttpServer = std::make_unique<net::CHttpServer>(nHttpPort);
 
-
-	std::string strHQMarketServer = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "hqmarket_server", std::string());
-	std::string strHQMarketPort = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "hqmarket_port", std::string());
-
-	int nHQMarketPort = strHQMarketPort.empty() ? std::atoi(strHQMarketPort) : 9901;
+	int nHQMarketPort = std::atoi(strHQMarketPort.c_str());
 	m_pTcpClient = std::make_unique<net::CTcpClient>(strHQMarketServer, nHQMarketPort);
 
 	m_bInitialized = true;
@@ -144,9 +148,9 @@ net::CHttpServer& CBootLoader::GetHttpServer()
 	return *m_pHttpServer;
 }
 
-const std::string& CBootLoader::GetHQMarketToken() const
+const std::string& CBootLoader::GetToken() const
 {
-	return m_strHQMarketToken;
+	return m_strToken;
 }
 
 const std::string& CBootLoader::GetLastError() const

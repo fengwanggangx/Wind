@@ -131,9 +131,10 @@ namespace net
 		return sz;
 	}
 
-	void CTcpClient::OnConnected(bufferevent*)
+	void CTcpClient::OnConnected(bufferevent* pEvent)
 	{
 		m_bConnected = true;
+		struct bufferevent* pBuffer = CNetPool::InstancePtr()->RegisterAConnection(pEvent, GetNet(), pAddr, nLength, CTcpServer::Read_Callback, nullptr, CTcpServer::Event_Callback, this);
 		if (nullptr != m_dispatcher)
 		{
 			std::vector<CNetEvent> events;
