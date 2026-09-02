@@ -72,6 +72,11 @@ namespace net
 		m_bConnected = false;
 	}
 
+	net::_TyConnectionId CTcpClient::GetId() const
+	{
+		return m_id;
+	}
+
 	bool CTcpClient::Send(const void* pData, std::size_t nLength)
 	{
 		if ((nullptr == pData) || (0 == nLength) || !m_bConnected)
@@ -81,14 +86,14 @@ namespace net
 		return (nullptr != m_pEvent) && (0 == bufferevent_write(m_pEvent.get(), pData, nLength));
 	}
 
-	bool CTcpClient::SendRequest(CRequest* pRequest)
+	bool CTcpClient::SendRequest(const CRequest& req)
 	{
-		if ((nullptr == pRequest) || !m_bConnected || (nullptr == m_pEvent))
+		if (!m_bConnected || (nullptr == m_pEvent))
 		{
 			return false;
 		}
 
-		return net::utility::SendRequest(pRequest, m_pEvent.get());
+		return net::SendRequest(GetId(), req);
 	}
 
 	void CTcpClient::RegisterHandler(_TyHandler&& handler)
@@ -115,7 +120,7 @@ namespace net
 	std::size_t CTcpClient::OnRead(bufferevent* pEvent)
 	{
 		std::vector<std::unique_ptr<CRequest>> reqs;
-		std::size_t sz = net::utility::RequestFromBuffer(reqs, pEvent);
+		std::size_t sz = net::RequestFromBuffer(reqs, pEvent);
 		if (m_dispatcher != nullptr)
 		{
 			std::vector<CNetEvent> events;
@@ -134,7 +139,7 @@ namespace net
 	void CTcpClient::OnConnected(bufferevent* pEvent)
 	{
 		m_bConnected = true;
-		struct bufferevent* pBuffer = CNetPool::InstancePtr()->RegisterAConnection(pEvent);
+		m_id = CNetPool::InstancePtr()->RegisterAConnection(pEvent);
 		if (nullptr != m_dispatcher)
 		{
 			std::vector<CNetEvent> events;

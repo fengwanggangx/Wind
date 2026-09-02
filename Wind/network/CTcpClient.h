@@ -27,13 +27,15 @@ namespace net
 			int Initialize();
 
 			bool IsConnected() const;
-			
-			bool SendRequest(CRequest* pRequest);
+
+			bool SendRequest(const CRequest& req);
 
 			void ClearHandlers();
 			void RegisterHandler(_TyHandler&& handler);
 
 			void Release();
+
+			net::_TyConnectionId GetId() const;
 		
 		private:
 			bool Send(const void* pData, std::size_t nLength);
@@ -54,6 +56,8 @@ namespace net
 		private:
 			std::string m_strAddr;
 			int m_nPort{ -1 };
+
+			net::_TyConnectionId m_id{ 0 };
 	};
 } // namespace net
 #endif

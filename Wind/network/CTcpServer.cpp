@@ -35,18 +35,18 @@ namespace net
 		struct bufferevent* pBuffer = CNetPool::InstancePtr()->RegisterConnect(id, GetNet(), pAddr, nLength, CTcpServer::Read_Callback, nullptr, CTcpServer::Event_Callback, this);
 		if (nullptr != pBuffer)
 		{
-			CRequest* pReq = new CRequest;
-			pReq->SetType(CRequest::Type::QUERY_AUTH);
-			pReq->SetCmd("connet_build");
-			pReq->SetExtraData("retmsg", "connect_ok_hahhahahahhahaha");
-			net::utility::SendRequest(pReq, pBuffer);
+			CRequest req;
+			req.SetType(CRequest::Type::QUERY_AUTH);
+			req.SetCmd("connet_build");
+			req.SetExtraData("retmsg", "connect_ok_hahhahahahhahaha");
+			net::SendRequest(pBuffer, req);
 		}
 	}
 
 	std::size_t CTcpServer::OnRead(struct bufferevent* pEvent)
 	{
 		std::vector<std::unique_ptr<CRequest>> reqs;
-		std::size_t sz = net::utility::RequestFromBuffer(reqs, pEvent);
+		std::size_t sz = net::RequestFromBuffer(reqs, pEvent);
 		if (m_dispatcher != nullptr)
 		{
 			std::vector<CNetEvent> events;

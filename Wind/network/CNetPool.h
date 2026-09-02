@@ -28,12 +28,11 @@ namespace net
 			net::_TyConnectionId CloseAConnection(_TyConnectionId id);
 			net::_TyConnectionId CloseAConnection(struct bufferevent* pEvent);
 
-			bool SendData2Client(_TyConnectionId id, const char* data, size_t nLength);
+			bool Send(_TyConnectionId id, const char* data, size_t nLength);
 			std::size_t Count() const;
-
 			struct bufferevent* RegisterConnect(_TyConnectionId id, struct event_base* pNet, struct sockaddr* pAddr, int nLength, bufferevent_data_cb readcb, bufferevent_data_cb writecb, bufferevent_event_cb eventcb, void* cbarg);
-
-			struct bufferevent* RegisterAConnection(struct bufferevent* pEvent);
+			
+			_TyConnectionId RegisterAConnection(struct bufferevent* pEvent);
 			struct bufferevent* RegisterAConnection(_TyConnectionId id, struct bufferevent* pEvent, struct sockaddr_storage* pAddr);
 
 		private:

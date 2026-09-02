@@ -2,6 +2,7 @@
 #include "CHQRequest.h"
 #include "../network/CTcpClient.h"
 #include "../network/common_net.h"
+#include "../network/CNetTools.h"
 #include "../common/defines.h"
 
 namespace
@@ -80,22 +81,23 @@ bool CHQMarket::SubscribeQuote(const std::string& strCode, market::Exchange mk, 
 	{
 		return false;
 	}
-	return SendRequest(CHQRequest::GetSubscribeRequest(strKey, strChannel, true));
+	std::unique_ptr<CRequest> req(CHQRequest::GetSubscribeRequest(strKey, strChannel, true));
+	return SendRequest(*req);
 }
 
 void CHQMarket::RegisterHandler(_TyHandler&& handler)
 {
+	std::lock_guard<std::mutex> lock(m_mtx_state);
 	m_handlers.emplace_back(std::move(handler));
 }
 
-bool CHQMarket::SendRequest(CRequest* pRequest)
+bool CHQMarket::SendRequest(const CRequest& req)
 {
-	std::unique_ptr<CRequest> request(pRequest);
-	if ((nullptr == request) || !m_bAuthenticated || (nullptr == m_pTcpClient))
+	if (!m_bAuthenticated || (nullptr == m_pTcpClient))
 	{
 		return false;
 	}
-	return m_pTcpClient->SendRequest(request.get());
+	return net::SendRequest(m_pTcpClient->GetId(), req);
 }
 
 int CHQMarket::OnNetEvent(const net::CNetEvent& ev)
@@ -129,27 +131,24 @@ int CHQMarket::OnNetEvent(const net::CNetEvent& ev)
 
 void CHQMarket::SendAuthRequest()
 {
-	if (nullptr == m_pTcpClient)
-	{
-		return;
-	}
 	CRequest request;
 	request.SetType(CRequest::Type::HQMARKET);
 	request.SetCmd("auth");
 	request.SetExtraData("token", m_strToken);
-	m_pTcpClient->SendRequest(&request);
+	SendRequest(request);
 }
 
 void CHQMarket::HandleRequest(const CRequest& request)
 {
-	if (("auth" == request.GetCmd()) || ("auth_response" == request.GetCmd()))
+	std::string strCmd = request.GetCmd();
+	if (("auth" == strCmd) || ("auth_response" == strCmd))
 	{
 		m_bAuthenticated = IsAccepted(request);
 		if (!m_bAuthenticated)
 		{
 			std::cerr << "HQMarket declined Authenticate\n";
 		}
-		SubscribeQuote("600010", market::Exchange::sse, market::Channel::bar_1m);
+		SubscribeQuote("600010", market::Exchange::sse, market::Channel::quote);
 		return;
 	}
 	
@@ -158,6 +157,8 @@ void CHQMarket::HandleRequest(const CRequest& request)
 		std::cerr << "HQMarket Not Authenticated\n";
 		return;
 	}
+	std::string strErrCode = request.GetReturnData("error_code");
+	std::string strErrMsg = request.GetReturnData("error_message");
 	Dispatch(CloneRequest(request));
 }
 

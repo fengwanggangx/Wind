@@ -112,6 +112,7 @@
     <ClCompile Include="hqmarket\MarketTypes.cpp" />
     <ClCompile Include="hqmarket\v1\market.pb.cc" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="network\CFrameCodec.cpp" />
     <ClCompile Include="network\CHttpServer.cpp" />
     <ClCompile Include="network\CNet.cpp" />
     <ClCompile Include="network\CTcpClient.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="hqmarket\CHQRequest.h" />
     <ClInclude Include="hqmarket\MarketTypes.h" />
     <ClInclude Include="hqmarket\v1\market.pb.h" />
+    <ClInclude Include="network\CFrameCodec.h" />
     <ClInclude Include="network\CHttpServer.h" />
     <ClInclude Include="network\CNet.h" />
     <ClInclude Include="network\CTcpClient.h" />

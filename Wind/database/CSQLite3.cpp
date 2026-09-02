@@ -92,7 +92,7 @@ namespace db
 			table.second.emplace_back();
 			auto& row = table.second.back();
 			row.reserve(nCols);
-			for (int i = 0; i < nCols; ++i)
+			for (std::size_t i = 0; i < nCols; ++i)
 			{
 				const unsigned char* pszValue = sqlite3_column_text(statement.get(), i);
 				row.emplace_back(nullptr == pszValue ? "" : reinterpret_cast<const char*>(pszValue));

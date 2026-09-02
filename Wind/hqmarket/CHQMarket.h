@@ -30,7 +30,7 @@ class CHQMarket final
 		// 订阅指定证券和数据通道的实时行情。
 		bool SubscribeQuote(const std::string& strCode, market::Exchange mk, market::Channel channel);
 		// 接管request所有权，调用结束后自动释放。
-		bool SendRequest(CRequest* pRequest);
+		bool SendRequest(const CRequest& req);
 		void RegisterHandler(_TyHandler&& handler);
 		bool IsConnected() const;
 		bool IsAuthenticated() const;

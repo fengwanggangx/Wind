@@ -14,7 +14,6 @@ namespace
 {
 #define FOR_EACH_DATA_TYPE(Action) \
 	Action("hqmarket.market.v1.AuthRequest", hqmarket::market::v1::AuthRequest) \
-	Action("hqmarket.market.v1.AuthResponse", hqmarket::market::v1::AuthResponse) \
 	Action("hqmarket.market.v1.SubscribeRequest", hqmarket::market::v1::SubscribeRequest) \
 	Action("hqmarket.market.v1.UnsubscribeRequest", hqmarket::market::v1::UnsubscribeRequest) \
 	Action("hqmarket.market.v1.SubscriptionAck", hqmarket::market::v1::SubscriptionAck) \
@@ -23,9 +22,7 @@ namespace
 	Action("hqmarket.market.v1.TradeData", hqmarket::market::v1::TradeData) \
 	Action("hqmarket.market.v1.BarData", hqmarket::market::v1::BarData) \
 	Action("hqmarket.market.v1.MarketStatusData", hqmarket::market::v1::MarketStatusData) \
-	Action("hqmarket.market.v1.HeartbeatData", hqmarket::market::v1::HeartbeatData) \
 	Action("hqmarket.market.v1.ProviderStatusData", hqmarket::market::v1::ProviderStatusData) \
-	Action("hqmarket.market.v1.ErrorData", hqmarket::market::v1::ErrorData) \
 	Action("hqmarket.market.v1.QueryRequest", hqmarket::market::v1::QueryRequest) \
 	Action("hqmarket.market.v1.QueryResponse", hqmarket::market::v1::QueryResponse)
 }
@@ -135,6 +132,46 @@ CRequest::CRequest() : m_arena(std::make_unique<google::protobuf::Arena>())
 }
 
 CRequest::~CRequest() = default;
+
+CRequest::CRequest(const CRequest& arg) : CRequest()
+{
+	*this = arg;
+}
+
+CRequest& CRequest::operator=(const CRequest& arg)
+{
+	if (this == &arg)
+	{
+		return *this;
+	}
+
+	auto arena = std::make_unique<google::protobuf::Arena>();
+	request::RequestData* data = google::protobuf::Arena::CreateMessage<request::RequestData>(arena.get());
+	if (nullptr != arg.m_data)
+	{
+		data->CopyFrom(*arg.m_data);
+	}
+
+	std::unique_ptr<CData> cdata;
+	if (nullptr != arg.m_cdata)
+	{
+		std::string payload;
+		if (arg.m_cdata->Serialize(&payload))
+		{
+			cdata = std::make_unique<CData>();
+			if (!cdata->Deserialize(arg.m_cdata->GetType(), payload))
+			{
+				cdata.reset();
+			}
+		}
+	}
+
+	m_arena = std::move(arena);
+	m_data = data;
+	m_cdata = std::move(cdata);
+	m_connection_id = arg.m_connection_id;
+	return *this;
+}
 
 bool CRequest::Serialize(std::string* output) const
 {
