@@ -87,7 +87,15 @@ namespace net
 			return nullptr;
 		}
 		_TyConnectionId id = bufferevent_getfd(pEvent);
-		return RegisterAConnection(id, pEvent, nullptr);
+
+		sockaddr_storage addr{};
+		ev_socklen_t nLen = sizeof(addr);
+		if (0 != getpeername(id, reinterpret_cast<sockaddr*>(&addr), &nLen))
+		{
+			return nullptr;
+		}
+
+		return RegisterAConnection(id, pEvent, &addr);
 	}
 
 	struct bufferevent* CNetPool::RegisterAConnection(_TyConnectionId id, struct bufferevent* pEvent, struct sockaddr_storage* pAddr)
