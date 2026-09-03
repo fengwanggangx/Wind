@@ -286,7 +286,11 @@ namespace net
 		{
 			return false;
 		}
-		std::string frame = net::CFrameBuffer::Encode(strPayload);
+		auto ret = net::CFrameBuffer::Encode(strPayload);
+		if (!ret.has_value())
+		{
+			return false;
+		}
 
 		std::shared_lock<std::shared_mutex> lock(m_shared_mtx_pool);
 		const auto mIter = m_pool.find(id);
@@ -294,7 +298,7 @@ namespace net
 		{
 			return false;
 		}
-		return Send(mIter->second->m_pEvent, frame.data(), frame.size());
+		return Send(mIter->second->m_pEvent, ret->data(), ret->size());
 	}
 
 	std::size_t CNetPool::Count() const

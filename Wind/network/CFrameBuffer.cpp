@@ -6,6 +6,7 @@ namespace net
 	{
 		m_recv_buffer.reserve(4096);
 	}
+
 	std::optional<std::vector<std::string>> CFrameBuffer::Decode(const void* pData, std::size_t nLength)
 	{
 		if (m_bError || ((nullptr == pData) && (nLength != 0)))
@@ -54,6 +55,7 @@ namespace net
 		}
 		return frames;
 	}
+
 	void CFrameBuffer::Reset()
 	{
 		m_recv_buffer.clear();
@@ -65,8 +67,14 @@ namespace net
 		return m_bError;
 	}
 
-	std::string CFrameBuffer::Encode(const std::string& strPayload)
+	std::optional<std::string> CFrameBuffer::Encode(const std::string& strPayload)
 	{
+		std::size_t sz = strPayload.size();
+		if (strPayload.empty() || (sz > m_nMaxFrameSize))
+		{
+			return std::nullopt;
+		}
+
 		std::uint32_t nLength = static_cast<std::uint32_t>(strPayload.size());
 		std::string frame(sizeof(std::uint32_t), '\0');
 		frame[0] = static_cast<char>((nLength >> 24) & 0xFF);

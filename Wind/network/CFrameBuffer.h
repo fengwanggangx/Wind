@@ -22,11 +22,11 @@ namespace net
 
 			void Reset();
 			bool HasError() const;
-			static std::string Encode(const std::string& strPayload);
+			static std::optional<std::string> Encode(const std::string& strPayload);
 			std::optional<std::vector<std::string>> Decode(const void* pData, std::size_t nLength);
 
 		private:
-			const std::size_t m_nMaxFrameSize{ 8 * 1024 * 1024 };
+			static const std::size_t m_nMaxFrameSize{ 8 * 1024 * 1024 };
 			std::vector<std::uint8_t> m_recv_buffer;
 			bool m_bError{ false };
 	};
