@@ -1,12 +1,14 @@
-#include "CNetPool.h"
+#include <string.h>
+#include <utility>
+#include <vector>
 #include <iostream>
 #include "common_net.h"
 #include "event2/event.h"
 #include <event2/buffer.h>
-#include <string.h>
-#include <utility>
-#include <vector>
 #include "CFrameBuffer.h"
+#include "CNetPool.h"
+#include "../request/request.h"
+
 namespace net
 {
 	struct CNetInfo
@@ -292,7 +294,7 @@ namespace net
 		{
 			return false;
 		}
-		return Send(mIter->second->m_pEvent, frame, frame.size());
+		return Send(mIter->second->m_pEvent, frame.data(), frame.size());
 	}
 
 	std::size_t CNetPool::Count() const

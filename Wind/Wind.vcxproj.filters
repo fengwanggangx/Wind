@@ -92,7 +92,7 @@
     <ClCompile Include="hqmarket\v1\market.pb.cc">
       <Filter>hqmarket</Filter>
     </ClCompile>
-    <ClCompile Include="network\CFrameCodec.cpp">
+    <ClCompile Include="network\CFrameBuffer.cpp">
       <Filter>network</Filter>
     </ClCompile>
   </ItemGroup>
@@ -234,7 +234,7 @@
     <ClInclude Include="hqmarket\v1\market.pb.h">
       <Filter>hqmarket</Filter>
     </ClInclude>
-    <ClInclude Include="network\CFrameCodec.h">
+    <ClInclude Include="network\CFrameBuffer.h">
       <Filter>network</Filter>
     </ClInclude>
   </ItemGroup>
