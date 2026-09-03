@@ -285,6 +285,7 @@ namespace net
 			return false;
 		}
 		std::string frame = net::CFrameBuffer::Encode(strPayload);
+
 		std::shared_lock<std::shared_mutex> lock(m_shared_mtx_pool);
 		const auto mIter = m_pool.find(id);
 		if (mIter == m_pool.end())

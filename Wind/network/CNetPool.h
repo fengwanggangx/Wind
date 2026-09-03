@@ -27,13 +27,16 @@ namespace net
 			DECLARE_SINGLE_DFAULT(CNetPool)
 
 		public:
+			std::size_t Count() const;
+
 			std::pair<RecvFrameResult, std::vector<std::string>> GetRecvFrames(_TyConnectionId id, struct bufferevent* pEvent, const char* data, std::size_t nLength);
 
 			net::_TyConnectionId CloseAConnection(_TyConnectionId id);
 			net::_TyConnectionId CloseAConnection(struct bufferevent* pEvent);
 
 			bool Send(_TyConnectionId id, const char* data, size_t nLength);
-			std::size_t Count() const;
+			bool SendRequest(net::_TyConnectionId id, const CRequest& request);
+
 			struct bufferevent* RegisterConnect(_TyConnectionId id, struct event_base* pNet, struct sockaddr* pAddr, int nLength, bufferevent_data_cb readcb, bufferevent_data_cb writecb, bufferevent_event_cb eventcb, void* cbarg);
 			
 			_TyConnectionId RegisterAConnection(struct bufferevent* pEvent);
