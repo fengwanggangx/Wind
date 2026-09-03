@@ -14,16 +14,20 @@
 
 namespace net
 {
+	enum class RecvFrameResult
+	{
+		Ok,
+		ConnectionNotFound,
+		ProtocolError
+	};
+
 	struct CNetInfo;
 	class CNetPool final : public ISingleton<CNetPool>
 	{
 			DECLARE_SINGLE_DFAULT(CNetPool)
 
 		public:
-			std::optional<std::vector<char>*> GetRecvBuffer(_TyConnectionId id);
-			std::optional<std::vector<char>*> GetSendBuffer(_TyConnectionId id);
-			std::optional<std::vector<char>*> GetRecvBuffer(struct bufferevent* pEvent);
-			std::optional<std::vector<char>*> GetSendBuffer(struct bufferevent* pEvent);
+			std::pair<RecvFrameResult, std::vector<std::string>> GetRecvFrames(_TyConnectionId id, struct bufferevent* pEvent, const char* data, std::size_t nLength);
 
 			net::_TyConnectionId CloseAConnection(_TyConnectionId id);
 			net::_TyConnectionId CloseAConnection(struct bufferevent* pEvent);
@@ -38,6 +42,8 @@ namespace net
 		private:
 			bool CloseAConnection(CNetInfo& info);
 			bool RegisterAConnection(_TyConnectionId id, struct bufferevent* pEvent, struct sockaddr* pAddr);
+
+			bool Send(struct bufferevent* pEvent, const char* data, size_t nLength);
 
 		private:
 			mutable std::shared_mutex m_shared_mtx_pool;

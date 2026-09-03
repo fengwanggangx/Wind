@@ -10,16 +10,29 @@
 #include <unordered_map>
 #include "CNetPool.h"
 #include "CNetTools.h"
-#include "CFrameCodec.h"
+#include "CFrameBuffer.h"
 
 namespace net
 {
+	namespace
+	{
+		constexpr std::size_t ReadChunkSize = 64 * 1024;
+	}
+
+	net::_TyConnectionId GetConnectionId(struct bufferevent* pEvent)
+	{
+		if (nullptr == pEvent)
+		{
+			return -1;
+		}
+		return bufferevent_getfd(pEvent);
+	}
 
 	std::size_t BufferEventReader(struct bufferevent* pEvent, std::vector<char>& buffer)
 	{
 		buffer.clear();
 		struct evbuffer* input = bufferevent_get_input(pEvent);
-		std::size_t nLength = evbuffer_get_length(input);
+		std::size_t nLength = std::min(evbuffer_get_length(input), ReadChunkSize);
 		buffer.resize(nLength);
 		std::size_t n = evbuffer_remove(input, buffer.data(), nLength);
 		buffer.resize(n);
@@ -28,62 +41,41 @@ namespace net
 
 	std::size_t RequestFromBuffer(std::vector<std::unique_ptr<CRequest>>& reqs, struct bufferevent* pEvent)
 	{
-		auto ret = CNetPool::InstancePtr()->GetRecvBuffer(pEvent);
-		if (!ret.has_value())
+		if (nullptr == pEvent)
 		{
 			return 0;
 		}
-		std::vector<char>& buffer = *ret.value();
-		std::vector<char> received;
-		std::size_t nReceived = net::BufferEventReader(pEvent, received);
-		if (nReceived == 0)
-		{
-			return 0;
-		}
-		_TyConnectionId id = bufferevent_getfd(pEvent);
-		buffer.insert(buffer.end(), received.begin(), received.end());
-
+		_TyConnectionId id = GetConnectionId(pEvent);
 		std::size_t nReqCount = 0;
-		std::size_t nBufferLength = buffer.size();
-		while (nBufferLength >= sizeof(uint32_t))
+		for (;;)
 		{
-			constexpr std::size_t nHeaderLength = sizeof(uint32_t);
-			uint32_t nDataLength = 0;
-			memcpy(&nDataLength, buffer.data(), nHeaderLength);
-			nDataLength = ntohl(nDataLength);
-
-			if (nBufferLength < (nHeaderLength + nDataLength))
+			std::vector<char> received;
+			if (net::BufferEventReader(pEvent, received) == 0)
 			{
 				break;
 			}
 
-			const char* pszData = buffer.data() + nHeaderLength;
-			std::string strData(pszData, nDataLength);
-
-			std::unique_ptr<CRequest> req = std::make_unique<CRequest>();
-			if (req->Deserialize(strData))
+			auto [result, frames] = CNetPool::InstancePtr()->GetRecvFrames(id, pEvent, received.data(), received.size());
+			if (result != RecvFrameResult::Ok)
 			{
+				if (result == RecvFrameResult::ProtocolError)
+				{
+					bufferevent_trigger_event(pEvent, BEV_EVENT_ERROR, BEV_TRIG_DEFER_CALLBACKS);
+				}
+				return nReqCount;
+			}
+
+			for (const auto& frame : frames)
+			{
+				std::unique_ptr<CRequest> req = std::make_unique<CRequest>();
+				if (!req->Deserialize(frame))
+				{
+					bufferevent_trigger_event(pEvent, BEV_EVENT_ERROR, BEV_TRIG_DEFER_CALLBACKS);
+					return nReqCount;
+				}
 				req->SetConnectionId(id);
 				reqs.emplace_back(std::move(req));
 				++nReqCount;
-			}
-			else
-			{
-				break;
-			}
-
-			// 移除已处理的数据
-			std::size_t nDone = nHeaderLength + nDataLength;
-			if (nBufferLength > nDone)
-			{
-				memmove(buffer.data(), buffer.data() + nDone, nBufferLength - nDone);
-				buffer.resize(nBufferLength - nDone);
-				nBufferLength = buffer.size();
-			}
-			else
-			{
-				buffer.clear();
-				break;
 			}
 		}
 		return nReqCount;
@@ -91,13 +83,7 @@ namespace net
 
 	bool SendRequest(net::_TyConnectionId id, const CRequest& request)
 	{
-		std::string strPayload;
-		if (!request.Serialize(&strPayload))
-		{
-			return false;
-		}
-		std::string frame = net::CFrameCodec::Encode(strPayload);
-		bool bRet = net::CNetPool::InstancePtr()->Send(id, frame.data(), frame.size());
+		bool bRet = net::CNetPool::InstancePtr()->SendRequest(id, request);
 		return bRet;
 	}
 

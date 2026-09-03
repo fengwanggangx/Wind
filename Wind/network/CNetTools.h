@@ -10,6 +10,7 @@ struct bufferevent;
 class CRequest;
 namespace net
 {
+	net::_TyConnectionId GetConnectionId(struct bufferevent* pEvent);
 	std::size_t BufferEventReader(struct bufferevent* pEvent, std::vector<char>& buffer);
 	std::size_t RequestFromBuffer(std::vector<std::unique_ptr<CRequest>>& reqs, struct bufferevent* pEvent);
 
