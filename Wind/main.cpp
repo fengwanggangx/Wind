@@ -8,6 +8,7 @@
 #include "./network/CHttpServer.h"
 #include "./network/common_net.h"
 #include "./system/CBootLoader.h"
+#include "./business/RequestCenter.h"
 
 
 void TcpTest(net::CTcpServer* pTcpServer)
@@ -16,9 +17,7 @@ void TcpTest(net::CTcpServer* pTcpServer)
 	{
 		return;
 	}
-// 	pTcpServer->RegisterHandler(Query);
-// 	pTcpServer->RegisterHandler(Update);
-// 	pTcpServer->RegisterHandler(Auth);
+	pTcpServer->RegisterHandler(HandleUserRequest);
 
 }
 

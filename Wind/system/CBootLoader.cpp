@@ -3,6 +3,8 @@
 #include "../network/CTcpServer.h"
 #include "../network/CTcpClient.h"
 #include "../ini/CINIHandler.h"
+#include "../business/RequestCenter.h"
+#include "../database/CDBEngine.h"
 #include <cstdlib>
 #include <utility>
 
@@ -61,6 +63,21 @@ bool CBootLoader::Initialize()
 	{
 		m_nErrorCode = 4;
 		m_strLastError = "HQMarket hqmarket_server && hqmarket_port is required in ini/system.ini";
+		return false;
+	}
+
+	std::string strMySqlHost = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "MySQL", "host", std::string("127.0.0.1"));
+	std::string strMySqlPort = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "MySQL", "port", std::string("3306"));
+	std::string strMySqlAccount = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "MySQL", "account", std::string("root"));
+	std::string strMySqlPassword = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "MySQL", "password", std::string());
+	std::string strMySqlDatabase = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "MySQL", "database", std::string("wind"));
+	int nMySqlPort = std::atoi(strMySqlPort.c_str());
+	int nMySqlPoolSize = std::atoi(ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "MySQL", "pool_size", std::string("4")).c_str());
+	db::CConnectParam dbParam(strMySqlHost, static_cast<unsigned int>(nMySqlPort), strMySqlAccount, strMySqlPassword, strMySqlDatabase, "utf8mb4");
+	if ((0 != CDBEngine::InstanceRef().Initialize(db::em_database::mysql, dbParam, nMySqlPoolSize)) || !InitializeUserStorage())
+	{
+		m_nErrorCode = 5;
+		m_strLastError = "MySQL initialization failed";
 		return false;
 	}
 
@@ -130,6 +147,7 @@ void CBootLoader::Finalize()
 	m_pHttpServer.reset();
 	m_pTcpClient.reset();
 	m_pTcpServer.reset();
+	CDBEngine::InstanceRef().Close();
 	m_bInitialized = false;
 }
 

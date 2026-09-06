@@ -1,12 +1,12 @@
-#ifndef __CREQUESTCENTER_H__
-#define __CREQUESTCENTER_H__
-#include <memory>
+#ifndef WIND_BUSINESS_REQUESTCENTER_H
+#define WIND_BUSINESS_REQUESTCENTER_H
 
-class CRequest;
+namespace net
+{
+	struct CNetEvent;
+}
 
-
-int Query(const std::unique_ptr<CRequest>& req);
-int Update(const std::unique_ptr<CRequest>& req);
-int Auth(const std::unique_ptr<CRequest>& req);
+bool InitializeUserStorage();
+int HandleUserRequest(const net::CNetEvent& event);
 
 #endif

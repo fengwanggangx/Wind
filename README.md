@@ -20,6 +20,27 @@ HQMarket 认证 Token 从 `Wind/ini/system.ini` 读取：
 token=replace-with-your-token
 ```
 
+## Mary 登录与注册
+
+Wind TCP 服务兼容 Mary 的 `auth` / `register` 请求，账号与密码字段分别为
+`user` / `password`。启动时 Wind 连接 MySQL 并自动创建 `table_user`；密码使用
+每用户随机盐和 SHA-256 摘要保存，不存储明文。
+
+在运行目录的 `ini/system.ini` 中配置数据库：
+
+```ini
+[MySQL]
+host=127.0.0.1
+port=3306
+account=root
+password=your-password
+database=wind
+pool_size=4
+```
+
+数据库 `wind` 需要预先存在，配置账号需要拥有建表、查询和写入权限。账号允许
+3-64 位字母、数字及 `_-.@`，密码长度为 8-128 位。
+
 订阅股票当日实时行情时，代码和交易所分开传入：
 
 ```cpp
