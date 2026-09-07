@@ -11,16 +11,6 @@
 #include "./business/RequestCenter.h"
 
 
-void TcpTest(net::CTcpServer* pTcpServer)
-{
-	if (nullptr == pTcpServer)
-	{
-		return;
-	}
-	pTcpServer->RegisterHandler(HandleUserRequest);
-
-}
-
 std::unique_ptr<net::CHttpResponseData> MakeResponse(int nStatus, std::string strBody, const std::string& strContentType = "text/plain; charset=utf-8")
 {
 	auto response = std::make_unique<net::CHttpResponseData>();
@@ -110,7 +100,7 @@ int main()
 		std::cerr << boot.GetLastError() << '\n';
 		return boot.GetErrorCode();
 	}
-	TcpTest(&boot.GetTcpServer());
+	boot.GetTcpServer().RegisterHandler(OnClientNetEvent);
 	HttpTest(&boot.GetHttpServer());
 	CHQMarket hqMarket(&boot.GetTcpClient());
 	if (!hqMarket.Initialize(boot.GetToken()))

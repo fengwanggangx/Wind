@@ -79,7 +79,7 @@
     <CopyAdditionalIncludes>true</CopyAdditionalIncludes>
     <RemoteOutDir>$(RemoteProjectDir)exec/debug/</RemoteOutDir>
     <OutDir>$(ProjectDir)exec\debug\</OutDir>
-    <RemoteDeployDir>$(RemoteProjectDir)/exec/debug</RemoteDeployDir>
+    <RemoteDeployDir>$(RemoteProjectDir)</RemoteDeployDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <RemoteCompileLocalCopyObjectFiles>true</RemoteCompileLocalCopyObjectFiles>
@@ -87,7 +87,7 @@
     <LibraryPath>
     </LibraryPath>
     <OutDir>$(ProjectDir)exec\release\</OutDir>
-    <RemoteDeployDir>$(RemoteProjectDir)/exec/release</RemoteDeployDir>
+    <RemoteDeployDir>$(RemoteProjectDir)</RemoteDeployDir>
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="basic\CDistributor.cpp" />

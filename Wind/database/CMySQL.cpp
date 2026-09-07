@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <mysql/mysql.h>
 #include "common_db.h"
+#include <iostream>
 #include <memory>
 
 namespace db
@@ -29,11 +30,10 @@ namespace db
 		}
 
 		mysql_options(m_pDB, MYSQL_SET_CHARSET_NAME, param.m_strCharset.c_str());
-		bool bReconnect = true;
-		mysql_options(m_pDB, MYSQL_OPT_RECONNECT, &bReconnect);
-		if (!mysql_real_connect(m_pDB, param.m_strHost.c_str(), param.m_strAccount.c_str(), param.m_strPasswd.c_str(),
+		if (nullptr == mysql_real_connect(m_pDB, param.m_strHost.c_str(), param.m_strAccount.c_str(), param.m_strPasswd.c_str(),
 								param.m_strDataBase.c_str(), param.m_nPort, nullptr, 0))
 		{
+			std::cerr << "MySQL connection failed: " << mysql_error(m_pDB) << '\n';
 			mysql_close(m_pDB);
 			m_pDB = nullptr;
 			return 1;

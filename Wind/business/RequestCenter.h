@@ -7,6 +7,6 @@ namespace net
 }
 
 bool InitializeUserStorage();
-int HandleUserRequest(const net::CNetEvent& event);
+int OnClientNetEvent(const net::CNetEvent& ev);
 
 #endif

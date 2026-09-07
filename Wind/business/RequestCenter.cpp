@@ -22,12 +22,12 @@ namespace
 	constexpr std::size_t MinPasswordLength = 8;
 	constexpr std::size_t MaxPasswordLength = 128;
 
-	std::string ToHex(const std::string& value)
+	std::string ToHex(const std::string& strValue)
 	{
 		constexpr std::array<char, 16> digits{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 		std::string result;
-		result.reserve(value.size() * 2);
-		for (unsigned char character : value)
+		result.reserve(strValue.size() * 2);
+		for (unsigned char character : strValue)
 		{
 			result.push_back(digits[character >> 4]);
 			result.push_back(digits[character & 0x0F]);
@@ -46,13 +46,13 @@ namespace
 		return ToHex(std::string(reinterpret_cast<const char*>(salt.data()), salt.size()));
 	}
 
-	bool IsAccountValid(const std::string& account)
+	bool IsAccountValid(const std::string& strAccount)
 	{
-		if ((MinAccountLength > account.size()) || (MaxAccountLength < account.size()))
+		if ((MinAccountLength > strAccount.size()) || (MaxAccountLength < strAccount.size()))
 		{
 			return false;
 		}
-		for (unsigned char character : account)
+		for (unsigned char character : strAccount)
 		{
 			if ((0 == std::isalnum(character)) && ('_' != character) && ('-' != character) && ('.' != character) && ('@' != character))
 			{
@@ -62,125 +62,125 @@ namespace
 		return true;
 	}
 
-	bool IsPasswordValid(const std::string& password)
+	bool IsPasswordValid(const std::string& strPassword)
 	{
-		return (MinPasswordLength <= password.size()) && (MaxPasswordLength >= password.size());
+		return (MinPasswordLength <= strPassword.size()) && (MaxPasswordLength >= strPassword.size());
 	}
 
-	std::string Utf8Literal(const std::string& value)
+	std::string Utf8Literal(const std::string& strValue)
 	{
-		return "CONVERT(UNHEX('" + ToHex(value) + "') USING utf8mb4)";
+		return "CONVERT(UNHEX('" + ToHex(strValue) + "') USING utf8mb4)";
 	}
 
-	void SendResponse(const CRequest& request, int errorCode, const std::string& message)
+	void SendResponse(const CRequest& req, int nErrorCode, const std::string& strMessage)
 	{
 		CRequest response;
-		response.SetId(request.GetId());
-		response.SetType(request.GetType());
-		response.SetCmd(request.GetCmd());
-		if (0 != errorCode)
+		response.SetId(req.GetId());
+		response.SetType(req.GetType());
+		response.SetCmd(req.GetCmd());
+		if (0 != nErrorCode)
 		{
-			net::SetError(response, errorCode, message);
+			net::SetError(response, nErrorCode, strMessage);
 		}
 		else
 		{
 			response.SetReturnData("status", "ok");
-			response.SetReturnData("message", message);
+			response.SetReturnData("message", strMessage);
 		}
-		net::SendRequest(request.GetConnectionId(), response);
+		net::SendRequest(req.GetConnectionId(), response);
 	}
 
-	int Login(const CRequest& request)
+	int Login(const CRequest& req)
 	{
-		std::string account = request.GetExtraData("user");
-		std::string password = request.GetExtraData("password");
-		if (!IsAccountValid(account) || !IsPasswordValid(password))
+		std::string strAccount = req.GetExtraData("user");
+		std::string strPassword = req.GetExtraData("password");
+		if (!IsAccountValid(strAccount) || !IsPasswordValid(strPassword))
 		{
-			SendResponse(request, InvalidCredentials, "账号或密码错误");
+			SendResponse(req, InvalidCredentials, "账号或密码错误");
 			return 0;
 		}
 
-		db::_TyDBPtr database = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
-		if (nullptr == database)
+		db::_TyDBPtr db = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
+		if (nullptr == db)
 		{
-			SendResponse(request, StorageUnavailable, "用户数据库暂不可用");
+			SendResponse(req, StorageUnavailable, "用户数据库暂不可用");
 			return 0;
 		}
 
-		std::string sql = "SELECT user_id, account FROM table_user WHERE account=" + Utf8Literal(account)
-			+ " AND password_hash=UNHEX(SHA2(CONCAT(password_salt,UNHEX('" + ToHex(password)
+		std::string sql = "SELECT user_id, account FROM table_user WHERE account=" + Utf8Literal(strAccount)
+			+ " AND password_hash=UNHEX(SHA2(CONCAT(password_salt,UNHEX('" + ToHex(strPassword)
 			+ "')),256)) AND status=1 LIMIT 1";
-		const db::_TyTableInfo& table = database->ExecQuery(sql);
+		const db::_TyTableInfo& table = db->ExecQuery(sql);
 		if (table.second.empty())
 		{
-			SendResponse(request, InvalidCredentials, "账号或密码错误");
+			SendResponse(req, InvalidCredentials, "账号或密码错误");
 			return 0;
 		}
 
 		CRequest response;
-		response.SetId(request.GetId());
-		response.SetType(request.GetType());
-		response.SetCmd(request.GetCmd());
+		response.SetId(req.GetId());
+		response.SetType(req.GetType());
+		response.SetCmd(req.GetCmd());
 		response.SetReturnData("status", "ok");
 		response.SetReturnData("user_id", table.second.front().at(0));
 		response.SetReturnData("account", table.second.front().at(1));
-		net::SendRequest(request.GetConnectionId(), response);
+		net::SendRequest(req.GetConnectionId(), response);
 		return 1;
 	}
 
-	int Register(const CRequest& request)
+	int Register(const CRequest& req)
 	{
-		std::string account = request.GetExtraData("user");
-		std::string password = request.GetExtraData("password");
-		if (!IsAccountValid(account))
+		std::string strAccount = req.GetExtraData("user");
+		std::string strPassword = req.GetExtraData("password");
+		if (!IsAccountValid(strAccount))
 		{
-			SendResponse(request, InvalidRequest, "账号需为 3-64 位字母、数字或 _-.@");
+			SendResponse(req, InvalidRequest, "账号需为 3-64 位字母、数字或 _-.@");
 			return 0;
 		}
-		if (!IsPasswordValid(password))
+		if (!IsPasswordValid(strPassword))
 		{
-			SendResponse(request, InvalidRequest, "密码长度需为 8-128 位");
-			return 0;
-		}
-
-		db::_TyDBPtr database = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
-		if (nullptr == database)
-		{
-			SendResponse(request, StorageUnavailable, "用户数据库暂不可用");
+			SendResponse(req, InvalidRequest, "密码长度需为 8-128 位");
 			return 0;
 		}
 
-		std::string accountLiteral = Utf8Literal(account);
-		const db::_TyTableInfo& existing = database->ExecQuery("SELECT user_id FROM table_user WHERE account=" + accountLiteral + " LIMIT 1");
-		if (!existing.second.empty())
+		db::_TyDBPtr db = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
+		if (nullptr == db)
 		{
-			SendResponse(request, AccountExists, "账号已存在");
+			SendResponse(req, StorageUnavailable, "用户数据库暂不可用");
+			return 0;
+		}
+
+		std::string strAccountLiteral = Utf8Literal(strAccount);
+		const db::_TyTableInfo& table = db->ExecQuery("SELECT user_id FROM table_user WHERE account=" + strAccountLiteral + " LIMIT 1");
+		if (!table.second.empty())
+		{
+			SendResponse(req, AccountExists, "账号已存在");
 			return 0;
 		}
 
 		std::string saltHex = MakeSaltHex();
 		std::string sql = "INSERT INTO table_user(account,password_hash,password_salt,status) VALUES("
-			+ accountLiteral + ",UNHEX(SHA2(CONCAT(UNHEX('" + saltHex + "'),UNHEX('" + ToHex(password)
+			+ strAccountLiteral + ",UNHEX(SHA2(CONCAT(UNHEX('" + saltHex + "'),UNHEX('" + ToHex(strPassword)
 			+ "')),256)),UNHEX('" + saltHex + "'),1)";
-		if (0 != database->ExecUpdate(sql))
+		if (0 != db->ExecUpdate(sql))
 		{
-			SendResponse(request, AccountExists, "账号已存在或注册失败");
+			SendResponse(req, AccountExists, "账号已存在或注册失败");
 			return 0;
 		}
 
-		SendResponse(request, 0, "注册成功");
+		SendResponse(req, 0, "注册成功");
 		return 1;
 	}
 }
 
 bool InitializeUserStorage()
 {
-	db::_TyDBPtr database = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
-	if (nullptr == database)
+	db::_TyDBPtr db = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
+	if (nullptr == db)
 	{
 		return false;
 	}
-	return 0 == database->ExecUpdate(
+	return 0 == db->ExecUpdate(
 		"CREATE TABLE IF NOT EXISTS table_user("
 		"user_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,"
 		"account VARCHAR(64) NOT NULL,"
@@ -193,21 +193,35 @@ bool InitializeUserStorage()
 		" ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin");
 }
 
-int HandleUserRequest(const net::CNetEvent& event)
+int HandleClientRequest(const CRequest& req)
 {
-	if ((net::em_event::request != event.m_event) || (nullptr == event.m_request))
+	return 1;
+}
+
+int OnClientNetEvent(const net::CNetEvent& ev)
+{
+	if ((net::em_event::request != ev.m_event) || (nullptr == ev.m_request))
 	{
 		return 1;
 	}
 
-	const CRequest& request = *event.m_request;
-	if ((CRequest::Type::QUERY_AUTH == request.GetType()) && ("auth" == request.GetCmd()))
+	const CRequest& req = *ev.m_request;
+	CRequest::Type t = req.GetType();
+	bool bAuthRequest = (CRequest::Type::QUERY_AUTH == t) || (CRequest::Type::UPDATE_AUTH == t);
+	std::string strCmd = req.GetCmd();
+
+	if (bAuthRequest)
 	{
-		return Login(request);
+		if (("auth" == strCmd))
+		{
+			return Login(req);
+		}
+		
+		if ("register" == strCmd)
+		{
+			return Register(req);
+		}
 	}
-	if ((CRequest::Type::UPDATE_AUTH == request.GetType()) && ("register" == request.GetCmd()))
-	{
-		return Register(request);
-	}
-	return 1;
+
+	return HandleClientRequest(req);
 }
