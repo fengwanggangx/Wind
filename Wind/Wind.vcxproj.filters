@@ -83,9 +83,12 @@
     <ClCompile Include="hqmarket\CHQMarket.cpp">
       <Filter>hqmarket</Filter>
     </ClCompile>
-    <ClCompile Include="hqmarket\CHQRequest.cpp">
-      <Filter>hqmarket</Filter>
-    </ClCompile>
+		<ClCompile Include="hqmarket\CHQRequest.cpp">
+			<Filter>hqmarket</Filter>
+		</ClCompile>
+		<ClCompile Include="hqmarket\CSession.cpp">
+			<Filter>hqmarket</Filter>
+		</ClCompile>
     <ClCompile Include="hqmarket\MarketTypes.cpp">
       <Filter>hqmarket</Filter>
     </ClCompile>
@@ -225,9 +228,12 @@
     <ClInclude Include="hqmarket\CHQMarket.h">
       <Filter>hqmarket</Filter>
     </ClInclude>
-    <ClInclude Include="hqmarket\CHQRequest.h">
-      <Filter>hqmarket</Filter>
-    </ClInclude>
+		<ClInclude Include="hqmarket\CHQRequest.h">
+			<Filter>hqmarket</Filter>
+		</ClInclude>
+		<ClInclude Include="hqmarket\CSession.h">
+			<Filter>hqmarket</Filter>
+		</ClInclude>
     <ClInclude Include="hqmarket\MarketTypes.h">
       <Filter>hqmarket</Filter>
     </ClInclude>

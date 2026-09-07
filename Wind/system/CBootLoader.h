@@ -9,7 +9,6 @@
 namespace net
 {
 	class CHttpServer;
-	class CTcpClient;
 	class CTcpServer;
 }
 
@@ -26,9 +25,10 @@ class CBootLoader final
 		void Finalize();
 		const std::filesystem::path& GetRoot() const;
 		net::CTcpServer& GetTcpServer();
-		net::CTcpClient& GetTcpClient();
 		net::CHttpServer& GetHttpServer();
 		const std::string& GetToken() const;
+		const std::string& GetHQMarketHost() const;
+		int GetHQMarketPort() const;
 		const std::string& GetLastError() const;
 		int GetErrorCode() const;
 
@@ -37,13 +37,14 @@ class CBootLoader final
 		std::filesystem::path m_path_py_runtime;
 		std::filesystem::path m_path_py_scripts;
 		std::string m_strToken;
+		std::string m_strHQMarketHost;
+		int m_nHQMarketPort{ 0 };
 		std::string m_strLastError;
 		int m_nErrorCode{ 0 };
 		bool m_bInitialized{ false };
 
 	private:
 		std::unique_ptr<net::CTcpServer> m_pTcpServer;
-		std::unique_ptr<net::CTcpClient> m_pTcpClient;
 		std::unique_ptr<net::CHttpServer> m_pHttpServer;
 };
 

@@ -68,8 +68,13 @@ namespace net
 	void CTcpClient::Release()
 	{
 		ShutDown();
+		if (m_bConnected && (0 <= m_id))
+		{
+			CNetPool::InstancePtr()->CloseAConnection(m_id);
+		}
 		m_pEvent.reset();
 		m_bConnected = false;
+		m_id = -1;
 	}
 
 	net::_TyConnectionId CTcpClient::GetId() const
@@ -88,7 +93,7 @@ namespace net
 
 	bool CTcpClient::SendRequest(const CRequest& req)
 	{
-		if (!m_bConnected || (nullptr == m_pEvent))
+		if (!m_bConnected || (0 > m_id))
 		{
 			return false;
 		}
@@ -140,6 +145,10 @@ namespace net
 	{
 		m_bConnected = true;
 		m_id = CNetPool::InstancePtr()->RegisterAConnection(pEvent);
+		if (0 <= m_id)
+		{
+			m_pEvent.release();
+		}
 		if (nullptr != m_dispatcher)
 		{
 			std::vector<CNetEvent> events;
@@ -160,11 +169,14 @@ namespace net
 		}
 
 		_TyConnectionId id = CNetPool::InstancePtr()->CloseAConnection(pEvent);
+		m_bConnected = false;
+		m_id = -1;
 		if ((id >= 0) && (nullptr != m_dispatcher))
 		{
 			std::vector<CNetEvent> events;
 			events.emplace_back(em_event::disconnected, id);
 			m_dispatcher->Dispatch(std::move(events));
 		}
+		ShutDown();
 	}
 } // namespace net

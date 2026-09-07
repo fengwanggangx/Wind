@@ -1,7 +1,6 @@
 #include "CBootLoader.h"
 #include "../network/CHttpServer.h"
 #include "../network/CTcpServer.h"
-#include "../network/CTcpClient.h"
 #include "../ini/CINIHandler.h"
 #include "../business/RequestCenter.h"
 #include "../database/CDBEngine.h"
@@ -57,9 +56,9 @@ bool CBootLoader::Initialize()
 		return false;
 	}
 
-	std::string strHQMarketServer = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "hqmarket_server", std::string());
+	m_strHQMarketHost = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "hqmarket_server", std::string());
 	std::string strHQMarketPort = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "hqmarket_port", std::string());
-	if (strHQMarketServer.empty() || strHQMarketPort.empty())
+	if (m_strHQMarketHost.empty() || strHQMarketPort.empty())
 	{
 		m_nErrorCode = 4;
 		m_strLastError = "HQMarket hqmarket_server && hqmarket_port is required in ini/system.ini";
@@ -87,8 +86,13 @@ bool CBootLoader::Initialize()
 	m_pTcpServer = std::make_unique<net::CTcpServer>(nTcpPort);
 	m_pHttpServer = std::make_unique<net::CHttpServer>(nHttpPort);
 
-	int nHQMarketPort = std::atoi(strHQMarketPort.c_str());
-	m_pTcpClient = std::make_unique<net::CTcpClient>(strHQMarketServer, nHQMarketPort);
+	m_nHQMarketPort = std::atoi(strHQMarketPort.c_str());
+	if ((0 >= m_nHQMarketPort) || (65535 < m_nHQMarketPort))
+	{
+		m_nErrorCode = 4;
+		m_strLastError = "HQMarket port is invalid";
+		return false;
+	}
 
 	m_bInitialized = true;
 	return true;
@@ -96,7 +100,7 @@ bool CBootLoader::Initialize()
 
 bool CBootLoader::Run()
 {
-	if (!m_bInitialized || (nullptr == m_pTcpServer) || (nullptr == m_pTcpClient) || (nullptr == m_pHttpServer))
+	if (!m_bInitialized || (nullptr == m_pTcpServer) || (nullptr == m_pHttpServer))
 	{
 		m_nErrorCode = 4;
 		m_strLastError = "Boot loader is not initialized";
@@ -114,17 +118,8 @@ bool CBootLoader::Run()
 		m_strLastError = "HTTP server initialization failed";
 		return false;
 	}
-	if (0 != m_pTcpClient->Initialize())
-	{
-		m_nErrorCode = 6;
-		m_strLastError = "HQMarket TCP client initialization failed";
-		return false;
-	}
-
 	std::jthread tcpServerThread([this]() { m_pTcpServer->Start(true); });
-	std::jthread tcpClientThread([this]() { m_pTcpClient->Start(true); });
 	m_pHttpServer->Start(true);
-	m_pTcpClient->ShutDown();
 	m_pTcpServer->ShutDown();
 	return true;
 }
@@ -139,13 +134,7 @@ void CBootLoader::Finalize()
 	{
 		m_pTcpServer->ShutDown();
 	}
-	if (nullptr != m_pTcpClient)
-	{
-		m_pTcpClient->ShutDown();
-	}
-
 	m_pHttpServer.reset();
-	m_pTcpClient.reset();
 	m_pTcpServer.reset();
 	CDBEngine::InstanceRef().Close();
 	m_bInitialized = false;
@@ -156,11 +145,6 @@ net::CTcpServer& CBootLoader::GetTcpServer()
 	return *m_pTcpServer;
 }
 
-net::CTcpClient& CBootLoader::GetTcpClient()
-{
-	return *m_pTcpClient;
-}
-
 net::CHttpServer& CBootLoader::GetHttpServer()
 {
 	return *m_pHttpServer;
@@ -169,6 +153,16 @@ net::CHttpServer& CBootLoader::GetHttpServer()
 const std::string& CBootLoader::GetToken() const
 {
 	return m_strToken;
+}
+
+const std::string& CBootLoader::GetHQMarketHost() const
+{
+	return m_strHQMarketHost;
+}
+
+int CBootLoader::GetHQMarketPort() const
+{
+	return m_nHQMarketPort;
 }
 
 const std::string& CBootLoader::GetLastError() const

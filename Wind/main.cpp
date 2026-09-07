@@ -2,7 +2,7 @@
 #include <memory>
 #include <string>
 #include <utility>
-#include "./hqmarket/CHQMarket.h"
+#include "./hqmarket/CSession.h"
 #include "./hqmarket/v1/market.pb.h"
 #include "./network/CTcpServer.h"
 #include "./network/CHttpServer.h"
@@ -51,14 +51,14 @@ void HttpTest(net::CHttpServer* pHttpServer)
 		});
 }
 
-void HQMarketTest(CHQMarket* pHQMarket)
+void HQMarketTest(CSession* pSession)
 {
-	if (nullptr == pHQMarket)
+	if (nullptr == pSession)
 	{
 		return;
 	}
 
-	pHQMarket->RegisterHandler([](const CRequest& request)
+	pSession->RegisterHandler([](const CRequest& request)
 	{
 		const std::string strCommand = request.GetCmd();
 		if ("subscription_ack" == strCommand)
@@ -102,20 +102,21 @@ int main()
 	}
 	boot.GetTcpServer().RegisterHandler(OnClientNetEvent);
 	HttpTest(&boot.GetHttpServer());
-	CHQMarket hqMarket(&boot.GetTcpClient());
-	if (!hqMarket.Initialize(boot.GetToken()))
+	CSession session(boot.GetHQMarketHost(), boot.GetHQMarketPort(), boot.GetToken());
+	if (!session.Start())
 	{
-		std::cerr << "HQMarket token is required\n";
+		std::cerr << "HQMarket session configuration is invalid\n";
 		return 7;
 	}
-	HQMarketTest(&hqMarket);
+	HQMarketTest(&session);
+	session.SubscribeQuote("600010", market::Exchange::sse, market::Channel::bar_1m);
 
 	if (!boot.Run())
 	{
 		std::cerr << boot.GetLastError() << '\n';
 		return boot.GetErrorCode();
 	}
-	hqMarket.Stop();
+	session.Stop();
 	boot.Finalize();
 	return 0;
 }
