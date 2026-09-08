@@ -108,7 +108,7 @@
     <ClCompile Include="ini\CIniFile.cpp" />
     <ClCompile Include="ini\CINIHandler.cpp" />
     <ClCompile Include="hqmarket\CHQMarket.cpp" />
-		<ClCompile Include="hqmarket\CSession.cpp" />
+    <ClCompile Include="hqmarket\CSession.cpp" />
     <ClCompile Include="hqmarket\MarketTypes.cpp" />
     <ClCompile Include="hqmarket\v1\market.pb.cc" />
     <ClCompile Include="main.cpp" />
@@ -122,6 +122,7 @@
     <ClCompile Include="network\common_net.cpp" />
     <ClCompile Include="request\request.cpp" />
     <ClCompile Include="request\request.pb.cc" />
+    <ClCompile Include="system\CHostMgr.cpp" />
     <ClCompile Include="thread\CThreadPool.cpp" />
     <ClCompile Include="system\CBootLoader.cpp" />
   </ItemGroup>
@@ -146,7 +147,7 @@
     <ClInclude Include="ini\CIniFile.h" />
     <ClInclude Include="ini\CINIHandler.h" />
     <ClInclude Include="hqmarket\CHQMarket.h" />
-		<ClInclude Include="hqmarket\CSession.h" />
+    <ClInclude Include="hqmarket\CSession.h" />
     <ClInclude Include="hqmarket\MarketTypes.h" />
     <ClInclude Include="hqmarket\v1\market.pb.h" />
     <ClInclude Include="network\CFrameBuffer.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="network\common_net.h" />
     <ClInclude Include="request\request.h" />
     <ClInclude Include="request\request.pb.h" />
+    <ClInclude Include="system\CHostMgr.h" />
     <ClInclude Include="thread\CThreadPool.h" />
     <ClInclude Include="system\CBootLoader.h" />
   </ItemGroup>
