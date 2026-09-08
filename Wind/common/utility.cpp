@@ -14,9 +14,9 @@ namespace utility
 		return strVal;
 	}
 
-	size_t SplitString(const std::string& s, std::vector<std::string>& vc, char delim, bool bEmpty)
+	size_t split(const std::string& s, std::vector<std::string>& v, char delim, bool bEmpty)
 	{
-		vc.clear();
+		v.clear();
 		const char* p = s.c_str();
 		size_t n = strlen(p);
 		size_t opos = 0;
@@ -28,7 +28,7 @@ namespace utility
 			{
 				if ((i - opos > 0) || bEmpty)
 				{
-					vc.emplace_back(s.substr(opos, i - opos));
+					v.emplace_back(s.substr(opos, i - opos));
 				}
 				opos = bEnd ? i : i + 1;
 			}
@@ -38,32 +38,33 @@ namespace utility
 				{
 					if (bEmpty)
 					{
-						vc.emplace_back(s.substr(opos, 0));
+						v.emplace_back(s.substr(opos, 0));
 					}
 				}
 				else
 				{
-					vc.emplace_back(s.substr(opos, -1));
+					v.emplace_back(s.substr(opos, -1));
 				}
 			}
 		}
-		return vc.size();
+		return v.size();
 	}
 
-	std::size_t SplitStringView(const std::string& str, std::vector<stringview>& views, char delim, bool bEmpty)
+	std::size_t split(const std::string& s, std::vector<std::string_view>& v, char delim, bool bEmpty)
 	{
-		std::size_t nLength = str.length();
+		std::size_t nLength = s.length();
 		if (nLength <= 0)
 		{
-			views.clear();
+			v.clear();
 			return 0;
 		}
-		std::size_t sz = views.size();
+		const char* p = s.c_str();
+		std::size_t sz = v.size();
 		std::size_t n = 0;
 		std::size_t nStart = 0;
 		for (std::size_t i = 0; i < nLength; ++i)
 		{
-			if (str[i] == delim)
+			if (s[i] == delim)
 			{
 				if ((!bEmpty) && (nStart == i))
 				{
@@ -72,11 +73,11 @@ namespace utility
 				}
 				if (n < sz)
 				{
-					views.at(n).SetView(nStart, i);
+					v.at(n) = std::string_view(p + nStart, i - nStart);
 				}
 				else
 				{
-					views.emplace_back(nStart, i);
+					v.emplace_back(p + nStart, i - nStart);
 				}
 				++n;
 				nStart = i + 1;
@@ -84,16 +85,16 @@ namespace utility
 		}
 		if (n < sz)
 		{
-			views.at(n).SetView(nStart, nLength);
+			v.at(n) = std::string_view(p + nStart, nLength - nStart);
 		}
 		else
 		{
-			views.emplace_back(nStart, nLength);
+			v.emplace_back(p + nStart, nLength - nStart);
 		}
 		++n;
 		if (n < sz)
 		{
-			views.resize(n);
+			v.resize(n);
 		}
 		return n;
 	}

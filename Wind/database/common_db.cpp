@@ -15,7 +15,7 @@ namespace db
 	CConnectParam::CConnectParam(const std::string& strParam, char delimiter)
 	{
 		std::vector<std::string> data;
-		if (utility::SplitString(strParam, data, delimiter, false) == 6)
+		if (utility::split(strParam, data, delimiter, false) == 6)
 		{
 			m_strHost = data[0];
 			utility::to_number(data[1], m_nPort);

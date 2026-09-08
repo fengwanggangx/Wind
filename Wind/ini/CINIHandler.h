@@ -25,45 +25,47 @@ namespace ini
 	{
 		DECLARE_SINGLE_DFAULT(CINIHandler)
 
-	public:
+	  public:
 		template <class Type, std::enable_if_t<!std::is_convertible<Type, std::string>::value, int> = 0>
-		Type GetValue(Config config, const std::string& section, const std::string& key, Type&& defaultValue) const
+		Type GetValue(Config config, const std::string& strSection, const std::string& strKey, Type&& defaultValue) const
 		{
-			const auto& iter = m_iniFiles.find(config);
-			if (m_iniFiles.end() == iter)
+			const auto& mIter = m_iniFiles.find(config);
+			if (m_iniFiles.end() == mIter)
 			{
 				return std::forward<Type>(defaultValue);
 			}
-			return iter->second->GetValue(section, key, std::forward<Type>(defaultValue));
+			return mIter->second->GetValue(strSection, strKey, std::forward<Type>(defaultValue));
 		}
 
 		template <class Type, std::enable_if_t<std::is_convertible<Type, std::string>::value, int> = 0>
-		std::string GetValue(Config config, const std::string& section, const std::string& key, Type&& defaultValue) const
+		std::string GetValue(Config config, const std::string& strSection, const std::string& strKey, Type&& defaultValue) const
 		{
-			const auto& iter = m_iniFiles.find(config);
-			if (m_iniFiles.end() == iter)
+			const auto& mIter = m_iniFiles.find(config);
+			if (m_iniFiles.end() == mIter)
 			{
 				return std::forward<Type>(defaultValue);
 			}
-			return iter->second->GetString(section, key, std::forward<Type>(defaultValue));
+			return mIter->second->GetString(strSection, strKey, std::forward<Type>(defaultValue));
 		}
 
 		template <class Type>
-		bool SetValue(Config config, const std::string& section, const std::string& key, Type&& value)
+		bool SetValue(Config config, const std::string& strSection, const std::string& strKey, Type&& value)
 		{
-			const auto& iter = m_iniFiles.find(config);
-			if (m_iniFiles.end() == iter)
+			const auto& mIter = m_iniFiles.find(config);
+			if (m_iniFiles.end() == mIter)
 			{
 				return false;
 			}
-			return iter->second->SetValue(section, key, std::forward<Type>(value));
+			return mIter->second->SetValue(strSection, strKey, std::forward<Type>(value));
 		}
 
 		bool Load();
+		std::vector<std::pair<std::string, std::string>> GetSection(Config config, const std::string& strSection) const;
+		bool UpdateEntry(Config config, const std::string& strSection, const std::string& strKey, const std::optional<std::string>& value, const std::string& oldKey = {});
 
-	private:
+	  private:
 		std::unordered_map<Config, std::unique_ptr<CIniFile>> m_iniFiles;
 	};
-}
+} // namespace ini
 
 #endif

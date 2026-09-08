@@ -54,8 +54,8 @@ public:
 	std::unordered_map<std::string, std::string> GetReturnData() const;
 	void SetReturnData(const std::string& strKey, const std::string& strValue);
 
-	void SetConnectionId(std::int64_t id);
-	std::int64_t GetConnectionId() const;
+	void SetConnectionId(net::_TyConnectionId id);
+	net::_TyConnectionId GetConnectionId() const;
 
 	void SetFd(std::int64_t id);
 	std::int64_t GetFd() const;

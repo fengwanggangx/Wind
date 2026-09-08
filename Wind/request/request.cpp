@@ -3,7 +3,7 @@
 #include "request.pb.h"
 
 #include <atomic>
-#include <common/utility.h>
+#include "../common/utility.h"
 
 namespace
 {
@@ -96,12 +96,12 @@ void CRequest::SetReturnData(const std::string& strKey, const std::string& strVa
 	(*m_data->mutable_ret())[strKey] = strValue;
 }
 
-void CRequest::SetConnectionId(std::int64_t id)
+void CRequest::SetConnectionId(net::_TyConnectionId id)
 {
 	m_connectionId = id;
 }
 
-std::int64_t CRequest::GetConnectionId() const
+net::_TyConnectionId CRequest::GetConnectionId() const
 {
 	return m_connectionId;
 }

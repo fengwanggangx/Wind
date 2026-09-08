@@ -1,9 +1,63 @@
 #include "CIniFile.h"
 #include <mutex>
-#include <fstream>
 
 namespace ini
 {
+	std::vector<std::pair<std::string, std::string>> CIniFile::GetSection(const std::string& strSection) const
+	{
+		CSimpleIniA::TNamesDepend keys;
+		std::vector<std::pair<std::string, std::string>> entries;
+
+		{
+			std::shared_lock<std::shared_mutex> lck(m_mtx_parser);
+			m_pParser->GetAllKeys(strSection.c_str(), keys);
+			keys.sort(CSimpleIniA::Entry::LoadOrder());
+			entries.reserve(keys.size());
+			for (const auto& strKey : keys)
+			{
+				entries.emplace_back(strKey.pItem, m_pParser->GetValue(strSection.c_str(), strKey.pItem, ""));
+			}
+		}
+		return entries;
+	}
+
+	bool CIniFile::UpdateEntry(const std::string& strSection, const std::string& strKey, const std::optional<std::string>& value, const std::string& oldKey)
+	{
+		if (strSection.empty() || strKey.empty())
+		{
+			return false;
+		}
+		std::unique_lock<std::shared_mutex> lck(m_mtx_parser);
+		std::string data;
+		std::unique_ptr<CSimpleIniA> parser = std::make_unique<CSimpleIniA>(false, false, false);
+		if (0 > m_pParser->Save(data) || 0 > parser->LoadData(data))
+		{
+			return false;
+		}
+		if (value.has_value())
+		{
+			if (0 > parser->SetValue(strSection.c_str(), strKey.c_str(), value->c_str()))
+			{
+				return false;
+			}
+			if (!oldKey.empty())
+			{
+				parser->Delete(strSection.c_str(), oldKey.c_str());
+			}
+		}
+		else
+		{
+			parser->Delete(strSection.c_str(), strKey.c_str());
+		}
+		if (0 > parser->SaveFile(m_strFileName.c_str()))
+		{
+			return false;
+		}
+		m_pParser.swap(parser);
+		m_bUpdated = false;
+		return true;
+	}
+
 	CIniFile::CIniFile(const std::string& strFile) : m_pParser(std::make_unique<CSimpleIniA>(false, false, false)), m_strFileName(strFile)
 	{
 		Load(strFile);
@@ -18,26 +72,22 @@ namespace ini
 	{
 		std::unique_lock<std::shared_mutex> lck(m_mtx_parser);
 		SI_Error ret = m_pParser->LoadFile(strFile.c_str());
-		if (ret < 0)
+		if (0 > ret)
 		{
-			if (ret == SI_FILE)
+			if (SI_FILE == ret)
 			{
-				std::ofstream f(strFile);
-				if (!f.is_open())
-				{
-					return false;
-				}
-				f.close();
+				return 0 <= m_pParser->SaveFile(strFile.c_str());
 			}
+			return false;
 		}
 		return true;
 	}
 
-	bool CIniFile::Save() const 
+	bool CIniFile::Save() const
 	{
 		std::unique_lock<std::shared_mutex> lck(m_mtx_parser);
 		SI_Error ret = m_pParser->SaveFile(m_strFileName.c_str());
-		return ret >= 0;
+		return 0 <= ret;
 	}
 
 	int CIniFile::GetInt(const std::string& strSection, const std::string& strKey, int nDefault) const
@@ -45,7 +95,6 @@ namespace ini
 		std::shared_lock<std::shared_mutex> lck(m_mtx_parser);
 		return m_pParser->GetLongValue(strSection.c_str(), strKey.c_str(), nDefault);
 	}
-
 
 	bool CIniFile::GetBool(const std::string& strSection, const std::string& strKey, bool bDefault) const
 	{
@@ -141,9 +190,9 @@ namespace ini
 		CSimpleIniA::TNamesDepend sections;
 		m_pParser->GetAllSections(sections);
 
-		for (const auto& s : sections) 
+		for (const auto& s : sections)
 		{
-			if (s.pItem == strSection) 
+			if (strSection == s.pItem)
 			{
 				return true;
 			}
@@ -161,10 +210,10 @@ namespace ini
 			m_pParser->GetAllSections(sections);
 		}
 
-		for (const auto& s : sections) 
+		for (const auto& s : sections)
 		{
 			ret.emplace_back(s.pItem);
 		}
 		return ret;
 	}
-}
+} // namespace ini

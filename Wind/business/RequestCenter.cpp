@@ -232,7 +232,7 @@ namespace
 		if ("subscription_ack" == strCmd)
 		{
 			std::vector<PendingSubscription> pending;
-			bool bAccepted = ("1" == req.GetReturnData("accepted");
+			bool bAccepted = "1" == req.GetReturnData("accepted");
 			std::string strReason = req.GetReturnData("reason");
 			{
 				std::lock_guard<std::mutex> lock(StateMutex);
@@ -449,7 +449,7 @@ static int HandleClientRequest(const CRequest& req)
 		}
 	}
 
-	if (!IsSubcriptionRequest(req) && !IsUnSubcriptionRequest(req))
+	if (!request::IsSubcriptionRequest(req) && !request::IsUnSubcriptionRequest(req))
 	{
 		net::SendError(id, req, InvalidSubscription, "unsupported request");
 		return 0;
@@ -462,7 +462,7 @@ static int HandleClientRequest(const CRequest& req)
 	}
 	std::string strKey = quote.String();
 
-	if (IsSubcriptionRequest(req))
+	if (request::IsSubcriptionRequest(req))
 	{
 		bool bSendUpstream = false;
 		bool bPending = false;
@@ -611,7 +611,7 @@ static int HandleAuthenticationRequest(const CRequest& req)
 	}
 
 	//登录认证
-	if ("auth" == strCmd)
+	if ("auth" == req.GetCmd())
 	{
 		if (Login(req, strToken))
 		{
@@ -627,7 +627,6 @@ static int HandleAuthenticationRequest(const CRequest& req)
 
 int OnClientNetEvent(const net::CNetEvent& ev)
 {
-	CRequest::Type t = ev.m_request->GetType();
 	if ((net::em_event::disconnected == ev.m_event) || (net::em_event::error == ev.m_event) || (net::em_event::timeout == ev.m_event))
 	{
 		return HandleClientDisconnected(ev.m_connection_id);
@@ -638,11 +637,11 @@ int OnClientNetEvent(const net::CNetEvent& ev)
 		return 0;
 	}
 
-	if (IsRegisterRequest(*ev.m_request))
+	if (request::IsRegisterRequest(*ev.m_request))
 	{
 		return Register(*ev.m_request);
 	}
-	if (IsAuthRequest(*ev.m_request))
+	if (request::IsAuthRequest(*ev.m_request))
 	{
 		return HandleAuthenticationRequest(*ev.m_request);
 	}
