@@ -38,20 +38,21 @@ class CBrokerService final
 
   private:
 	int OnNetEvent(const net::CNetEvent& ev);
-	bool HandleRegister(net::_TyConnectionId id, CRequest& request);
-	bool HandleAuthentication(net::_TyConnectionId id, CRequest& request);
-	bool HandleSubscription(net::_TyConnectionId id, CRequest& request);
-	int HandleClientRequest(const CRequest& req);
+	bool HandleRegisterAuth(net::_TyConnectionId id, const CRequest& req);
+	bool HandleAuth(net::_TyConnectionId id, const CRequest& req);
+	bool HandleSubscription(net::_TyConnectionId id, const CRequest& req);
+
+private:
+
 	int HandleClientDisconnected(net::_TyConnectionId id);
-	int HandleReAuthenticationRequest(const CRequest& req);
-	int HandleAuthenticationRequest(const CRequest& req);
-	void HandleMarketResponse(const CRequest& req);
+	bool HandleReAuthenticationRequest(const CRequest& req);
+	void OnHQMarketResponse(const CRequest& req);
 
 	std::string ToHex(const std::string& strValue) const;
 	std::string MakeSaltHex() const;
 	market::CQuoteInfo GetQuoteInfo(const CRequest& req) const;
 	void SendSubscriptionResponse(net::_TyConnectionId id, _TyRequestId requestId, bool bAccepted, const std::string& strReason) const;
-	std::string GetMarketResponseKey(const CRequest& response) const;
+	std::string GetMarketResponseKey(const CRequest& req) const;
 	bool IsAccountValid(const std::string& strAccount) const;
 	bool IsPasswordValid(const std::string& strPassword) const;
 	std::string Utf8Literal(const std::string& strValue) const;

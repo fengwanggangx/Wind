@@ -37,8 +37,8 @@ CBrokerService::CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession) 
 {
 	m_handler =
 	{
-		{"register", std::bind_front(&CBrokerService::HandleRegister, this)},
-		{"auth", std::bind_front(&CBrokerService::HandleAuthentication, this)},
+		{"register", std::bind_front(&CBrokerService::HandleRegisterAuth, this)},
+		{"auth", std::bind_front(&CBrokerService::HandleAuth, this)},
 		{"subscribe", std::bind_front(&CBrokerService::HandleSubscription, this)},
 		{"unsubscribe", std::bind_front(&CBrokerService::HandleSubscription, this)}
 	};
@@ -51,7 +51,7 @@ bool CBrokerService::Initialize()
 		return false;
 	}
 	m_pTcpServer->RegisterHandler(std::bind_front(&CBrokerService::OnNetEvent, this));
-	m_pSession->RegisterHandler(std::bind_front(&CBrokerService::HandleMarketResponse, this));
+	m_pSession->RegisterHandler(std::bind_front(&CBrokerService::OnHQMarketResponse, this));
 	return true;
 }
 
@@ -148,7 +148,7 @@ std::string CBrokerService::GetMarketResponseKey(const CRequest& response) const
 	return {};
 }
 
-void CBrokerService::HandleMarketResponse(const CRequest& req)
+void CBrokerService::OnHQMarketResponse(const CRequest& req)
 {
 	std::string strKey = GetMarketResponseKey(req);
 	if (strKey.empty())
@@ -351,7 +351,7 @@ bool CBrokerService::InitializeUserStorage()
 					" ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin");
 }
 
-int CBrokerService::HandleClientRequest(const CRequest& req)
+bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& req)
 {
 	net::_TyConnectionId id = static_cast<net::_TyConnectionId>(req.GetConnectionId());
 	{
@@ -359,7 +359,7 @@ int CBrokerService::HandleClientRequest(const CRequest& req)
 		if (m_authenticatedClients.end() == m_authenticatedClients.find(id))
 		{
 			net::SendError(id, req, AuthenticationRequired, "authentication required");
-			return 0;
+			return false;
 		}
 	}
 
@@ -367,13 +367,13 @@ int CBrokerService::HandleClientRequest(const CRequest& req)
 	if (("subscribe" != strCmd) && ("unsubscribe" != strCmd))
 	{
 		net::SendError(id, req, InvalidSubscription, "unsupported request");
-		return 0;
+		return false;
 	}
 	market::CQuoteInfo quote = GetQuoteInfo(req);
 	if (!quote.IsValid())
 	{
 		net::SendError(id, req, InvalidSubscription, "invalid security or unsupported subscription channel");
-		return 0;
+		return false;
 	}
 	std::string strKey = quote.String();
 
@@ -411,15 +411,15 @@ int CBrokerService::HandleClientRequest(const CRequest& req)
 					m_pendingSubscriptions.erase(strKey);
 				}
 				SendSubscriptionResponse(id, req.GetId(), false, "HQMarket is unavailable");
-				return 0;
+				return false;
 			}
-			return 1;
+			return true;
 		}
 		if (!bPending)
 		{
 			SendSubscriptionResponse(id, req.GetId(), true, "ok");
 		}
-		return 1;
+		return true;
 	}
 
 	bool bSendUpstream = false;
@@ -451,10 +451,10 @@ int CBrokerService::HandleClientRequest(const CRequest& req)
 	if (bSendUpstream && ((nullptr == m_pSession) || !m_pSession->UnsubscribeQuote(quote)))
 	{
 		SendSubscriptionResponse(id, req.GetId(), false, "HQMarket is unavailable");
-		return 0;
+		return false;
 	}
 	SendSubscriptionResponse(id, req.GetId(), true, "ok");
-	return 1;
+	return true;
 }
 
 int CBrokerService::HandleClientDisconnected(net::_TyConnectionId id)
@@ -495,7 +495,7 @@ int CBrokerService::HandleClientDisconnected(net::_TyConnectionId id)
 	return 1;
 }
 
-int CBrokerService::HandleReAuthenticationRequest(const CRequest& req)
+bool CBrokerService::HandleReAuthenticationRequest(const CRequest& req)
 {
 	std::string strToken = req.GetExtraData("token");
 	bool bAccepted = false;
@@ -510,13 +510,13 @@ int CBrokerService::HandleReAuthenticationRequest(const CRequest& req)
 	if (bAccepted)
 	{
 		SendResponse(req, 0, "认证成功");
-		return 0;
+		return true;
 	}
 	SendResponse(req, InvalidCredentials, "登录状态已失效");
-	return 0;
+	return false;
 }
 
-int CBrokerService::HandleAuthenticationRequest(const CRequest& req)
+bool CBrokerService::HandleAuth(net::_TyConnectionId id, const CRequest& req)
 {
 	// 断线重连
 	std::string strToken = req.GetExtraData("token");
@@ -534,27 +534,16 @@ int CBrokerService::HandleAuthenticationRequest(const CRequest& req)
 			m_authenticatedClients.emplace(req.GetConnectionId());
 			m_loginTokens.emplace(strToken);
 		}
-		return 0;
+		return true;
 	}
 	net::SendError(req.GetConnectionId(), req, InvalidRequest, "unsupported authentication request");
-	return 0;
+	return false;
 }
 
-bool CBrokerService::HandleRegister(net::_TyConnectionId, CRequest& request)
+bool CBrokerService::HandleRegisterAuth(net::_TyConnectionId, const CRequest& req)
 {
-	Register(request);
+	Register(req);
 	return true;
-}
-
-bool CBrokerService::HandleAuthentication(net::_TyConnectionId, CRequest& request)
-{
-	HandleAuthenticationRequest(request);
-	return true;
-}
-
-bool CBrokerService::HandleSubscription(net::_TyConnectionId, CRequest& request)
-{
-	return 0 != HandleClientRequest(request);
 }
 
 int CBrokerService::OnNetEvent(const net::CNetEvent& ev)
