@@ -4,7 +4,6 @@
 #include <string>
 #include <utility>
 #include "./hqmarket/CSession.h"
-#include "./hqmarket/v1/market.pb.h"
 #include "./network/CTcpServer.h"
 #include "./network/CHttpServer.h"
 #include "./network/common_net.h"
@@ -52,47 +51,6 @@ void HttpTest(net::CHttpServer* pHttpServer)
 		});
 }
 
-void HQMarketTest(CSession* pSession)
-{
-	if (nullptr == pSession)
-	{
-		return;
-	}
-
-	pSession->RegisterHandler([](const CRequest& request)
-	{
-		const std::string strCommand = request.GetCmd();
-		if ("subscription_ack" == strCommand)
-		{
-			std::cout << "600010.SSE minute-bar subscription accepted="
-				<< request.GetReturnData("accepted") << '\n';
-			return;
-		}
-
-		if (("bar_1m" != strCommand) && ("bar" != strCommand))
-		{
-			return;
-		}
-		const CData* pData = request.GetData();
-		if (nullptr == pData)
-		{
-			return;
-		}
-		const hqmarket::market::v1::BarData* pBar = pData->GetDataAs<hqmarket::market::v1::BarData>();
-		if ((nullptr == pBar) || ("600010" != pBar->instrument().symbol()))
-		{
-			return;
-		}
-		std::cout << "600010.SSE minute bar: beginTimeMs=" << pBar->begin_time_ms()
-			<< ", open=" << pBar->open_price()
-			<< ", high=" << pBar->high_price()
-			<< ", low=" << pBar->low_price()
-			<< ", close=" << pBar->close_price()
-			<< ", volume=" << pBar->volume()
-			<< ", priceScale=" << pBar->price_scale() << '\n';
-	});
-}
-
 int main()
 {
 	CBootLoader boot;
@@ -111,14 +69,12 @@ int main()
 	}
 	CLoginInfo loginInfo{ boot.GetToken(), boot.GetPassword(), host.value() };
 	CSession session(loginInfo);
+	InitializeRequestCenter(&session);
 	if (!session.Start())
 	{
 		std::cerr << "HQMarket session configuration is invalid\n";
 		return 7;
 	}
-	HQMarketTest(&session);
-	session.SubscribeQuote(market::CQuoteInfo("600010", market::Exchange::sse, market::Channel::bar_1m));
-
 	if (!boot.Run())
 	{
 		std::cerr << boot.GetLastError() << '\n';

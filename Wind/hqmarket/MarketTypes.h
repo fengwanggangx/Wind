@@ -62,6 +62,8 @@ namespace market
 		}
 
 		bool IsValid() const;
+		std::string String() const;
+
 		CSecurity m_security;
 		Channel m_channel{ Channel::unknown };
 	};

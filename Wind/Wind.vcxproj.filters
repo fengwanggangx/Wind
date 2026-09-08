@@ -80,9 +80,6 @@
     <ClCompile Include="ini\CINIHandler.cpp">
       <Filter>ini</Filter>
     </ClCompile>
-    <ClCompile Include="hqmarket\CHQMarket.cpp">
-      <Filter>hqmarket</Filter>
-    </ClCompile>
 		<ClCompile Include="hqmarket\CSession.cpp">
 			<Filter>hqmarket</Filter>
 		</ClCompile>
@@ -221,9 +218,6 @@
     </ClInclude>
     <ClInclude Include="ini\CINIHandler.h">
       <Filter>ini</Filter>
-    </ClInclude>
-    <ClInclude Include="hqmarket\CHQMarket.h">
-      <Filter>hqmarket</Filter>
     </ClInclude>
 		<ClInclude Include="hqmarket\CSession.h">
 			<Filter>hqmarket</Filter>

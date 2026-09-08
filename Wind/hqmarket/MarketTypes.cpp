@@ -106,4 +106,9 @@ namespace market
 	{
 		return m_security.IsValid() && (Channel::unknown != m_channel);
 	}
+
+	std::string CQuoteInfo::String() const
+	{
+		quote.m_security.String() + '.' + market::GetChannelString(quote.m_channel)
+	}
 }
