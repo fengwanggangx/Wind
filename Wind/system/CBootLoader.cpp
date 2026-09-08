@@ -1,4 +1,5 @@
 #include "CBootLoader.h"
+#include "CHostMgr.h"
 #include "../network/CHttpServer.h"
 #include "../network/CTcpServer.h"
 #include "../ini/CINIHandler.h"
@@ -40,7 +41,7 @@ bool CBootLoader::Initialize()
 	}
 
 	m_pHostMgr = std::make_unique<CHostMgr>();
-	if (!m_pHostMgr->Initialize())
+	if (!m_pHostMgr->GetActiveHost().has_value())
 	{
 		m_nErrorCode = 2;
 		m_strLastError = "Failed to initialize CHostMgr";
@@ -56,7 +57,7 @@ bool CBootLoader::Initialize()
 	}
 
 	m_strPassword = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "HQMarket", "password", std::string());
-	if (m_strToken.empty())
+	if (m_strPassword.empty())
 	{
 		m_nErrorCode = 4;
 		m_strLastError = "HQMarket token password is required in ini/system.ini";
@@ -69,15 +70,6 @@ bool CBootLoader::Initialize()
 	{
 		m_nErrorCode = 5;
 		m_strLastError = "HQMarket tcp_port && http_port is required in ini/system.ini";
-		return false;
-	}
-
-	m_strHQMarketHost = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "hqmarket_server", std::string());
-	std::string strHQMarketPort = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "hqmarket_port", std::string());
-	if (m_strHQMarketHost.empty() || strHQMarketPort.empty())
-	{
-		m_nErrorCode = 4;
-		m_strLastError = "HQMarket hqmarket_server && hqmarket_port is required in ini/system.ini";
 		return false;
 	}
 
@@ -101,14 +93,6 @@ bool CBootLoader::Initialize()
 
 	m_pTcpServer = std::make_unique<net::CTcpServer>(nTcpPort);
 	m_pHttpServer = std::make_unique<net::CHttpServer>(nHttpPort);
-
-	m_nHQMarketPort = std::atoi(strHQMarketPort.c_str());
-	if ((0 >= m_nHQMarketPort) || (65535 < m_nHQMarketPort))
-	{
-		m_nErrorCode = 4;
-		m_strLastError = "HQMarket port is invalid";
-		return false;
-	}
 
 	m_bInitialized = true;
 	return true;
@@ -171,14 +155,14 @@ const std::string& CBootLoader::GetToken() const
 	return m_strToken;
 }
 
-const std::string& CBootLoader::GetHQMarketHost() const
+const std::string& CBootLoader::GetPassword() const
 {
-	return m_strHQMarketHost;
+	return m_strPassword;
 }
 
-int CBootLoader::GetHQMarketPort() const
+CHostMgr& CBootLoader::GetHostMgr()
 {
-	return m_nHQMarketPort;
+	return *m_pHostMgr;
 }
 
 const std::string& CBootLoader::GetLastError() const

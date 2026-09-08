@@ -9,7 +9,7 @@
 
 namespace
 {
-	constexpr unsigned int portLowLimit = 0;
+	constexpr unsigned int portLowLimit = 1;
 	constexpr unsigned int portUpLimit = 65535;
 }
 

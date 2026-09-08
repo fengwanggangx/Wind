@@ -12,6 +12,8 @@ namespace net
 	class CTcpServer;
 }
 
+class CHostMgr;
+
 class CBootLoader final
 {
 	public:
@@ -27,8 +29,8 @@ class CBootLoader final
 		net::CTcpServer& GetTcpServer();
 		net::CHttpServer& GetHttpServer();
 		const std::string& GetToken() const;
-		const std::string& GetHQMarketHost() const;
-		int GetHQMarketPort() const;
+		const std::string& GetPassword() const;
+		CHostMgr& GetHostMgr();
 		const std::string& GetLastError() const;
 		int GetErrorCode() const;
 
@@ -38,8 +40,6 @@ class CBootLoader final
 		std::filesystem::path m_path_py_scripts;
 		std::string m_strToken;
 		std::string m_strPassword;
-		std::string m_strHQMarketHost;
-		int m_nHQMarketPort{ 0 };
 		std::string m_strLastError;
 		int m_nErrorCode{ 0 };
 		bool m_bInitialized{ false };

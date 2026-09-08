@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <string>
 #include <utility>
 #include "./hqmarket/CSession.h"
@@ -102,7 +103,14 @@ int main()
 	}
 	boot.GetTcpServer().RegisterHandler(OnClientNetEvent);
 	HttpTest(&boot.GetHttpServer());
-	CSession session(boot.GetHQMarketHost(), boot.GetHQMarketPort(), boot.GetToken());
+	std::optional<CHostInfo> host = boot.GetHostMgr().GetActiveHost();
+	if (!host.has_value())
+	{
+		std::cerr << "HQMarket active host is unavailable\n";
+		return 7;
+	}
+	CLoginInfo loginInfo{ boot.GetToken(), boot.GetPassword(), host.value() };
+	CSession session(loginInfo);
 	if (!session.Start())
 	{
 		std::cerr << "HQMarket session configuration is invalid\n";

@@ -11,7 +11,7 @@ namespace
 	bool IsAccepted(const CRequest& response)
 	{
 		std::string strAccepted = response.GetReturnData("accepted");
-		return ("1" == strAccepted) || ("true" == strAccepted);
+		return ("1" == strAccepted) || ("true" == strAccepted) || ("ok" == response.GetReturnData("status"));
 	}
 }
 
@@ -28,9 +28,13 @@ CSession::~CSession()
 
 bool CSession::Start()
 {
-	if (m_strHost.empty() || (0 >= m_nPort) || (65535 < m_nPort) || m_strToken.empty())
 	{
-		return false;
+		std::lock_guard<std::mutex> lock(m_mtx_auth);
+		bool bCredentialsValid = (m_auth.has_value() && m_auth->Valid()) || (m_login.has_value() && m_login->Valid());
+		if (!bCredentialsValid)
+		{
+			return false;
+		}
 	}
 	if (m_thread_conn.joinable() || m_thread_heartbeat.joinable())
 	{
@@ -150,17 +154,24 @@ bool CSession::IsAuthenticated() const
 
 void CSession::ConnectionLoop()
 {
-	int nReconnectSeconds = 1;
+	int nReConnectSeconds = 1;
 	while (!m_bStopping.load())
 	{
-		NotifyState(1 == nReconnectSeconds ? SessionState::Connecting : SessionState::Reconnecting, 1 == nReconnectSeconds ? "Connecting to HQMarket" : "Reconnecting to HQMarket in " + std::to_string(nReconnectSeconds) + " seconds");
-		std::unique_ptr<net::CTcpClient> pClient = std::make_unique<net::CTcpClient>(m_strHost, m_nPort);
-		pClient->RegisterHandler([this](const net::CNetEvent& ev)
+		NotifyState(1 == nReConnectSeconds ? SessionState::Connecting : SessionState::Reconnecting, 1 == nReConnectSeconds ? "Connecting to HQMarket" : "Reconnecting to HQMarket in " + std::to_string(nReConnectSeconds) + " seconds");
+		std::optional<CLoginInfo> info;
 		{
-			return OnNetEvent(ev);
-		});
-		int nResult = pClient->Initialize();
-		if (0 == nResult)
+			std::lock_guard<std::mutex> lock(m_mtx_auth);
+			info = m_auth.has_value() ? m_auth : m_login;
+		}
+		if (!info.has_value() || !info->Valid())
+		{
+			NotifyState(SessionState::Disconnected, "HQMarket login information is invalid");
+			break;
+		}
+		decltype(m_client) pClient = std::make_unique<net::CTcpClient>(info->m_host.m_strHost, static_cast<int>(info->m_host.m_nPort));
+		pClient->RegisterHandler(std::bind_front(&CSession::OnNetEvent, this));
+		int nRet = pClient->Initialize();
+		if (0 == nRet)
 		{
 			{
 				std::lock_guard<std::mutex> lock(m_mtx_client);
@@ -170,9 +181,9 @@ void CSession::ConnectionLoop()
 		}
 		else
 		{
-			std::cerr << "HQMarket connection initialization failed: " << nResult << '\n';
+			std::cerr << "HQMarket connection initialization failed: " << nRet << '\n';
 		}
-		bool bAuthenticated = IsAuthenticated();
+		bool bAuthed = IsAuthenticated();
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_client);
 			m_client.reset();
@@ -183,17 +194,17 @@ void CSession::ConnectionLoop()
 		}
 		NotifyState(SessionState::Disconnected, "HQMarket connection closed");
 		std::unique_lock<std::mutex> lock(m_mtx_loops);
-		m_cv_loops.wait_for(lock, std::chrono::seconds(nReconnectSeconds), [this]()
+		m_cv_loops.wait_for(lock, std::chrono::seconds(nReConnectSeconds), [this]()
 		{
 			return m_bStopping.load();
 		});
-		nReconnectSeconds = bAuthenticated ? 1 : (std::min)(m_nMaxReconnectSeconds, nReconnectSeconds * 2);
+		nReConnectSeconds = bAuthed ? 1 : (std::min)(m_nMaxReconnectSeconds, nReConnectSeconds * 2);
 	}
 }
 
 void CSession::MaintenanceLoop()
 {
-	std::chrono::steady_clock::time_point nextHeartbeat = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point nTmNextHearbeat = std::chrono::steady_clock::now();
 	while (!m_bStopping.load())
 	{
 		std::unique_lock<std::mutex> lock(m_mtx_loops);
@@ -207,10 +218,10 @@ void CSession::MaintenanceLoop()
 			break;
 		}
 		std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
-		if (IsAuthenticated() && (nextHeartbeat <= now))
+		if (IsAuthenticated() && (nTmNextHearbeat <= now))
 		{
 			SendRequest(request::HeartBeat());
-			nextHeartbeat = now + std::chrono::seconds(m_nHeartbeatSeconds);
+			nTmNextHearbeat = now + std::chrono::seconds(m_nHeartbeatSeconds);
 		}
 	}
 }
@@ -236,25 +247,43 @@ int CSession::OnNetEvent(const net::CNetEvent& ev)
 	return 0;
 }
 
-void CSession::HandleResponse(const CRequest& response)
+void CSession::HandleResponse(const CRequest& req)
 {
-	if ("auth" == response.GetCmd())
+	if ("auth" == req.GetCmd())
 	{
-		if (!IsAccepted(response))
+		if (!IsAccepted(req))
 		{
-			NotifyState(SessionState::Connected, "HQMarket authentication failed: " + response.GetReturnData("reason"));
+			NotifyState(SessionState::Connected, "HQMarket authentication failed: " + req.GetReturnData("reason"));
 			return;
+		}
+		{
+			std::lock_guard<std::mutex> lock(m_mtx_auth);
+			if (m_auth.has_value())
+			{
+				m_login = std::move(m_auth);
+				m_auth.reset();
+			}
 		}
 		NotifyState(SessionState::Ready, "HQMarket session ready");
 		RestoreSubscriptions();
 	}
-	Dispatch(response);
+	Dispatch(req);
 }
 
 bool CSession::SendAuthentication()
 {
+	std::optional<CLoginInfo> info;
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_auth);
+		info = m_auth.has_value() ? m_auth : m_login;
+	}
+	if (!info.has_value() || !info->Valid())
+	{
+		NotifyState(SessionState::Connected, "HQMarket credentials are invalid");
+		return false;
+	}
 	NotifyState(SessionState::Authenticating, "Authenticating with HQMarket");
-	return SendRequest(request::Auth(m_auth.m_strToken, m_auth.m_strPassword));
+	return SendRequest(request::Auth(info->m_strToken, info->m_strPassword));
 }
 
 void CSession::RestoreSubscriptions()
@@ -288,7 +317,7 @@ void CSession::NotifyState(SessionState state, const std::string& strMessage)
 	}
 }
 
-void CSession::Dispatch(const CRequest& response)
+void CSession::Dispatch(const CRequest& req)
 {
 	std::vector<ResponseHandler> handlers;
 	{
@@ -299,7 +328,7 @@ void CSession::Dispatch(const CRequest& response)
 	{
 		if (nullptr != handler)
 		{
-			handler(response);
+			handler(req);
 		}
 	}
 }
