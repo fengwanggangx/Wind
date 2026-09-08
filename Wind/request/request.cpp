@@ -106,16 +106,6 @@ net::_TyConnectionId CRequest::GetConnectionId() const
 	return m_connectionId;
 }
 
-void CRequest::SetFd(std::int64_t id)
-{
-	SetConnectionId(id);
-}
-
-std::int64_t CRequest::GetFd() const
-{
-	return GetConnectionId();
-}
-
 bool CRequest::Serialize(std::string* pOutput) const
 {
 	return (nullptr != pOutput) && m_data->SerializeToString(pOutput);

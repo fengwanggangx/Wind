@@ -6,6 +6,7 @@
 #include <string>
 #include <unordered_map>
 #include <optional>
+#include "../network/common_net.h"
 
 namespace request
 {
@@ -56,9 +57,6 @@ public:
 
 	void SetConnectionId(net::_TyConnectionId id);
 	net::_TyConnectionId GetConnectionId() const;
-
-	void SetFd(std::int64_t id);
-	std::int64_t GetFd() const;
 
 	bool Serialize(std::string* pOutput) const;
 	bool Deserialize(const std::string& strData);
