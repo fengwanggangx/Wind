@@ -1,15 +1,14 @@
+#include "./business/CBrokerService.h"
+#include "./hqmarket/CSession.h"
+#include "./network/CHttpServer.h"
+#include "./network/CTcpServer.h"
+#include "./network/common_net.h"
+#include "./system/CBootLoader.h"
 #include <iostream>
 #include <memory>
 #include <optional>
 #include <string>
 #include <utility>
-#include "./hqmarket/CSession.h"
-#include "./network/CTcpServer.h"
-#include "./network/CHttpServer.h"
-#include "./network/common_net.h"
-#include "./system/CBootLoader.h"
-#include "./business/RequestCenter.h"
-
 
 std::unique_ptr<net::CHttpResponseData> MakeResponse(int nStatus, std::string strBody, const std::string& strContentType = "text/plain; charset=utf-8")
 {
@@ -20,7 +19,6 @@ std::unique_ptr<net::CHttpResponseData> MakeResponse(int nStatus, std::string st
 	return response;
 }
 
-
 void HttpTest(net::CHttpServer* pHttpServer)
 {
 	if (nullptr == pHttpServer)
@@ -29,26 +27,25 @@ void HttpTest(net::CHttpServer* pHttpServer)
 	}
 
 	// GET http://server-ip:8080/health
-	pHttpServer->RegisterHandler(net::HttpMethod::GET, "/health", [](const net::CHttpRequest&) {
-			return MakeResponse(200, R"({"status":"ok"})", "application/json; charset=utf-8");
-		});
+	pHttpServer->RegisterHandler(net::HttpMethod::GET, "/health", [](const net::CHttpRequest&)
+								 { return MakeResponse(200, R"({"status":"ok"})", "application/json; charset=utf-8"); });
 
 	// GET http://server-ip:8080/hello?name=Wind
-	pHttpServer->RegisterHandler(net::HttpMethod::GET, "/hello", [](const net::CHttpRequest& request) {
+	pHttpServer->RegisterHandler(net::HttpMethod::GET, "/hello", [](const net::CHttpRequest& request)
+								 {
 			std::string strName = request.GetQuery("name");
 			if (strName.empty())
 			{
 				strName = "world";
 			}
-			return MakeResponse(200, "hello, " + strName + "\n");
-		});
+			return MakeResponse(200, "hello, " + strName + "\n"); });
 
 	// POST http://server-ip:8080/echo
-	pHttpServer->RegisterHandler(net::HttpMethod::POST, "/echo", [](const net::CHttpRequest& request) {
+	pHttpServer->RegisterHandler(net::HttpMethod::POST, "/echo", [](const net::CHttpRequest& request)
+								 {
 			const std::string strContentType = request.GetHeader("content-type");
 			return MakeResponse(200, request.GetBody(),
-				strContentType.empty() ? "application/octet-stream" : strContentType);
-		});
+				strContentType.empty() ? "application/octet-stream" : strContentType); });
 }
 
 int main()
@@ -59,7 +56,6 @@ int main()
 		std::cerr << boot.GetLastError() << '\n';
 		return boot.GetErrorCode();
 	}
-	boot.GetTcpServer().RegisterHandler(OnClientNetEvent);
 	HttpTest(&boot.GetHttpServer());
 	std::optional<CHostInfo> host = boot.GetHostMgr().GetActiveHost();
 	if (!host.has_value())
@@ -67,9 +63,13 @@ int main()
 		std::cerr << "HQMarket active host is unavailable\n";
 		return 7;
 	}
-	CLoginInfo loginInfo{ boot.GetToken(), boot.GetPassword(), host.value() };
-	CSession session(loginInfo);
-	InitializeRequestCenter(&session);
+	CSession session({ boot.GetToken(), boot.GetPassword(), host.value() });
+	CBrokerService service(&boot.GetTcpServer(), &session);
+	if (!service.Initialize())
+	{
+		std::cerr << "Trade service initialization failed\n";
+		return 7;
+	}
 	if (!session.Start())
 	{
 		std::cerr << "HQMarket session configuration is invalid\n";

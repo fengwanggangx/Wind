@@ -1,10 +1,10 @@
 #include "CBootLoader.h"
-#include "CHostMgr.h"
+#include "../business/CBrokerService.h"
+#include "../database/CDBEngine.h"
+#include "../ini/CINIHandler.h"
 #include "../network/CHttpServer.h"
 #include "../network/CTcpServer.h"
-#include "../ini/CINIHandler.h"
-#include "../business/RequestCenter.h"
-#include "../database/CDBEngine.h"
+#include "CHostMgr.h"
 #include <cstdlib>
 #include <utility>
 
@@ -81,7 +81,7 @@ bool CBootLoader::Initialize()
 	int nMySqlPort = std::atoi(strMySqlPort.c_str());
 	int nMySqlPoolSize = std::atoi(ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "MySQL", "pool_size", std::string("4")).c_str());
 	db::CConnectParam dbParam(strMySqlHost, static_cast<unsigned int>(nMySqlPort), strMySqlAccount, strMySqlPassword, strMySqlDatabase, "utf8mb4");
-	if ((0 != CDBEngine::InstanceRef().Initialize(db::em_database::mysql, dbParam, nMySqlPoolSize)) || !InitializeUserStorage())
+	if ((0 != CDBEngine::InstanceRef().Initialize(db::em_database::mysql, dbParam, nMySqlPoolSize)) || !CBrokerService::InitializeUserStorage())
 	{
 		m_nErrorCode = 5;
 		m_strLastError = "MySQL initialization failed";
@@ -118,7 +118,8 @@ bool CBootLoader::Run()
 		m_strLastError = "HTTP server initialization failed";
 		return false;
 	}
-	std::jthread tcpServerThread([this]() { m_pTcpServer->Start(true); });
+	std::jthread tcpServerThread([this]()
+								 { m_pTcpServer->Start(true); });
 	m_pHttpServer->Start(true);
 	m_pTcpServer->ShutDown();
 	return true;
