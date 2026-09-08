@@ -53,6 +53,9 @@ namespace market
 
 	std::string GetMarketString(Exchange exchange);
 	std::string GetChannelString(Channel channel);
+	Exchange ParseMarket(const std::string& strExchange);
+	Channel ParseChannel(const std::string& strChannel);
+
 	std::string FmtSecurityString(const std::string& strCode, Exchange mk);
 
 	struct CQuoteInfo

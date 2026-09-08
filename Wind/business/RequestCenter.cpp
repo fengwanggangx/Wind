@@ -151,33 +151,6 @@ namespace
 		return ToHex(std::string(reinterpret_cast<const char*>(salt.data()), salt.size()));
 	}
 
-	market::Exchange ParseExchange(const std::string& strExchange)
-	{
-		static const std::unordered_map<std::string, market::Exchange> exchanges
-		{
-			{ "SSE", market::Exchange::sse }, { "SZSE", market::Exchange::szse }, { "BSE", market::Exchange::bse },
-			{ "HKEX", market::Exchange::hkex }, { "CFFEX", market::Exchange::cffex }, { "SHFE", market::Exchange::shfe },
-			{ "DCE", market::Exchange::dce }, { "CZCE", market::Exchange::czce }, { "INE", market::Exchange::ine },
-			{ "GFEX", market::Exchange::gfex }, { "NASDAQ", market::Exchange::nasdaq }, { "NYSE", market::Exchange::nyse },
-			{ "CRYPTO", market::Exchange::crypto }
-		};
-		auto iter = exchanges.find(strExchange);
-		return exchanges.end() == iter ? market::Exchange::unknown : iter->second;
-	}
-
-	market::Channel ParseChannel(const std::string& strChannel)
-	{
-		if ("quote" == strChannel)
-		{
-			return market::Channel::quote;
-		}
-		if ("depth" == strChannel)
-		{
-			return market::Channel::depth;
-		}
-		return market::Channel::unknown;
-	}
-
 	market::CQuoteInfo GetQuoteInfo(const CRequest& req)
 	{
 		std::string strSecurity = req.GetExtraData("security");
@@ -186,7 +159,7 @@ namespace
 		{
 			return market::CQuoteInfo("", market::Exchange::unknown, market::Channel::unknown);
 		}
-		return market::CQuoteInfo(strSecurity.substr(0, nDot), ParseExchange(strSecurity.substr(nDot + 1)), ParseChannel(req.GetExtraData("channel")));
+		return market::CQuoteInfo(strSecurity.substr(0, nDot), market::ParseMarket(strSecurity.substr(nDot + 1)), market::ParseChannel(req.GetExtraData("channel")));
 	}
 
 	void SendSubscriptionResponse(net::_TyConnectionId id, _TyRequestId requestId, bool bAccepted, const std::string& strReason)

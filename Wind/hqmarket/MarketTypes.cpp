@@ -37,16 +37,6 @@ namespace market
 		}
 	}
 
-	std::string FmtSecurityString(const std::string& strCode, Exchange mk)
-	{
-		std::string strMarket = GetMarketString(mk);
-		if (strCode.empty() || strMarket.empty())
-		{
-			return {};
-		}
-		return strCode + "." + strMarket;
-	}
-
 	std::string GetChannelString(Channel channel)
 	{
 		switch (channel)
@@ -66,6 +56,102 @@ namespace market
 		default:
 			return "";
 		}
+	}
+
+	Exchange ParseMarket(const std::string& strExchange)
+	{
+		if ("SSE" == strExchange)
+		{
+			return Exchange::sse;
+		}
+		if ("SZSE" == strExchange)
+		{
+			return Exchange::szse;
+		}
+		if ("BSE" == strExchange)
+		{
+			return Exchange::bse;
+		}
+		if ("HKEX" == strExchange)
+		{
+			return Exchange::hkex;
+		}
+		if ("CFFEX" == strExchange)
+		{
+			return Exchange::cffex;
+		}
+		if ("SHFE" == strExchange)
+		{
+			return Exchange::shfe;
+		}
+		if ("DCE" == strExchange)
+		{
+			return Exchange::dce;
+		}
+		if ("CZCE" == strExchange)
+		{
+			return Exchange::czce;
+		}
+		if ("INE" == strExchange)
+		{
+			return Exchange::ine;
+		}
+		if ("GFEX" == strExchange)
+		{
+			return Exchange::gfex;
+		}
+		if ("NASDAQ" == strExchange)
+		{
+			return Exchange::nasdaq;
+		}
+		if ("NYSE" == strExchange)
+		{
+			return Exchange::nyse;
+		}
+		if ("CRYPTO" == strExchange)
+		{
+			return Exchange::crypto;
+		}
+		return Exchange::unknown;
+	}
+
+	Channel ParseChannel(const std::string& strChannel)
+	{
+		if ("quote" == strChannel)
+		{
+			return Channel::quote;
+		}
+		if ("depth" == strChannel)
+		{
+			return Channel::depth;
+		}
+		if ("trade" == strChannel)
+		{
+			return Channel::trade;
+		}
+		if ("bar_1m" == strChannel)
+		{
+			return Channel::bar_1m;
+		}
+		if ("bar_1d" == strChannel)
+		{
+			return Channel::bar_1d;
+		}
+		if ("market_status" == strChannel)
+		{
+			return Channel::market_status;
+		}
+		return Channel::unknown;
+	}
+
+	std::string FmtSecurityString(const std::string& strCode, Exchange mk)
+	{
+		std::string strMarket = GetMarketString(mk);
+		if (strCode.empty() || strMarket.empty())
+		{
+			return {};
+		}
+		return strCode + "." + strMarket;
 	}
 
 	CSecurity::CSecurity(const CSecurity& arg) : m_strCode(arg.m_strCode), m_market(arg.m_market)
@@ -109,6 +195,6 @@ namespace market
 
 	std::string CQuoteInfo::String() const
 	{
-		quote.m_security.String() + '.' + market::GetChannelString(quote.m_channel)
+		return m_security.String() + ':' + GetChannelString(m_channel);
 	}
 }
