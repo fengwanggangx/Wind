@@ -101,4 +101,9 @@ namespace market
 	{
 		return (m_market == arg.m_market) && (m_strCode == arg.m_strCode);
 	}
+
+	bool CQuoteInfo::IsValid() const
+	{
+		return m_security.IsValid() && (Channel::unknown != m_channel);
+	}
 }

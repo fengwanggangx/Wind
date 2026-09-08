@@ -89,26 +89,30 @@ bool CSession::SendRequest(const CRequest& request)
 	return (nullptr != m_client) && m_client->SendRequest(request);
 }
 
-bool CSession::SubscribeQuote(const std::string& strCode, market::Exchange mk, market::Channel channel)
+bool CSession::SubscribeQuote(const market::CQuoteInfo& quote)
 {
-	std::string strSecurity = FmtSecurityString(strCode, mk);
-	std::string strChannel = market::GetChannelString(channel);
-	if (strSecurity.empty() || strChannel.empty())
+	if (!quote.IsValid())
 	{
 		return false;
 	}
+	std::string strSecurity = quote.m_security.String();
+	std::string strChannel = market::GetChannelString(quote.m_channel);
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_subscriptions);
-		m_subscriptions.insert_or_assign(MakeSubscriptionKey(strSecurity, strChannel), Subscription{ strSecurity, strChannel });
+		m_subscriptions.insert_or_assign(MakeSubscriptionKey(quote), Subscription{ quote });
 	}
-	return !IsAuthenticated() || SendRequest(request::Subscription(strSecurity, strChannel));
+	return SendRequest(request::Subscription(strSecurity, strChannel));
 }
 
-bool CSession::UnsubscribeQuote(const std::string& strCode, market::Exchange mk, market::Channel channel)
+bool CSession::UnsubscribeQuote(const market::CQuoteInfo& quote)
 {
-	std::string strSecurity = FmtSecurityString(strCode, mk);
-	std::string strChannel = market::GetChannelString(channel);
-	std::string strKey = MakeSubscriptionKey(strSecurity, strChannel);
+	if (!quote.IsValid())
+	{
+		return false;
+	}
+	std::string strSecurity = quote.m_security.String();
+	std::string strChannel = market::GetChannelString(quote.m_channel);
+	std::string strKey = MakeSubscriptionKey(quote);
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_subscriptions);
 		if (m_subscriptions.end() == m_subscriptions.find(strKey))
@@ -116,7 +120,7 @@ bool CSession::UnsubscribeQuote(const std::string& strCode, market::Exchange mk,
 			return false;
 		}
 	}
-	bool bSent = !IsAuthenticated() || SendRequest(request::UnSubscription(strSecurity, strChannel));
+	bool bSent = SendRequest(request::UnSubscription(strSecurity, strChannel));
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_subscriptions);
 		m_subscriptions.erase(strKey);
@@ -299,7 +303,7 @@ void CSession::RestoreSubscriptions()
 	}
 	for (const auto& subscription : subscriptions)
 	{
-		SendRequest(request::Subscription(subscription.m_strSecurity, subscription.m_strChannel));
+		SendRequest(request::Subscription(subscription.m_quote.m_security.String(), market::GetChannelString(subscription.m_quote.m_channel)));
 	}
 }
 
@@ -333,7 +337,7 @@ void CSession::Dispatch(const CRequest& req)
 	}
 }
 
-std::string CSession::MakeSubscriptionKey(const std::string& strSecurity, const std::string& strChannel)
+std::string CSession::MakeSubscriptionKey(const market::CQuoteInfo& quote)
 {
-	return strSecurity + ':' + strChannel;
+	return quote.m_security.String() + ':' + market::GetChannelString(quote.m_channel);
 }

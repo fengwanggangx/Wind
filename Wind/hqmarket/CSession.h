@@ -54,8 +54,8 @@ public:
 	bool Start();
 	void Stop();
 	bool SendRequest(const CRequest& request);
-	bool SubscribeQuote(const std::string& strCode, market::Exchange mk, market::Channel channel);
-	bool UnsubscribeQuote(const std::string& strCode, market::Exchange mk, market::Channel channel);
+	bool SubscribeQuote(const market::CQuoteInfo& quote);
+	bool UnsubscribeQuote(const market::CQuoteInfo& quote);
 	void RegisterHandler(ResponseHandler&& handler);
 	void SetStateHandler(StateHandler&& handler);
 	SessionState GetState() const;
@@ -65,8 +65,7 @@ public:
 private:
 	struct Subscription
 	{
-		std::string m_strSecurity;
-		std::string m_strChannel;
+		market::CQuoteInfo m_quote;
 	};
 
 	void ConnectionLoop();
@@ -77,7 +76,7 @@ private:
 	void RestoreSubscriptions();
 	void NotifyState(SessionState state, const std::string& strMessage);
 	void Dispatch(const CRequest& req);
-	static std::string MakeSubscriptionKey(const std::string& strSecurity, const std::string& strChannel);
+	static std::string MakeSubscriptionKey(const market::CQuoteInfo& quote);
 
 private:
 	std::mutex m_mtx_client;

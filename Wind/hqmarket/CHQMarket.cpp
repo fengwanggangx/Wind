@@ -73,10 +73,10 @@ bool CHQMarket::IsAuthenticated() const
 	return m_bAuthenticated;
 }
 
-bool CHQMarket::SubscribeQuote(const std::string& strCode, market::Exchange mk, market::Channel channel)
+bool CHQMarket::SubscribeQuote(const market::CQuoteInfo& quote)
 {
-	std::string strKey = FmtSecurityString(strCode, mk);
-	std::string strChannel = market::GetChannelString(channel);
+	std::string strKey = quote.m_security.String();
+	std::string strChannel = market::GetChannelString(quote.m_channel);
 	if (strKey.empty() || strChannel.empty())
 	{
 		return false;
@@ -143,7 +143,7 @@ void CHQMarket::HandleRequest(const CRequest& request)
 		{
 			std::cerr << "HQMarket declined Authenticate\n";
 		}
-		SubscribeQuote("600010", market::Exchange::sse, market::Channel::quote);
+		SubscribeQuote(market::CQuoteInfo("600010", market::Exchange::sse, market::Channel::quote));
 		return;
 	}
 	

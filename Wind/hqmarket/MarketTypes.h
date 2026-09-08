@@ -54,6 +54,18 @@ namespace market
 	std::string GetMarketString(Exchange exchange);
 	std::string GetChannelString(Channel channel);
 	std::string FmtSecurityString(const std::string& strCode, Exchange mk);
+
+	struct CQuoteInfo
+	{
+		CQuoteInfo(const std::string& strCode, Exchange mk, Channel channel) : m_security(strCode, mk), m_channel(channel)
+		{
+		}
+
+		bool IsValid() const;
+		CSecurity m_security;
+		Channel m_channel{ Channel::unknown };
+	};
+
 }
 
 #endif

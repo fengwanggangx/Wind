@@ -117,7 +117,7 @@ int main()
 		return 7;
 	}
 	HQMarketTest(&session);
-	session.SubscribeQuote("600010", market::Exchange::sse, market::Channel::bar_1m);
+	session.SubscribeQuote(market::CQuoteInfo("600010", market::Exchange::sse, market::Channel::bar_1m));
 
 	if (!boot.Run())
 	{
