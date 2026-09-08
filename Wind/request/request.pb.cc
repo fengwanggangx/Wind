@@ -408,13 +408,9 @@ RequestData::RequestData(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
-  ::memcpy(reinterpret_cast<char *>(&_impl_) +
-               offsetof(Impl_, id_),
-           reinterpret_cast<const char *>(&from._impl_) +
-               offsetof(Impl_, id_),
-           offsetof(Impl_, type_) -
-               offsetof(Impl_, id_) +
-               sizeof(Impl_::type_));
+  ::memcpy(reinterpret_cast<char *>(&_impl_) + offsetof(Impl_, id_),
+           reinterpret_cast<const char *>(&from._impl_) + offsetof(Impl_, id_),
+           offsetof(Impl_, type_) - offsetof(Impl_, id_) + sizeof(Impl_::type_));
 
   // @@protoc_insertion_point(copy_constructor:request.RequestData)
 }
@@ -428,12 +424,8 @@ inline PROTOBUF_NDEBUG_INLINE RequestData::Impl_::Impl_(
 
 inline void RequestData::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  ::memset(reinterpret_cast<char *>(&_impl_) +
-               offsetof(Impl_, id_),
-           0,
-           offsetof(Impl_, type_) -
-               offsetof(Impl_, id_) +
-               sizeof(Impl_::type_));
+  ::memset(reinterpret_cast<char *>(&_impl_) + offsetof(Impl_, id_), 0,
+           offsetof(Impl_, type_) - offsetof(Impl_, id_) + sizeof(Impl_::type_));
 }
 RequestData::~RequestData() {
   // @@protoc_insertion_point(destructor:request.RequestData)

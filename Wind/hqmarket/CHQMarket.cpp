@@ -1,5 +1,5 @@
 #include "CHQMarket.h"
-#include "CHQRequest.h"
+#include "../business/RequestCenter.h"
 #include "../network/CTcpClient.h"
 #include "../network/common_net.h"
 #include "../network/CNetTools.h"
@@ -81,8 +81,7 @@ bool CHQMarket::SubscribeQuote(const std::string& strCode, market::Exchange mk, 
 	{
 		return false;
 	}
-	std::unique_ptr<CRequest> req(CHQRequest::GetSubscribeRequest(strKey, strChannel, true));
-	return SendRequest(*req);
+	return SendRequest(request::Subscription(strKey, strChannel));
 }
 
 void CHQMarket::RegisterHandler(_TyHandler&& handler)
@@ -131,11 +130,7 @@ int CHQMarket::OnNetEvent(const net::CNetEvent& ev)
 
 void CHQMarket::SendAuthRequest()
 {
-	CRequest request;
-	request.SetType(CRequest::Type::HQMARKET);
-	request.SetCmd("auth");
-	request.SetExtraData("token", m_strToken);
-	SendRequest(request);
+	SendRequest(request::Auth(m_strToken));
 }
 
 void CHQMarket::HandleRequest(const CRequest& request)

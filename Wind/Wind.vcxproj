@@ -108,7 +108,6 @@
     <ClCompile Include="ini\CIniFile.cpp" />
     <ClCompile Include="ini\CINIHandler.cpp" />
     <ClCompile Include="hqmarket\CHQMarket.cpp" />
-		<ClCompile Include="hqmarket\CHQRequest.cpp" />
 		<ClCompile Include="hqmarket\CSession.cpp" />
     <ClCompile Include="hqmarket\MarketTypes.cpp" />
     <ClCompile Include="hqmarket\v1\market.pb.cc" />
@@ -147,7 +146,6 @@
     <ClInclude Include="ini\CIniFile.h" />
     <ClInclude Include="ini\CINIHandler.h" />
     <ClInclude Include="hqmarket\CHQMarket.h" />
-		<ClInclude Include="hqmarket\CHQRequest.h" />
 		<ClInclude Include="hqmarket\CSession.h" />
     <ClInclude Include="hqmarket\MarketTypes.h" />
     <ClInclude Include="hqmarket\v1\market.pb.h" />

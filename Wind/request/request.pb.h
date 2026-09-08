@@ -391,7 +391,6 @@ class RequestData final : public ::google::protobuf::Message
   std::string* _internal_mutable_cmd();
 
   public:
-  // uint64 id = 5;
   void clear_id() ;
   ::uint64_t id() const;
   void set_id(::uint64_t value);
@@ -459,6 +458,26 @@ class RequestData final : public ::google::protobuf::Message
 
 // ===================================================================
 
+
+// uint64 id = 5;
+inline void RequestData::clear_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.id_ = ::uint64_t{0u};
+}
+inline ::uint64_t RequestData::id() const {
+  return _internal_id();
+}
+inline void RequestData::set_id(::uint64_t value) {
+  _internal_set_id(value);
+}
+inline ::uint64_t RequestData::_internal_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.id_;
+}
+inline void RequestData::_internal_set_id(::uint64_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.id_ = value;
+}
 
 #ifdef __GNUC__
 #pragma GCC diagnostic push
@@ -596,28 +615,6 @@ inline ::google::protobuf::Map<std::string, std::string>* RequestData::_internal
 inline ::google::protobuf::Map<std::string, std::string>* RequestData::mutable_ret() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   // @@protoc_insertion_point(field_mutable_map:request.RequestData.ret)
   return _internal_mutable_ret();
-}
-
-// uint64 id = 5;
-inline void RequestData::clear_id() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = ::uint64_t{0u};
-}
-inline ::uint64_t RequestData::id() const {
-  // @@protoc_insertion_point(field_get:request.RequestData.id)
-  return _internal_id();
-}
-inline void RequestData::set_id(::uint64_t value) {
-  _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:request.RequestData.id)
-}
-inline ::uint64_t RequestData::_internal_id() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.id_;
-}
-inline void RequestData::_internal_set_id(::uint64_t value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = value;
 }
 
 #ifdef __GNUC__

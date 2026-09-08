@@ -39,11 +39,27 @@ bool CBootLoader::Initialize()
 		return false;
 	}
 
+	m_pHostMgr = std::make_unique<CHostMgr>();
+	if (!m_pHostMgr->Initialize())
+	{
+		m_nErrorCode = 2;
+		m_strLastError = "Failed to initialize CHostMgr";
+		return false;
+	}
+
 	m_strToken = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "HQMarket", "token", std::string());
 	if (m_strToken.empty())
 	{
-		m_nErrorCode = 2;
+		m_nErrorCode = 3;
 		m_strLastError = "HQMarket token is required in ini/system.ini";
+		return false;
+	}
+
+	m_strPassword = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "HQMarket", "password", std::string());
+	if (m_strToken.empty())
+	{
+		m_nErrorCode = 4;
+		m_strLastError = "HQMarket token password is required in ini/system.ini";
 		return false;
 	}
 
@@ -51,7 +67,7 @@ bool CBootLoader::Initialize()
 	std::string strHttpPort = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "http_port", std::string());
 	if (strTcpPort.empty() || strHttpPort.empty())
 	{
-		m_nErrorCode = 3;
+		m_nErrorCode = 5;
 		m_strLastError = "HQMarket tcp_port && http_port is required in ini/system.ini";
 		return false;
 	}

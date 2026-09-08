@@ -1,21 +1,13 @@
 #include "CSession.h"
-
-#include "CHQRequest.h"
+#include "../business/RequestCenter.h"
 #include "../network/CTcpClient.h"
 #include "../network/common_net.h"
-
 #include <algorithm>
-#include <cstdint>
 #include <iostream>
 #include <utility>
 
 namespace
 {
-	std::int64_t NowMilliseconds()
-	{
-		return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-	}
-
 	bool IsAccepted(const CRequest& response)
 	{
 		std::string strAccepted = response.GetReturnData("accepted");
@@ -23,8 +15,10 @@ namespace
 	}
 }
 
-CSession::CSession(std::string strHost, int nPort, std::string strToken) : m_strHost(std::move(strHost)), m_nPort(nPort), m_strToken(std::move(strToken))
+
+CSession::CSession(const CLoginInfo& info)
 {
+	m_auth = info;
 }
 
 CSession::~CSession()
@@ -38,50 +32,57 @@ bool CSession::Start()
 	{
 		return false;
 	}
-	if (m_threadConnection.joinable() || m_threadMaintenance.joinable())
+	if (m_thread_conn.joinable() || m_thread_heartbeat.joinable())
 	{
 		return true;
 	}
 	m_bStopping.store(false);
-	m_threadConnection = std::thread(&CSession::ConnectionLoop, this);
-	m_threadMaintenance = std::thread(&CSession::MaintenanceLoop, this);
+	m_thread_conn = std::thread(&CSession::ConnectionLoop, this);
+	m_thread_heartbeat = std::thread(&CSession::MaintenanceLoop, this);
 	return true;
 }
 
 void CSession::Stop()
 {
-	if (!m_threadConnection.joinable() && !m_threadMaintenance.joinable())
+	if (!m_thread_conn.joinable() && !m_thread_heartbeat.joinable())
 	{
 		return;
 	}
 	m_bStopping.store(true);
 	NotifyState(SessionState::Stopping, "HQMarket session is stopping");
-	m_cv_wait.notify_all();
+	m_cv_loops.notify_all();
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_client);
-		if (nullptr != m_pClient)
+		if (nullptr != m_client)
 		{
-			m_pClient->ShutDown();
+			m_client->ShutDown();
 		}
 	}
-	if (m_threadMaintenance.joinable())
+	if (m_thread_heartbeat.joinable())
 	{
-		m_threadMaintenance.join();
+		m_thread_heartbeat.join();
 	}
-	if (m_threadConnection.joinable())
+	if (m_thread_conn.joinable())
 	{
-		m_threadConnection.join();
+		m_thread_conn.join();
 	}
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_client);
-		m_pClient.reset();
+		m_client.reset();
 	}
 	NotifyState(SessionState::Disconnected, "HQMarket session stopped");
 }
 
 bool CSession::SendRequest(const CRequest& request)
 {
-	return SendRequestInternal(request, true);
+	CRequest::Type t = request.GetType();
+	bool bAuthRequest = (CRequest::Type::QUERY_AUTH == t) || (CRequest::Type::UPDATE_AUTH == t) || ("auth" == request.GetCmd());
+	if (!bAuthRequest && !IsAuthenticated())
+	{
+		return false;
+	}
+	std::lock_guard<std::mutex> lock(m_mtx_client);
+	return (nullptr != m_client) && m_client->SendRequest(request);
 }
 
 bool CSession::SubscribeQuote(const std::string& strCode, market::Exchange mk, market::Channel channel)
@@ -92,12 +93,11 @@ bool CSession::SubscribeQuote(const std::string& strCode, market::Exchange mk, m
 	{
 		return false;
 	}
-	std::unique_ptr<CRequest> request(CHQRequest::GetSubscribeRequest(strSecurity, strChannel, true));
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_subscriptions);
 		m_subscriptions.insert_or_assign(MakeSubscriptionKey(strSecurity, strChannel), Subscription{ strSecurity, strChannel });
 	}
-	return !IsAuthenticated() || SendRequest(*request);
+	return !IsAuthenticated() || SendRequest(request::Subscription(strSecurity, strChannel));
 }
 
 bool CSession::UnsubscribeQuote(const std::string& strCode, market::Exchange mk, market::Channel channel)
@@ -112,8 +112,7 @@ bool CSession::UnsubscribeQuote(const std::string& strCode, market::Exchange mk,
 			return false;
 		}
 	}
-	std::unique_ptr<CRequest> request(CHQRequest::GetSubscribeRequest(strSecurity, strChannel, false));
-	bool bSent = !IsAuthenticated() || SendRequest(*request);
+	bool bSent = !IsAuthenticated() || SendRequest(request::UnSubscription(strSecurity, strChannel));
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_subscriptions);
 		m_subscriptions.erase(strKey);
@@ -154,8 +153,7 @@ void CSession::ConnectionLoop()
 	int nReconnectSeconds = 1;
 	while (!m_bStopping.load())
 	{
-		NotifyState(1 == nReconnectSeconds ? SessionState::Connecting : SessionState::Reconnecting,
-			1 == nReconnectSeconds ? "Connecting to HQMarket" : "Reconnecting to HQMarket in " + std::to_string(nReconnectSeconds) + " seconds");
+		NotifyState(1 == nReconnectSeconds ? SessionState::Connecting : SessionState::Reconnecting, 1 == nReconnectSeconds ? "Connecting to HQMarket" : "Reconnecting to HQMarket in " + std::to_string(nReconnectSeconds) + " seconds");
 		std::unique_ptr<net::CTcpClient> pClient = std::make_unique<net::CTcpClient>(m_strHost, m_nPort);
 		pClient->RegisterHandler([this](const net::CNetEvent& ev)
 		{
@@ -166,9 +164,9 @@ void CSession::ConnectionLoop()
 		{
 			{
 				std::lock_guard<std::mutex> lock(m_mtx_client);
-				m_pClient = std::move(pClient);
+				m_client = std::move(pClient);
 			}
-			m_pClient->Start(true);
+			m_client->Start(true);
 		}
 		else
 		{
@@ -177,15 +175,15 @@ void CSession::ConnectionLoop()
 		bool bAuthenticated = IsAuthenticated();
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_client);
-			m_pClient.reset();
+			m_client.reset();
 		}
 		if (m_bStopping.load())
 		{
 			break;
 		}
 		NotifyState(SessionState::Disconnected, "HQMarket connection closed");
-		std::unique_lock<std::mutex> lock(m_mtx_wait);
-		m_cv_wait.wait_for(lock, std::chrono::seconds(nReconnectSeconds), [this]()
+		std::unique_lock<std::mutex> lock(m_mtx_loops);
+		m_cv_loops.wait_for(lock, std::chrono::seconds(nReconnectSeconds), [this]()
 		{
 			return m_bStopping.load();
 		});
@@ -198,8 +196,8 @@ void CSession::MaintenanceLoop()
 	std::chrono::steady_clock::time_point nextHeartbeat = std::chrono::steady_clock::now();
 	while (!m_bStopping.load())
 	{
-		std::unique_lock<std::mutex> lock(m_mtx_wait);
-		m_cv_wait.wait_for(lock, std::chrono::milliseconds(250), [this]()
+		std::unique_lock<std::mutex> lock(m_mtx_loops);
+		m_cv_loops.wait_for(lock, std::chrono::milliseconds(250), [this]()
 		{
 			return m_bStopping.load();
 		});
@@ -211,8 +209,7 @@ void CSession::MaintenanceLoop()
 		std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
 		if (IsAuthenticated() && (nextHeartbeat <= now))
 		{
-			std::unique_ptr<CRequest> request(CHQRequest::Heartbeat(NowMilliseconds()));
-			SendRequest(*request);
+			SendRequest(request::HeartBeat());
 			nextHeartbeat = now + std::chrono::seconds(m_nHeartbeatSeconds);
 		}
 	}
@@ -256,22 +253,8 @@ void CSession::HandleResponse(const CRequest& response)
 
 bool CSession::SendAuthentication()
 {
-	CRequest request;
-	request.SetType(CRequest::Type::HQMARKET);
-	request.SetCmd("auth");
-	request.SetExtraData("token", m_strToken);
 	NotifyState(SessionState::Authenticating, "Authenticating with HQMarket");
-	return SendRequestInternal(request, false);
-}
-
-bool CSession::SendRequestInternal(const CRequest& request, bool bRequireAuthentication)
-{
-	if (bRequireAuthentication && !IsAuthenticated())
-	{
-		return false;
-	}
-	std::lock_guard<std::mutex> lock(m_mtx_client);
-	return (nullptr != m_pClient) && m_pClient->SendRequest(request);
+	return SendRequest(request::Auth(m_auth.m_strToken, m_auth.m_strPassword));
 }
 
 void CSession::RestoreSubscriptions()
@@ -287,8 +270,7 @@ void CSession::RestoreSubscriptions()
 	}
 	for (const auto& subscription : subscriptions)
 	{
-		std::unique_ptr<CRequest> request(CHQRequest::GetSubscribeRequest(subscription.m_strSecurity, subscription.m_strChannel, true));
-		SendRequest(*request);
+		SendRequest(request::Subscription(subscription.m_strSecurity, subscription.m_strChannel));
 	}
 }
 

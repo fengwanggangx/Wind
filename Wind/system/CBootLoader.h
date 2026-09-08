@@ -37,6 +37,7 @@ class CBootLoader final
 		std::filesystem::path m_path_py_runtime;
 		std::filesystem::path m_path_py_scripts;
 		std::string m_strToken;
+		std::string m_strPassword;
 		std::string m_strHQMarketHost;
 		int m_nHQMarketPort{ 0 };
 		std::string m_strLastError;
@@ -46,6 +47,7 @@ class CBootLoader final
 	private:
 		std::unique_ptr<net::CTcpServer> m_pTcpServer;
 		std::unique_ptr<net::CHttpServer> m_pHttpServer;
+		std::unique_ptr<CHostMgr> m_pHostMgr;
 };
 
 #endif

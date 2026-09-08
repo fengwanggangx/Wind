@@ -1,116 +1,73 @@
-#ifndef __REQUEST_H__
-#define __REQUEST_H__
+#ifndef MARY_REQUEST_REQUEST_H
+#define MARY_REQUEST_REQUEST_H
 
-#include <string>
 #include <cstdint>
-#include <unordered_map>
 #include <memory>
-#include "../network/common_net.h"
-
-class CData final
-{
-	public:
-		CData() = default;
-		CData(std::string type, void* pData);
-		~CData();
-		CData(const CData&) = delete;
-		CData& operator=(const CData&) = delete;
-		CData(CData&&) = delete;
-		CData& operator=(CData&&) = delete;
-
-		const std::string& GetType() const;
-		void* GetData();
-		const void* GetData() const;
-
-		template<typename _Ty>
-		_Ty* GetDataAs()
-		{
-			return (_Ty::descriptor()->full_name() == m_type) ? static_cast<_Ty*>(m_pData) : nullptr;
-		}
-
-		template<typename _Ty>
-		const _Ty* GetDataAs() const
-		{
-			return (_Ty::descriptor()->full_name() == m_type) ? static_cast<const _Ty*>(m_pData) : nullptr;
-		}
-
-		bool Serialize(std::string* output) const;
-		bool Deserialize(const std::string& type, const std::string& payload);
-
-	private:
-		void Reset();
-
-		std::string m_type;
-		void* m_pData{ nullptr };
-};
+#include <string>
+#include <unordered_map>
+#include <optional>
 
 namespace request
 {
 	class RequestData;
 }
 
-namespace google
+using _TyRequestId = std::uint64_t;
+
+class CRequest final
 {
-	namespace protobuf
+public:
+	enum class Type
 	{
-		class Arena;
-	}
-} // namespace google
+		UNKNOWN = 0,
+		QUERY_AUTH = 1,
+		QUERY_USERINFO = 2,
+		UPDATE_AUTH = 3,
+		UPDAT_PRODUCT = 4,
+		HQMARKET = 5,
+		HEARTBEAT = 6
+	};
 
-class CRequest
-{
-	public:
-		CRequest();
-		~CRequest();
-		CRequest(const CRequest& arg);
-		CRequest& operator=(const CRequest& arg);
-		CRequest(CRequest&&) = delete;
-		CRequest& operator=(CRequest&&) = delete;
+	CRequest();
+	~CRequest();
+	CRequest(const CRequest& arg);
+	CRequest& operator=(const CRequest& arg);
+	CRequest(CRequest&&) noexcept;
+	CRequest& operator=(CRequest&&) noexcept;
 
-		enum class Type
-		{
-			UNKNOWN = 0,
-			QUERY_AUTH = 1,
-			QUERY_USERINFO = 2,
-			UPDATE_AUTH = 3,
-			UPDAT_PRODUCT = 4,
-			HQMARKET = 5
-		};
+public:
+	_TyRequestId GetId() const;
+	void SetId(_TyRequestId id);
 
-	public:
-		std::uint64_t GetId() const;
-		void SetId(std::uint64_t nId);
+	Type GetType() const;
+	void SetType(Type type);
 
-		CRequest::Type GetType() const;
-		void SetType(CRequest::Type type);
+	std::string GetCmd() const;
+	void SetCmd(const std::string& strCmd);
 
-		std::string GetCmd() const;
-		void SetCmd(const std::string& strCmd);
+	std::string GetExtraData(const std::string& strKey) const;
+	std::unordered_map<std::string, std::string> GetExtraData() const;
 
-		std::string GetExtraData(const std::string& strKey) const;
-		std::unordered_map<std::string, std::string> GetExtraData() const;
+	void SetExtraData(const std::string& strKey, const std::string& strValue);
+	std::string GetReturnData(const std::string& strKey) const;
 
-		void SetExtraData(const std::string& strKey, const std::string& strVal);
-		std::string GetReturnData(const std::string& strKey) const;
+	std::unordered_map<std::string, std::string> GetReturnData() const;
+	void SetReturnData(const std::string& strKey, const std::string& strValue);
 
-		std::unordered_map<std::string, std::string> GetReturnData() const;
-		void SetReturnData(const std::string& strKey, const std::string& strVal);
+	void SetConnectionId(std::int64_t id);
+	std::int64_t GetConnectionId() const;
 
-		void SetData(std::unique_ptr<CData> data);
-		const CData* GetData() const;
+	void SetFd(std::int64_t id);
+	std::int64_t GetFd() const;
 
-		void SetConnectionId(net::_TyConnectionId id);
-		net::_TyConnectionId GetConnectionId() const;
+	bool Serialize(std::string* pOutput) const;
+	bool Deserialize(const std::string& strData);
 
-	public:
-		bool Serialize(std::string* output) const;
-		bool Deserialize(const std::string& data);
+	std::optional<std::pair<int, std::string>> GetErrorInfo() const;
 
-	private:
-		std::unique_ptr<google::protobuf::Arena> m_arena;
-		request::RequestData* m_data{ nullptr };
-		std::unique_ptr<CData> m_cdata;
-		net::_TyConnectionId m_connection_id{ -1 };
+private:
+	std::unique_ptr<request::RequestData> m_data;
+	std::int64_t m_connectionId{ -1 };
 };
 
 #endif

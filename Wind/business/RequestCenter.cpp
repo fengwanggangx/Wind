@@ -8,8 +8,70 @@
 
 #include <array>
 #include <cctype>
+#include <chrono>
 #include <random>
 #include <string>
+
+namespace request
+{
+	CRequest Auth(const std::string& strAccount, const std::string& strPassword)
+	{
+		CRequest req;
+		req.SetType(CRequest::Type::QUERY_AUTH);
+		req.SetCmd("auth");
+		req.SetExtraData("user", strAccount);
+		req.SetExtraData("password", strPassword);
+		return req;
+	}
+
+	CRequest Subscription(const std::string& strInstrument, const std::string& strChannel)
+	{
+		CRequest req;
+		req.SetType(CRequest::Type::HQMARKET);
+		req.SetCmd("subscribe");
+		req.SetExtraData("security", strInstrument);
+		req.SetExtraData("channel", strChannel);
+		return req;
+	}
+
+	CRequest UnSubscription(const std::string& strInstrument, const std::string& strChannel)
+	{
+		CRequest req = Subscription(strInstrument, strChannel);
+		req.SetCmd("unsubscribe");
+		return req;
+	}
+
+	CRequest QueryQuote(const std::string& strInstrument)
+	{
+		CRequest req;
+		req.SetType(CRequest::Type::HQMARKET);
+		req.SetCmd("query_quote");
+		req.SetExtraData("instrument", strInstrument);
+		return req;
+	}
+
+	CRequest QueryBars(const std::string& strInstrument, const std::string& strChannel, std::int64_t nBeginTime, std::int64_t nEndTime)
+	{
+		CRequest req;
+		req.SetType(CRequest::Type::HQMARKET);
+		req.SetCmd("query_bars");
+		req.SetExtraData("instrument", strInstrument);
+		req.SetExtraData("channel", strChannel);
+		req.SetExtraData("begin_time_ms", std::to_string(nBeginTime));
+		req.SetExtraData("end_time_ms", std::to_string(nEndTime));
+		return req;
+	}
+
+	CRequest HeartBeat()
+	{
+		CRequest req;
+		req.SetType(CRequest::Type::HEARTBEAT);
+		req.SetCmd("heartbeat");
+		std::int64_t nClientTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+		req.SetExtraData("client_time_ms", std::to_string(nClientTime));
+		return req;
+	}
+}
 
 namespace
 {
