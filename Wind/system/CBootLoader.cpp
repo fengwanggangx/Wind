@@ -1,5 +1,4 @@
 #include "CBootLoader.h"
-#include "CBrokerService.h"
 #include "../database/CDBEngine.h"
 #include "../ini/CINIHandler.h"
 #include "../network/CHttpServer.h"
@@ -48,7 +47,9 @@ bool CBootLoader::Initialize()
 		return false;
 	}
 
-	m_strToken = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "HQMarket", "token", std::string());
+	ini::CINIHandler hIni = ini::CINIHandler::InstanceRef();
+
+	m_strToken = hIni.GetValue(ini::Config::System, "HQMarket", "token", std::string());
 	if (m_strToken.empty())
 	{
 		m_nErrorCode = 3;
@@ -56,7 +57,7 @@ bool CBootLoader::Initialize()
 		return false;
 	}
 
-	m_strPassword = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "HQMarket", "password", std::string());
+	m_strPassword = hIni.GetValue(ini::Config::System, "HQMarket", "password", std::string());
 	if (m_strPassword.empty())
 	{
 		m_nErrorCode = 4;
@@ -64,8 +65,8 @@ bool CBootLoader::Initialize()
 		return false;
 	}
 
-	std::string strTcpPort = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "tcp_port", std::string());
-	std::string strHttpPort = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "System", "http_port", std::string());
+	std::string strTcpPort = hIni.GetValue(ini::Config::System, "System", "tcp_port", std::string());
+	std::string strHttpPort = hIni.GetValue(ini::Config::System, "System", "http_port", std::string());
 	if (strTcpPort.empty() || strHttpPort.empty())
 	{
 		m_nErrorCode = 5;
@@ -73,18 +74,25 @@ bool CBootLoader::Initialize()
 		return false;
 	}
 
-	std::string strMySqlHost = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "MySQL", "host", std::string("127.0.0.1"));
-	std::string strMySqlPort = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "MySQL", "port", std::string("3306"));
-	std::string strMySqlAccount = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "MySQL", "account", std::string("root"));
-	std::string strMySqlPassword = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "MySQL", "password", std::string());
-	std::string strMySqlDatabase = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "MySQL", "database", std::string("wind"));
+	std::string strMySqlHost = hIni.GetValue(ini::Config::System, "MySQL", "host", std::string("127.0.0.1"));
+	std::string strMySqlPort = hIni.GetValue(ini::Config::System, "MySQL", "port", std::string("3306"));
+	std::string strMySqlAccount = hIni.GetValue(ini::Config::System, "MySQL", "account", std::string("root"));
+	std::string strMySqlPassword = hIni.GetValue(ini::Config::System, "MySQL", "password", std::string());
+	std::string strMySqlDatabase = hIni.GetValue(ini::Config::System, "MySQL", "database", std::string("wind"));
 	int nMySqlPort = std::atoi(strMySqlPort.c_str());
-	int nMySqlPoolSize = std::atoi(ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "MySQL", "pool_size", std::string("4")).c_str());
+	int nMySqlPoolSize = std::atoi(hIni.GetValue(ini::Config::System, "MySQL", "pool_size", std::string("4")).c_str());
 	db::CConnectParam dbParam(strMySqlHost, static_cast<unsigned int>(nMySqlPort), strMySqlAccount, strMySqlPassword, strMySqlDatabase, "utf8mb4");
-	if ((0 != CDBEngine::InstanceRef().Initialize(db::em_database::mysql, dbParam, nMySqlPoolSize)) || !CBrokerService::InitializeUserStorage())
+	if (0 != CDBEngine::InstanceRef().Initialize(db::em_database::mysql, dbParam, nMySqlPoolSize))
 	{
 		m_nErrorCode = 5;
 		m_strLastError = "MySQL initialization failed";
+		return false;
+	}
+	db::_TyDBPtr db = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
+	if ((nullptr == db) || (0 != db->ExecSqlFile(m_exec / "sql" / "table_user.sql")))
+	{
+		m_nErrorCode = 6;
+		m_strLastError = "Failed to execute sql/table_user.sql";
 		return false;
 	}
 
@@ -118,8 +126,7 @@ bool CBootLoader::Run()
 		m_strLastError = "HTTP server initialization failed";
 		return false;
 	}
-	std::jthread tcpServerThread([this]()
-								 { m_pTcpServer->Start(true); });
+	std::jthread tcpServerThread([this]() { m_pTcpServer->Start(true); });
 	m_pHttpServer->Start(true);
 	m_pTcpServer->ShutDown();
 	return true;

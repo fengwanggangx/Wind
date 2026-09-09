@@ -331,26 +331,6 @@ bool CBrokerService::HandleRegisterAuth(net::_TyConnectionId, const CRequest& re
 	return true;
 }
 
-bool CBrokerService::InitializeUserStorage()
-{
-	db::_TyDBPtr db = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
-	if (nullptr == db)
-	{
-		return false;
-	}
-	return 0 == db->ExecUpdate(
-					"CREATE TABLE IF NOT EXISTS table_user("
-					"user_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,"
-					"account VARCHAR(64) NOT NULL,"
-					"password_hash BINARY(32) NOT NULL,"
-					"password_salt BINARY(16) NOT NULL,"
-					"status TINYINT UNSIGNED NOT NULL DEFAULT 1,"
-					"created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-					"updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
-					"PRIMARY KEY(user_id),UNIQUE KEY uk_table_user_account(account))"
-					" ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin");
-}
-
 bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& req)
 {
 	net::_TyConnectionId id = static_cast<net::_TyConnectionId>(req.GetConnectionId());

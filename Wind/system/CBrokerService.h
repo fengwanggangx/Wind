@@ -34,7 +34,6 @@ class CBrokerService final
 	CBrokerService& operator=(const CBrokerService&) = delete;
 
 	bool Initialize();
-	static bool InitializeUserStorage();
 
   private:
 	int OnNetEvent(const net::CNetEvent& ev);

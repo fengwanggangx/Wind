@@ -121,6 +121,9 @@
     <Filter Include="system">
       <UniqueIdentifier>{0cd3262f-a988-4777-b436-7b5541db40ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sql">
+      <UniqueIdentifier>{90c8300d-fb72-46a4-8ea8-14a5d367ea2c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ini">
       <UniqueIdentifier>{355a3106-79fa-438c-b69e-c77cb45d6425}</UniqueIdentifier>
     </Filter>
@@ -240,5 +243,10 @@
     <ClInclude Include="network\CFrameBuffer.h">
       <Filter>network</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="exec\debug\sql\table_user.sql">
+      <Filter>sql</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #ifndef __IDATABASE_H__
 #define __IDATABASE_H__
 
+#include <filesystem>
 #include <string>
 #include <vector>
 #include "common_db.h"
@@ -41,7 +42,10 @@ namespace db
 			// virtual int ReConnect(const std::string& strFile) = 0;
 
 			virtual int ExecUpdate(const std::string& strSQL) = 0;
+			virtual int ExecScript(const std::string& strSQL);
 			virtual const _TyTableInfo& ExecQuery(const std::string& strSQL) = 0;
+
+			int ExecSqlFile(const std::filesystem::path& filePath);
 
 			virtual bool BeginTransaction() = 0;
 			virtual bool EndTransaction() = 0;
