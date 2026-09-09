@@ -30,6 +30,10 @@ struct Typer<_Ty, std::enable_if_t<IsContainer<_Ty>>>
 
 namespace utility
 {
+	std::string ToHex(const std::string& strValue);
+	std::string MakeSaltHex();
+	std::string Utf8Literal(const std::string& strValue);
+
 	template <typename _Ty>
 	bool to_number(const std::string& value, _Ty& result)
 	{

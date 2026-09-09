@@ -1,10 +1,41 @@
 #include "utility.h"
 
 #include <algorithm>
+#include <array>
 #include <cctype>
+#include <random>
 
 namespace utility
 {
+	std::string ToHex(const std::string& strValue)
+	{
+		constexpr std::array<char, 16> digits{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+		std::string result;
+		result.reserve(strValue.size() * 2);
+		for (unsigned char character : strValue)
+		{
+			result.push_back(digits[character >> 4]);
+			result.push_back(digits[character & 0x0F]);
+		}
+		return result;
+	}
+
+	std::string MakeSaltHex()
+	{
+		std::random_device randomDevice;
+		std::array<unsigned char, 16> salt;
+		for (unsigned char& value : salt)
+		{
+			value = static_cast<unsigned char>(randomDevice());
+		}
+		return ToHex(std::string(reinterpret_cast<const char*>(salt.data()), salt.size()));
+	}
+
+	std::string Utf8Literal(const std::string& strValue)
+	{
+		return "CONVERT(UNHEX('" + ToHex(strValue) + "') USING utf8mb4)";
+	}
+
 	std::string lower(std::string strVal)
 	{
 		std::transform(strVal.begin(), strVal.end(), strVal.begin(), [](unsigned char ch)
