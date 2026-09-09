@@ -1,5 +1,6 @@
 #include "CBootLoader.h"
 #include "../database/CDBEngine.h"
+#include "../database/IDataBase.h"
 #include "../ini/CINIHandler.h"
 #include "../network/CHttpServer.h"
 #include "../network/CTcpServer.h"
@@ -47,7 +48,7 @@ bool CBootLoader::Initialize()
 		return false;
 	}
 
-	ini::CINIHandler hIni = ini::CINIHandler::InstanceRef();
+	ini::CINIHandler& hIni = ini::CINIHandler::InstanceRef();
 
 	m_strToken = hIni.GetValue(ini::Config::System, "HQMarket", "token", std::string());
 	if (m_strToken.empty())

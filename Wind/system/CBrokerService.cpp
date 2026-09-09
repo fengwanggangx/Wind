@@ -503,7 +503,7 @@ int CBrokerService::OnNetEvent(const net::CNetEvent& ev)
 	}
 
 	std::string strCmd = ev.m_request->GetCmd();
-	cosnt auto mIter = m_handler.find(strCmd);
+	const auto mIter = m_handler.find(strCmd);
 	if (m_handler.end() == mIter)
 	{
 		net::SendError(ev.m_connection_id, *ev.m_request, InvalidRequest, "unknown command");
