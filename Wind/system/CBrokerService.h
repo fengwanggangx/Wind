@@ -1,5 +1,5 @@
-#ifndef WIND_BUSINESS_CBROKERSERVICE_H
-#define WIND_BUSINESS_CBROKERSERVICE_H
+#ifndef WIND_SYSTEM_CBROKERSERVICE_H
+#define WIND_SYSTEM_CBROKERSERVICE_H
 
 #include "../hqmarket/MarketTypes.h"
 #include "../network/common_net.h"
@@ -38,14 +38,14 @@ class CBrokerService final
 
   private:
 	int OnNetEvent(const net::CNetEvent& ev);
-	bool HandleRegisterAuth(net::_TyConnectionId id, const CRequest& req);
 	bool HandleAuth(net::_TyConnectionId id, const CRequest& req);
+	bool HandleRegisterAuth(net::_TyConnectionId id, const CRequest& req);
 	bool HandleSubscription(net::_TyConnectionId id, const CRequest& req);
 
 private:
 
-	int HandleClientDisconnected(net::_TyConnectionId id);
-	bool HandleReAuthenticationRequest(const CRequest& req);
+	int HandleDisconnected(net::_TyConnectionId id);
+	bool HandleReAuth(const CRequest& req);
 	void OnHQMarketResponse(const CRequest& req);
 
 	std::string ToHex(const std::string& strValue) const;
@@ -58,7 +58,6 @@ private:
 	std::string Utf8Literal(const std::string& strValue) const;
 	void SendResponse(const CRequest& req, int nErrorCode, const std::string& strMessage) const;
 	bool Login(const CRequest& req, std::string& strToken);
-	int Register(const CRequest& req);
 
   private:
 	std::unordered_map<std::string, std::function<bool(net::_TyConnectionId, CRequest&)>> m_handler;

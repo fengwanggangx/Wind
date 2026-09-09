@@ -101,10 +101,10 @@ void CBrokerService::SendSubscriptionResponse(net::_TyConnectionId id, _TyReques
 	net::SendRequest(id, response);
 }
 
-std::string CBrokerService::GetMarketResponseKey(const CRequest& response) const
+std::string CBrokerService::GetMarketResponseKey(const CRequest& req) const
 {
-	std::string strPayload = response.GetReturnData("data");
-	std::string strType = response.GetReturnData("data_type");
+	std::string strPayload = req.GetReturnData("data");
+	std::string strType = req.GetReturnData("data_type");
 	if (("hqmarket.market.v1.QuoteData" == strType) || ("hqmarket.market.v1.DepthData" == strType))
 	{
 		hqmarket::market::v1::Instrument instrument;
@@ -173,21 +173,21 @@ void CBrokerService::OnHQMarketResponse(const CRequest& req)
 			m_pendingSubscriptions.erase(pendingIter);
 			if (!bAccepted)
 			{
-				auto clientsIter = m_subscriptionClients.find(strKey);
-				if (m_subscriptionClients.end() != clientsIter)
+				const auto mIter = m_subscriptionClients.find(strKey);
+				if (m_subscriptionClients.end() != mIter)
 				{
-					for (net::_TyConnectionId id : clientsIter->second)
+					for (net::_TyConnectionId id : mIter->second)
 					{
 						m_clientSubscriptions[id].erase(strKey);
 					}
-					m_subscriptionClients.erase(clientsIter);
+					m_subscriptionClients.erase(mIter);
 				}
 				m_subscriptionInfo.erase(strKey);
 			}
 		}
-		for (const auto& item : pending)
+		for (const auto& v : pending)
 		{
-			SendSubscriptionResponse(item.m_id, item.m_requestId, bAccepted, strReason);
+			SendSubscriptionResponse(v.m_id, v.m_requestId, bAccepted, strReason);
 		}
 		return;
 	}
@@ -195,10 +195,10 @@ void CBrokerService::OnHQMarketResponse(const CRequest& req)
 	std::vector<net::_TyConnectionId> clients;
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
-		auto iter = m_subscriptionClients.find(strKey);
-		if (m_subscriptionClients.end() != iter)
+		const auto mIter = m_subscriptionClients.find(strKey);
+		if (m_subscriptionClients.end() != mIter)
 		{
-			clients.assign(iter->second.begin(), iter->second.end());
+			clients.assign(mIter->second.begin(), mIter->second.end());
 		}
 	}
 	for (net::_TyConnectionId id : clients)
@@ -289,26 +289,26 @@ bool CBrokerService::Login(const CRequest& req, std::string& strToken)
 	return true;
 }
 
-int CBrokerService::Register(const CRequest& req)
+bool CBrokerService::HandleRegisterAuth(net::_TyConnectionId, const CRequest& req)
 {
 	std::string strAccount = req.GetExtraData("user");
 	std::string strPassword = req.GetExtraData("password");
 	if (!IsAccountValid(strAccount))
 	{
 		SendResponse(req, InvalidRequest, "账号需为 3-64 位字母、数字或 _-.@");
-		return 0;
+		return false;
 	}
 	if (!IsPasswordValid(strPassword))
 	{
 		SendResponse(req, InvalidRequest, "密码长度需为 8-128 位");
-		return 0;
+		return false;
 	}
 
 	db::_TyDBPtr db = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
 	if (nullptr == db)
 	{
 		SendResponse(req, StorageUnavailable, "用户数据库暂不可用");
-		return 0;
+		return false;
 	}
 
 	std::string strAccountLiteral = Utf8Literal(strAccount);
@@ -316,19 +316,19 @@ int CBrokerService::Register(const CRequest& req)
 	if (!table.second.empty())
 	{
 		SendResponse(req, AccountExists, "账号已存在");
-		return 0;
+		return false;
 	}
 
 	std::string saltHex = MakeSaltHex();
-	std::string sql = "INSERT INTO table_user(account,password_hash,password_salt,status) VALUES(" + strAccountLiteral + ",UNHEX(SHA2(CONCAT(UNHEX('" + saltHex + "'),UNHEX('" + ToHex(strPassword) + "')),256)),UNHEX('" + saltHex + "'),1)";
-	if (0 != db->ExecUpdate(sql))
+	std::string strSQL = "INSERT INTO table_user(account,password_hash,password_salt,status) VALUES(" + strAccountLiteral + ",UNHEX(SHA2(CONCAT(UNHEX('" + saltHex + "'),UNHEX('" + ToHex(strPassword) + "')),256)),UNHEX('" + saltHex + "'),1)";
+	if (0 != db->ExecUpdate(strSQL))
 	{
 		SendResponse(req, AccountExists, "账号已存在或注册失败");
-		return 0;
+		return false;
 	}
 
 	SendResponse(req, 0, "注册成功");
-	return 1;
+	return true;
 }
 
 bool CBrokerService::InitializeUserStorage()
@@ -383,13 +383,13 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 		bool bPending = false;
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_state);
-			std::unordered_set<std::string>& subscriptions = m_clientSubscriptions[id];
+			auto& subscriptions = m_clientSubscriptions[id];
 			if (!subscriptions.emplace(strKey).second)
 			{
 				SendSubscriptionResponse(id, req.GetId(), true, "already subscribed");
 				return 1;
 			}
-			std::unordered_set<net::_TyConnectionId>& clients = m_subscriptionClients[strKey];
+			auto& clients = m_subscriptionClients[strKey];
 			bSendUpstream = clients.empty();
 			clients.emplace(id);
 			m_subscriptionInfo.insert_or_assign(strKey, quote);
@@ -425,24 +425,24 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 	bool bSendUpstream = false;
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
-		auto clientIter = m_clientSubscriptions.find(id);
-		if ((m_clientSubscriptions.end() == clientIter) || (0 == clientIter->second.erase(strKey)))
+		auto mIter = m_clientSubscriptions.find(id);
+		if ((m_clientSubscriptions.end() == mIter) || (0 == mIter->second.erase(strKey)))
 		{
 			SendSubscriptionResponse(id, req.GetId(), true, "not subscribed");
 			return 1;
 		}
-		if (clientIter->second.empty())
+		if (mIter->second.empty())
 		{
-			m_clientSubscriptions.erase(clientIter);
+			m_clientSubscriptions.erase(mIter);
 		}
-		auto clientsIter = m_subscriptionClients.find(strKey);
-		if (m_subscriptionClients.end() != clientsIter)
+		auto mmIter = m_subscriptionClients.find(strKey);
+		if (m_subscriptionClients.end() != mmIter)
 		{
-			clientsIter->second.erase(id);
-			bSendUpstream = clientsIter->second.empty();
+			mmIter->second.erase(id);
+			bSendUpstream = mmIter->second.empty();
 			if (bSendUpstream)
 			{
-				m_subscriptionClients.erase(clientsIter);
+				m_subscriptionClients.erase(mmIter);
 				m_subscriptionInfo.erase(strKey);
 				m_pendingSubscriptions.erase(strKey);
 			}
@@ -457,32 +457,32 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 	return true;
 }
 
-int CBrokerService::HandleClientDisconnected(net::_TyConnectionId id)
+int CBrokerService::HandleDisconnected(net::_TyConnectionId id)
 {
 	std::vector<market::CQuoteInfo> removed;
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
 		m_authenticatedClients.erase(id);
-		auto clientIter = m_clientSubscriptions.find(id);
-		if (m_clientSubscriptions.end() != clientIter)
+		const auto mIter = m_clientSubscriptions.find(id);
+		if (m_clientSubscriptions.end() != mIter)
 		{
-			for (const std::string& strKey : clientIter->second)
+			for (const std::string& strKey : mIter->second)
 			{
-				auto clientsIter = m_subscriptionClients.find(strKey);
-				if (m_subscriptionClients.end() == clientsIter)
+				auto mmIter = m_subscriptionClients.find(strKey);
+				if (m_subscriptionClients.end() == mmIter)
 				{
 					continue;
 				}
-				clientsIter->second.erase(id);
-				if (clientsIter->second.empty())
+				mmIter->second.erase(id);
+				if (mmIter->second.empty())
 				{
 					removed.emplace_back(m_subscriptionInfo.at(strKey));
-					m_subscriptionClients.erase(clientsIter);
+					m_subscriptionClients.erase(mmIter);
 					m_subscriptionInfo.erase(strKey);
 					m_pendingSubscriptions.erase(strKey);
 				}
 			}
-			m_clientSubscriptions.erase(clientIter);
+			m_clientSubscriptions.erase(mIter);
 		}
 	}
 	if (nullptr != m_pSession)
@@ -495,7 +495,7 @@ int CBrokerService::HandleClientDisconnected(net::_TyConnectionId id)
 	return 1;
 }
 
-bool CBrokerService::HandleReAuthenticationRequest(const CRequest& req)
+bool CBrokerService::HandleReAuth(const CRequest& req)
 {
 	std::string strToken = req.GetExtraData("token");
 	bool bAccepted = false;
@@ -522,7 +522,7 @@ bool CBrokerService::HandleAuth(net::_TyConnectionId id, const CRequest& req)
 	std::string strToken = req.GetExtraData("token");
 	if (!strToken.empty())
 	{
-		return HandleReAuthenticationRequest(req);
+		return HandleReAuth(req);
 	}
 
 	// 登录认证
@@ -540,17 +540,11 @@ bool CBrokerService::HandleAuth(net::_TyConnectionId id, const CRequest& req)
 	return false;
 }
 
-bool CBrokerService::HandleRegisterAuth(net::_TyConnectionId, const CRequest& req)
-{
-	Register(req);
-	return true;
-}
-
 int CBrokerService::OnNetEvent(const net::CNetEvent& ev)
 {
 	if ((net::em_event::disconnected == ev.m_event) || (net::em_event::error == ev.m_event) || (net::em_event::timeout == ev.m_event))
 	{
-		return HandleClientDisconnected(ev.m_connection_id);
+		return HandleDisconnected(ev.m_connection_id);
 	}
 
 	if (nullptr == ev.m_request)
@@ -559,11 +553,11 @@ int CBrokerService::OnNetEvent(const net::CNetEvent& ev)
 	}
 
 	std::string strCmd = ev.m_request->GetCmd();
-	auto handlerIter = m_handler.find(strCmd);
-	if (m_handler.end() == handlerIter)
+	cosnt auto mIter = m_handler.find(strCmd);
+	if (m_handler.end() == mIter)
 	{
 		net::SendError(ev.m_connection_id, *ev.m_request, InvalidRequest, "unknown command");
 		return 0;
 	}
-	return handlerIter->second(ev.m_connection_id, *ev.m_request) ? 0 : 1;
+	return mIter->second(ev.m_connection_id, *ev.m_request) ? 0 : 1;
 }

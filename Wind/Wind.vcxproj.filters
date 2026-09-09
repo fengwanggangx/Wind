@@ -59,11 +59,11 @@
     <ClCompile Include="thread\CThreadPool.cpp">
       <Filter>thread</Filter>
     </ClCompile>
-	<ClCompile Include="business\CBrokerService.cpp">
-	  <Filter>business</Filter>
+	<ClCompile Include="system\CBrokerService.cpp">
+	  <Filter>system</Filter>
 	</ClCompile>
-	<ClCompile Include="business\RequestCenter.cpp">
-	  <Filter>business</Filter>
+	<ClCompile Include="system\RequestCenter.cpp">
+	  <Filter>system</Filter>
 	</ClCompile>
     <ClCompile Include="common\utility.cpp">
       <Filter>common</Filter>
@@ -75,6 +75,9 @@
       <Filter>network</Filter>
     </ClCompile>
     <ClCompile Include="system\CBootLoader.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="system\CHostMgr.cpp">
       <Filter>system</Filter>
     </ClCompile>
     <ClCompile Include="ini\CIniFile.cpp">
@@ -108,9 +111,6 @@
     </Filter>
     <Filter Include="database">
       <UniqueIdentifier>{9bf96648-bd0f-464d-86a0-81b1e6ff865a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="business">
-      <UniqueIdentifier>{f50ec8ea-f829-4773-8521-3130e9e0ac20}</UniqueIdentifier>
     </Filter>
     <Filter Include="basic">
       <UniqueIdentifier>{581f3253-c1e7-4eea-b5f2-477b1b68f585}</UniqueIdentifier>
@@ -192,11 +192,11 @@
     <ClInclude Include="common\defines.h">
       <Filter>common</Filter>
     </ClInclude>
-	<ClInclude Include="business\RequestCenter.h">
-	  <Filter>business</Filter>
+	<ClInclude Include="system\RequestCenter.h">
+	  <Filter>system</Filter>
 	</ClInclude>
-	<ClInclude Include="business\CBrokerService.h">
-	  <Filter>business</Filter>
+	<ClInclude Include="system\CBrokerService.h">
+	  <Filter>system</Filter>
 	</ClInclude>
     <ClInclude Include="basic\CDistributor.h">
       <Filter>basic</Filter>
@@ -217,6 +217,9 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="system\CBootLoader.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="system\CHostMgr.h">
       <Filter>system</Filter>
     </ClInclude>
     <ClInclude Include="ini\CIniFile.h">

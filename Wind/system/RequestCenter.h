@@ -1,5 +1,5 @@
-#ifndef WIND_BUSINESS_REQUESTCENTER_H
-#define WIND_BUSINESS_REQUESTCENTER_H
+#ifndef WIND_SYSTEM_REQUESTCENTER_H
+#define WIND_SYSTEM_REQUESTCENTER_H
 
 #include "../request/request.h"
 #include "../hqmarket/MarketTypes.h"
