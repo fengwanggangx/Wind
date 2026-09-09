@@ -38,6 +38,7 @@ class CBrokerService final
 
   private:
 	int OnNetEvent(const net::CNetEvent& ev);
+	void OnClientRequest(net::_TyConnectionId id, const CRequest& request);
 	bool HandleAuth(net::_TyConnectionId id, const CRequest& req);
 	bool HandleRegisterAuth(net::_TyConnectionId id, const CRequest& req);
 	bool HandleSubscription(net::_TyConnectionId id, const CRequest& req);
@@ -47,7 +48,7 @@ class CBrokerService final
 	void OnHQMarketResponse(const CRequest& req);
 
 private:
-
+	bool IsAuthenticated(net::_TyConnectionId id) const;
 	market::CQuoteInfo GetQuoteInfo(const CRequest& req) const;
 	void SendSubscriptionResponse(net::_TyConnectionId id, _TyRequestId requestId, bool bAccepted, const std::string& strReason) const;
 	std::string GetMarketResponseKey(const CRequest& req) const;
@@ -55,10 +56,12 @@ private:
 	bool Login(const CRequest& req, std::string& strToken);
 
   private:
-	std::unordered_map<std::string, std::function<bool(net::_TyConnectionId, CRequest&)>> m_handler;
-	std::mutex m_mtx_state;
-	std::unordered_set<net::_TyConnectionId> m_authenticatedClients;
-	std::unordered_set<std::string> m_loginTokens;
+	std::unordered_map<std::string, std::function<bool(net::_TyConnectionId, const CRequest&)>> m_handler;
+
+	mutable std::mutex m_mtx_state;
+	std::unordered_set<net::_TyConnectionId> m_auth_clients;
+	std::unordered_set<std::string> m_client_tokens;
+
 	CSubscriptionMgr m_subscriptions;
 	std::unordered_map<std::string, std::vector<PendingSubscription>> m_pendingSubscriptions;
 

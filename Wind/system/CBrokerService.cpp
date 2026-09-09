@@ -289,7 +289,7 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 	net::_TyConnectionId id = static_cast<net::_TyConnectionId>(req.GetConnectionId());
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
-		if (m_authenticatedClients.end() == m_authenticatedClients.find(id))
+		if (m_auth_clients.end() == m_auth_clients.find(id))
 		{
 			net::SendError(id, req, AuthenticationRequired, "authentication required");
 			return false;
@@ -377,7 +377,7 @@ int CBrokerService::HandleDisconnected(net::_TyConnectionId id)
 	std::vector<market::CQuoteInfo> removed = m_subscriptions.RemoveClient(id);
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
-		m_authenticatedClients.erase(id);
+		m_auth_clients.erase(id);
 		for (const market::CQuoteInfo& quote : removed)
 		{
 			std::string strKey = quote.String();
@@ -400,10 +400,10 @@ bool CBrokerService::HandleReAuth(const CRequest& req)
 	bool bAccepted = false;
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
-		bAccepted = m_loginTokens.end() != m_loginTokens.find(strToken);
+		bAccepted = m_client_tokens.end() != m_client_tokens.find(strToken);
 		if (bAccepted)
 		{
-			m_authenticatedClients.emplace(req.GetConnectionId());
+			m_auth_clients.emplace(req.GetConnectionId());
 		}
 	}
 	if (bAccepted)
@@ -413,6 +413,12 @@ bool CBrokerService::HandleReAuth(const CRequest& req)
 	}
 	SendResponse(req, InvalidCredentials, "登录状态已失效");
 	return false;
+}
+
+bool CBrokerService::IsAuthenticated(net::_TyConnectionId id) const
+{
+	std::lock_guard<std::mutex> lck(m_mtx_state);
+	return (m_auth_clients.end() != m_auth_clients.find(id));
 }
 
 bool CBrokerService::HandleAuth(net::_TyConnectionId id, const CRequest& req)
@@ -430,8 +436,8 @@ bool CBrokerService::HandleAuth(net::_TyConnectionId id, const CRequest& req)
 		if (Login(req, strToken))
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_state);
-			m_authenticatedClients.emplace(req.GetConnectionId());
-			m_loginTokens.emplace(strToken);
+			m_auth_clients.emplace(req.GetConnectionId());
+			m_client_tokens.emplace(strToken);
 		}
 		return true;
 	}
@@ -439,24 +445,40 @@ bool CBrokerService::HandleAuth(net::_TyConnectionId id, const CRequest& req)
 	return false;
 }
 
-int CBrokerService::OnNetEvent(const net::CNetEvent& ev)
+void CBrokerService::OnClientRequest(net::_TyConnectionId id, const CRequest& request)
 {
-	if ((net::em_event::disconnected == ev.m_event) || (net::em_event::error == ev.m_event) || (net::em_event::timeout == ev.m_event))
-	{
-		return HandleDisconnected(ev.m_connection_id);
-	}
-
-	if (nullptr == ev.m_request)
-	{
-		return 0;
-	}
-
-	std::string strCmd = ev.m_request->GetCmd();
+	std::string strCmd = request.GetCmd();
 	const auto mIter = m_handler.find(strCmd);
 	if (m_handler.end() == mIter)
 	{
-		net::SendError(ev.m_connection_id, *ev.m_request, InvalidRequest, "unknown command");
-		return 0;
+		net::SendError(id, request, 1006, "unknown command");
+		return;
 	}
-	return mIter->second(ev.m_connection_id, *ev.m_request) ? 0 : 1;
+
+	if ("auth" == strCmd)
+	{
+		mIter->second(id, request);
+		return;
+	}
+
+	if (!IsAuthenticated(id))
+	{
+		net::SendError(id, request, 1002, "authentication required");
+		return;
+	}
+
+	mIter->second(id, request);
+}
+
+int CBrokerService::OnNetEvent(const net::CNetEvent& ev)
+{
+	if (net::em_event::request == ev.m_event)
+	{
+		OnClientRequest(ev.m_request->GetConnectionId(), *ev.m_request);
+	}
+	else if ((net::em_event::disconnected == ev.m_event) || (net::em_event::error == ev.m_event) || (net::em_event::timeout == ev.m_event))
+	{
+		HandleDisconnected(ev.m_connection_id);
+	}
+	
 }
