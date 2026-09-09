@@ -32,6 +32,27 @@ namespace
 	constexpr int InvalidSubscription = 1006;
 } // namespace
 
+bool IsAccountValid(const std::string& strAccount)
+{
+	if ((MinAccountLength > strAccount.size()) || (MaxAccountLength < strAccount.size()))
+	{
+		return false;
+	}
+	for (unsigned char c : strAccount)
+	{
+		if ((0 == std::isalnum(c)) && ('_' != c) && ('-' != c) && ('.' != c) && ('@' != c))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool IsPasswordValid(const std::string& strPassword)
+{
+	return (MinPasswordLength <= strPassword.size()) && (MaxPasswordLength >= strPassword.size());
+}
+
 CBrokerService::CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession) : m_pTcpServer(pTcpServer), m_pSession(pSession)
 {
 	m_handler =
@@ -139,26 +160,17 @@ void CBrokerService::OnHQMarketResponse(const CRequest& req)
 		std::string strReason = req.GetReturnData("reason");
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_state);
-			auto pendingIter = m_pendingSubscriptions.find(strKey);
-			if (m_pendingSubscriptions.end() == pendingIter)
+			auto mIter = m_pendingSubscriptions.find(strKey);
+			if (m_pendingSubscriptions.end() == mIter)
 			{
 				return;
 			}
-			pending = std::move(pendingIter->second);
-			m_pendingSubscriptions.erase(pendingIter);
-			if (!bAccepted)
-			{
-				const auto mIter = m_subscriptionClients.find(strKey);
-				if (m_subscriptionClients.end() != mIter)
-				{
-					for (net::_TyConnectionId id : mIter->second)
-					{
-						m_clientSubscriptions[id].erase(strKey);
-					}
-					m_subscriptionClients.erase(mIter);
-				}
-				m_subscriptionInfo.erase(strKey);
-			}
+			pending = std::move(mIter->second);
+			m_pendingSubscriptions.erase(mIter);
+		}
+		if (!bAccepted)
+		{
+			m_subscriptions.RemoveSubscription(strKey);
 		}
 		for (const auto& v : pending)
 		{
@@ -167,40 +179,11 @@ void CBrokerService::OnHQMarketResponse(const CRequest& req)
 		return;
 	}
 
-	std::vector<net::_TyConnectionId> clients;
-	{
-		std::lock_guard<std::mutex> lock(m_mtx_state);
-		const auto mIter = m_subscriptionClients.find(strKey);
-		if (m_subscriptionClients.end() != mIter)
-		{
-			clients.assign(mIter->second.begin(), mIter->second.end());
-		}
-	}
-	for (net::_TyConnectionId id : clients)
+	std::vector<net::_TyConnectionId> ids = m_subscriptions.GetSubscriberIds(strKey);
+	for (net::_TyConnectionId id : ids)
 	{
 		net::SendRequest(id, req);
 	}
-}
-
-bool CBrokerService::IsAccountValid(const std::string& strAccount) const
-{
-	if ((MinAccountLength > strAccount.size()) || (MaxAccountLength < strAccount.size()))
-	{
-		return false;
-	}
-	for (unsigned char c : strAccount)
-	{
-		if ((0 == std::isalnum(c)) && ('_' != c) && ('-' != c) && ('.' != c) && ('@' != c))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-bool CBrokerService::IsPasswordValid(const std::string& strPassword) const
-{
-	return (MinPasswordLength <= strPassword.size()) && (MaxPasswordLength >= strPassword.size());
 }
 
 void CBrokerService::SendResponse(const CRequest& req, int nErrorCode, const std::string& strMessage) const
@@ -329,35 +312,29 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 
 	if ("subscribe" == strCmd)
 	{
-		bool bSendUpstream = false;
+		if (m_subscriptions.IsSubscribed(id, quote))
+		{
+			SendSubscriptionResponse(id, req.GetId(), true, "already subscribed");
+			return true;
+		}
+		std::vector<market::CQuoteInfo> subscriptions{ quote };
+		bool bSendUpstream = !m_subscriptions.Subscribe(id, subscriptions).empty();
 		bool bPending = false;
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_state);
-			auto& subscriptions = m_clientSubscriptions[id];
-			if (!subscriptions.emplace(strKey).second)
-			{
-				SendSubscriptionResponse(id, req.GetId(), true, "already subscribed");
-				return 1;
-			}
-			auto& clients = m_subscriptionClients[strKey];
-			bSendUpstream = clients.empty();
-			clients.emplace(id);
-			m_subscriptionInfo.insert_or_assign(strKey, quote);
 			bPending = m_pendingSubscriptions.end() != m_pendingSubscriptions.find(strKey);
 			if (bSendUpstream || bPending)
 			{
-				m_pendingSubscriptions[strKey].push_back(PendingSubscription{id, req.GetId()});
+				m_pendingSubscriptions[strKey].push_back(PendingSubscription{ id, req.GetId() });
 			}
 		}
 		if (bSendUpstream)
 		{
 			if ((nullptr == m_pSession) || !m_pSession->SubscribeQuote(quote))
 			{
+				m_subscriptions.Unsubscribe(id, subscriptions);
 				{
 					std::lock_guard<std::mutex> lock(m_mtx_state);
-					m_clientSubscriptions[id].erase(strKey);
-					m_subscriptionClients.erase(strKey);
-					m_subscriptionInfo.erase(strKey);
 					m_pendingSubscriptions.erase(strKey);
 				}
 				SendSubscriptionResponse(id, req.GetId(), false, "HQMarket is unavailable");
@@ -372,30 +349,18 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 		return true;
 	}
 
-	bool bSendUpstream = false;
+	if (!m_subscriptions.IsSubscribed(id, quote))
+	{
+		SendSubscriptionResponse(id, req.GetId(), true, "not subscribed");
+		return true;
+	}
+	std::vector<market::CQuoteInfo> subscriptions{ quote };
+	bool bSendUpstream = !m_subscriptions.Unsubscribe(id, subscriptions).empty();
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
-		auto mIter = m_clientSubscriptions.find(id);
-		if ((m_clientSubscriptions.end() == mIter) || (0 == mIter->second.erase(strKey)))
+		if (bSendUpstream)
 		{
-			SendSubscriptionResponse(id, req.GetId(), true, "not subscribed");
-			return 1;
-		}
-		if (mIter->second.empty())
-		{
-			m_clientSubscriptions.erase(mIter);
-		}
-		auto mmIter = m_subscriptionClients.find(strKey);
-		if (m_subscriptionClients.end() != mmIter)
-		{
-			mmIter->second.erase(id);
-			bSendUpstream = mmIter->second.empty();
-			if (bSendUpstream)
-			{
-				m_subscriptionClients.erase(mmIter);
-				m_subscriptionInfo.erase(strKey);
-				m_pendingSubscriptions.erase(strKey);
-			}
+			m_pendingSubscriptions.erase(strKey);
 		}
 	}
 	if (bSendUpstream && ((nullptr == m_pSession) || !m_pSession->UnsubscribeQuote(quote)))
@@ -409,30 +374,14 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 
 int CBrokerService::HandleDisconnected(net::_TyConnectionId id)
 {
-	std::vector<market::CQuoteInfo> removed;
+	std::vector<market::CQuoteInfo> removed = m_subscriptions.RemoveClient(id);
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
 		m_authenticatedClients.erase(id);
-		const auto mIter = m_clientSubscriptions.find(id);
-		if (m_clientSubscriptions.end() != mIter)
+		for (const market::CQuoteInfo& quote : removed)
 		{
-			for (const std::string& strKey : mIter->second)
-			{
-				auto mmIter = m_subscriptionClients.find(strKey);
-				if (m_subscriptionClients.end() == mmIter)
-				{
-					continue;
-				}
-				mmIter->second.erase(id);
-				if (mmIter->second.empty())
-				{
-					removed.emplace_back(m_subscriptionInfo.at(strKey));
-					m_subscriptionClients.erase(mmIter);
-					m_subscriptionInfo.erase(strKey);
-					m_pendingSubscriptions.erase(strKey);
-				}
-			}
-			m_clientSubscriptions.erase(mIter);
+			std::string strKey = quote.String();
+			m_pendingSubscriptions.erase(strKey);
 		}
 	}
 	if (nullptr != m_pSession)

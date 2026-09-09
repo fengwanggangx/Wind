@@ -1,6 +1,7 @@
 #ifndef WIND_SYSTEM_CBROKERSERVICE_H
 #define WIND_SYSTEM_CBROKERSERVICE_H
 
+#include "CSubscriptionMgr.h"
 #include "../hqmarket/MarketTypes.h"
 #include "../network/common_net.h"
 #include "../request/request.h"
@@ -50,8 +51,6 @@ private:
 	market::CQuoteInfo GetQuoteInfo(const CRequest& req) const;
 	void SendSubscriptionResponse(net::_TyConnectionId id, _TyRequestId requestId, bool bAccepted, const std::string& strReason) const;
 	std::string GetMarketResponseKey(const CRequest& req) const;
-	bool IsAccountValid(const std::string& strAccount) const;
-	bool IsPasswordValid(const std::string& strPassword) const;
 	void SendResponse(const CRequest& req, int nErrorCode, const std::string& strMessage) const;
 	bool Login(const CRequest& req, std::string& strToken);
 
@@ -60,9 +59,7 @@ private:
 	std::mutex m_mtx_state;
 	std::unordered_set<net::_TyConnectionId> m_authenticatedClients;
 	std::unordered_set<std::string> m_loginTokens;
-	std::unordered_map<net::_TyConnectionId, std::unordered_set<std::string>> m_clientSubscriptions;
-	std::unordered_map<std::string, std::unordered_set<net::_TyConnectionId>> m_subscriptionClients;
-	std::unordered_map<std::string, market::CQuoteInfo> m_subscriptionInfo;
+	CSubscriptionMgr m_subscriptions;
 	std::unordered_map<std::string, std::vector<PendingSubscription>> m_pendingSubscriptions;
 
 private:

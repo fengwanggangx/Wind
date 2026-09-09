@@ -62,6 +62,9 @@
 	<ClCompile Include="system\CBrokerService.cpp">
 	  <Filter>system</Filter>
 	</ClCompile>
+	<ClCompile Include="system\CSubscriptionMgr.cpp">
+	  <Filter>system</Filter>
+	</ClCompile>
 	<ClCompile Include="system\RequestCenter.cpp">
 	  <Filter>system</Filter>
 	</ClCompile>
@@ -199,6 +202,9 @@
 	  <Filter>system</Filter>
 	</ClInclude>
 	<ClInclude Include="system\CBrokerService.h">
+	  <Filter>system</Filter>
+	</ClInclude>
+	<ClInclude Include="system\CSubscriptionMgr.h">
 	  <Filter>system</Filter>
 	</ClInclude>
     <ClInclude Include="basic\CDistributor.h">
