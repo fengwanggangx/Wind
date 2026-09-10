@@ -93,7 +93,7 @@
     <ClCompile Include="basic\CDistributor.cpp" />
 	<ClCompile Include="system\CBrokerService.cpp" />
 	<ClCompile Include="system\CSubscriptionMgr.cpp" />
-	<ClCompile Include="system\RequestCenter.cpp" />
+	<ClCompile Include="request\RequestCenter.cpp" />
     <ClCompile Include="common\datetime.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\include\release\libevent;.\include\release\protobuf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -129,7 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basic\CDistributor.h" />
-	<ClInclude Include="system\RequestCenter.h" />
+	<ClInclude Include="request\RequestCenter.h" />
 	<ClInclude Include="system\CBrokerService.h" />
 	<ClInclude Include="system\CSubscriptionMgr.h" />
     <ClInclude Include="common\container.h" />

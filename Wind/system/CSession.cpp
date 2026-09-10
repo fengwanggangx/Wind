@@ -1,5 +1,5 @@
 #include "CSession.h"
-#include "../system/RequestCenter.h"
+#include "../request/RequestCenter.h"
 #include "../network/CTcpClient.h"
 #include "../network/common_net.h"
 #include <algorithm>

@@ -2,7 +2,7 @@
 #define WIND_SYSTEM_REQUESTCENTER_H
 
 #include "../request/request.h"
-#include "../request/MarketTypes.h"
+#include "MarketTypes.h"
 
 #include <cstdint>
 #include <string>

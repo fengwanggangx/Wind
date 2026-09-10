@@ -65,8 +65,8 @@
 	<ClCompile Include="system\CSubscriptionMgr.cpp">
 	  <Filter>system</Filter>
 	</ClCompile>
-	<ClCompile Include="system\RequestCenter.cpp">
-	  <Filter>system</Filter>
+	<ClCompile Include="request\RequestCenter.cpp">
+		<Filter>request</Filter>
 	</ClCompile>
     <ClCompile Include="common\utility.cpp">
       <Filter>common</Filter>
@@ -195,8 +195,8 @@
     <ClInclude Include="common\defines.h">
       <Filter>common</Filter>
     </ClInclude>
-	<ClInclude Include="system\RequestCenter.h">
-	  <Filter>system</Filter>
+	<ClInclude Include="request\RequestCenter.h">
+		<Filter>request</Filter>
 	</ClInclude>
 	<ClInclude Include="system\CBrokerService.h">
 	  <Filter>system</Filter>
