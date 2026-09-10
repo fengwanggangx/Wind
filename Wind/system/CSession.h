@@ -58,6 +58,7 @@ public:
 	bool SubscribeQuote(const market::CQuoteInfo& quote);
 	bool UnsubscribeQuote(const market::CQuoteInfo& quote);
 	void RegisterHandler(ResponseHandler&& handler);
+	void RegisterStateHandler(StateHandler&& handler);
 	void SetStateHandler(StateHandler&& handler);
 	SessionState GetState() const;
 	bool IsConnected() const;
@@ -67,6 +68,7 @@ private:
 	struct Subscription
 	{
 		market::CQuoteInfo m_quote;
+		std::size_t m_referenceCount{ 1 };
 	};
 
 	void ConnectionLoop();
@@ -102,7 +104,7 @@ private:
 	std::mutex m_mtx_handlers;
 	std::vector<ResponseHandler> m_handlers;
 
-	StateHandler m_stateHandler;
+	std::vector<StateHandler> m_stateHandlers;
 	int m_nHeartbeatSeconds{ 5 };
 	int m_nMaxReconnectSeconds{ 30 };
 };

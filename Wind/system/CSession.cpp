@@ -95,15 +95,19 @@ bool CSession::SubscribeQuote(const market::CQuoteInfo& quote)
 	{
 		return false;
 	}
+	std::lock_guard<std::mutex> lock(m_mtx_subscriptions);
+	std::string strKey = MakeSubscriptionKey(quote);
+	auto iter = m_subscriptions.find(strKey);
+	if (m_subscriptions.end() != iter)
 	{
-		std::lock_guard<std::mutex> lock(m_mtx_subscriptions);
-		m_subscriptions.insert_or_assign(MakeSubscriptionKey(quote), Subscription{ quote });
+		++iter->second.m_referenceCount;
+		return true;
 	}
+	m_subscriptions.emplace(strKey, Subscription{ quote, 1 });
 	bool bSent = SendRequest(request::Subscription(quote));
 	if (!bSent)
 	{
-		std::lock_guard<std::mutex> lock(m_mtx_subscriptions);
-		m_subscriptions.erase(MakeSubscriptionKey(quote));
+		m_subscriptions.erase(strKey);
 	}
 	return bSent;
 }
@@ -115,18 +119,19 @@ bool CSession::UnsubscribeQuote(const market::CQuoteInfo& quote)
 		return false;
 	}
 	std::string strKey = MakeSubscriptionKey(quote);
+	std::lock_guard<std::mutex> lock(m_mtx_subscriptions);
+	auto iter = m_subscriptions.find(strKey);
+	if (m_subscriptions.end() == iter)
 	{
-		std::lock_guard<std::mutex> lock(m_mtx_subscriptions);
-		if (m_subscriptions.end() == m_subscriptions.find(strKey))
-		{
-			return false;
-		}
+		return false;
+	}
+	if (1 < iter->second.m_referenceCount)
+	{
+		--iter->second.m_referenceCount;
+		return true;
 	}
 	bool bSent = SendRequest(request::UnSubscription(quote));
-	{
-		std::lock_guard<std::mutex> lock(m_mtx_subscriptions);
-		m_subscriptions.erase(strKey);
-	}
+	m_subscriptions.erase(iter);
 	return bSent;
 }
 
@@ -139,7 +144,21 @@ void CSession::RegisterHandler(ResponseHandler&& handler)
 void CSession::SetStateHandler(StateHandler&& handler)
 {
 	std::lock_guard<std::mutex> lock(m_mtx_handlers);
-	m_stateHandler = std::move(handler);
+	m_stateHandlers.clear();
+	if (nullptr != handler)
+	{
+		m_stateHandlers.emplace_back(std::move(handler));
+	}
+}
+
+void CSession::RegisterStateHandler(StateHandler&& handler)
+{
+	if (nullptr == handler)
+	{
+		return;
+	}
+	std::lock_guard<std::mutex> lock(m_mtx_handlers);
+	m_stateHandlers.emplace_back(std::move(handler));
 }
 
 SessionState CSession::GetState() const
@@ -290,8 +309,9 @@ void CSession::HandleResponse(const CRequest& req)
 				m_login->m_strToken = req.GetReturnData("token");
 			}
 		}
-		NotifyState(SessionState::Ready, "HQMarket session ready");
+		m_state.store(SessionState::Ready);
 		RestoreSubscriptions();
+		NotifyState(SessionState::Ready, "HQMarket session ready");
 		return;
 	}
 	Dispatch(req);
@@ -337,14 +357,17 @@ void CSession::RestoreSubscriptions()
 void CSession::NotifyState(SessionState state, const std::string& strMessage)
 {
 	m_state.store(state);
-	StateHandler handler;
+	std::vector<StateHandler> handlers;
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_handlers);
-		handler = m_stateHandler;
+		handlers = m_stateHandlers;
 	}
-	if (nullptr != handler)
+	for (const auto& handler : handlers)
 	{
-		handler(state, strMessage);
+		if (nullptr != handler)
+		{
+			handler(state, strMessage);
+		}
 	}
 }
 

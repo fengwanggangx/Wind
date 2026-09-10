@@ -77,7 +77,7 @@ bool CBrokerService::Initialize()
 	}
 	m_pTcpServer->RegisterHandler(std::bind_front(&CBrokerService::OnNetEvent, this));
 	m_pSession->RegisterHandler(std::bind_front(&CBrokerService::OnHQMarketResponse, this));
-	m_pSession->SetStateHandler(std::bind_front(&CBrokerService::OnHQMarketState, this));
+	m_pSession->RegisterStateHandler(std::bind_front(&CBrokerService::OnHQMarketState, this));
 	return true;
 }
 
