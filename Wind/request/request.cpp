@@ -6,20 +6,12 @@
 
 #include <atomic>
 
-namespace
-{
-	std::atomic_uint64_t NextRequestId{ 1 };
-
-	request::RequestType ToProtoType(CRequest::Type type)
-	{
-		return static_cast<request::RequestType>(type);
-	}
-}
-
 CRequest::CRequest() : m_arena(std::make_unique<google::protobuf::Arena>())
 {
 	m_data = google::protobuf::Arena::CreateMessage<_TyReqData>(m_arena.get());
-	SetId(NextRequestId.fetch_add(1, std::memory_order_relaxed));
+
+	std::atomic<_TyRequestId> s_id{ 1 };
+	SetId(s_id.fetch_add(1, std::memory_order_relaxed));
 }
 
 CRequest::~CRequest() = default;
@@ -58,9 +50,9 @@ CRequest::Type CRequest::GetType() const
 	return static_cast<Type>(m_data->type());
 }
 
-void CRequest::SetType(Type type)
+void CRequest::SetType(Type t)
 {
-	m_data->set_type(ToProtoType(type));
+	m_data->set_type(static_cast<request::RequestType>(t));
 }
 
 std::string CRequest::GetCmd() const
@@ -75,8 +67,8 @@ void CRequest::SetCmd(const std::string& strCmd)
 
 std::string CRequest::GetExtraData(const std::string& strKey) const
 {
-	auto iter = m_data->extra().find(strKey);
-	return m_data->extra().end() == iter ? std::string() : iter->second;
+	const auto mIter = m_data->extra().find(strKey);
+	return m_data->extra().end() == mIter ? std::string() : mIter->second;
 }
 
 std::unordered_map<std::string, std::string> CRequest::GetExtraData() const
@@ -91,8 +83,8 @@ void CRequest::SetExtraData(const std::string& strKey, const std::string& strVal
 
 std::string CRequest::GetReturnData(const std::string& strKey) const
 {
-	auto iter = m_data->ret().find(strKey);
-	return m_data->ret().end() == iter ? std::string() : iter->second;
+	const auto mIter = m_data->ret().find(strKey);
+	return m_data->ret().end() == mIter ? std::string() : mIter->second;
 }
 
 std::unordered_map<std::string, std::string> CRequest::GetReturnData() const

@@ -61,7 +61,7 @@ public:
 	void SetId(_TyRequestId id);
 
 	Type GetType() const;
-	void SetType(Type type);
+	void SetType(Type t);
 
 	std::string GetCmd() const;
 	void SetCmd(const std::string& strCmd);
