@@ -123,6 +123,10 @@
     <ClCompile Include="network\common_net.cpp" />
     <ClCompile Include="request\request.cpp" />
     <ClCompile Include="request\request.pb.cc" />
+	<ClCompile Include="strategy\CStrategyContext.cpp" />
+	<ClCompile Include="strategy\CStrategyEngine.cpp" />
+	<ClCompile Include="strategy\StrategyTypes.cpp" />
+	<ClCompile Include="strategy\strategies\CMovingAverageStrategy.cpp" />
     <ClCompile Include="system\CHostMgr.cpp" />
     <ClCompile Include="thread\CThreadPool.cpp" />
     <ClCompile Include="system\CBootLoader.cpp" />
@@ -163,6 +167,14 @@
     <ClInclude Include="network\common_net.h" />
     <ClInclude Include="request\request.h" />
     <ClInclude Include="request\request.pb.h" />
+	<ClInclude Include="strategy\CStrategyContext.h" />
+	<ClInclude Include="strategy\CStrategyEngine.h" />
+	<ClInclude Include="strategy\IStrategy.h" />
+	<ClInclude Include="strategy\IStrategyContext.h" />
+	<ClInclude Include="strategy\IStrategyOrderSink.h" />
+	<ClInclude Include="strategy\ITradingSnapshotProvider.h" />
+	<ClInclude Include="strategy\StrategyTypes.h" />
+	<ClInclude Include="strategy\strategies\CMovingAverageStrategy.h" />
     <ClInclude Include="system\CHostMgr.h" />
     <ClInclude Include="thread\CThreadPool.h" />
     <ClInclude Include="system\CBootLoader.h" />

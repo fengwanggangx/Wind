@@ -1,0 +1,41 @@
+#ifndef WIND_STRATEGY_ISTRATEGY_H
+#define WIND_STRATEGY_ISTRATEGY_H
+
+#include "StrategyTypes.h"
+
+class IStrategyContext;
+
+class IStrategy
+{
+  public:
+	virtual ~IStrategy() = default;
+
+	virtual bool Initialize(IStrategyContext& context, const CStrategyConfig& config) = 0;
+	virtual void OnStart() = 0;
+	virtual void OnPause() = 0;
+	virtual void OnStop() = 0;
+
+	virtual void OnQuote(const _TyQuoteData& data)
+	{
+	}
+	virtual void OnDepth(const _TyDepthData& data)
+	{
+	}
+	virtual void OnMarketTrade(const _TyMarketTradeData& data)
+	{
+	}
+	virtual void OnBar(const _TyBarData& data)
+	{
+	}
+	virtual void OnOrder(const COrderEvent& event)
+	{
+	}
+	virtual void OnTrade(const CTradeEvent& event)
+	{
+	}
+	virtual void OnTimer(const CTimerEvent& event)
+	{
+	}
+};
+
+#endif

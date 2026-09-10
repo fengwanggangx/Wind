@@ -101,6 +101,18 @@
     <ClCompile Include="network\CFrameBuffer.cpp">
       <Filter>network</Filter>
     </ClCompile>
+    <ClCompile Include="strategy\CStrategyContext.cpp">
+      <Filter>strategy</Filter>
+    </ClCompile>
+    <ClCompile Include="strategy\CStrategyEngine.cpp">
+      <Filter>strategy</Filter>
+    </ClCompile>
+    <ClCompile Include="strategy\StrategyTypes.cpp">
+      <Filter>strategy</Filter>
+    </ClCompile>
+    <ClCompile Include="strategy\strategies\CMovingAverageStrategy.cpp">
+      <Filter>strategy\strategies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -129,6 +141,12 @@
     </Filter>
     <Filter Include="ini">
       <UniqueIdentifier>{355a3106-79fa-438c-b69e-c77cb45d6425}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="strategy">
+      <UniqueIdentifier>{a7266a16-194f-4eb2-999e-091ff81864c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="strategy\strategies">
+      <UniqueIdentifier>{7912c051-b607-476a-8fa4-22f27deedda1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +263,30 @@
     </ClInclude>
     <ClInclude Include="network\CFrameBuffer.h">
       <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="strategy\CStrategyContext.h">
+      <Filter>strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="strategy\CStrategyEngine.h">
+      <Filter>strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="strategy\IStrategy.h">
+      <Filter>strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="strategy\IStrategyContext.h">
+      <Filter>strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="strategy\IStrategyOrderSink.h">
+      <Filter>strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="strategy\ITradingSnapshotProvider.h">
+      <Filter>strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="strategy\StrategyTypes.h">
+      <Filter>strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="strategy\strategies\CMovingAverageStrategy.h">
+      <Filter>strategy\strategies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
