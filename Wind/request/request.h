@@ -1,21 +1,40 @@
-#ifndef MARY_REQUEST_REQUEST_H
-#define MARY_REQUEST_REQUEST_H
+#ifndef HQMARKET_REQUEST_REQUEST_H
+#define HQMARKET_REQUEST_REQUEST_H
+
+#include "../network/common_net.h"
 
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <string>
 #include <unordered_map>
-#include <optional>
-#include "../network/common_net.h"
 
 namespace request
 {
 	class RequestData;
 }
 
-using _TyRequestId = std::uint64_t;
+namespace hqmarket::market::v1
+{
+	class SubscriptionAck;
+	class QuoteData;
+	class DepthData;
+	class QueryResponse;
+}
 
-class CRequest final
+namespace google::protobuf
+{
+	class Arena;
+}
+
+using _TyRequestId = std::uint64_t;
+using _TyReqData = request::RequestData;
+using _TySubscriptionAck = hqmarket::market::v1::SubscriptionAck;
+using _TyQuoteData = hqmarket::market::v1::QuoteData;
+using _TyDepthData = hqmarket::market::v1::DepthData;
+using _TyQueryResponse = hqmarket::market::v1::QueryResponse;
+
+class CRequest
 {
 public:
 	enum class Type
@@ -29,12 +48,13 @@ public:
 		HEARTBEAT = 6
 	};
 
+public:
 	CRequest();
 	~CRequest();
 	CRequest(const CRequest& arg);
 	CRequest& operator=(const CRequest& arg);
-	CRequest(CRequest&&) noexcept;
-	CRequest& operator=(CRequest&&) noexcept;
+	CRequest(CRequest&&) = delete;
+	CRequest& operator=(CRequest&&) = delete;
 
 public:
 	_TyRequestId GetId() const;
@@ -48,12 +68,17 @@ public:
 
 	std::string GetExtraData(const std::string& strKey) const;
 	std::unordered_map<std::string, std::string> GetExtraData() const;
-
 	void SetExtraData(const std::string& strKey, const std::string& strValue);
-	std::string GetReturnData(const std::string& strKey) const;
 
+	std::string GetReturnData(const std::string& strKey) const;
 	std::unordered_map<std::string, std::string> GetReturnData() const;
 	void SetReturnData(const std::string& strKey, const std::string& strValue);
+
+	void SetData(const _TySubscriptionAck& value);
+	void SetData(const _TyQuoteData& value);
+	void SetData(const _TyDepthData& value);
+	void SetData(const _TyQueryResponse& value);
+	const _TyReqData& GetData() const;
 
 	void SetConnectionId(net::_TyConnectionId id);
 	net::_TyConnectionId GetConnectionId() const;
@@ -64,8 +89,9 @@ public:
 	std::optional<std::pair<int, std::string>> GetErrorInfo() const;
 
 private:
-	std::unique_ptr<request::RequestData> m_data;
-	std::int64_t m_connectionId{ -1 };
+	std::unique_ptr<google::protobuf::Arena> m_arena;
+	_TyReqData* m_data{ nullptr };
+	net::_TyConnectionId m_connection_id{ -1 };
 };
 
 #endif

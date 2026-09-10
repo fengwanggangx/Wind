@@ -1,38 +1,43 @@
 #include "request.h"
 
 #include "request.pb.h"
+#include "../common/utility.h"
+#include "../hqmarket/v1/market.pb.h"
 
 #include <atomic>
-#include "../common/utility.h"
 
 namespace
 {
 	std::atomic_uint64_t NextRequestId{ 1 };
+
+	request::RequestType ToProtoType(CRequest::Type type)
+	{
+		return static_cast<request::RequestType>(type);
+	}
 }
 
-CRequest::CRequest() : m_data(std::make_unique<request::RequestData>())
+CRequest::CRequest() : m_arena(std::make_unique<google::protobuf::Arena>())
 {
+	m_data = google::protobuf::Arena::CreateMessage<_TyReqData>(m_arena.get());
 	SetId(NextRequestId.fetch_add(1, std::memory_order_relaxed));
 }
 
 CRequest::~CRequest() = default;
 
-CRequest::CRequest(const CRequest& arg) : m_data(std::make_unique<request::RequestData>(*arg.m_data)), m_connectionId(arg.m_connectionId)
+CRequest::CRequest(const CRequest& arg) : CRequest()
 {
+	*this = arg;
 }
 
 CRequest& CRequest::operator=(const CRequest& arg)
 {
 	if (this != &arg)
 	{
-		*m_data = *arg.m_data;
-		m_connectionId = arg.m_connectionId;
+		m_data->CopyFrom(*arg.m_data);
+		m_connection_id = arg.m_connection_id;
 	}
 	return *this;
 }
-
-CRequest::CRequest(CRequest&&) noexcept = default;
-CRequest& CRequest::operator=(CRequest&&) noexcept = default;
 
 _TyRequestId CRequest::GetId() const
 {
@@ -51,7 +56,7 @@ CRequest::Type CRequest::GetType() const
 
 void CRequest::SetType(Type type)
 {
-	m_data->set_type(static_cast<request::RequestType>(type));
+	m_data->set_type(ToProtoType(type));
 }
 
 std::string CRequest::GetCmd() const
@@ -64,15 +69,15 @@ void CRequest::SetCmd(const std::string& strCmd)
 	m_data->set_cmd(strCmd);
 }
 
+std::string CRequest::GetExtraData(const std::string& strKey) const
+{
+	auto iter = m_data->extra().find(strKey);
+	return m_data->extra().end() == iter ? std::string() : iter->second;
+}
+
 std::unordered_map<std::string, std::string> CRequest::GetExtraData() const
 {
 	return { m_data->extra().begin(), m_data->extra().end() };
-}
-
-std::string CRequest::GetExtraData(const std::string& strKey) const
-{
-	google::protobuf::Map<std::string, std::string>::const_iterator iter = m_data->extra().find(strKey);
-	return m_data->extra().end() == iter ? std::string() : iter->second;
 }
 
 void CRequest::SetExtraData(const std::string& strKey, const std::string& strValue)
@@ -80,15 +85,15 @@ void CRequest::SetExtraData(const std::string& strKey, const std::string& strVal
 	(*m_data->mutable_extra())[strKey] = strValue;
 }
 
+std::string CRequest::GetReturnData(const std::string& strKey) const
+{
+	auto iter = m_data->ret().find(strKey);
+	return m_data->ret().end() == iter ? std::string() : iter->second;
+}
+
 std::unordered_map<std::string, std::string> CRequest::GetReturnData() const
 {
 	return { m_data->ret().begin(), m_data->ret().end() };
-}
-
-std::string CRequest::GetReturnData(const std::string& strKey) const
-{
-	google::protobuf::Map<std::string, std::string>::const_iterator iter = m_data->ret().find(strKey);
-	return m_data->ret().end() == iter ? std::string() : iter->second;
 }
 
 void CRequest::SetReturnData(const std::string& strKey, const std::string& strValue)
@@ -96,14 +101,39 @@ void CRequest::SetReturnData(const std::string& strKey, const std::string& strVa
 	(*m_data->mutable_ret())[strKey] = strValue;
 }
 
+void CRequest::SetData(const _TySubscriptionAck& value)
+{
+	m_data->mutable_subscription_ack()->CopyFrom(value);
+}
+
+void CRequest::SetData(const _TyQuoteData& value)
+{
+	m_data->mutable_quote()->CopyFrom(value);
+}
+
+void CRequest::SetData(const _TyDepthData& value)
+{
+	m_data->mutable_depth()->CopyFrom(value);
+}
+
+void CRequest::SetData(const _TyQueryResponse& value)
+{
+	m_data->mutable_query_response()->CopyFrom(value);
+}
+
+const _TyReqData& CRequest::GetData() const
+{
+	return *m_data;
+}
+
 void CRequest::SetConnectionId(net::_TyConnectionId id)
 {
-	m_connectionId = id;
+	m_connection_id = id;
 }
 
 net::_TyConnectionId CRequest::GetConnectionId() const
 {
-	return m_connectionId;
+	return m_connection_id;
 }
 
 bool CRequest::Serialize(std::string* pOutput) const

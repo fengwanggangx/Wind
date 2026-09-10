@@ -9,6 +9,7 @@
 #include "../network/CTcpServer.h"
 #include "../network/common_net.h"
 #include "../request/request.h"
+#include "../request/request.pb.h"
 
 #include <cctype>
 #include <functional>
@@ -104,44 +105,28 @@ void CBrokerService::SendSubscriptionResponse(net::_TyConnectionId id, _TyReques
 
 std::string CBrokerService::GetMarketResponseKey(const CRequest& req) const
 {
-	std::string strData = req.GetReturnData("data");
-	std::string strType = req.GetReturnData("data_type");
-	if (("hqmarket.market.v1.QuoteData" == strType) || ("hqmarket.market.v1.DepthData" == strType))
+	const _TyReqData& message = req.GetData();
+	hqmarket::market::v1::Instrument instrument;
+	hqmarket::market::v1::Channel channel = hqmarket::market::v1::CHANNEL_UNSPECIFIED;
+	if (message.has_quote())
 	{
-		hqmarket::market::v1::Instrument instrument;
-		hqmarket::market::v1::Channel channel = hqmarket::market::v1::CHANNEL_UNSPECIFIED;
-		if ("hqmarket.market.v1.QuoteData" == strType)
-		{
-			hqmarket::market::v1::QuoteData value;
-			if (!value.ParseFromString(strData))
-			{
-				return {};
-			}
-			instrument = value.instrument();
-			channel = hqmarket::market::v1::CHANNEL_QUOTE;
-		}
-		else
-		{
-			hqmarket::market::v1::DepthData value;
-			if (!value.ParseFromString(strData))
-			{
-				return {};
-			}
-			instrument = value.instrument();
-			channel = hqmarket::market::v1::CHANNEL_DEPTH;
-		}
+		instrument = message.quote().instrument();
+		channel = hqmarket::market::v1::CHANNEL_QUOTE;
+	}
+	else if (message.has_depth())
+	{
+		instrument = message.depth().instrument();
+		channel = hqmarket::market::v1::CHANNEL_DEPTH;
+	}
+	if (hqmarket::market::v1::CHANNEL_UNSPECIFIED != channel)
+	{
 		market::Exchange exchange = static_cast<market::Exchange>(static_cast<int>(instrument.exchange()));
 		market::Channel marketChannel = static_cast<market::Channel>(static_cast<int>(channel));
 		return market::CQuoteInfo(instrument.symbol(), exchange, marketChannel).String();
 	}
-	if ("hqmarket.market.v1.SubscriptionAck" == strType)
+	if (message.has_subscription_ack() && (0 != message.subscription_ack().results_size()))
 	{
-		hqmarket::market::v1::SubscriptionAck ack;
-		if (!ack.ParseFromString(strData) || (0 == ack.results_size()))
-		{
-			return {};
-		}
-		const hqmarket::market::v1::SubscriptionResult& result = ack.results(0);
+		const hqmarket::market::v1::SubscriptionResult& result = message.subscription_ack().results(0);
 		market::Exchange exchange = static_cast<market::Exchange>(static_cast<int>(result.instrument().exchange()));
 		market::Channel channel = static_cast<market::Channel>(static_cast<int>(result.channel()));
 		return market::CQuoteInfo(result.instrument().symbol(), exchange, channel).String();

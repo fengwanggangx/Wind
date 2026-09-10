@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package request;
 
+import "hqmarket/v1/market.proto";
+
 enum RequestType {
 	UNKNOWN = 0;
     QUERY_AUTH = 1;
@@ -18,4 +20,18 @@ message RequestData {
     map<string, string> extra = 3;
     map<string, string> ret = 4;
 	uint64 id = 5;
+	oneof payload {
+		hqmarket.market.v1.AuthRequest auth_request = 10;
+		hqmarket.market.v1.SubscribeRequest subscribe_request = 11;
+		hqmarket.market.v1.UnsubscribeRequest unsubscribe_request = 12;
+		hqmarket.market.v1.SubscriptionAck subscription_ack = 13;
+		hqmarket.market.v1.QuoteData quote = 14;
+		hqmarket.market.v1.DepthData depth = 15;
+		hqmarket.market.v1.TradeData trade = 16;
+		hqmarket.market.v1.BarData bar = 17;
+		hqmarket.market.v1.MarketStatusData market_status = 18;
+		hqmarket.market.v1.ProviderStatusData provider_status = 19;
+		hqmarket.market.v1.QueryRequest query_request = 20;
+		hqmarket.market.v1.QueryResponse query_response = 21;
+	}
 }
