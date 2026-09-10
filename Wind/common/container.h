@@ -213,6 +213,19 @@ namespace container
 			func(dest, v);
 		}
 	}
+
+	template <class _TyContainer, class... _Args, typename std::enable_if_t<traits::is_sequence_container<_TyContainer>::value, int> = 0>
+	auto& emplace_back(_TyContainer& container, _Args&&... args)
+	{
+		container.emplace_back(std::forward<_Args>(args)...);
+		return container.back();
+	}
+
+	template <class _TyContainer, class... _Args, typename std::enable_if_t<traits::is_associative_container<_TyContainer>::value, int> = 0>
+	auto& emplace_back(_TyContainer& container, _Args&&... args)
+	{
+		return container.emplace_back(std::forward<_Args>(args)...)->second;
+	}
 };
 
 #endif
