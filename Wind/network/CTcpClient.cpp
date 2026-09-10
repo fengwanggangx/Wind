@@ -53,6 +53,8 @@ namespace net
 			return -3;
 		}
 		bufferevent_setcb(pEvent.get(), CTcpClient::Read_Callback, nullptr, CTcpClient::Event_Callback, this);
+		timeval readTimeout{ 20, 0 };
+		bufferevent_set_timeouts(pEvent.get(), &readTimeout, nullptr);
 		if (0 != bufferevent_enable(pEvent.get(), EV_READ | EV_WRITE))
 		{
 			return -4;

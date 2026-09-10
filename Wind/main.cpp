@@ -63,7 +63,7 @@ int main()
 		std::cerr << "HQMarket active host is unavailable\n";
 		return 7;
 	}
-	CSession session({ boot.GetToken(), boot.GetPassword(), host.value() });
+	CSession session({ boot.GetAccount(), boot.GetPassword(), {}, host.value() });
 	CBrokerService service(&boot.GetTcpServer(), &session);
 	if (!service.Initialize())
 	{

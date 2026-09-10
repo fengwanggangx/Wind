@@ -50,11 +50,11 @@ bool CBootLoader::Initialize()
 
 	ini::CINIHandler& hIni = ini::CINIHandler::InstanceRef();
 
-	m_strToken = hIni.GetValue(ini::Config::System, "HQMarket", "token", std::string());
-	if (m_strToken.empty())
+	m_strAccount = hIni.GetValue(ini::Config::System, "HQMarket", "account", std::string());
+	if (m_strAccount.empty())
 	{
 		m_nErrorCode = 3;
-		m_strLastError = "HQMarket token is required in ini/system.ini";
+		m_strLastError = "HQMarket account is required in ini/system.ini";
 		return false;
 	}
 
@@ -159,9 +159,9 @@ net::CHttpServer& CBootLoader::GetHttpServer()
 	return *m_pHttpServer;
 }
 
-const std::string& CBootLoader::GetToken() const
+const std::string& CBootLoader::GetAccount() const
 {
-	return m_strToken;
+	return m_strAccount;
 }
 
 const std::string& CBootLoader::GetPassword() const

@@ -12,6 +12,7 @@
 
 #include <cctype>
 #include <functional>
+#include <iterator>
 #include <mutex>
 #include <string>
 #include <unordered_map>
@@ -30,6 +31,8 @@ namespace
 	constexpr std::size_t MaxPasswordLength = 128;
 	constexpr int AuthenticationRequired = 1005;
 	constexpr int InvalidSubscription = 1006;
+	constexpr std::chrono::hours TokenLifetime{ 24 };
+	constexpr std::chrono::seconds UpstreamRequestTimeout{ 10 };
 } // namespace
 
 bool IsAccountValid(const std::string& strAccount)
@@ -59,6 +62,7 @@ CBrokerService::CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession) 
 	{
 		{"register", std::bind_front(&CBrokerService::HandleRegisterAuth, this)},
 		{"auth", std::bind_front(&CBrokerService::HandleAuth, this)},
+		{"heartbeat", std::bind_front(&CBrokerService::HandleHeartbeat, this)},
 		{"subscribe", std::bind_front(&CBrokerService::HandleSubscription, this)},
 		{"unsubscribe", std::bind_front(&CBrokerService::HandleSubscription, this)}
 	};
@@ -72,6 +76,7 @@ bool CBrokerService::Initialize()
 	}
 	m_pTcpServer->RegisterHandler(std::bind_front(&CBrokerService::OnNetEvent, this));
 	m_pSession->RegisterHandler(std::bind_front(&CBrokerService::OnHQMarketResponse, this));
+	m_pSession->SetStateHandler(std::bind_front(&CBrokerService::OnHQMarketState, this));
 	return true;
 }
 
@@ -92,7 +97,7 @@ void CBrokerService::SendSubscriptionResponse(net::_TyConnectionId id, _TyReques
 	response.SetId(requestId);
 	response.SetType(CRequest::Type::HQMARKET);
 	response.SetCmd("subscription_ack");
-	response.SetReturnData("accepted", bAccepted ? "true" : "false");
+	response.SetReturnData("accepted", bAccepted ? "1" : "0");
 	response.SetReturnData("reason", strReason);
 	net::SendRequest(id, response);
 }
@@ -146,6 +151,7 @@ std::string CBrokerService::GetMarketResponseKey(const CRequest& req) const
 
 void CBrokerService::OnHQMarketResponse(const CRequest& req)
 {
+	ExpirePendingSubscriptions();
 	std::string strKey = GetMarketResponseKey(req);
 	if (strKey.empty())
 	{
@@ -179,10 +185,85 @@ void CBrokerService::OnHQMarketResponse(const CRequest& req)
 		return;
 	}
 
+	CRequest push = req;
+	push.SetId(0);
 	std::vector<net::_TyConnectionId> ids = m_subscriptions.GetSubscriberIds(strKey);
+	std::vector<net::_TyConnectionId> disconnected;
 	for (net::_TyConnectionId id : ids)
 	{
-		net::SendRequest(id, req);
+		if (!net::SendRequest(id, push))
+		{
+			disconnected.emplace_back(id);
+		}
+	}
+	for (net::_TyConnectionId id : disconnected)
+	{
+		HandleDisconnected(id);
+	}
+}
+
+void CBrokerService::OnHQMarketState(SessionState state, const std::string& strMessage)
+{
+	if ((SessionState::Disconnected == state) || (SessionState::Stopping == state))
+	{
+		FailPendingSubscriptions(strMessage.empty() ? "HQMarket connection lost" : strMessage);
+	}
+}
+
+void CBrokerService::ExpirePendingSubscriptions()
+{
+	std::vector<PendingSubscription> expired;
+	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_state);
+		for (auto mIter = m_pendingSubscriptions.begin(); m_pendingSubscriptions.end() != mIter;)
+		{
+			auto& values = mIter->second;
+			for (auto vIter = values.begin(); values.end() != vIter;)
+			{
+				if (vIter->m_deadline <= now)
+				{
+					expired.emplace_back(*vIter);
+					vIter = values.erase(vIter);
+				}
+				else
+				{
+					++vIter;
+				}
+			}
+			mIter = values.empty() ? m_pendingSubscriptions.erase(mIter) : std::next(mIter);
+		}
+	}
+	for (const PendingSubscription& pending : expired)
+	{
+		m_subscriptions.Unsubscribe(pending.m_id, { pending.m_quote });
+		if (nullptr != m_pSession)
+		{
+			m_pSession->UnsubscribeQuote(pending.m_quote);
+		}
+		SendSubscriptionResponse(pending.m_id, pending.m_requestId, false, "HQMarket request timeout");
+	}
+}
+
+void CBrokerService::FailPendingSubscriptions(const std::string& strReason)
+{
+	std::vector<PendingSubscription> failed;
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_state);
+		for (const auto& [strKey, values] : m_pendingSubscriptions)
+		{
+			failed.insert(failed.end(), values.begin(), values.end());
+		}
+		m_pendingSubscriptions.clear();
+	}
+	for (const PendingSubscription& pending : failed)
+	{
+		m_subscriptions.Unsubscribe(pending.m_id, { pending.m_quote });
+		if (nullptr != m_pSession)
+		{
+			m_pSession->UnsubscribeQuote(pending.m_quote);
+		}
+		SendSubscriptionResponse(pending.m_id, pending.m_requestId, false, strReason);
 	}
 }
 
@@ -325,7 +406,7 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 			bPending = m_pendingSubscriptions.end() != m_pendingSubscriptions.find(strKey);
 			if (bSendUpstream || bPending)
 			{
-				m_pendingSubscriptions[strKey].push_back(PendingSubscription{ id, req.GetId() });
+				m_pendingSubscriptions[strKey].push_back(PendingSubscription{ id, req.GetId(), quote, std::chrono::steady_clock::now() + UpstreamRequestTimeout });
 			}
 		}
 		if (bSendUpstream)
@@ -400,7 +481,12 @@ bool CBrokerService::HandleReAuth(const CRequest& req)
 	bool bAccepted = false;
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
-		bAccepted = m_client_tokens.end() != m_client_tokens.find(strToken);
+		auto mIter = m_client_tokens.find(strToken);
+		bAccepted = (m_client_tokens.end() != mIter) && (std::chrono::steady_clock::now() < mIter->second);
+		if ((m_client_tokens.end() != mIter) && !bAccepted)
+		{
+			m_client_tokens.erase(mIter);
+		}
 		if (bAccepted)
 		{
 			m_auth_clients.emplace(req.GetConnectionId());
@@ -437,7 +523,7 @@ bool CBrokerService::HandleAuth(net::_TyConnectionId id, const CRequest& req)
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_state);
 			m_auth_clients.emplace(req.GetConnectionId());
-			m_client_tokens.emplace(strToken);
+			m_client_tokens.insert_or_assign(strToken, std::chrono::steady_clock::now() + TokenLifetime);
 		}
 		return true;
 	}
@@ -470,6 +556,17 @@ void CBrokerService::OnClientRequest(net::_TyConnectionId id, const CRequest& re
 	mIter->second(id, request);
 }
 
+bool CBrokerService::HandleHeartbeat(net::_TyConnectionId id, const CRequest& req)
+{
+	CRequest response;
+	response.SetId(req.GetId());
+	response.SetType(CRequest::Type::HEARTBEAT);
+	response.SetCmd("heartbeat");
+	response.SetReturnData("client_time_ms", req.GetExtraData("client_time_ms"));
+	response.SetReturnData("status", "ok");
+	return net::SendRequest(id, response);
+}
+
 int CBrokerService::OnNetEvent(const net::CNetEvent& ev)
 {
 	if (net::em_event::request == ev.m_event)
@@ -480,5 +577,5 @@ int CBrokerService::OnNetEvent(const net::CNetEvent& ev)
 	{
 		HandleDisconnected(ev.m_connection_id);
 	}
-	
+	return 1;
 }

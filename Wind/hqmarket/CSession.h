@@ -19,13 +19,14 @@
 
 struct CLoginInfo
 {
-	std::string m_strToken;
+	std::string m_strAccount;
 	std::string m_strPassword;
+	std::string m_strToken;
 	CHostInfo m_host;
 
 	bool Valid() const noexcept
 	{
-		return !m_strToken.empty() && !m_strPassword.empty() && m_host.Valid();
+		return m_host.Valid() && (!m_strToken.empty() || (!m_strAccount.empty() && !m_strPassword.empty()));
 	}
 };
 

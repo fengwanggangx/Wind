@@ -28,7 +28,7 @@ class CBootLoader final
 		const std::filesystem::path& GetRoot() const;
 		net::CTcpServer& GetTcpServer();
 		net::CHttpServer& GetHttpServer();
-		const std::string& GetToken() const;
+		const std::string& GetAccount() const;
 		const std::string& GetPassword() const;
 		CHostMgr& GetHostMgr();
 		const std::string& GetLastError() const;
@@ -38,7 +38,7 @@ class CBootLoader final
 		std::filesystem::path m_exec;
 		std::filesystem::path m_path_py_runtime;
 		std::filesystem::path m_path_py_scripts;
-		std::string m_strToken;
+		std::string m_strAccount;
 		std::string m_strPassword;
 		std::string m_strLastError;
 		int m_nErrorCode{ 0 };

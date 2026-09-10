@@ -9,7 +9,8 @@
 
 namespace request
 {
-	CRequest Auth(const std::string& strToken, const std::string& strPassword);
+	CRequest Auth(const std::string& strAccount, const std::string& strPassword);
+	CRequest Auth(const std::string& strToken);
 	CRequest Subscription(const market::CQuoteInfo& quote);
 	CRequest UnSubscription(const market::CQuoteInfo& quote);
 	CRequest QueryQuote(const market::CSecurity& security);

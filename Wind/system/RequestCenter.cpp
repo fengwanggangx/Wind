@@ -4,13 +4,22 @@
 
 namespace request
 {
-	CRequest Auth(const std::string& strToken, const std::string& strPassword)
+	CRequest Auth(const std::string& strAccount, const std::string& strPassword)
+	{
+		CRequest req;
+		req.SetType(CRequest::Type::QUERY_AUTH);
+		req.SetCmd("auth");
+		req.SetExtraData("user", strAccount);
+		req.SetExtraData("password", strPassword);
+		return req;
+	}
+
+	CRequest Auth(const std::string& strToken)
 	{
 		CRequest req;
 		req.SetType(CRequest::Type::QUERY_AUTH);
 		req.SetCmd("auth");
 		req.SetExtraData("token", strToken);
-		req.SetExtraData("password", strPassword);
 		return req;
 	}
 

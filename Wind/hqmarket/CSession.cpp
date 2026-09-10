@@ -11,7 +11,7 @@ namespace
 	bool IsAccepted(const CRequest& response)
 	{
 		std::string strAccepted = response.GetReturnData("accepted");
-		return ("1" == strAccepted) || ("true" == strAccepted) || ("ok" == response.GetReturnData("status"));
+		return strAccepted.empty() ? ("ok" == response.GetReturnData("status")) : ("1" == strAccepted);
 	}
 }
 
@@ -259,15 +259,35 @@ void CSession::HandleResponse(const CRequest& req)
 	{
 		if (!IsAccepted(req))
 		{
-			NotifyState(SessionState::Connected, "HQMarket authentication failed: " + req.GetReturnData("reason"));
+			bool bRetryWithCredentials = false;
+			{
+				std::lock_guard<std::mutex> lock(m_mtx_auth);
+				if (m_login.has_value() && !m_login->m_strToken.empty())
+				{
+					m_login->m_strToken.clear();
+					bRetryWithCredentials = !m_login->m_strAccount.empty() && !m_login->m_strPassword.empty();
+				}
+			}
+			if (bRetryWithCredentials)
+			{
+				SendAuthentication();
+				return;
+			}
+			std::optional<std::pair<int, std::string>> errorInfo = req.GetErrorInfo();
+			NotifyState(SessionState::Connected, "HQMarket authentication failed: " + (errorInfo.has_value() ? errorInfo->second : req.GetReturnData("reason")));
 			return;
 		}
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_auth);
 			if (m_auth.has_value())
 			{
+				m_auth->m_strToken = req.GetReturnData("token");
 				m_login = std::move(m_auth);
 				m_auth.reset();
+			}
+			else if (m_login.has_value() && !req.GetReturnData("token").empty())
+			{
+				m_login->m_strToken = req.GetReturnData("token");
 			}
 		}
 		NotifyState(SessionState::Ready, "HQMarket session ready");
@@ -290,7 +310,11 @@ bool CSession::SendAuthentication()
 		return false;
 	}
 	NotifyState(SessionState::Authenticating, "Authenticating with HQMarket");
-	return SendRequest(request::Auth(info->m_strToken, info->m_strPassword));
+	if (!info->m_strToken.empty())
+	{
+		return SendRequest(request::Auth(info->m_strToken));
+	}
+	return SendRequest(request::Auth(info->m_strAccount, info->m_strPassword));
 }
 
 void CSession::RestoreSubscriptions()

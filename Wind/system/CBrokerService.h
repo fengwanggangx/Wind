@@ -7,6 +7,7 @@
 #include "../request/request.h"
 
 #include <functional>
+#include <chrono>
 #include <mutex>
 #include <string>
 #include <unordered_map>
@@ -14,6 +15,7 @@
 #include <vector>
 
 class CSession;
+enum class SessionState;
 
 namespace net
 {
@@ -25,8 +27,10 @@ class CBrokerService final
   private:
 	struct PendingSubscription
 	{
-		net::_TyConnectionId m_id{-1};
-		_TyRequestId m_requestId{0};
+		net::_TyConnectionId m_id{ -1 };
+		_TyRequestId m_requestId{ 0 };
+		market::CQuoteInfo m_quote;
+		std::chrono::steady_clock::time_point m_deadline;
 	};
 
   public:
@@ -42,10 +46,14 @@ class CBrokerService final
 	bool HandleAuth(net::_TyConnectionId id, const CRequest& req);
 	bool HandleRegisterAuth(net::_TyConnectionId id, const CRequest& req);
 	bool HandleSubscription(net::_TyConnectionId id, const CRequest& req);
+	bool HandleHeartbeat(net::_TyConnectionId id, const CRequest& req);
 
 	int HandleDisconnected(net::_TyConnectionId id);
 	bool HandleReAuth(const CRequest& req);
 	void OnHQMarketResponse(const CRequest& req);
+	void OnHQMarketState(SessionState state, const std::string& strMessage);
+	void ExpirePendingSubscriptions();
+	void FailPendingSubscriptions(const std::string& strReason);
 
 private:
 	bool IsAuthenticated(net::_TyConnectionId id) const;
@@ -60,13 +68,13 @@ private:
 
 	mutable std::mutex m_mtx_state;
 	std::unordered_set<net::_TyConnectionId> m_auth_clients;
-	std::unordered_set<std::string> m_client_tokens;
+	std::unordered_map<std::string, std::chrono::steady_clock::time_point> m_client_tokens;
 
 	CSubscriptionMgr m_subscriptions;
 	std::unordered_map<std::string, std::vector<PendingSubscription>> m_pendingSubscriptions;
 
 private:
-	net::CTcpServer* m_pTcpServer{ nullptr};
+	net::CTcpServer* m_pTcpServer{ nullptr };
 	CSession* m_pSession{ nullptr };
 };
 
