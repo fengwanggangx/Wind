@@ -158,16 +158,16 @@ const char descriptor_table_protodef_request_2eproto[] ABSL_ATTRIBUTE_SECTION_VA
     ".RequestData.RetEntry\022\n\n\002id\030\005 \001(\004\032,\n\nExt"
     "raEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\032"
     "*\n\010RetEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:"
-    "\0028\001*p\n\013RequestType\022\013\n\007UNKNOWN\020\000\022\016\n\nQUERY"
+    "\0028\001*\177\n\013RequestType\022\013\n\007UNKNOWN\020\000\022\016\n\nQUERY"
     "_AUTH\020\001\022\022\n\016QUERY_USERINFO\020\002\022\017\n\013UPDATE_AU"
-    "TH\020\003\022\021\n\rUPDAT_PRODUCT\020\004\022\014\n\010HQMARKET\020\005b\006p"
-    "roto3"
+    "TH\020\003\022\021\n\rUPDAT_PRODUCT\020\004\022\014\n\010HQMARKET\020\005\022\r\n"
+    "\tHEARTBEAT\020\006b\006proto3"
 };
 static ::absl::once_flag descriptor_table_request_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_request_2eproto = {
     false,
     false,
-    405,
+    420,
     descriptor_table_protodef_request_2eproto,
     "request.proto",
     &descriptor_table_request_2eproto_once,
@@ -186,9 +186,9 @@ const ::google::protobuf::EnumDescriptor* RequestType_descriptor() {
   return file_level_enum_descriptors_request_2eproto[0];
 }
 PROTOBUF_CONSTINIT const uint32_t RequestType_internal_data_[] = {
-    393216u, 0u, };
+    458752u, 0u, };
 bool RequestType_IsValid(int value) {
-  return 0 <= value && value <= 5;
+  return 0 <= value && value <= 6;
 }
 // ===================================================================
 
@@ -408,9 +408,13 @@ RequestData::RequestData(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
-  ::memcpy(reinterpret_cast<char *>(&_impl_) + offsetof(Impl_, id_),
-           reinterpret_cast<const char *>(&from._impl_) + offsetof(Impl_, id_),
-           offsetof(Impl_, type_) - offsetof(Impl_, id_) + sizeof(Impl_::type_));
+  ::memcpy(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, id_),
+           reinterpret_cast<const char *>(&from._impl_) +
+               offsetof(Impl_, id_),
+           offsetof(Impl_, type_) -
+               offsetof(Impl_, id_) +
+               sizeof(Impl_::type_));
 
   // @@protoc_insertion_point(copy_constructor:request.RequestData)
 }
@@ -424,8 +428,12 @@ inline PROTOBUF_NDEBUG_INLINE RequestData::Impl_::Impl_(
 
 inline void RequestData::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  ::memset(reinterpret_cast<char *>(&_impl_) + offsetof(Impl_, id_), 0,
-           offsetof(Impl_, type_) - offsetof(Impl_, id_) + sizeof(Impl_::type_));
+  ::memset(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, id_),
+           0,
+           offsetof(Impl_, type_) -
+               offsetof(Impl_, id_) +
+               sizeof(Impl_::type_));
 }
 RequestData::~RequestData() {
   // @@protoc_insertion_point(destructor:request.RequestData)
