@@ -2,7 +2,7 @@
 #define WIND_SYSTEM_CBROKERSERVICE_H
 
 #include "CSubscriptionMgr.h"
-#include "../hqmarket/MarketTypes.h"
+#include "../request/MarketTypes.h"
 #include "../network/common_net.h"
 #include "../request/request.h"
 

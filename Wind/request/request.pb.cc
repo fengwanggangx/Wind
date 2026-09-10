@@ -166,46 +166,46 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 const char descriptor_table_protodef_request_2frequest_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
-    "\n\025request/request.proto\022\007request\032\030hqmark"
-    "et/v1/market.proto\"\305\007\n\013RequestData\022\"\n\004ty"
-    "pe\030\001 \001(\0162\024.request.RequestType\022\013\n\003cmd\030\002 "
-    "\001(\t\022.\n\005extra\030\003 \003(\0132\037.request.RequestData"
-    ".ExtraEntry\022*\n\003ret\030\004 \003(\0132\035.request.Reque"
-    "stData.RetEntry\022\n\n\002id\030\005 \001(\004\0227\n\014auth_requ"
-    "est\030\n \001(\0132\037.hqmarket.market.v1.AuthReque"
-    "stH\000\022A\n\021subscribe_request\030\013 \001(\0132$.hqmark"
-    "et.market.v1.SubscribeRequestH\000\022E\n\023unsub"
-    "scribe_request\030\014 \001(\0132&.hqmarket.market.v"
-    "1.UnsubscribeRequestH\000\022\?\n\020subscription_a"
-    "ck\030\r \001(\0132#.hqmarket.market.v1.Subscripti"
-    "onAckH\000\022.\n\005quote\030\016 \001(\0132\035.hqmarket.market"
-    ".v1.QuoteDataH\000\022.\n\005depth\030\017 \001(\0132\035.hqmarke"
-    "t.market.v1.DepthDataH\000\022.\n\005trade\030\020 \001(\0132\035"
-    ".hqmarket.market.v1.TradeDataH\000\022*\n\003bar\030\021"
-    " \001(\0132\033.hqmarket.market.v1.BarDataH\000\022=\n\rm"
-    "arket_status\030\022 \001(\0132$.hqmarket.market.v1."
-    "MarketStatusDataH\000\022A\n\017provider_status\030\023 "
-    "\001(\0132&.hqmarket.market.v1.ProviderStatusD"
-    "ataH\000\0229\n\rquery_request\030\024 \001(\0132 .hqmarket."
-    "market.v1.QueryRequestH\000\022;\n\016query_respon"
-    "se\030\025 \001(\0132!.hqmarket.market.v1.QueryRespo"
-    "nseH\000\032,\n\nExtraEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005valu"
-    "e\030\002 \001(\t:\0028\001\032*\n\010RetEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005"
-    "value\030\002 \001(\t:\0028\001B\t\n\007payload*\177\n\013RequestTyp"
-    "e\022\013\n\007UNKNOWN\020\000\022\016\n\nQUERY_AUTH\020\001\022\022\n\016QUERY_"
-    "USERINFO\020\002\022\017\n\013UPDATE_AUTH\020\003\022\021\n\rUPDAT_PRO"
-    "DUCT\020\004\022\014\n\010HQMARKET\020\005\022\r\n\tHEARTBEAT\020\006b\006pro"
-    "to3"
+    "\n\025request/request.proto\022\007request\032\027reques"
+    "t/v1/market.proto\"\305\007\n\013RequestData\022\"\n\004typ"
+    "e\030\001 \001(\0162\024.request.RequestType\022\013\n\003cmd\030\002 \001"
+    "(\t\022.\n\005extra\030\003 \003(\0132\037.request.RequestData."
+    "ExtraEntry\022*\n\003ret\030\004 \003(\0132\035.request.Reques"
+    "tData.RetEntry\022\n\n\002id\030\005 \001(\004\0227\n\014auth_reque"
+    "st\030\n \001(\0132\037.hqmarket.market.v1.AuthReques"
+    "tH\000\022A\n\021subscribe_request\030\013 \001(\0132$.hqmarke"
+    "t.market.v1.SubscribeRequestH\000\022E\n\023unsubs"
+    "cribe_request\030\014 \001(\0132&.hqmarket.market.v1"
+    ".UnsubscribeRequestH\000\022\?\n\020subscription_ac"
+    "k\030\r \001(\0132#.hqmarket.market.v1.Subscriptio"
+    "nAckH\000\022.\n\005quote\030\016 \001(\0132\035.hqmarket.market."
+    "v1.QuoteDataH\000\022.\n\005depth\030\017 \001(\0132\035.hqmarket"
+    ".market.v1.DepthDataH\000\022.\n\005trade\030\020 \001(\0132\035."
+    "hqmarket.market.v1.TradeDataH\000\022*\n\003bar\030\021 "
+    "\001(\0132\033.hqmarket.market.v1.BarDataH\000\022=\n\rma"
+    "rket_status\030\022 \001(\0132$.hqmarket.market.v1.M"
+    "arketStatusDataH\000\022A\n\017provider_status\030\023 \001"
+    "(\0132&.hqmarket.market.v1.ProviderStatusDa"
+    "taH\000\0229\n\rquery_request\030\024 \001(\0132 .hqmarket.m"
+    "arket.v1.QueryRequestH\000\022;\n\016query_respons"
+    "e\030\025 \001(\0132!.hqmarket.market.v1.QueryRespon"
+    "seH\000\032,\n\nExtraEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value"
+    "\030\002 \001(\t:\0028\001\032*\n\010RetEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005v"
+    "alue\030\002 \001(\t:\0028\001B\t\n\007payload*\177\n\013RequestType"
+    "\022\013\n\007UNKNOWN\020\000\022\016\n\nQUERY_AUTH\020\001\022\022\n\016QUERY_U"
+    "SERINFO\020\002\022\017\n\013UPDATE_AUTH\020\003\022\021\n\rUPDAT_PROD"
+    "UCT\020\004\022\014\n\010HQMARKET\020\005\022\r\n\tHEARTBEAT\020\006b\006prot"
+    "o3"
 };
 static const ::_pbi::DescriptorTable* const descriptor_table_request_2frequest_2eproto_deps[1] =
     {
-        &::descriptor_table_hqmarket_2fv1_2fmarket_2eproto,
+        &::descriptor_table_request_2fv1_2fmarket_2eproto,
 };
 static ::absl::once_flag descriptor_table_request_2frequest_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_request_2frequest_2eproto = {
     false,
     false,
-    1163,
+    1162,
     descriptor_table_protodef_request_2frequest_2eproto,
     "request/request.proto",
     &descriptor_table_request_2frequest_2eproto_once,

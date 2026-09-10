@@ -2,7 +2,7 @@
 
 #include "request.pb.h"
 #include "../common/utility.h"
-#include "../hqmarket/v1/market.pb.h"
+#include "v1/market.pb.h"
 
 #include <atomic>
 
@@ -23,6 +23,10 @@ CRequest::CRequest() : m_arena(std::make_unique<google::protobuf::Arena>())
 }
 
 CRequest::~CRequest() = default;
+
+CRequest::CRequest(CRequest&& arg) noexcept = default;
+
+CRequest& CRequest::operator=(CRequest&& arg) noexcept = default;
 
 CRequest::CRequest(const CRequest& arg) : CRequest()
 {

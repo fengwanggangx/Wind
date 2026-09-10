@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package request;
 
-import "hqmarket/v1/market.proto";
+import "request/v1/market.proto";
 
 enum RequestType {
 	UNKNOWN = 0;

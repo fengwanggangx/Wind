@@ -109,9 +109,9 @@
     <ClCompile Include="database\IDataBase.cpp" />
     <ClCompile Include="ini\CIniFile.cpp" />
     <ClCompile Include="ini\CINIHandler.cpp" />
-    <ClCompile Include="hqmarket\CSession.cpp" />
-    <ClCompile Include="hqmarket\MarketTypes.cpp" />
-    <ClCompile Include="hqmarket\v1\market.pb.cc" />
+    <ClCompile Include="system\CSession.cpp" />
+    <ClCompile Include="request\MarketTypes.cpp" />
+    <ClCompile Include="request\v1\market.pb.cc" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="network\CFrameBuffer.cpp" />
     <ClCompile Include="network\CHttpServer.cpp" />
@@ -149,9 +149,9 @@
     <ClInclude Include="database\IDataBase.h" />
     <ClInclude Include="ini\CIniFile.h" />
     <ClInclude Include="ini\CINIHandler.h" />
-    <ClInclude Include="hqmarket\CSession.h" />
-    <ClInclude Include="hqmarket\MarketTypes.h" />
-    <ClInclude Include="hqmarket\v1\market.pb.h" />
+    <ClInclude Include="system\CSession.h" />
+    <ClInclude Include="request\MarketTypes.h" />
+    <ClInclude Include="request\v1\market.pb.h" />
     <ClInclude Include="network\CFrameBuffer.h" />
     <ClInclude Include="network\CHttpServer.h" />
     <ClInclude Include="network\CNet.h" />

@@ -1,7 +1,7 @@
 #ifndef WIND_HQMARKET_CSESSION_H
 #define WIND_HQMARKET_CSESSION_H
 
-#include "MarketTypes.h"
+#include "../request/MarketTypes.h"
 #include "../system/CHostMgr.h"
 #include "../request/request.h"
 #include <atomic>

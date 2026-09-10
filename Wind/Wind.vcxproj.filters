@@ -89,14 +89,14 @@
     <ClCompile Include="ini\CINIHandler.cpp">
       <Filter>ini</Filter>
     </ClCompile>
-		<ClCompile Include="hqmarket\CSession.cpp">
-			<Filter>hqmarket</Filter>
+		<ClCompile Include="system\CSession.cpp">
+			<Filter>system</Filter>
 		</ClCompile>
-    <ClCompile Include="hqmarket\MarketTypes.cpp">
-      <Filter>hqmarket</Filter>
+    <ClCompile Include="request\MarketTypes.cpp">
+      <Filter>request</Filter>
     </ClCompile>
-    <ClCompile Include="hqmarket\v1\market.pb.cc">
-      <Filter>hqmarket</Filter>
+    <ClCompile Include="request\v1\market.pb.cc">
+      <Filter>request</Filter>
     </ClCompile>
     <ClCompile Include="network\CFrameBuffer.cpp">
       <Filter>network</Filter>
@@ -129,9 +129,6 @@
     </Filter>
     <Filter Include="ini">
       <UniqueIdentifier>{355a3106-79fa-438c-b69e-c77cb45d6425}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="hqmarket">
-      <UniqueIdentifier>{a2bcf128-1849-4f30-94f0-7feab82104c1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -237,14 +234,14 @@
     <ClInclude Include="ini\CINIHandler.h">
       <Filter>ini</Filter>
     </ClInclude>
-		<ClInclude Include="hqmarket\CSession.h">
-			<Filter>hqmarket</Filter>
+		<ClInclude Include="system\CSession.h">
+			<Filter>system</Filter>
 		</ClInclude>
-    <ClInclude Include="hqmarket\MarketTypes.h">
-      <Filter>hqmarket</Filter>
+    <ClInclude Include="request\MarketTypes.h">
+      <Filter>request</Filter>
     </ClInclude>
-    <ClInclude Include="hqmarket\v1\market.pb.h">
-      <Filter>hqmarket</Filter>
+    <ClInclude Include="request\v1\market.pb.h">
+      <Filter>request</Filter>
     </ClInclude>
     <ClInclude Include="network\CFrameBuffer.h">
       <Filter>network</Filter>

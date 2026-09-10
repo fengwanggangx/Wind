@@ -53,8 +53,8 @@ public:
 	~CRequest();
 	CRequest(const CRequest& arg);
 	CRequest& operator=(const CRequest& arg);
-	CRequest(CRequest&&) = delete;
-	CRequest& operator=(CRequest&&) = delete;
+	CRequest(CRequest&& arg) noexcept;
+	CRequest& operator=(CRequest&& arg) noexcept;
 
 public:
 	_TyRequestId GetId() const;

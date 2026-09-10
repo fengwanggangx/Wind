@@ -1,7 +1,7 @@
 #ifndef WIND_SYSTEM_CSUBSCRIPTIONMGR_H
 #define WIND_SYSTEM_CSUBSCRIPTIONMGR_H
 
-#include "../hqmarket/MarketTypes.h"
+#include "../request/MarketTypes.h"
 #include "../network/common_net.h"
 
 #include <shared_mutex>
