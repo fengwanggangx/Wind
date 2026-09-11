@@ -25,6 +25,57 @@ namespace _pb = ::google::protobuf;
 namespace _pbi = ::google::protobuf::internal;
 namespace _fl = ::google::protobuf::internal::field_layout;
 namespace request {
+
+inline constexpr StrategySubscription::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : security_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        exchange_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        channel_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        _cached_size_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR StrategySubscription::StrategySubscription(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct StrategySubscriptionDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR StrategySubscriptionDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~StrategySubscriptionDefaultTypeInternal() {}
+  union {
+    StrategySubscription _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StrategySubscriptionDefaultTypeInternal _StrategySubscription_default_instance_;
+              template <typename>
+PROTOBUF_CONSTEXPR StrategyInfo_ParametersEntry_DoNotUse::StrategyInfo_ParametersEntry_DoNotUse(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : StrategyInfo_ParametersEntry_DoNotUse::MapEntry(_class_data_.base()){}
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : StrategyInfo_ParametersEntry_DoNotUse::MapEntry() {
+}
+#endif  // PROTOBUF_CUSTOM_VTABLE
+struct StrategyInfo_ParametersEntry_DoNotUseDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR StrategyInfo_ParametersEntry_DoNotUseDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~StrategyInfo_ParametersEntry_DoNotUseDefaultTypeInternal() {}
+  union {
+    StrategyInfo_ParametersEntry_DoNotUse _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StrategyInfo_ParametersEntry_DoNotUseDefaultTypeInternal _StrategyInfo_ParametersEntry_DoNotUse_default_instance_;
               template <typename>
 PROTOBUF_CONSTEXPR RequestData_RetEntry_DoNotUse::RequestData_RetEntry_DoNotUse(::_pbi::ConstantInitialized)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
@@ -61,6 +112,67 @@ struct RequestData_ExtraEntry_DoNotUseDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RequestData_ExtraEntry_DoNotUseDefaultTypeInternal _RequestData_ExtraEntry_DoNotUse_default_instance_;
+
+inline constexpr StrategyInfo::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : parameters_{},
+        subscriptions_{},
+        strategy_type_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        strategy_name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        strategy_id_{::uint64_t{0u}},
+        event_queue_limit_{0u},
+        auto_start_{false},
+        enabled_{false},
+        _cached_size_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR StrategyInfo::StrategyInfo(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct StrategyInfoDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR StrategyInfoDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~StrategyInfoDefaultTypeInternal() {}
+  union {
+    StrategyInfo _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StrategyInfoDefaultTypeInternal _StrategyInfo_default_instance_;
+
+inline constexpr StrategyList::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : strategies_{},
+        _cached_size_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR StrategyList::StrategyList(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct StrategyListDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR StrategyListDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~StrategyListDefaultTypeInternal() {}
+  union {
+    StrategyList _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StrategyListDefaultTypeInternal _StrategyList_default_instance_;
 
 inline constexpr RequestData::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -101,6 +213,54 @@ static constexpr const ::_pb::ServiceDescriptor**
 const ::uint32_t
     TableStruct_request_2eproto::offsets[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
         protodesc_cold) = {
+        ~0u,  // no _has_bits_
+        PROTOBUF_FIELD_OFFSET(::request::StrategySubscription, _internal_metadata_),
+        ~0u,  // no _extensions_
+        ~0u,  // no _oneof_case_
+        ~0u,  // no _weak_field_map_
+        ~0u,  // no _inlined_string_donated_
+        ~0u,  // no _split_
+        ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::request::StrategySubscription, _impl_.security_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategySubscription, _impl_.exchange_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategySubscription, _impl_.channel_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategyInfo_ParametersEntry_DoNotUse, _impl_._has_bits_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategyInfo_ParametersEntry_DoNotUse, _internal_metadata_),
+        ~0u,  // no _extensions_
+        ~0u,  // no _oneof_case_
+        ~0u,  // no _weak_field_map_
+        ~0u,  // no _inlined_string_donated_
+        ~0u,  // no _split_
+        ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::request::StrategyInfo_ParametersEntry_DoNotUse, _impl_.key_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategyInfo_ParametersEntry_DoNotUse, _impl_.value_),
+        0,
+        1,
+        ~0u,  // no _has_bits_
+        PROTOBUF_FIELD_OFFSET(::request::StrategyInfo, _internal_metadata_),
+        ~0u,  // no _extensions_
+        ~0u,  // no _oneof_case_
+        ~0u,  // no _weak_field_map_
+        ~0u,  // no _inlined_string_donated_
+        ~0u,  // no _split_
+        ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::request::StrategyInfo, _impl_.strategy_id_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategyInfo, _impl_.strategy_type_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategyInfo, _impl_.strategy_name_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategyInfo, _impl_.parameters_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategyInfo, _impl_.subscriptions_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategyInfo, _impl_.event_queue_limit_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategyInfo, _impl_.auto_start_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategyInfo, _impl_.enabled_),
+        ~0u,  // no _has_bits_
+        PROTOBUF_FIELD_OFFSET(::request::StrategyList, _internal_metadata_),
+        ~0u,  // no _extensions_
+        ~0u,  // no _oneof_case_
+        ~0u,  // no _weak_field_map_
+        ~0u,  // no _inlined_string_donated_
+        ~0u,  // no _split_
+        ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::request::StrategyList, _impl_.strategies_),
         PROTOBUF_FIELD_OFFSET(::request::RequestData_ExtraEntry_DoNotUse, _impl_._has_bits_),
         PROTOBUF_FIELD_OFFSET(::request::RequestData_ExtraEntry_DoNotUse, _internal_metadata_),
         ~0u,  // no _extensions_
@@ -150,16 +310,26 @@ const ::uint32_t
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
+        ::_pbi::kInvalidFieldOffsetTag,
+        ::_pbi::kInvalidFieldOffsetTag,
         PROTOBUF_FIELD_OFFSET(::request::RequestData, _impl_.payload_),
 };
 
 static const ::_pbi::MigrationSchema
     schemas[] ABSL_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-        {0, 10, -1, sizeof(::request::RequestData_ExtraEntry_DoNotUse)},
-        {12, 22, -1, sizeof(::request::RequestData_RetEntry_DoNotUse)},
-        {24, -1, -1, sizeof(::request::RequestData)},
+        {0, -1, -1, sizeof(::request::StrategySubscription)},
+        {11, 21, -1, sizeof(::request::StrategyInfo_ParametersEntry_DoNotUse)},
+        {23, -1, -1, sizeof(::request::StrategyInfo)},
+        {39, -1, -1, sizeof(::request::StrategyList)},
+        {48, 58, -1, sizeof(::request::RequestData_ExtraEntry_DoNotUse)},
+        {60, 70, -1, sizeof(::request::RequestData_RetEntry_DoNotUse)},
+        {72, -1, -1, sizeof(::request::RequestData)},
 };
 static const ::_pb::Message* const file_default_instances[] = {
+    &::request::_StrategySubscription_default_instance_._instance,
+    &::request::_StrategyInfo_ParametersEntry_DoNotUse_default_instance_._instance,
+    &::request::_StrategyInfo_default_instance_._instance,
+    &::request::_StrategyList_default_instance_._instance,
     &::request::_RequestData_ExtraEntry_DoNotUse_default_instance_._instance,
     &::request::_RequestData_RetEntry_DoNotUse_default_instance_._instance,
     &::request::_RequestData_default_instance_._instance,
@@ -167,34 +337,47 @@ static const ::_pb::Message* const file_default_instances[] = {
 const char descriptor_table_protodef_request_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
     "\n\rrequest.proto\022\007request\032\017v1/market.prot"
-    "o\"\305\007\n\013RequestData\022\"\n\004type\030\001 \001(\0162\024.reques"
-    "t.RequestType\022\013\n\003cmd\030\002 \001(\t\022.\n\005extra\030\003 \003("
-    "\0132\037.request.RequestData.ExtraEntry\022*\n\003re"
-    "t\030\004 \003(\0132\035.request.RequestData.RetEntry\022\n"
-    "\n\002id\030\005 \001(\004\0227\n\014auth_request\030\n \001(\0132\037.hqmar"
-    "ket.market.v1.AuthRequestH\000\022A\n\021subscribe"
-    "_request\030\013 \001(\0132$.hqmarket.market.v1.Subs"
-    "cribeRequestH\000\022E\n\023unsubscribe_request\030\014 "
-    "\001(\0132&.hqmarket.market.v1.UnsubscribeRequ"
-    "estH\000\022\?\n\020subscription_ack\030\r \001(\0132#.hqmark"
-    "et.market.v1.SubscriptionAckH\000\022.\n\005quote\030"
-    "\016 \001(\0132\035.hqmarket.market.v1.QuoteDataH\000\022."
-    "\n\005depth\030\017 \001(\0132\035.hqmarket.market.v1.Depth"
-    "DataH\000\022.\n\005trade\030\020 \001(\0132\035.hqmarket.market."
-    "v1.TradeDataH\000\022*\n\003bar\030\021 \001(\0132\033.hqmarket.m"
-    "arket.v1.BarDataH\000\022=\n\rmarket_status\030\022 \001("
-    "\0132$.hqmarket.market.v1.MarketStatusDataH"
-    "\000\022A\n\017provider_status\030\023 \001(\0132&.hqmarket.ma"
-    "rket.v1.ProviderStatusDataH\000\0229\n\rquery_re"
-    "quest\030\024 \001(\0132 .hqmarket.market.v1.QueryRe"
-    "questH\000\022;\n\016query_response\030\025 \001(\0132!.hqmark"
-    "et.market.v1.QueryResponseH\000\032,\n\nExtraEnt"
-    "ry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\032*\n\010Re"
-    "tEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001B\t"
-    "\n\007payload*\177\n\013RequestType\022\013\n\007UNKNOWN\020\000\022\016\n"
-    "\nQUERY_AUTH\020\001\022\022\n\016QUERY_USERINFO\020\002\022\017\n\013UPD"
-    "ATE_AUTH\020\003\022\021\n\rUPDAT_PRODUCT\020\004\022\014\n\010HQMARKE"
-    "T\020\005\022\r\n\tHEARTBEAT\020\006b\006proto3"
+    "o\"K\n\024StrategySubscription\022\020\n\010security\030\001 "
+    "\001(\t\022\020\n\010exchange\030\002 \001(\t\022\017\n\007channel\030\003 \001(\t\"\265"
+    "\002\n\014StrategyInfo\022\023\n\013strategy_id\030\001 \001(\004\022\025\n\r"
+    "strategy_type\030\002 \001(\t\022\025\n\rstrategy_name\030\003 \001"
+    "(\t\0229\n\nparameters\030\004 \003(\0132%.request.Strateg"
+    "yInfo.ParametersEntry\0224\n\rsubscriptions\030\005"
+    " \003(\0132\035.request.StrategySubscription\022\031\n\021e"
+    "vent_queue_limit\030\006 \001(\r\022\022\n\nauto_start\030\007 \001"
+    "(\010\022\017\n\007enabled\030\010 \001(\010\0321\n\017ParametersEntry\022\013"
+    "\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"9\n\014Strate"
+    "gyList\022)\n\nstrategies\030\001 \003(\0132\025.request.Str"
+    "ategyInfo\"\240\010\n\013RequestData\022\"\n\004type\030\001 \001(\0162"
+    "\024.request.RequestType\022\013\n\003cmd\030\002 \001(\t\022.\n\005ex"
+    "tra\030\003 \003(\0132\037.request.RequestData.ExtraEnt"
+    "ry\022*\n\003ret\030\004 \003(\0132\035.request.RequestData.Re"
+    "tEntry\022\n\n\002id\030\005 \001(\004\0227\n\014auth_request\030\n \001(\013"
+    "2\037.hqmarket.market.v1.AuthRequestH\000\022A\n\021s"
+    "ubscribe_request\030\013 \001(\0132$.hqmarket.market"
+    ".v1.SubscribeRequestH\000\022E\n\023unsubscribe_re"
+    "quest\030\014 \001(\0132&.hqmarket.market.v1.Unsubsc"
+    "ribeRequestH\000\022\?\n\020subscription_ack\030\r \001(\0132"
+    "#.hqmarket.market.v1.SubscriptionAckH\000\022."
+    "\n\005quote\030\016 \001(\0132\035.hqmarket.market.v1.Quote"
+    "DataH\000\022.\n\005depth\030\017 \001(\0132\035.hqmarket.market."
+    "v1.DepthDataH\000\022.\n\005trade\030\020 \001(\0132\035.hqmarket"
+    ".market.v1.TradeDataH\000\022*\n\003bar\030\021 \001(\0132\033.hq"
+    "market.market.v1.BarDataH\000\022=\n\rmarket_sta"
+    "tus\030\022 \001(\0132$.hqmarket.market.v1.MarketSta"
+    "tusDataH\000\022A\n\017provider_status\030\023 \001(\0132&.hqm"
+    "arket.market.v1.ProviderStatusDataH\000\0229\n\r"
+    "query_request\030\024 \001(\0132 .hqmarket.market.v1"
+    ".QueryRequestH\000\022;\n\016query_response\030\025 \001(\0132"
+    "!.hqmarket.market.v1.QueryResponseH\000\022)\n\010"
+    "strategy\030\026 \001(\0132\025.request.StrategyInfoH\000\022"
+    ".\n\rstrategy_list\030\027 \001(\0132\025.request.Strateg"
+    "yListH\000\032,\n\nExtraEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005va"
+    "lue\030\002 \001(\t:\0028\001\032*\n\010RetEntry\022\013\n\003key\030\001 \001(\t\022\r"
+    "\n\005value\030\002 \001(\t:\0028\001B\t\n\007payload*z\n\013RequestT"
+    "ype\022\013\n\007UNKNOWN\020\000\022\016\n\nQUERY_AUTH\020\001\022\022\n\016QUER"
+    "Y_USERINFO\020\002\022\017\n\013UPDATE_AUTH\020\003\022\014\n\010STRATEG"
+    "Y\020\004\022\014\n\010HQMARKET\020\005\022\r\n\tHEARTBEAT\020\006b\006proto3"
 };
 static const ::_pbi::DescriptorTable* const descriptor_table_request_2eproto_deps[1] =
     {
@@ -204,13 +387,13 @@ static ::absl::once_flag descriptor_table_request_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_request_2eproto = {
     false,
     false,
-    1146,
+    1680,
     descriptor_table_protodef_request_2eproto,
     "request.proto",
     &descriptor_table_request_2eproto_once,
     descriptor_table_request_2eproto_deps,
     1,
-    3,
+    7,
     schemas,
     file_default_instances,
     TableStruct_request_2eproto::offsets,
@@ -226,6 +409,1101 @@ PROTOBUF_CONSTINIT const uint32_t RequestType_internal_data_[] = {
     458752u, 0u, };
 bool RequestType_IsValid(int value) {
   return 0 <= value && value <= 6;
+}
+// ===================================================================
+
+class StrategySubscription::_Internal {
+ public:
+};
+
+StrategySubscription::StrategySubscription(::google::protobuf::Arena* arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:request.StrategySubscription)
+}
+inline PROTOBUF_NDEBUG_INLINE StrategySubscription::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::request::StrategySubscription& from_msg)
+      : security_(arena, from.security_),
+        exchange_(arena, from.exchange_),
+        channel_(arena, from.channel_),
+        _cached_size_{0} {}
+
+StrategySubscription::StrategySubscription(
+    ::google::protobuf::Arena* arena,
+    const StrategySubscription& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  StrategySubscription* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+
+  // @@protoc_insertion_point(copy_constructor:request.StrategySubscription)
+}
+inline PROTOBUF_NDEBUG_INLINE StrategySubscription::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : security_(arena),
+        exchange_(arena),
+        channel_(arena),
+        _cached_size_{0} {}
+
+inline void StrategySubscription::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+}
+StrategySubscription::~StrategySubscription() {
+  // @@protoc_insertion_point(destructor:request.StrategySubscription)
+  SharedDtor(*this);
+}
+inline void StrategySubscription::SharedDtor(MessageLite& self) {
+  StrategySubscription& this_ = static_cast<StrategySubscription&>(self);
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.security_.Destroy();
+  this_._impl_.exchange_.Destroy();
+  this_._impl_.channel_.Destroy();
+  this_._impl_.~Impl_();
+}
+
+inline void* StrategySubscription::PlacementNew_(const void*, void* mem,
+                                        ::google::protobuf::Arena* arena) {
+  return ::new (mem) StrategySubscription(arena);
+}
+constexpr auto StrategySubscription::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(StrategySubscription),
+                                            alignof(StrategySubscription));
+}
+PROTOBUF_CONSTINIT
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::google::protobuf::internal::ClassDataFull StrategySubscription::_class_data_ = {
+    ::google::protobuf::internal::ClassData{
+        &_StrategySubscription_default_instance_._instance,
+        &_table_.header,
+        nullptr,  // OnDemandRegisterArenaDtor
+        nullptr,  // IsInitialized
+        &StrategySubscription::MergeImpl,
+        ::google::protobuf::Message::GetNewImpl<StrategySubscription>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        &StrategySubscription::SharedDtor,
+        ::google::protobuf::Message::GetClearImpl<StrategySubscription>(), &StrategySubscription::ByteSizeLong,
+            &StrategySubscription::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+        PROTOBUF_FIELD_OFFSET(StrategySubscription, _impl_._cached_size_),
+        false,
+    },
+    &StrategySubscription::kDescriptorMethods,
+    &descriptor_table_request_2eproto,
+    nullptr,  // tracker
+};
+const ::google::protobuf::internal::ClassData* StrategySubscription::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
+  return _class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<2, 3, 0, 60, 2> StrategySubscription::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    3, 24,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967288,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    3,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    _class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::request::StrategySubscription>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // string security = 1;
+    {::_pbi::TcParser::FastUS1,
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(StrategySubscription, _impl_.security_)}},
+    // string exchange = 2;
+    {::_pbi::TcParser::FastUS1,
+     {18, 63, 0, PROTOBUF_FIELD_OFFSET(StrategySubscription, _impl_.exchange_)}},
+    // string channel = 3;
+    {::_pbi::TcParser::FastUS1,
+     {26, 63, 0, PROTOBUF_FIELD_OFFSET(StrategySubscription, _impl_.channel_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // string security = 1;
+    {PROTOBUF_FIELD_OFFSET(StrategySubscription, _impl_.security_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // string exchange = 2;
+    {PROTOBUF_FIELD_OFFSET(StrategySubscription, _impl_.exchange_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // string channel = 3;
+    {PROTOBUF_FIELD_OFFSET(StrategySubscription, _impl_.channel_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  // no aux_entries
+  {{
+    "\34\10\10\7\0\0\0\0"
+    "request.StrategySubscription"
+    "security"
+    "exchange"
+    "channel"
+  }},
+};
+
+PROTOBUF_NOINLINE void StrategySubscription::Clear() {
+// @@protoc_insertion_point(message_clear_start:request.StrategySubscription)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.security_.ClearToEmpty();
+  _impl_.exchange_.ClearToEmpty();
+  _impl_.channel_.ClearToEmpty();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::uint8_t* StrategySubscription::_InternalSerialize(
+            const MessageLite& base, ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) {
+          const StrategySubscription& this_ = static_cast<const StrategySubscription&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::uint8_t* StrategySubscription::_InternalSerialize(
+            ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+          const StrategySubscription& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(serialize_to_array_start:request.StrategySubscription)
+          ::uint32_t cached_has_bits = 0;
+          (void)cached_has_bits;
+
+          // string security = 1;
+          if (!this_._internal_security().empty()) {
+            const std::string& _s = this_._internal_security();
+            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.StrategySubscription.security");
+            target = stream->WriteStringMaybeAliased(1, _s, target);
+          }
+
+          // string exchange = 2;
+          if (!this_._internal_exchange().empty()) {
+            const std::string& _s = this_._internal_exchange();
+            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.StrategySubscription.exchange");
+            target = stream->WriteStringMaybeAliased(2, _s, target);
+          }
+
+          // string channel = 3;
+          if (!this_._internal_channel().empty()) {
+            const std::string& _s = this_._internal_channel();
+            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.StrategySubscription.channel");
+            target = stream->WriteStringMaybeAliased(3, _s, target);
+          }
+
+          if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+            target =
+                ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                    this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+          }
+          // @@protoc_insertion_point(serialize_to_array_end:request.StrategySubscription)
+          return target;
+        }
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::size_t StrategySubscription::ByteSizeLong(const MessageLite& base) {
+          const StrategySubscription& this_ = static_cast<const StrategySubscription&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::size_t StrategySubscription::ByteSizeLong() const {
+          const StrategySubscription& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(message_byte_size_start:request.StrategySubscription)
+          ::size_t total_size = 0;
+
+          ::uint32_t cached_has_bits = 0;
+          // Prevent compiler warnings about cached_has_bits being unused
+          (void)cached_has_bits;
+
+          ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+           {
+            // string security = 1;
+            if (!this_._internal_security().empty()) {
+              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                              this_._internal_security());
+            }
+            // string exchange = 2;
+            if (!this_._internal_exchange().empty()) {
+              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                              this_._internal_exchange());
+            }
+            // string channel = 3;
+            if (!this_._internal_channel().empty()) {
+              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                              this_._internal_channel());
+            }
+          }
+          return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                                     &this_._impl_._cached_size_);
+        }
+
+void StrategySubscription::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<StrategySubscription*>(&to_msg);
+  auto& from = static_cast<const StrategySubscription&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:request.StrategySubscription)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!from._internal_security().empty()) {
+    _this->_internal_set_security(from._internal_security());
+  }
+  if (!from._internal_exchange().empty()) {
+    _this->_internal_set_exchange(from._internal_exchange());
+  }
+  if (!from._internal_channel().empty()) {
+    _this->_internal_set_channel(from._internal_channel());
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void StrategySubscription::CopyFrom(const StrategySubscription& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:request.StrategySubscription)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void StrategySubscription::InternalSwap(StrategySubscription* PROTOBUF_RESTRICT other) {
+  using std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.security_, &other->_impl_.security_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.exchange_, &other->_impl_.exchange_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.channel_, &other->_impl_.channel_, arena);
+}
+
+::google::protobuf::Metadata StrategySubscription::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+              StrategyInfo_ParametersEntry_DoNotUse::StrategyInfo_ParametersEntry_DoNotUse() : SuperType(_class_data_.base()) {}
+              StrategyInfo_ParametersEntry_DoNotUse::StrategyInfo_ParametersEntry_DoNotUse(::google::protobuf::Arena* arena)
+                  : SuperType(arena, _class_data_.base()) {}
+#else   // PROTOBUF_CUSTOM_VTABLE
+              StrategyInfo_ParametersEntry_DoNotUse::StrategyInfo_ParametersEntry_DoNotUse() : SuperType() {}
+              StrategyInfo_ParametersEntry_DoNotUse::StrategyInfo_ParametersEntry_DoNotUse(::google::protobuf::Arena* arena) : SuperType(arena) {}
+#endif  // PROTOBUF_CUSTOM_VTABLE
+              inline void* StrategyInfo_ParametersEntry_DoNotUse::PlacementNew_(const void*, void* mem,
+                                                      ::google::protobuf::Arena* arena) {
+                return ::new (mem) StrategyInfo_ParametersEntry_DoNotUse(arena);
+              }
+              constexpr auto StrategyInfo_ParametersEntry_DoNotUse::InternalNewImpl_() {
+                return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(StrategyInfo_ParametersEntry_DoNotUse),
+                                                          alignof(StrategyInfo_ParametersEntry_DoNotUse));
+              }
+              PROTOBUF_CONSTINIT
+              PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+              const ::google::protobuf::internal::ClassDataFull StrategyInfo_ParametersEntry_DoNotUse::_class_data_ = {
+                  ::google::protobuf::internal::ClassData{
+                      &_StrategyInfo_ParametersEntry_DoNotUse_default_instance_._instance,
+                      &_table_.header,
+                      nullptr,  // OnDemandRegisterArenaDtor
+                      nullptr,  // IsInitialized
+                      &StrategyInfo_ParametersEntry_DoNotUse::MergeImpl,
+                      ::google::protobuf::Message::GetNewImpl<StrategyInfo_ParametersEntry_DoNotUse>(),
+              #if defined(PROTOBUF_CUSTOM_VTABLE)
+                      &StrategyInfo_ParametersEntry_DoNotUse::SharedDtor,
+                      static_cast<void (::google::protobuf::MessageLite::*)()>(
+                          &StrategyInfo_ParametersEntry_DoNotUse::ClearImpl),
+                          ::google::protobuf::Message::ByteSizeLongImpl, ::google::protobuf::Message::_InternalSerializeImpl
+                          ,
+              #endif  // PROTOBUF_CUSTOM_VTABLE
+                      PROTOBUF_FIELD_OFFSET(StrategyInfo_ParametersEntry_DoNotUse, _impl_._cached_size_),
+                      false,
+                  },
+                  &StrategyInfo_ParametersEntry_DoNotUse::kDescriptorMethods,
+                  &descriptor_table_request_2eproto,
+                  nullptr,  // tracker
+              };
+              const ::google::protobuf::internal::ClassData* StrategyInfo_ParametersEntry_DoNotUse::GetClassData() const {
+                ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
+                ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
+                return _class_data_.base();
+              }
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<1, 2, 0, 53, 2> StrategyInfo_ParametersEntry_DoNotUse::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(StrategyInfo_ParametersEntry_DoNotUse, _impl_._has_bits_),
+    0, // no _extensions_
+    2, 8,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    _class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::DiscardEverythingFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::request::StrategyInfo_ParametersEntry_DoNotUse>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // string value = 2;
+    {::_pbi::TcParser::FastUS1,
+     {18, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyInfo_ParametersEntry_DoNotUse, _impl_.value_)}},
+    // string key = 1;
+    {::_pbi::TcParser::FastUS1,
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyInfo_ParametersEntry_DoNotUse, _impl_.key_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // string key = 1;
+    {PROTOBUF_FIELD_OFFSET(StrategyInfo_ParametersEntry_DoNotUse, _impl_.key_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // string value = 2;
+    {PROTOBUF_FIELD_OFFSET(StrategyInfo_ParametersEntry_DoNotUse, _impl_.value_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  // no aux_entries
+  {{
+    "\44\3\5\0\0\0\0\0"
+    "request.StrategyInfo.ParametersEntry"
+    "key"
+    "value"
+  }},
+};
+
+// ===================================================================
+
+class StrategyInfo::_Internal {
+ public:
+};
+
+StrategyInfo::StrategyInfo(::google::protobuf::Arena* arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:request.StrategyInfo)
+}
+inline PROTOBUF_NDEBUG_INLINE StrategyInfo::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::request::StrategyInfo& from_msg)
+      : parameters_{visibility, arena, from.parameters_},
+        subscriptions_{visibility, arena, from.subscriptions_},
+        strategy_type_(arena, from.strategy_type_),
+        strategy_name_(arena, from.strategy_name_),
+        _cached_size_{0} {}
+
+StrategyInfo::StrategyInfo(
+    ::google::protobuf::Arena* arena,
+    const StrategyInfo& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  StrategyInfo* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::memcpy(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, strategy_id_),
+           reinterpret_cast<const char *>(&from._impl_) +
+               offsetof(Impl_, strategy_id_),
+           offsetof(Impl_, enabled_) -
+               offsetof(Impl_, strategy_id_) +
+               sizeof(Impl_::enabled_));
+
+  // @@protoc_insertion_point(copy_constructor:request.StrategyInfo)
+}
+inline PROTOBUF_NDEBUG_INLINE StrategyInfo::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : parameters_{visibility, arena},
+        subscriptions_{visibility, arena},
+        strategy_type_(arena),
+        strategy_name_(arena),
+        _cached_size_{0} {}
+
+inline void StrategyInfo::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, strategy_id_),
+           0,
+           offsetof(Impl_, enabled_) -
+               offsetof(Impl_, strategy_id_) +
+               sizeof(Impl_::enabled_));
+}
+StrategyInfo::~StrategyInfo() {
+  // @@protoc_insertion_point(destructor:request.StrategyInfo)
+  SharedDtor(*this);
+}
+inline void StrategyInfo::SharedDtor(MessageLite& self) {
+  StrategyInfo& this_ = static_cast<StrategyInfo&>(self);
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.strategy_type_.Destroy();
+  this_._impl_.strategy_name_.Destroy();
+  this_._impl_.~Impl_();
+}
+
+inline void* StrategyInfo::PlacementNew_(const void*, void* mem,
+                                        ::google::protobuf::Arena* arena) {
+  return ::new (mem) StrategyInfo(arena);
+}
+constexpr auto StrategyInfo::InternalNewImpl_() {
+  constexpr auto arena_bits = ::google::protobuf::internal::EncodePlacementArenaOffsets({
+      PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.parameters_) +
+          decltype(StrategyInfo::_impl_.parameters_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+      PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.parameters_) +
+          decltype(StrategyInfo::_impl_.parameters_)::
+              InternalGetArenaOffsetAlt(
+                  ::google::protobuf::Message::internal_visibility()),
+      PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.subscriptions_) +
+          decltype(StrategyInfo::_impl_.subscriptions_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+  });
+  if (arena_bits.has_value()) {
+    return ::google::protobuf::internal::MessageCreator::CopyInit(
+        sizeof(StrategyInfo), alignof(StrategyInfo), *arena_bits);
+  } else {
+    return ::google::protobuf::internal::MessageCreator(&StrategyInfo::PlacementNew_,
+                                 sizeof(StrategyInfo),
+                                 alignof(StrategyInfo));
+  }
+}
+PROTOBUF_CONSTINIT
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::google::protobuf::internal::ClassDataFull StrategyInfo::_class_data_ = {
+    ::google::protobuf::internal::ClassData{
+        &_StrategyInfo_default_instance_._instance,
+        &_table_.header,
+        nullptr,  // OnDemandRegisterArenaDtor
+        nullptr,  // IsInitialized
+        &StrategyInfo::MergeImpl,
+        ::google::protobuf::Message::GetNewImpl<StrategyInfo>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        &StrategyInfo::SharedDtor,
+        ::google::protobuf::Message::GetClearImpl<StrategyInfo>(), &StrategyInfo::ByteSizeLong,
+            &StrategyInfo::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+        PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_._cached_size_),
+        false,
+    },
+    &StrategyInfo::kDescriptorMethods,
+    &descriptor_table_request_2eproto,
+    nullptr,  // tracker
+};
+const ::google::protobuf::internal::ClassData* StrategyInfo::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
+  return _class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<3, 8, 2, 73, 2> StrategyInfo::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    8, 56,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967040,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    8,  // num_field_entries
+    2,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    _class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::request::StrategyInfo>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // bool enabled = 8;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(StrategyInfo, _impl_.enabled_), 63>(),
+     {64, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.enabled_)}},
+    // uint64 strategy_id = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(StrategyInfo, _impl_.strategy_id_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.strategy_id_)}},
+    // string strategy_type = 2;
+    {::_pbi::TcParser::FastUS1,
+     {18, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.strategy_type_)}},
+    // string strategy_name = 3;
+    {::_pbi::TcParser::FastUS1,
+     {26, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.strategy_name_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    // repeated .request.StrategySubscription subscriptions = 5;
+    {::_pbi::TcParser::FastMtR1,
+     {42, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.subscriptions_)}},
+    // uint32 event_queue_limit = 6;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(StrategyInfo, _impl_.event_queue_limit_), 63>(),
+     {48, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.event_queue_limit_)}},
+    // bool auto_start = 7;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(StrategyInfo, _impl_.auto_start_), 63>(),
+     {56, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.auto_start_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // uint64 strategy_id = 1;
+    {PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.strategy_id_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUInt64)},
+    // string strategy_type = 2;
+    {PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.strategy_type_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // string strategy_name = 3;
+    {PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.strategy_name_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // map<string, string> parameters = 4;
+    {PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.parameters_), 0, 1,
+    (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
+    // repeated .request.StrategySubscription subscriptions = 5;
+    {PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.subscriptions_), 0, 0,
+    (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
+    // uint32 event_queue_limit = 6;
+    {PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.event_queue_limit_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
+    // bool auto_start = 7;
+    {PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.auto_start_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
+    // bool enabled = 8;
+    {PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.enabled_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
+  }}, {{
+    {::_pbi::TcParser::GetTable<::request::StrategySubscription>()},
+    {::_pbi::TcParser::GetMapAuxInfo<
+        decltype(StrategyInfo()._impl_.parameters_)>(
+        1, 0, 0, 9,
+        9)},
+  }}, {{
+    "\24\0\15\15\12\0\0\0\0\0\0\0\0\0\0\0"
+    "request.StrategyInfo"
+    "strategy_type"
+    "strategy_name"
+    "parameters"
+  }},
+};
+
+PROTOBUF_NOINLINE void StrategyInfo::Clear() {
+// @@protoc_insertion_point(message_clear_start:request.StrategyInfo)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.parameters_.Clear();
+  _impl_.subscriptions_.Clear();
+  _impl_.strategy_type_.ClearToEmpty();
+  _impl_.strategy_name_.ClearToEmpty();
+  ::memset(&_impl_.strategy_id_, 0, static_cast<::size_t>(
+      reinterpret_cast<char*>(&_impl_.enabled_) -
+      reinterpret_cast<char*>(&_impl_.strategy_id_)) + sizeof(_impl_.enabled_));
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::uint8_t* StrategyInfo::_InternalSerialize(
+            const MessageLite& base, ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) {
+          const StrategyInfo& this_ = static_cast<const StrategyInfo&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::uint8_t* StrategyInfo::_InternalSerialize(
+            ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+          const StrategyInfo& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(serialize_to_array_start:request.StrategyInfo)
+          ::uint32_t cached_has_bits = 0;
+          (void)cached_has_bits;
+
+          // uint64 strategy_id = 1;
+          if (this_._internal_strategy_id() != 0) {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteUInt64ToArray(
+                1, this_._internal_strategy_id(), target);
+          }
+
+          // string strategy_type = 2;
+          if (!this_._internal_strategy_type().empty()) {
+            const std::string& _s = this_._internal_strategy_type();
+            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.StrategyInfo.strategy_type");
+            target = stream->WriteStringMaybeAliased(2, _s, target);
+          }
+
+          // string strategy_name = 3;
+          if (!this_._internal_strategy_name().empty()) {
+            const std::string& _s = this_._internal_strategy_name();
+            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.StrategyInfo.strategy_name");
+            target = stream->WriteStringMaybeAliased(3, _s, target);
+          }
+
+          // map<string, string> parameters = 4;
+          if (!this_._internal_parameters().empty()) {
+            using MapType = ::google::protobuf::Map<std::string, std::string>;
+            using WireHelper = _pbi::MapEntryFuncs<std::string, std::string,
+                                           _pbi::WireFormatLite::TYPE_STRING,
+                                           _pbi::WireFormatLite::TYPE_STRING>;
+            const auto& field = this_._internal_parameters();
+
+            if (stream->IsSerializationDeterministic() && field.size() > 1) {
+              for (const auto& entry : ::google::protobuf::internal::MapSorterPtr<MapType>(field)) {
+                target = WireHelper::InternalSerialize(
+                    4, entry.first, entry.second, target, stream);
+                ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                    entry.first.data(), static_cast<int>(entry.first.length()),
+ ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.StrategyInfo.parameters");
+                ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                    entry.second.data(), static_cast<int>(entry.second.length()),
+ ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.StrategyInfo.parameters");
+              }
+            } else {
+              for (const auto& entry : field) {
+                target = WireHelper::InternalSerialize(
+                    4, entry.first, entry.second, target, stream);
+                ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                    entry.first.data(), static_cast<int>(entry.first.length()),
+ ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.StrategyInfo.parameters");
+                ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                    entry.second.data(), static_cast<int>(entry.second.length()),
+ ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.StrategyInfo.parameters");
+              }
+            }
+          }
+
+          // repeated .request.StrategySubscription subscriptions = 5;
+          for (unsigned i = 0, n = static_cast<unsigned>(
+                                   this_._internal_subscriptions_size());
+               i < n; i++) {
+            const auto& repfield = this_._internal_subscriptions().Get(i);
+            target =
+                ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                    5, repfield, repfield.GetCachedSize(),
+                    target, stream);
+          }
+
+          // uint32 event_queue_limit = 6;
+          if (this_._internal_event_queue_limit() != 0) {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
+                6, this_._internal_event_queue_limit(), target);
+          }
+
+          // bool auto_start = 7;
+          if (this_._internal_auto_start() != 0) {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteBoolToArray(
+                7, this_._internal_auto_start(), target);
+          }
+
+          // bool enabled = 8;
+          if (this_._internal_enabled() != 0) {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteBoolToArray(
+                8, this_._internal_enabled(), target);
+          }
+
+          if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+            target =
+                ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                    this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+          }
+          // @@protoc_insertion_point(serialize_to_array_end:request.StrategyInfo)
+          return target;
+        }
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::size_t StrategyInfo::ByteSizeLong(const MessageLite& base) {
+          const StrategyInfo& this_ = static_cast<const StrategyInfo&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::size_t StrategyInfo::ByteSizeLong() const {
+          const StrategyInfo& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(message_byte_size_start:request.StrategyInfo)
+          ::size_t total_size = 0;
+
+          ::uint32_t cached_has_bits = 0;
+          // Prevent compiler warnings about cached_has_bits being unused
+          (void)cached_has_bits;
+
+          ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+           {
+            // map<string, string> parameters = 4;
+            {
+              total_size +=
+                  1 * ::google::protobuf::internal::FromIntSize(this_._internal_parameters_size());
+              for (const auto& entry : this_._internal_parameters()) {
+                total_size += _pbi::MapEntryFuncs<std::string, std::string,
+                                               _pbi::WireFormatLite::TYPE_STRING,
+                                               _pbi::WireFormatLite::TYPE_STRING>::ByteSizeLong(entry.first, entry.second);
+              }
+            }
+            // repeated .request.StrategySubscription subscriptions = 5;
+            {
+              total_size += 1UL * this_._internal_subscriptions_size();
+              for (const auto& msg : this_._internal_subscriptions()) {
+                total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
+              }
+            }
+          }
+           {
+            // string strategy_type = 2;
+            if (!this_._internal_strategy_type().empty()) {
+              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                              this_._internal_strategy_type());
+            }
+            // string strategy_name = 3;
+            if (!this_._internal_strategy_name().empty()) {
+              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                              this_._internal_strategy_name());
+            }
+            // uint64 strategy_id = 1;
+            if (this_._internal_strategy_id() != 0) {
+              total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(
+                  this_._internal_strategy_id());
+            }
+            // uint32 event_queue_limit = 6;
+            if (this_._internal_event_queue_limit() != 0) {
+              total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
+                  this_._internal_event_queue_limit());
+            }
+            // bool auto_start = 7;
+            if (this_._internal_auto_start() != 0) {
+              total_size += 2;
+            }
+            // bool enabled = 8;
+            if (this_._internal_enabled() != 0) {
+              total_size += 2;
+            }
+          }
+          return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                                     &this_._impl_._cached_size_);
+        }
+
+void StrategyInfo::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<StrategyInfo*>(&to_msg);
+  auto& from = static_cast<const StrategyInfo&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:request.StrategyInfo)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  _this->_impl_.parameters_.MergeFrom(from._impl_.parameters_);
+  _this->_internal_mutable_subscriptions()->MergeFrom(
+      from._internal_subscriptions());
+  if (!from._internal_strategy_type().empty()) {
+    _this->_internal_set_strategy_type(from._internal_strategy_type());
+  }
+  if (!from._internal_strategy_name().empty()) {
+    _this->_internal_set_strategy_name(from._internal_strategy_name());
+  }
+  if (from._internal_strategy_id() != 0) {
+    _this->_impl_.strategy_id_ = from._impl_.strategy_id_;
+  }
+  if (from._internal_event_queue_limit() != 0) {
+    _this->_impl_.event_queue_limit_ = from._impl_.event_queue_limit_;
+  }
+  if (from._internal_auto_start() != 0) {
+    _this->_impl_.auto_start_ = from._impl_.auto_start_;
+  }
+  if (from._internal_enabled() != 0) {
+    _this->_impl_.enabled_ = from._impl_.enabled_;
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void StrategyInfo::CopyFrom(const StrategyInfo& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:request.StrategyInfo)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void StrategyInfo::InternalSwap(StrategyInfo* PROTOBUF_RESTRICT other) {
+  using std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  _impl_.parameters_.InternalSwap(&other->_impl_.parameters_);
+  _impl_.subscriptions_.InternalSwap(&other->_impl_.subscriptions_);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.strategy_type_, &other->_impl_.strategy_type_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.strategy_name_, &other->_impl_.strategy_name_, arena);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.enabled_)
+      + sizeof(StrategyInfo::_impl_.enabled_)
+      - PROTOBUF_FIELD_OFFSET(StrategyInfo, _impl_.strategy_id_)>(
+          reinterpret_cast<char*>(&_impl_.strategy_id_),
+          reinterpret_cast<char*>(&other->_impl_.strategy_id_));
+}
+
+::google::protobuf::Metadata StrategyInfo::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class StrategyList::_Internal {
+ public:
+};
+
+StrategyList::StrategyList(::google::protobuf::Arena* arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:request.StrategyList)
+}
+inline PROTOBUF_NDEBUG_INLINE StrategyList::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::request::StrategyList& from_msg)
+      : strategies_{visibility, arena, from.strategies_},
+        _cached_size_{0} {}
+
+StrategyList::StrategyList(
+    ::google::protobuf::Arena* arena,
+    const StrategyList& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  StrategyList* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+
+  // @@protoc_insertion_point(copy_constructor:request.StrategyList)
+}
+inline PROTOBUF_NDEBUG_INLINE StrategyList::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : strategies_{visibility, arena},
+        _cached_size_{0} {}
+
+inline void StrategyList::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+}
+StrategyList::~StrategyList() {
+  // @@protoc_insertion_point(destructor:request.StrategyList)
+  SharedDtor(*this);
+}
+inline void StrategyList::SharedDtor(MessageLite& self) {
+  StrategyList& this_ = static_cast<StrategyList&>(self);
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.~Impl_();
+}
+
+inline void* StrategyList::PlacementNew_(const void*, void* mem,
+                                        ::google::protobuf::Arena* arena) {
+  return ::new (mem) StrategyList(arena);
+}
+constexpr auto StrategyList::InternalNewImpl_() {
+  constexpr auto arena_bits = ::google::protobuf::internal::EncodePlacementArenaOffsets({
+      PROTOBUF_FIELD_OFFSET(StrategyList, _impl_.strategies_) +
+          decltype(StrategyList::_impl_.strategies_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+  });
+  if (arena_bits.has_value()) {
+    return ::google::protobuf::internal::MessageCreator::ZeroInit(
+        sizeof(StrategyList), alignof(StrategyList), *arena_bits);
+  } else {
+    return ::google::protobuf::internal::MessageCreator(&StrategyList::PlacementNew_,
+                                 sizeof(StrategyList),
+                                 alignof(StrategyList));
+  }
+}
+PROTOBUF_CONSTINIT
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::google::protobuf::internal::ClassDataFull StrategyList::_class_data_ = {
+    ::google::protobuf::internal::ClassData{
+        &_StrategyList_default_instance_._instance,
+        &_table_.header,
+        nullptr,  // OnDemandRegisterArenaDtor
+        nullptr,  // IsInitialized
+        &StrategyList::MergeImpl,
+        ::google::protobuf::Message::GetNewImpl<StrategyList>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        &StrategyList::SharedDtor,
+        ::google::protobuf::Message::GetClearImpl<StrategyList>(), &StrategyList::ByteSizeLong,
+            &StrategyList::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+        PROTOBUF_FIELD_OFFSET(StrategyList, _impl_._cached_size_),
+        false,
+    },
+    &StrategyList::kDescriptorMethods,
+    &descriptor_table_request_2eproto,
+    nullptr,  // tracker
+};
+const ::google::protobuf::internal::ClassData* StrategyList::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
+  return _class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 1, 1, 0, 2> StrategyList::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    1, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967294,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    1,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    _class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::request::StrategyList>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // repeated .request.StrategyInfo strategies = 1;
+    {::_pbi::TcParser::FastMtR1,
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyList, _impl_.strategies_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // repeated .request.StrategyInfo strategies = 1;
+    {PROTOBUF_FIELD_OFFSET(StrategyList, _impl_.strategies_), 0, 0,
+    (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
+  }}, {{
+    {::_pbi::TcParser::GetTable<::request::StrategyInfo>()},
+  }}, {{
+  }},
+};
+
+PROTOBUF_NOINLINE void StrategyList::Clear() {
+// @@protoc_insertion_point(message_clear_start:request.StrategyList)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.strategies_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::uint8_t* StrategyList::_InternalSerialize(
+            const MessageLite& base, ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) {
+          const StrategyList& this_ = static_cast<const StrategyList&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::uint8_t* StrategyList::_InternalSerialize(
+            ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+          const StrategyList& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(serialize_to_array_start:request.StrategyList)
+          ::uint32_t cached_has_bits = 0;
+          (void)cached_has_bits;
+
+          // repeated .request.StrategyInfo strategies = 1;
+          for (unsigned i = 0, n = static_cast<unsigned>(
+                                   this_._internal_strategies_size());
+               i < n; i++) {
+            const auto& repfield = this_._internal_strategies().Get(i);
+            target =
+                ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                    1, repfield, repfield.GetCachedSize(),
+                    target, stream);
+          }
+
+          if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+            target =
+                ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                    this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+          }
+          // @@protoc_insertion_point(serialize_to_array_end:request.StrategyList)
+          return target;
+        }
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::size_t StrategyList::ByteSizeLong(const MessageLite& base) {
+          const StrategyList& this_ = static_cast<const StrategyList&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::size_t StrategyList::ByteSizeLong() const {
+          const StrategyList& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(message_byte_size_start:request.StrategyList)
+          ::size_t total_size = 0;
+
+          ::uint32_t cached_has_bits = 0;
+          // Prevent compiler warnings about cached_has_bits being unused
+          (void)cached_has_bits;
+
+          ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+           {
+            // repeated .request.StrategyInfo strategies = 1;
+            {
+              total_size += 1UL * this_._internal_strategies_size();
+              for (const auto& msg : this_._internal_strategies()) {
+                total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
+              }
+            }
+          }
+          return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                                     &this_._impl_._cached_size_);
+        }
+
+void StrategyList::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<StrategyList*>(&to_msg);
+  auto& from = static_cast<const StrategyList&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:request.StrategyList)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  _this->_internal_mutable_strategies()->MergeFrom(
+      from._internal_strategies());
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void StrategyList::CopyFrom(const StrategyList& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:request.StrategyList)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void StrategyList::InternalSwap(StrategyList* PROTOBUF_RESTRICT other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  _impl_.strategies_.InternalSwap(&other->_impl_.strategies_);
+}
+
+::google::protobuf::Metadata StrategyList::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================
 
@@ -705,6 +1983,32 @@ void RequestData::clear_query_response() {
     clear_has_payload();
   }
 }
+void RequestData::set_allocated_strategy(::request::StrategyInfo* strategy) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (strategy) {
+    ::google::protobuf::Arena* submessage_arena = strategy->GetArena();
+    if (message_arena != submessage_arena) {
+      strategy = ::google::protobuf::internal::GetOwnedMessage(message_arena, strategy, submessage_arena);
+    }
+    set_has_strategy();
+    _impl_.payload_.strategy_ = strategy;
+  }
+  // @@protoc_insertion_point(field_set_allocated:request.RequestData.strategy)
+}
+void RequestData::set_allocated_strategy_list(::request::StrategyList* strategy_list) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (strategy_list) {
+    ::google::protobuf::Arena* submessage_arena = strategy_list->GetArena();
+    if (message_arena != submessage_arena) {
+      strategy_list = ::google::protobuf::internal::GetOwnedMessage(message_arena, strategy_list, submessage_arena);
+    }
+    set_has_strategy_list();
+    _impl_.payload_.strategy_list_ = strategy_list;
+  }
+  // @@protoc_insertion_point(field_set_allocated:request.RequestData.strategy_list)
+}
 RequestData::RequestData(::google::protobuf::Arena* arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, _class_data_.base()) {
@@ -782,6 +2086,12 @@ RequestData::RequestData(
         break;
       case kQueryResponse:
         _impl_.payload_.query_response_ = ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::QueryResponse>(arena, *from._impl_.payload_.query_response_);
+        break;
+      case kStrategy:
+        _impl_.payload_.strategy_ = ::google::protobuf::Message::CopyConstruct<::request::StrategyInfo>(arena, *from._impl_.payload_.strategy_);
+        break;
+      case kStrategyList:
+        _impl_.payload_.strategy_list_ = ::google::protobuf::Message::CopyConstruct<::request::StrategyList>(arena, *from._impl_.payload_.strategy_list_);
         break;
   }
 
@@ -921,6 +2231,22 @@ void RequestData::clear_payload() {
       }
       break;
     }
+    case kStrategy: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.strategy_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.strategy_);
+      }
+      break;
+    }
+    case kStrategyList: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.strategy_list_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.strategy_list_);
+      }
+      break;
+    }
     case PAYLOAD_NOT_SET: {
       break;
     }
@@ -989,16 +2315,16 @@ const ::google::protobuf::internal::ClassData* RequestData::GetClassData() const
   return _class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 17, 14, 55, 2> RequestData::_table_ = {
+const ::_pbi::TcParseTable<3, 19, 16, 55, 2> RequestData::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    21, 56,  // max_field_number, fast_idx_mask
+    23, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4292870624,  // skipmap
+    4286579168,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    17,  // num_field_entries
-    14,  // num_aux_entries
+    19,  // num_field_entries
+    16,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     _class_data_.base(),
     nullptr,  // post_loop_handler
@@ -1031,10 +2357,10 @@ const ::_pbi::TcParseTable<3, 17, 14, 55, 2> RequestData::_table_ = {
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.cmd_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // map<string, string> extra = 3;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.extra_), 0, 12,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.extra_), 0, 14,
     (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
     // map<string, string> ret = 4;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.ret_), 0, 13,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.ret_), 0, 15,
     (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
     // uint64 id = 5;
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.id_), 0, 0,
@@ -1075,6 +2401,12 @@ const ::_pbi::TcParseTable<3, 17, 14, 55, 2> RequestData::_table_ = {
     // .hqmarket.market.v1.QueryResponse query_response = 21;
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.query_response_), _Internal::kOneofCaseOffset + 0, 11,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .request.StrategyInfo strategy = 22;
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.strategy_), _Internal::kOneofCaseOffset + 0, 12,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .request.StrategyList strategy_list = 23;
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.strategy_list_), _Internal::kOneofCaseOffset + 0, 13,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }}, {{
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::AuthRequest>()},
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SubscribeRequest>()},
@@ -1088,6 +2420,8 @@ const ::_pbi::TcParseTable<3, 17, 14, 55, 2> RequestData::_table_ = {
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::ProviderStatusData>()},
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::QueryRequest>()},
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::QueryResponse>()},
+    {::_pbi::TcParser::GetTable<::request::StrategyInfo>()},
+    {::_pbi::TcParser::GetTable<::request::StrategyList>()},
     {::_pbi::TcParser::GetMapAuxInfo<
         decltype(RequestData()._impl_.extra_)>(
         1, 0, 0, 9,
@@ -1298,6 +2632,18 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
                   stream);
               break;
             }
+            case kStrategy: {
+              target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                  22, *this_._impl_.payload_.strategy_, this_._impl_.payload_.strategy_->GetCachedSize(), target,
+                  stream);
+              break;
+            }
+            case kStrategyList: {
+              target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                  23, *this_._impl_.payload_.strategy_list_, this_._impl_.payload_.strategy_list_->GetCachedSize(), target,
+                  stream);
+              break;
+            }
             default:
               break;
           }
@@ -1435,6 +2781,18 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
             case kQueryResponse: {
               total_size += 2 +
                             ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.query_response_);
+              break;
+            }
+            // .request.StrategyInfo strategy = 22;
+            case kStrategy: {
+              total_size += 2 +
+                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.strategy_);
+              break;
+            }
+            // .request.StrategyList strategy_list = 23;
+            case kStrategyList: {
+              total_size += 2 +
+                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.strategy_list_);
               break;
             }
             case PAYLOAD_NOT_SET: {
@@ -1581,6 +2939,24 @@ void RequestData::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goo
               ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::QueryResponse>(arena, *from._impl_.payload_.query_response_);
         } else {
           _this->_impl_.payload_.query_response_->MergeFrom(from._internal_query_response());
+        }
+        break;
+      }
+      case kStrategy: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.strategy_ =
+              ::google::protobuf::Message::CopyConstruct<::request::StrategyInfo>(arena, *from._impl_.payload_.strategy_);
+        } else {
+          _this->_impl_.payload_.strategy_->MergeFrom(from._internal_strategy());
+        }
+        break;
+      }
+      case kStrategyList: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.strategy_list_ =
+              ::google::protobuf::Message::CopyConstruct<::request::StrategyList>(arena, *from._impl_.payload_.strategy_list_);
+        } else {
+          _this->_impl_.payload_.strategy_list_->MergeFrom(from._internal_strategy_list());
         }
         break;
       }

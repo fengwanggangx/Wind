@@ -1,7 +1,7 @@
 #include "request.h"
 
-#include "request.pb.h"
 #include "../common/utility.h"
+#include "request.pb.h"
 #include "v1/market.pb.h"
 
 #include <atomic>
@@ -115,6 +115,16 @@ void CRequest::SetData(const _TyDepthData& value)
 void CRequest::SetData(const _TyQueryResponse& value)
 {
 	m_data->mutable_query_response()->CopyFrom(value);
+}
+
+void CRequest::SetData(const _TyStrategyInfo& value)
+{
+	m_data->mutable_strategy()->CopyFrom(value);
+}
+
+void CRequest::SetData(const _TyStrategyList& value)
+{
+	m_data->mutable_strategy_list()->CopyFrom(value);
 }
 
 const _TyReqData& CRequest::GetData() const

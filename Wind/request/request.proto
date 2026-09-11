@@ -9,9 +9,30 @@ enum RequestType {
     QUERY_AUTH = 1;
     QUERY_USERINFO = 2;
     UPDATE_AUTH = 3;
-	UPDAT_PRODUCT = 4;
+	STRATEGY = 4;
 	HQMARKET = 5;
 	HEARTBEAT = 6;
+}
+
+message StrategySubscription {
+    string security = 1;
+    string exchange = 2;
+    string channel = 3;
+}
+
+message StrategyInfo {
+    uint64 strategy_id = 1;
+    string strategy_type = 2;
+    string strategy_name = 3;
+    map<string, string> parameters = 4;
+    repeated StrategySubscription subscriptions = 5;
+    uint32 event_queue_limit = 6;
+    bool auto_start = 7;
+    bool enabled = 8;
+}
+
+message StrategyList {
+    repeated StrategyInfo strategies = 1;
 }
 
 message RequestData {
@@ -33,5 +54,7 @@ message RequestData {
 		hqmarket.market.v1.ProviderStatusData provider_status = 19;
 		hqmarket.market.v1.QueryRequest query_request = 20;
 		hqmarket.market.v1.QueryResponse query_response = 21;
+		StrategyInfo strategy = 22;
+		StrategyList strategy_list = 23;
 	}
 }

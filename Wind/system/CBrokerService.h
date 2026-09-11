@@ -15,6 +15,7 @@
 #include <vector>
 
 class CSession;
+class CStrategyEngine;
 enum class SessionState;
 
 namespace net
@@ -34,7 +35,7 @@ class CBrokerService final
 	};
 
   public:
-	CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession);
+	CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession, CStrategyEngine* pStrategyEngine);
 	CBrokerService(const CBrokerService&) = delete;
 	CBrokerService& operator=(const CBrokerService&) = delete;
 
@@ -47,6 +48,7 @@ class CBrokerService final
 	bool HandleRegisterAuth(net::_TyConnectionId id, const CRequest& req);
 	bool HandleSubscription(net::_TyConnectionId id, const CRequest& req);
 	bool HandleHeartbeat(net::_TyConnectionId id, const CRequest& req);
+	bool HandleStrategy(net::_TyConnectionId id, const CRequest& req);
 
 	int HandleDisconnected(net::_TyConnectionId id);
 	bool HandleReAuth(const CRequest& req);
@@ -76,6 +78,7 @@ private:
 private:
 	net::CTcpServer* m_pTcpServer{ nullptr };
 	CSession* m_pSession{ nullptr };
+	CStrategyEngine* m_pStrategyEngine{ nullptr };
 };
 
 #endif

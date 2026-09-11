@@ -67,19 +67,19 @@ int main()
 	//连接HQMarket
 	CSession session({ boot.GetAccount(), boot.GetPassword(), { }, host.value() });
 
-	//客户端连接响应
-	CBrokerService brokerService(&boot.GetTcpServer(), &session);
-	if (!brokerService.Initialize())
-	{
-		std::cerr << "Trade service initialization failed\n";
-		return 7;
-	}
-
 	//策略引擎
 	CStrategyEngine strategyEngine(&session);
 	if (!strategyEngine.Initialize())
 	{
 		std::cerr << "Strategy engine initialization failed: " << strategyEngine.GetLastError() << '\n';
+		return 7;
+	}
+
+	//客户端连接响应
+	CBrokerService brokerService(&boot.GetTcpServer(), &session, &strategyEngine);
+	if (!brokerService.Initialize())
+	{
+		std::cerr << "Trade service initialization failed\n";
 		return 7;
 	}
 

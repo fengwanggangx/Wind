@@ -12,7 +12,9 @@
 namespace request
 {
 	class RequestData;
-}
+	class StrategyInfo;
+	class StrategyList;
+} // namespace request
 
 namespace hqmarket::market::v1
 {
@@ -20,7 +22,7 @@ namespace hqmarket::market::v1
 	class QuoteData;
 	class DepthData;
 	class QueryResponse;
-}
+} // namespace hqmarket::market::v1
 
 namespace google::protobuf
 {
@@ -29,6 +31,8 @@ namespace google::protobuf
 
 using _TyRequestId = std::uint64_t;
 using _TyReqData = request::RequestData;
+using _TyStrategyInfo = request::StrategyInfo;
+using _TyStrategyList = request::StrategyList;
 using _TySubscriptionAck = hqmarket::market::v1::SubscriptionAck;
 using _TyQuoteData = hqmarket::market::v1::QuoteData;
 using _TyDepthData = hqmarket::market::v1::DepthData;
@@ -36,19 +40,19 @@ using _TyQueryResponse = hqmarket::market::v1::QueryResponse;
 
 class CRequest
 {
-public:
+  public:
 	enum class Type
 	{
 		UNKNOWN = 0,
 		QUERY_AUTH = 1,
 		QUERY_USERINFO = 2,
 		UPDATE_AUTH = 3,
-		UPDAT_PRODUCT = 4,
+		STRATEGY = 4,
 		HQMARKET = 5,
 		HEARTBEAT = 6
 	};
 
-public:
+  public:
 	CRequest();
 	~CRequest();
 	CRequest(const CRequest& arg);
@@ -56,7 +60,7 @@ public:
 	CRequest(CRequest&& arg) noexcept;
 	CRequest& operator=(CRequest&& arg) noexcept;
 
-public:
+  public:
 	_TyRequestId GetId() const;
 	void SetId(_TyRequestId id);
 
@@ -78,6 +82,8 @@ public:
 	void SetData(const _TyQuoteData& value);
 	void SetData(const _TyDepthData& value);
 	void SetData(const _TyQueryResponse& value);
+	void SetData(const _TyStrategyInfo& value);
+	void SetData(const _TyStrategyList& value);
 	const _TyReqData& GetData() const;
 
 	void SetConnectionId(net::_TyConnectionId id);
@@ -88,7 +94,7 @@ public:
 
 	std::optional<std::pair<int, std::string>> GetErrorInfo() const;
 
-private:
+  private:
 	std::unique_ptr<google::protobuf::Arena> m_arena;
 	_TyReqData* m_data{ nullptr };
 	net::_TyConnectionId m_connection_id{ -1 };

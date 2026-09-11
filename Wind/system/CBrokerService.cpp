@@ -3,13 +3,14 @@
 #include "../common/utility.h"
 #include "../database/CDBEngine.h"
 #include "../database/IDataBase.h"
-#include "CSession.h"
-#include "../request/v1/market.pb.h"
 #include "../network/CNetTools.h"
 #include "../network/CTcpServer.h"
 #include "../network/common_net.h"
 #include "../request/request.h"
 #include "../request/request.pb.h"
+#include "../request/v1/market.pb.h"
+#include "../strategy/CStrategyEngine.h"
+#include "CSession.h"
 
 #include <cctype>
 #include <functional>
@@ -57,21 +58,24 @@ bool IsPasswordValid(const std::string& strPassword)
 	return (MinPasswordLength <= strPassword.size()) && (MaxPasswordLength >= strPassword.size());
 }
 
-CBrokerService::CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession) : m_pTcpServer(pTcpServer), m_pSession(pSession)
+CBrokerService::CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession, CStrategyEngine* pStrategyEngine) : m_pTcpServer(pTcpServer), m_pSession(pSession), m_pStrategyEngine(pStrategyEngine)
 {
-	m_handler =
-	{
-		{"register", std::bind_front(&CBrokerService::HandleRegisterAuth, this)},
-		{"auth", std::bind_front(&CBrokerService::HandleAuth, this)},
-		{"heartbeat", std::bind_front(&CBrokerService::HandleHeartbeat, this)},
-		{"subscribe", std::bind_front(&CBrokerService::HandleSubscription, this)},
-		{"unsubscribe", std::bind_front(&CBrokerService::HandleSubscription, this)}
+	m_handler = {
+		{ "register", std::bind_front(&CBrokerService::HandleRegisterAuth, this) },
+		{ "auth", std::bind_front(&CBrokerService::HandleAuth, this) },
+		{ "heartbeat", std::bind_front(&CBrokerService::HandleHeartbeat, this) },
+		{ "subscribe", std::bind_front(&CBrokerService::HandleSubscription, this) },
+		{ "unsubscribe", std::bind_front(&CBrokerService::HandleSubscription, this) },
+		{ "strategy_add", std::bind_front(&CBrokerService::HandleStrategy, this) },
+		{ "strategy_modify", std::bind_front(&CBrokerService::HandleStrategy, this) },
+		{ "strategy_query", std::bind_front(&CBrokerService::HandleStrategy, this) },
+		{ "strategy_delete", std::bind_front(&CBrokerService::HandleStrategy, this) }
 	};
 }
 
 bool CBrokerService::Initialize()
 {
-	if ((nullptr == m_pTcpServer) || (nullptr == m_pSession))
+	if ((nullptr == m_pTcpServer) || (nullptr == m_pSession) || (nullptr == m_pStrategyEngine))
 	{
 		return false;
 	}
@@ -131,7 +135,7 @@ std::string CBrokerService::GetMarketResponseKey(const CRequest& req) const
 		market::Channel channel = static_cast<market::Channel>(static_cast<int>(result.channel()));
 		return market::CQuoteInfo(result.instrument().symbol(), exchange, channel).String();
 	}
-	return {};
+	return { };
 }
 
 void CBrokerService::OnHQMarketResponse(const CRequest& req)
@@ -550,6 +554,16 @@ bool CBrokerService::HandleHeartbeat(net::_TyConnectionId id, const CRequest& re
 	response.SetReturnData("client_time_ms", req.GetExtraData("client_time_ms"));
 	response.SetReturnData("status", "ok");
 	return net::SendRequest(id, response);
+}
+
+bool CBrokerService::HandleStrategy(net::_TyConnectionId id, const CRequest& req)
+{
+	if ((CRequest::Type::STRATEGY != req.GetType()) || (nullptr == m_pStrategyEngine))
+	{
+		net::SendError(id, req, InvalidRequest, "invalid strategy request");
+		return false;
+	}
+	return m_pStrategyEngine->HandleStrategyRequest(req);
 }
 
 int CBrokerService::OnNetEvent(const net::CNetEvent& ev)

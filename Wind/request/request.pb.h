@@ -66,6 +66,18 @@ extern RequestData_ExtraEntry_DoNotUseDefaultTypeInternal _RequestData_ExtraEntr
 class RequestData_RetEntry_DoNotUse;
 struct RequestData_RetEntry_DoNotUseDefaultTypeInternal;
 extern RequestData_RetEntry_DoNotUseDefaultTypeInternal _RequestData_RetEntry_DoNotUse_default_instance_;
+class StrategyInfo;
+struct StrategyInfoDefaultTypeInternal;
+extern StrategyInfoDefaultTypeInternal _StrategyInfo_default_instance_;
+class StrategyInfo_ParametersEntry_DoNotUse;
+struct StrategyInfo_ParametersEntry_DoNotUseDefaultTypeInternal;
+extern StrategyInfo_ParametersEntry_DoNotUseDefaultTypeInternal _StrategyInfo_ParametersEntry_DoNotUse_default_instance_;
+class StrategyList;
+struct StrategyListDefaultTypeInternal;
+extern StrategyListDefaultTypeInternal _StrategyList_default_instance_;
+class StrategySubscription;
+struct StrategySubscriptionDefaultTypeInternal;
+extern StrategySubscriptionDefaultTypeInternal _StrategySubscription_default_instance_;
 }  // namespace request
 namespace google {
 namespace protobuf {
@@ -78,7 +90,7 @@ enum RequestType : int {
   QUERY_AUTH = 1,
   QUERY_USERINFO = 2,
   UPDATE_AUTH = 3,
-  UPDAT_PRODUCT = 4,
+  STRATEGY = 4,
   HQMARKET = 5,
   HEARTBEAT = 6,
   RequestType_INT_MIN_SENTINEL_DO_NOT_USE_ =
@@ -115,6 +127,277 @@ inline bool RequestType_Parse(absl::string_view name, RequestType* value) {
 // ===================================================================
 
 
+// -------------------------------------------------------------------
+
+class StrategySubscription final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:request.StrategySubscription) */ {
+ public:
+  inline StrategySubscription() : StrategySubscription(nullptr) {}
+  ~StrategySubscription() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(StrategySubscription* msg, std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(StrategySubscription));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR StrategySubscription(
+      ::google::protobuf::internal::ConstantInitialized);
+
+  inline StrategySubscription(const StrategySubscription& from) : StrategySubscription(nullptr, from) {}
+  inline StrategySubscription(StrategySubscription&& from) noexcept
+      : StrategySubscription(nullptr, std::move(from)) {}
+  inline StrategySubscription& operator=(const StrategySubscription& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline StrategySubscription& operator=(StrategySubscription&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const StrategySubscription& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const StrategySubscription* internal_default_instance() {
+    return reinterpret_cast<const StrategySubscription*>(
+        &_StrategySubscription_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 0;
+  friend void swap(StrategySubscription& a, StrategySubscription& b) { a.Swap(&b); }
+  inline void Swap(StrategySubscription* other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(StrategySubscription* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  StrategySubscription* New(::google::protobuf::Arena* arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<StrategySubscription>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const StrategySubscription& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const StrategySubscription& from) { StrategySubscription::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(
+      ::google::protobuf::MessageLite& to_msg,
+      const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* _InternalSerialize(
+      const MessageLite& msg, ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(StrategySubscription* other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(
+      ::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "request.StrategySubscription"; }
+
+ protected:
+  explicit StrategySubscription(::google::protobuf::Arena* arena);
+  StrategySubscription(::google::protobuf::Arena* arena, const StrategySubscription& from);
+  StrategySubscription(::google::protobuf::Arena* arena, StrategySubscription&& from) noexcept
+      : StrategySubscription(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
+  static void* PlacementNew_(const void*, void* mem,
+                             ::google::protobuf::Arena* arena);
+  static constexpr auto InternalNewImpl_();
+  static const ::google::protobuf::internal::ClassDataFull _class_data_;
+
+ public:
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kSecurityFieldNumber = 1,
+    kExchangeFieldNumber = 2,
+    kChannelFieldNumber = 3,
+  };
+  // string security = 1;
+  void clear_security() ;
+  const std::string& security() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_security(Arg_&& arg, Args_... args);
+  std::string* mutable_security();
+  PROTOBUF_NODISCARD std::string* release_security();
+  void set_allocated_security(std::string* value);
+
+  private:
+  const std::string& _internal_security() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_security(
+      const std::string& value);
+  std::string* _internal_mutable_security();
+
+  public:
+  // string exchange = 2;
+  void clear_exchange() ;
+  const std::string& exchange() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_exchange(Arg_&& arg, Args_... args);
+  std::string* mutable_exchange();
+  PROTOBUF_NODISCARD std::string* release_exchange();
+  void set_allocated_exchange(std::string* value);
+
+  private:
+  const std::string& _internal_exchange() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_exchange(
+      const std::string& value);
+  std::string* _internal_mutable_exchange();
+
+  public:
+  // string channel = 3;
+  void clear_channel() ;
+  const std::string& channel() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_channel(Arg_&& arg, Args_... args);
+  std::string* mutable_channel();
+  PROTOBUF_NODISCARD std::string* release_channel();
+  void set_allocated_channel(std::string* value);
+
+  private:
+  const std::string& _internal_channel() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_channel(
+      const std::string& value);
+  std::string* _internal_mutable_channel();
+
+  public:
+  // @@protoc_insertion_point(class_scope:request.StrategySubscription)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      2, 3, 0,
+      60, 2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(
+        ::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena);
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena, const Impl_& from,
+                          const StrategySubscription& from_msg);
+    ::google::protobuf::internal::ArenaStringPtr security_;
+    ::google::protobuf::internal::ArenaStringPtr exchange_;
+    ::google::protobuf::internal::ArenaStringPtr channel_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_request_2eproto;
+};
+// -------------------------------------------------------------------
+
+class StrategyInfo_ParametersEntry_DoNotUse final
+    : public ::google::protobuf::internal::MapEntry<
+          std::string, std::string,
+          ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+          ::google::protobuf::internal::WireFormatLite::TYPE_STRING> {
+ public:
+  using SuperType = ::google::protobuf::internal::MapEntry<
+      std::string, std::string,
+      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+      ::google::protobuf::internal::WireFormatLite::TYPE_STRING>;
+  StrategyInfo_ParametersEntry_DoNotUse();
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR StrategyInfo_ParametersEntry_DoNotUse(
+      ::google::protobuf::internal::ConstantInitialized);
+  explicit StrategyInfo_ParametersEntry_DoNotUse(::google::protobuf::Arena* arena);
+  static const StrategyInfo_ParametersEntry_DoNotUse* internal_default_instance() {
+    return reinterpret_cast<const StrategyInfo_ParametersEntry_DoNotUse*>(
+        &_StrategyInfo_ParametersEntry_DoNotUse_default_instance_);
+  }
+
+
+ private:
+  friend class ::google::protobuf::MessageLite;
+  friend struct ::TableStruct_request_2eproto;
+
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      1, 2, 0,
+      53, 2>
+      _table_;
+
+  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
+  static void* PlacementNew_(const void*, void* mem,
+                             ::google::protobuf::Arena* arena);
+  static constexpr auto InternalNewImpl_();
+  static const ::google::protobuf::internal::ClassDataFull _class_data_;
+};
 // -------------------------------------------------------------------
 
 class RequestData_RetEntry_DoNotUse final
@@ -195,6 +478,504 @@ class RequestData_ExtraEntry_DoNotUse final
 };
 // -------------------------------------------------------------------
 
+class StrategyInfo final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:request.StrategyInfo) */ {
+ public:
+  inline StrategyInfo() : StrategyInfo(nullptr) {}
+  ~StrategyInfo() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(StrategyInfo* msg, std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(StrategyInfo));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR StrategyInfo(
+      ::google::protobuf::internal::ConstantInitialized);
+
+  inline StrategyInfo(const StrategyInfo& from) : StrategyInfo(nullptr, from) {}
+  inline StrategyInfo(StrategyInfo&& from) noexcept
+      : StrategyInfo(nullptr, std::move(from)) {}
+  inline StrategyInfo& operator=(const StrategyInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline StrategyInfo& operator=(StrategyInfo&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const StrategyInfo& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const StrategyInfo* internal_default_instance() {
+    return reinterpret_cast<const StrategyInfo*>(
+        &_StrategyInfo_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 2;
+  friend void swap(StrategyInfo& a, StrategyInfo& b) { a.Swap(&b); }
+  inline void Swap(StrategyInfo* other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(StrategyInfo* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  StrategyInfo* New(::google::protobuf::Arena* arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<StrategyInfo>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const StrategyInfo& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const StrategyInfo& from) { StrategyInfo::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(
+      ::google::protobuf::MessageLite& to_msg,
+      const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* _InternalSerialize(
+      const MessageLite& msg, ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(StrategyInfo* other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(
+      ::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "request.StrategyInfo"; }
+
+ protected:
+  explicit StrategyInfo(::google::protobuf::Arena* arena);
+  StrategyInfo(::google::protobuf::Arena* arena, const StrategyInfo& from);
+  StrategyInfo(::google::protobuf::Arena* arena, StrategyInfo&& from) noexcept
+      : StrategyInfo(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
+  static void* PlacementNew_(const void*, void* mem,
+                             ::google::protobuf::Arena* arena);
+  static constexpr auto InternalNewImpl_();
+  static const ::google::protobuf::internal::ClassDataFull _class_data_;
+
+ public:
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kParametersFieldNumber = 4,
+    kSubscriptionsFieldNumber = 5,
+    kStrategyTypeFieldNumber = 2,
+    kStrategyNameFieldNumber = 3,
+    kStrategyIdFieldNumber = 1,
+    kEventQueueLimitFieldNumber = 6,
+    kAutoStartFieldNumber = 7,
+    kEnabledFieldNumber = 8,
+  };
+  // map<string, string> parameters = 4;
+  int parameters_size() const;
+  private:
+  int _internal_parameters_size() const;
+
+  public:
+  void clear_parameters() ;
+  const ::google::protobuf::Map<std::string, std::string>& parameters() const;
+  ::google::protobuf::Map<std::string, std::string>* mutable_parameters();
+
+  private:
+  const ::google::protobuf::Map<std::string, std::string>& _internal_parameters() const;
+  ::google::protobuf::Map<std::string, std::string>* _internal_mutable_parameters();
+
+  public:
+  // repeated .request.StrategySubscription subscriptions = 5;
+  int subscriptions_size() const;
+  private:
+  int _internal_subscriptions_size() const;
+
+  public:
+  void clear_subscriptions() ;
+  ::request::StrategySubscription* mutable_subscriptions(int index);
+  ::google::protobuf::RepeatedPtrField<::request::StrategySubscription>* mutable_subscriptions();
+
+  private:
+  const ::google::protobuf::RepeatedPtrField<::request::StrategySubscription>& _internal_subscriptions() const;
+  ::google::protobuf::RepeatedPtrField<::request::StrategySubscription>* _internal_mutable_subscriptions();
+  public:
+  const ::request::StrategySubscription& subscriptions(int index) const;
+  ::request::StrategySubscription* add_subscriptions();
+  const ::google::protobuf::RepeatedPtrField<::request::StrategySubscription>& subscriptions() const;
+  // string strategy_type = 2;
+  void clear_strategy_type() ;
+  const std::string& strategy_type() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_strategy_type(Arg_&& arg, Args_... args);
+  std::string* mutable_strategy_type();
+  PROTOBUF_NODISCARD std::string* release_strategy_type();
+  void set_allocated_strategy_type(std::string* value);
+
+  private:
+  const std::string& _internal_strategy_type() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_strategy_type(
+      const std::string& value);
+  std::string* _internal_mutable_strategy_type();
+
+  public:
+  // string strategy_name = 3;
+  void clear_strategy_name() ;
+  const std::string& strategy_name() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_strategy_name(Arg_&& arg, Args_... args);
+  std::string* mutable_strategy_name();
+  PROTOBUF_NODISCARD std::string* release_strategy_name();
+  void set_allocated_strategy_name(std::string* value);
+
+  private:
+  const std::string& _internal_strategy_name() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_strategy_name(
+      const std::string& value);
+  std::string* _internal_mutable_strategy_name();
+
+  public:
+  // uint64 strategy_id = 1;
+  void clear_strategy_id() ;
+  ::uint64_t strategy_id() const;
+  void set_strategy_id(::uint64_t value);
+
+  private:
+  ::uint64_t _internal_strategy_id() const;
+  void _internal_set_strategy_id(::uint64_t value);
+
+  public:
+  // uint32 event_queue_limit = 6;
+  void clear_event_queue_limit() ;
+  ::uint32_t event_queue_limit() const;
+  void set_event_queue_limit(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_event_queue_limit() const;
+  void _internal_set_event_queue_limit(::uint32_t value);
+
+  public:
+  // bool auto_start = 7;
+  void clear_auto_start() ;
+  bool auto_start() const;
+  void set_auto_start(bool value);
+
+  private:
+  bool _internal_auto_start() const;
+  void _internal_set_auto_start(bool value);
+
+  public:
+  // bool enabled = 8;
+  void clear_enabled() ;
+  bool enabled() const;
+  void set_enabled(bool value);
+
+  private:
+  bool _internal_enabled() const;
+  void _internal_set_enabled(bool value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:request.StrategyInfo)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      3, 8, 2,
+      73, 2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(
+        ::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena);
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena, const Impl_& from,
+                          const StrategyInfo& from_msg);
+    ::google::protobuf::internal::MapField<StrategyInfo_ParametersEntry_DoNotUse, std::string, std::string,
+                      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+                      ::google::protobuf::internal::WireFormatLite::TYPE_STRING>
+        parameters_;
+    ::google::protobuf::RepeatedPtrField< ::request::StrategySubscription > subscriptions_;
+    ::google::protobuf::internal::ArenaStringPtr strategy_type_;
+    ::google::protobuf::internal::ArenaStringPtr strategy_name_;
+    ::uint64_t strategy_id_;
+    ::uint32_t event_queue_limit_;
+    bool auto_start_;
+    bool enabled_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_request_2eproto;
+};
+// -------------------------------------------------------------------
+
+class StrategyList final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:request.StrategyList) */ {
+ public:
+  inline StrategyList() : StrategyList(nullptr) {}
+  ~StrategyList() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(StrategyList* msg, std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(StrategyList));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR StrategyList(
+      ::google::protobuf::internal::ConstantInitialized);
+
+  inline StrategyList(const StrategyList& from) : StrategyList(nullptr, from) {}
+  inline StrategyList(StrategyList&& from) noexcept
+      : StrategyList(nullptr, std::move(from)) {}
+  inline StrategyList& operator=(const StrategyList& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline StrategyList& operator=(StrategyList&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const StrategyList& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const StrategyList* internal_default_instance() {
+    return reinterpret_cast<const StrategyList*>(
+        &_StrategyList_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 3;
+  friend void swap(StrategyList& a, StrategyList& b) { a.Swap(&b); }
+  inline void Swap(StrategyList* other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(StrategyList* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  StrategyList* New(::google::protobuf::Arena* arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<StrategyList>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const StrategyList& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const StrategyList& from) { StrategyList::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(
+      ::google::protobuf::MessageLite& to_msg,
+      const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* _InternalSerialize(
+      const MessageLite& msg, ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(StrategyList* other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(
+      ::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "request.StrategyList"; }
+
+ protected:
+  explicit StrategyList(::google::protobuf::Arena* arena);
+  StrategyList(::google::protobuf::Arena* arena, const StrategyList& from);
+  StrategyList(::google::protobuf::Arena* arena, StrategyList&& from) noexcept
+      : StrategyList(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
+  static void* PlacementNew_(const void*, void* mem,
+                             ::google::protobuf::Arena* arena);
+  static constexpr auto InternalNewImpl_();
+  static const ::google::protobuf::internal::ClassDataFull _class_data_;
+
+ public:
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kStrategiesFieldNumber = 1,
+  };
+  // repeated .request.StrategyInfo strategies = 1;
+  int strategies_size() const;
+  private:
+  int _internal_strategies_size() const;
+
+  public:
+  void clear_strategies() ;
+  ::request::StrategyInfo* mutable_strategies(int index);
+  ::google::protobuf::RepeatedPtrField<::request::StrategyInfo>* mutable_strategies();
+
+  private:
+  const ::google::protobuf::RepeatedPtrField<::request::StrategyInfo>& _internal_strategies() const;
+  ::google::protobuf::RepeatedPtrField<::request::StrategyInfo>* _internal_mutable_strategies();
+  public:
+  const ::request::StrategyInfo& strategies(int index) const;
+  ::request::StrategyInfo* add_strategies();
+  const ::google::protobuf::RepeatedPtrField<::request::StrategyInfo>& strategies() const;
+  // @@protoc_insertion_point(class_scope:request.StrategyList)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      0, 1, 1,
+      0, 2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(
+        ::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena);
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena, const Impl_& from,
+                          const StrategyList& from_msg);
+    ::google::protobuf::RepeatedPtrField< ::request::StrategyInfo > strategies_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_request_2eproto;
+};
+// -------------------------------------------------------------------
+
 class RequestData final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:request.RequestData) */ {
  public:
@@ -263,13 +1044,15 @@ class RequestData final : public ::google::protobuf::Message
     kProviderStatus = 19,
     kQueryRequest = 20,
     kQueryResponse = 21,
+    kStrategy = 22,
+    kStrategyList = 23,
     PAYLOAD_NOT_SET = 0,
   };
   static inline const RequestData* internal_default_instance() {
     return reinterpret_cast<const RequestData*>(
         &_RequestData_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 2;
+  static constexpr int kIndexInFileMessages = 6;
   friend void swap(RequestData& a, RequestData& b) { a.Swap(&b); }
   inline void Swap(RequestData* other) {
     if (other == this) return;
@@ -373,6 +1156,8 @@ class RequestData final : public ::google::protobuf::Message
     kProviderStatusFieldNumber = 19,
     kQueryRequestFieldNumber = 20,
     kQueryResponseFieldNumber = 21,
+    kStrategyFieldNumber = 22,
+    kStrategyListFieldNumber = 23,
   };
   // map<string, string> extra = 3;
   int extra_size() const;
@@ -668,6 +1453,44 @@ class RequestData final : public ::google::protobuf::Message
   ::hqmarket::market::v1::QueryResponse* _internal_mutable_query_response();
 
   public:
+  // .request.StrategyInfo strategy = 22;
+  bool has_strategy() const;
+  private:
+  bool _internal_has_strategy() const;
+
+  public:
+  void clear_strategy() ;
+  const ::request::StrategyInfo& strategy() const;
+  PROTOBUF_NODISCARD ::request::StrategyInfo* release_strategy();
+  ::request::StrategyInfo* mutable_strategy();
+  void set_allocated_strategy(::request::StrategyInfo* value);
+  void unsafe_arena_set_allocated_strategy(::request::StrategyInfo* value);
+  ::request::StrategyInfo* unsafe_arena_release_strategy();
+
+  private:
+  const ::request::StrategyInfo& _internal_strategy() const;
+  ::request::StrategyInfo* _internal_mutable_strategy();
+
+  public:
+  // .request.StrategyList strategy_list = 23;
+  bool has_strategy_list() const;
+  private:
+  bool _internal_has_strategy_list() const;
+
+  public:
+  void clear_strategy_list() ;
+  const ::request::StrategyList& strategy_list() const;
+  PROTOBUF_NODISCARD ::request::StrategyList* release_strategy_list();
+  ::request::StrategyList* mutable_strategy_list();
+  void set_allocated_strategy_list(::request::StrategyList* value);
+  void unsafe_arena_set_allocated_strategy_list(::request::StrategyList* value);
+  ::request::StrategyList* unsafe_arena_release_strategy_list();
+
+  private:
+  const ::request::StrategyList& _internal_strategy_list() const;
+  ::request::StrategyList* _internal_mutable_strategy_list();
+
+  public:
   void clear_payload();
   PayloadCase payload_case() const;
   // @@protoc_insertion_point(class_scope:request.RequestData)
@@ -685,11 +1508,13 @@ class RequestData final : public ::google::protobuf::Message
   void set_has_provider_status();
   void set_has_query_request();
   void set_has_query_response();
+  void set_has_strategy();
+  void set_has_strategy_list();
   inline bool has_payload() const;
   inline void clear_has_payload();
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      3, 17, 14,
+      3, 19, 16,
       55, 2>
       _table_;
 
@@ -733,6 +1558,8 @@ class RequestData final : public ::google::protobuf::Message
       ::hqmarket::market::v1::ProviderStatusData* provider_status_;
       ::hqmarket::market::v1::QueryRequest* query_request_;
       ::hqmarket::market::v1::QueryResponse* query_response_;
+      ::request::StrategyInfo* strategy_;
+      ::request::StrategyList* strategy_list_;
     } payload_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::uint32_t _oneof_case_[1];
@@ -754,6 +1581,474 @@ class RequestData final : public ::google::protobuf::Message
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// StrategySubscription
+
+// string security = 1;
+inline void StrategySubscription::clear_security() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.security_.ClearToEmpty();
+}
+inline const std::string& StrategySubscription::security() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:request.StrategySubscription.security)
+  return _internal_security();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void StrategySubscription::set_security(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.security_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:request.StrategySubscription.security)
+}
+inline std::string* StrategySubscription::mutable_security() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_security();
+  // @@protoc_insertion_point(field_mutable:request.StrategySubscription.security)
+  return _s;
+}
+inline const std::string& StrategySubscription::_internal_security() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.security_.Get();
+}
+inline void StrategySubscription::_internal_set_security(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.security_.Set(value, GetArena());
+}
+inline std::string* StrategySubscription::_internal_mutable_security() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.security_.Mutable( GetArena());
+}
+inline std::string* StrategySubscription::release_security() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:request.StrategySubscription.security)
+  return _impl_.security_.Release();
+}
+inline void StrategySubscription::set_allocated_security(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.security_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.security_.IsDefault()) {
+    _impl_.security_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:request.StrategySubscription.security)
+}
+
+// string exchange = 2;
+inline void StrategySubscription::clear_exchange() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.exchange_.ClearToEmpty();
+}
+inline const std::string& StrategySubscription::exchange() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:request.StrategySubscription.exchange)
+  return _internal_exchange();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void StrategySubscription::set_exchange(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.exchange_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:request.StrategySubscription.exchange)
+}
+inline std::string* StrategySubscription::mutable_exchange() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_exchange();
+  // @@protoc_insertion_point(field_mutable:request.StrategySubscription.exchange)
+  return _s;
+}
+inline const std::string& StrategySubscription::_internal_exchange() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.exchange_.Get();
+}
+inline void StrategySubscription::_internal_set_exchange(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.exchange_.Set(value, GetArena());
+}
+inline std::string* StrategySubscription::_internal_mutable_exchange() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.exchange_.Mutable( GetArena());
+}
+inline std::string* StrategySubscription::release_exchange() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:request.StrategySubscription.exchange)
+  return _impl_.exchange_.Release();
+}
+inline void StrategySubscription::set_allocated_exchange(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.exchange_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.exchange_.IsDefault()) {
+    _impl_.exchange_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:request.StrategySubscription.exchange)
+}
+
+// string channel = 3;
+inline void StrategySubscription::clear_channel() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.channel_.ClearToEmpty();
+}
+inline const std::string& StrategySubscription::channel() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:request.StrategySubscription.channel)
+  return _internal_channel();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void StrategySubscription::set_channel(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.channel_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:request.StrategySubscription.channel)
+}
+inline std::string* StrategySubscription::mutable_channel() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_channel();
+  // @@protoc_insertion_point(field_mutable:request.StrategySubscription.channel)
+  return _s;
+}
+inline const std::string& StrategySubscription::_internal_channel() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.channel_.Get();
+}
+inline void StrategySubscription::_internal_set_channel(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.channel_.Set(value, GetArena());
+}
+inline std::string* StrategySubscription::_internal_mutable_channel() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.channel_.Mutable( GetArena());
+}
+inline std::string* StrategySubscription::release_channel() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:request.StrategySubscription.channel)
+  return _impl_.channel_.Release();
+}
+inline void StrategySubscription::set_allocated_channel(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.channel_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.channel_.IsDefault()) {
+    _impl_.channel_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:request.StrategySubscription.channel)
+}
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// StrategyInfo
+
+// uint64 strategy_id = 1;
+inline void StrategyInfo::clear_strategy_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.strategy_id_ = ::uint64_t{0u};
+}
+inline ::uint64_t StrategyInfo::strategy_id() const {
+  // @@protoc_insertion_point(field_get:request.StrategyInfo.strategy_id)
+  return _internal_strategy_id();
+}
+inline void StrategyInfo::set_strategy_id(::uint64_t value) {
+  _internal_set_strategy_id(value);
+  // @@protoc_insertion_point(field_set:request.StrategyInfo.strategy_id)
+}
+inline ::uint64_t StrategyInfo::_internal_strategy_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.strategy_id_;
+}
+inline void StrategyInfo::_internal_set_strategy_id(::uint64_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.strategy_id_ = value;
+}
+
+// string strategy_type = 2;
+inline void StrategyInfo::clear_strategy_type() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.strategy_type_.ClearToEmpty();
+}
+inline const std::string& StrategyInfo::strategy_type() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:request.StrategyInfo.strategy_type)
+  return _internal_strategy_type();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void StrategyInfo::set_strategy_type(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.strategy_type_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:request.StrategyInfo.strategy_type)
+}
+inline std::string* StrategyInfo::mutable_strategy_type() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_strategy_type();
+  // @@protoc_insertion_point(field_mutable:request.StrategyInfo.strategy_type)
+  return _s;
+}
+inline const std::string& StrategyInfo::_internal_strategy_type() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.strategy_type_.Get();
+}
+inline void StrategyInfo::_internal_set_strategy_type(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.strategy_type_.Set(value, GetArena());
+}
+inline std::string* StrategyInfo::_internal_mutable_strategy_type() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.strategy_type_.Mutable( GetArena());
+}
+inline std::string* StrategyInfo::release_strategy_type() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:request.StrategyInfo.strategy_type)
+  return _impl_.strategy_type_.Release();
+}
+inline void StrategyInfo::set_allocated_strategy_type(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.strategy_type_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.strategy_type_.IsDefault()) {
+    _impl_.strategy_type_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:request.StrategyInfo.strategy_type)
+}
+
+// string strategy_name = 3;
+inline void StrategyInfo::clear_strategy_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.strategy_name_.ClearToEmpty();
+}
+inline const std::string& StrategyInfo::strategy_name() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:request.StrategyInfo.strategy_name)
+  return _internal_strategy_name();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void StrategyInfo::set_strategy_name(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.strategy_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:request.StrategyInfo.strategy_name)
+}
+inline std::string* StrategyInfo::mutable_strategy_name() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_strategy_name();
+  // @@protoc_insertion_point(field_mutable:request.StrategyInfo.strategy_name)
+  return _s;
+}
+inline const std::string& StrategyInfo::_internal_strategy_name() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.strategy_name_.Get();
+}
+inline void StrategyInfo::_internal_set_strategy_name(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.strategy_name_.Set(value, GetArena());
+}
+inline std::string* StrategyInfo::_internal_mutable_strategy_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.strategy_name_.Mutable( GetArena());
+}
+inline std::string* StrategyInfo::release_strategy_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:request.StrategyInfo.strategy_name)
+  return _impl_.strategy_name_.Release();
+}
+inline void StrategyInfo::set_allocated_strategy_name(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.strategy_name_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.strategy_name_.IsDefault()) {
+    _impl_.strategy_name_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:request.StrategyInfo.strategy_name)
+}
+
+// map<string, string> parameters = 4;
+inline int StrategyInfo::_internal_parameters_size() const {
+  return _internal_parameters().size();
+}
+inline int StrategyInfo::parameters_size() const {
+  return _internal_parameters_size();
+}
+inline void StrategyInfo::clear_parameters() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.parameters_.Clear();
+}
+inline const ::google::protobuf::Map<std::string, std::string>& StrategyInfo::_internal_parameters() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.parameters_.GetMap();
+}
+inline const ::google::protobuf::Map<std::string, std::string>& StrategyInfo::parameters() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_map:request.StrategyInfo.parameters)
+  return _internal_parameters();
+}
+inline ::google::protobuf::Map<std::string, std::string>* StrategyInfo::_internal_mutable_parameters() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.parameters_.MutableMap();
+}
+inline ::google::protobuf::Map<std::string, std::string>* StrategyInfo::mutable_parameters() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable_map:request.StrategyInfo.parameters)
+  return _internal_mutable_parameters();
+}
+
+// repeated .request.StrategySubscription subscriptions = 5;
+inline int StrategyInfo::_internal_subscriptions_size() const {
+  return _internal_subscriptions().size();
+}
+inline int StrategyInfo::subscriptions_size() const {
+  return _internal_subscriptions_size();
+}
+inline void StrategyInfo::clear_subscriptions() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.subscriptions_.Clear();
+}
+inline ::request::StrategySubscription* StrategyInfo::mutable_subscriptions(int index)
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable:request.StrategyInfo.subscriptions)
+  return _internal_mutable_subscriptions()->Mutable(index);
+}
+inline ::google::protobuf::RepeatedPtrField<::request::StrategySubscription>* StrategyInfo::mutable_subscriptions()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable_list:request.StrategyInfo.subscriptions)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_subscriptions();
+}
+inline const ::request::StrategySubscription& StrategyInfo::subscriptions(int index) const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:request.StrategyInfo.subscriptions)
+  return _internal_subscriptions().Get(index);
+}
+inline ::request::StrategySubscription* StrategyInfo::add_subscriptions() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::request::StrategySubscription* _add = _internal_mutable_subscriptions()->Add();
+  // @@protoc_insertion_point(field_add:request.StrategyInfo.subscriptions)
+  return _add;
+}
+inline const ::google::protobuf::RepeatedPtrField<::request::StrategySubscription>& StrategyInfo::subscriptions() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:request.StrategyInfo.subscriptions)
+  return _internal_subscriptions();
+}
+inline const ::google::protobuf::RepeatedPtrField<::request::StrategySubscription>&
+StrategyInfo::_internal_subscriptions() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.subscriptions_;
+}
+inline ::google::protobuf::RepeatedPtrField<::request::StrategySubscription>*
+StrategyInfo::_internal_mutable_subscriptions() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.subscriptions_;
+}
+
+// uint32 event_queue_limit = 6;
+inline void StrategyInfo::clear_event_queue_limit() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.event_queue_limit_ = 0u;
+}
+inline ::uint32_t StrategyInfo::event_queue_limit() const {
+  // @@protoc_insertion_point(field_get:request.StrategyInfo.event_queue_limit)
+  return _internal_event_queue_limit();
+}
+inline void StrategyInfo::set_event_queue_limit(::uint32_t value) {
+  _internal_set_event_queue_limit(value);
+  // @@protoc_insertion_point(field_set:request.StrategyInfo.event_queue_limit)
+}
+inline ::uint32_t StrategyInfo::_internal_event_queue_limit() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.event_queue_limit_;
+}
+inline void StrategyInfo::_internal_set_event_queue_limit(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.event_queue_limit_ = value;
+}
+
+// bool auto_start = 7;
+inline void StrategyInfo::clear_auto_start() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.auto_start_ = false;
+}
+inline bool StrategyInfo::auto_start() const {
+  // @@protoc_insertion_point(field_get:request.StrategyInfo.auto_start)
+  return _internal_auto_start();
+}
+inline void StrategyInfo::set_auto_start(bool value) {
+  _internal_set_auto_start(value);
+  // @@protoc_insertion_point(field_set:request.StrategyInfo.auto_start)
+}
+inline bool StrategyInfo::_internal_auto_start() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.auto_start_;
+}
+inline void StrategyInfo::_internal_set_auto_start(bool value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.auto_start_ = value;
+}
+
+// bool enabled = 8;
+inline void StrategyInfo::clear_enabled() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.enabled_ = false;
+}
+inline bool StrategyInfo::enabled() const {
+  // @@protoc_insertion_point(field_get:request.StrategyInfo.enabled)
+  return _internal_enabled();
+}
+inline void StrategyInfo::set_enabled(bool value) {
+  _internal_set_enabled(value);
+  // @@protoc_insertion_point(field_set:request.StrategyInfo.enabled)
+}
+inline bool StrategyInfo::_internal_enabled() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.enabled_;
+}
+inline void StrategyInfo::_internal_set_enabled(bool value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.enabled_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// StrategyList
+
+// repeated .request.StrategyInfo strategies = 1;
+inline int StrategyList::_internal_strategies_size() const {
+  return _internal_strategies().size();
+}
+inline int StrategyList::strategies_size() const {
+  return _internal_strategies_size();
+}
+inline void StrategyList::clear_strategies() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.strategies_.Clear();
+}
+inline ::request::StrategyInfo* StrategyList::mutable_strategies(int index)
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable:request.StrategyList.strategies)
+  return _internal_mutable_strategies()->Mutable(index);
+}
+inline ::google::protobuf::RepeatedPtrField<::request::StrategyInfo>* StrategyList::mutable_strategies()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable_list:request.StrategyList.strategies)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_strategies();
+}
+inline const ::request::StrategyInfo& StrategyList::strategies(int index) const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:request.StrategyList.strategies)
+  return _internal_strategies().Get(index);
+}
+inline ::request::StrategyInfo* StrategyList::add_strategies() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::request::StrategyInfo* _add = _internal_mutable_strategies()->Add();
+  // @@protoc_insertion_point(field_add:request.StrategyList.strategies)
+  return _add;
+}
+inline const ::google::protobuf::RepeatedPtrField<::request::StrategyInfo>& StrategyList::strategies() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:request.StrategyList.strategies)
+  return _internal_strategies();
+}
+inline const ::google::protobuf::RepeatedPtrField<::request::StrategyInfo>&
+StrategyList::_internal_strategies() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.strategies_;
+}
+inline ::google::protobuf::RepeatedPtrField<::request::StrategyInfo>*
+StrategyList::_internal_mutable_strategies() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.strategies_;
+}
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
@@ -1723,6 +3018,164 @@ inline ::hqmarket::market::v1::QueryResponse* RequestData::_internal_mutable_que
 inline ::hqmarket::market::v1::QueryResponse* RequestData::mutable_query_response() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   ::hqmarket::market::v1::QueryResponse* _msg = _internal_mutable_query_response();
   // @@protoc_insertion_point(field_mutable:request.RequestData.query_response)
+  return _msg;
+}
+
+// .request.StrategyInfo strategy = 22;
+inline bool RequestData::has_strategy() const {
+  return payload_case() == kStrategy;
+}
+inline bool RequestData::_internal_has_strategy() const {
+  return payload_case() == kStrategy;
+}
+inline void RequestData::set_has_strategy() {
+  _impl_._oneof_case_[0] = kStrategy;
+}
+inline void RequestData::clear_strategy() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kStrategy) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.strategy_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.strategy_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::request::StrategyInfo* RequestData::release_strategy() {
+  // @@protoc_insertion_point(field_release:request.RequestData.strategy)
+  if (payload_case() == kStrategy) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.strategy_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.strategy_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::request::StrategyInfo& RequestData::_internal_strategy() const {
+  return payload_case() == kStrategy ? *_impl_.payload_.strategy_ : reinterpret_cast<::request::StrategyInfo&>(::request::_StrategyInfo_default_instance_);
+}
+inline const ::request::StrategyInfo& RequestData::strategy() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:request.RequestData.strategy)
+  return _internal_strategy();
+}
+inline ::request::StrategyInfo* RequestData::unsafe_arena_release_strategy() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:request.RequestData.strategy)
+  if (payload_case() == kStrategy) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.strategy_;
+    _impl_.payload_.strategy_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void RequestData::unsafe_arena_set_allocated_strategy(::request::StrategyInfo* value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_strategy();
+    _impl_.payload_.strategy_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:request.RequestData.strategy)
+}
+inline ::request::StrategyInfo* RequestData::_internal_mutable_strategy() {
+  if (payload_case() != kStrategy) {
+    clear_payload();
+    set_has_strategy();
+    _impl_.payload_.strategy_ =
+        ::google::protobuf::Message::DefaultConstruct<::request::StrategyInfo>(GetArena());
+  }
+  return _impl_.payload_.strategy_;
+}
+inline ::request::StrategyInfo* RequestData::mutable_strategy() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::request::StrategyInfo* _msg = _internal_mutable_strategy();
+  // @@protoc_insertion_point(field_mutable:request.RequestData.strategy)
+  return _msg;
+}
+
+// .request.StrategyList strategy_list = 23;
+inline bool RequestData::has_strategy_list() const {
+  return payload_case() == kStrategyList;
+}
+inline bool RequestData::_internal_has_strategy_list() const {
+  return payload_case() == kStrategyList;
+}
+inline void RequestData::set_has_strategy_list() {
+  _impl_._oneof_case_[0] = kStrategyList;
+}
+inline void RequestData::clear_strategy_list() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kStrategyList) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.strategy_list_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.strategy_list_);
+    }
+    clear_has_payload();
+  }
+}
+inline ::request::StrategyList* RequestData::release_strategy_list() {
+  // @@protoc_insertion_point(field_release:request.RequestData.strategy_list)
+  if (payload_case() == kStrategyList) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.strategy_list_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.strategy_list_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::request::StrategyList& RequestData::_internal_strategy_list() const {
+  return payload_case() == kStrategyList ? *_impl_.payload_.strategy_list_ : reinterpret_cast<::request::StrategyList&>(::request::_StrategyList_default_instance_);
+}
+inline const ::request::StrategyList& RequestData::strategy_list() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:request.RequestData.strategy_list)
+  return _internal_strategy_list();
+}
+inline ::request::StrategyList* RequestData::unsafe_arena_release_strategy_list() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:request.RequestData.strategy_list)
+  if (payload_case() == kStrategyList) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.strategy_list_;
+    _impl_.payload_.strategy_list_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void RequestData::unsafe_arena_set_allocated_strategy_list(::request::StrategyList* value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_strategy_list();
+    _impl_.payload_.strategy_list_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:request.RequestData.strategy_list)
+}
+inline ::request::StrategyList* RequestData::_internal_mutable_strategy_list() {
+  if (payload_case() != kStrategyList) {
+    clear_payload();
+    set_has_strategy_list();
+    _impl_.payload_.strategy_list_ =
+        ::google::protobuf::Message::DefaultConstruct<::request::StrategyList>(GetArena());
+  }
+  return _impl_.payload_.strategy_list_;
+}
+inline ::request::StrategyList* RequestData::mutable_strategy_list() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::request::StrategyList* _msg = _internal_mutable_strategy_list();
+  // @@protoc_insertion_point(field_mutable:request.RequestData.strategy_list)
   return _msg;
 }
 

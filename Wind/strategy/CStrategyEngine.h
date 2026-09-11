@@ -117,6 +117,7 @@ class CStrategyEngine final
 
   public:
 	bool Initialize();
+	bool HandleStrategyRequest(const CRequest& req);
 	std::unique_ptr<IStrategy> CreateStrategy(const std::string& strType) const;
 	bool CreateStrategy(const CStrategyConfig& config);
 	bool RemoveStrategy(_TyStrategyId id);
@@ -162,6 +163,10 @@ class CStrategyEngine final
 	static std::string GetMarketKey(const CRequest& req);
 	static bool IsFinishedOrderStatus(OrderStatus status);
 	bool LoadStrategies();
+	bool AddStrategy(const CRequest& req);
+	bool ModifyStrategy(const CRequest& req);
+	bool QueryStrategies(const CRequest& req) const;
+	bool DeleteStrategy(const CRequest& req);
 
   private:
 	CSession* m_pSession{ nullptr };
