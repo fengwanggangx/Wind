@@ -22,7 +22,6 @@ class CRequest;
 class CSession;
 class CSimulatedTradingService;
 class CStrategyContext;
-class CThreadPool;
 class ITradingSnapshotProvider;
 enum class SessionState;
 
@@ -44,6 +43,7 @@ using _TyStrategyEventData = std::variant<std::monostate, _TyQuoteData, _TyDepth
 
 struct CStrategyEvent
 {
+	CStrategyEvent();
 	StrategyEventType m_type{ StrategyEventType::Quote };
 	std::uint64_t m_sequence{ 0 };
 	_TyStrategyEventData m_data;
@@ -116,7 +116,7 @@ class CStrategyEngine final
 	CStrategyEngine(const CStrategyEngine&) = delete;
 	CStrategyEngine& operator=(const CStrategyEngine&) = delete;
 
-public:
+  public:
 	bool Initialize();
 	std::unique_ptr<IStrategy> CreateStrategy(const std::string& strType) const;
 	bool CreateStrategy(const CStrategyConfig& config);
@@ -124,20 +124,24 @@ public:
 
 	const std::string& GetLastError() const;
 
+public:
 	bool StartStrategy(_TyStrategyId id);
 	bool PauseStrategy(_TyStrategyId id);
 	bool StopStrategy(_TyStrategyId id);
 	void StopAll();
 
-	void OnHQMarketResponse(const CRequest& req);
-	void OnMarketState(SessionState state, const std::string& strReason);
-	void OnOrderEvent(const COrderEvent& ev);
-	void OnTradeEvent(const CTradeEvent& ev);
-
+public:
 	std::optional<CStrategySnapshot> GetSnapshot(_TyStrategyId id) const;
 	std::vector<CStrategySnapshot> GetSnapshots() const;
 	void RegisterStateHandler(_TyStateHandler&& handler);
 	bool IsMarketAvailable() const;
+
+private:
+	void OnHQMarketResponse(const CRequest& req);
+	void OnHQMarketState(SessionState state, const std::string& strReason);
+	void OnOrderEvent(const COrderEvent& ev);
+	void OnTradeEvent(const CTradeEvent& ev);
+
 
   private:
 	friend class CStrategyContext;
@@ -149,17 +153,17 @@ public:
 	bool DispatchEvent(CStrategyRuntime& runtime, CStrategyEvent& ev);
 	void HandleStrategyException(CStrategyRuntime& runtime, const std::string& strError);
 	void RouteMarketEvent(const std::string& strKey, CStrategyEvent&& ev);
-	void AddRoutes(const CStrategyConfig& config);
-	void RemoveRoutes(const CStrategyConfig& config);
-	void SubscribeRequiredQuotes(const CStrategyConfig& config);
-	void UnsubscribeUnusedQuotes(const CStrategyConfig& config);
+	void AddRoutes(const CStrategyConfig& confcfgig);
+	void RemoveRoutes(const CStrategyConfig& cfg);
+	void SubscribeRequiredQuotes(const CStrategyConfig& cfg);
+	void UnsubscribeUnusedQuotes(const CStrategyConfig& cfg);
 	void RestoreRequiredSubscriptions();
 	COrderSubmitResult SubmitOrder(_TyStrategyId id, const COrderIntent& intent);
 	bool CancelOrder(_TyStrategyId id, _TyOrderId orderId);
 	CStrategySnapshot MakeSnapshot(const std::shared_ptr<CStrategyRuntime>& runtime) const;
 	void NotifySnapshot(const std::shared_ptr<CStrategyRuntime>& runtime);
 	void WaitUntilIdle(const std::shared_ptr<CStrategyRuntime>& runtime);
-	static std::string GetMarketKey(const CRequest& request);
+	static std::string GetMarketKey(const CRequest& req);
 	static bool IsFinishedOrderStatus(OrderStatus status);
 	bool LoadStrategies();
 
@@ -171,10 +175,10 @@ public:
 
 	mutable std::shared_mutex m_mtx_strategies;
 	std::unordered_map<_TyStrategyId, std::shared_ptr<CStrategyRuntime>> m_runtimes;
-	mutable std::shared_mutex m_smtx_routes;
+	mutable std::shared_mutex m_mtx_routes;
 	std::unordered_map<std::string, std::unordered_set<_TyStrategyId>> m_marketRoutes;
 	std::unordered_map<std::string, CSubscriptionEntry> m_subscriptions;
-	mutable std::shared_mutex m_smtx_orders;
+	mutable std::shared_mutex m_mtx_orders;
 	std::unordered_map<_TyOrderId, _TyStrategyId> m_orderRoutes;
 	std::unordered_map<_TyClientOrderId, _TyStrategyId> m_clientOrderRoutes;
 	std::mutex m_mtx_signals;
@@ -182,8 +186,6 @@ public:
 	std::mutex m_mtx_handlers;
 	std::vector<_TyStateHandler> m_stateHandlers;
 
-	std::unique_ptr<CThreadPool> m_threadPool;
-	std::atomic_uint64_t m_nextEventSequence{ 1 };
 	std::atomic_bool m_bMarketAvailable{ false };
 	std::atomic_bool m_bStopping{ false };
 	std::string m_strLastError;
