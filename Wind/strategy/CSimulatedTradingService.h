@@ -1,27 +1,24 @@
 #ifndef WIND_STRATEGY_CSIMULATEDTRADINGSERVICE_H
 #define WIND_STRATEGY_CSIMULATEDTRADINGSERVICE_H
 
-#include "IStrategyOrderSink.h"
-#include "ITradingSnapshotProvider.h"
+#include "ITradeService.h"
 
 #include <atomic>
 #include <functional>
 #include <mutex>
 #include <unordered_map>
 
-class CSimulatedTradingService final : public IStrategyOrderSink, public ITradingSnapshotProvider
+class CSimulatedTradingService final : public ITradeService
 {
   public:
-	using OrderEventHandler = std::function<void(const COrderEvent&)>;
-
 	CSimulatedTradingService();
 
 	COrderSubmitResult Submit(const COrderIntent& intent) override;
 	bool Cancel(_TyStrategyId strategyId, _TyOrderId orderId) override;
 	CPositionSnapshot GetPosition(const market::CSecurity& security) const override;
 	CAccountSnapshot GetAccount() const override;
-	void SetOrderEventHandler(OrderEventHandler&& handler);
-	void Stop();
+	void SetOrderEventHandler(_TyOrderEventHandler&& handler) override;
+	void Stop() override;
 
   private:
 	struct CSimulatedOrder
@@ -39,7 +36,7 @@ class CSimulatedTradingService final : public IStrategyOrderSink, public ITradin
 	std::unordered_map<_TyOrderId, CSimulatedOrder> m_orders;
 	std::unordered_map<std::string, CPositionSnapshot> m_positions;
 	CAccountSnapshot m_account;
-	OrderEventHandler m_orderEventHandler;
+	_TyOrderEventHandler m_orderEventHandler;
 	std::atomic_uint64_t m_nextClientOrderId{ 1 };
 	std::atomic_uint64_t m_nextOrderId{ 1 };
 	std::atomic_bool m_bStopping{ false };

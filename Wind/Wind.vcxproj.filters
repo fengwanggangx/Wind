@@ -107,6 +107,9 @@
     <ClCompile Include="strategy\CStrategyEngine.cpp">
       <Filter>strategy</Filter>
     </ClCompile>
+	<ClCompile Include="strategy\CTradeService.cpp">
+	  <Filter>strategy</Filter>
+	</ClCompile>
     <ClCompile Include="strategy\CSimulatedTradingService.cpp">
       <Filter>strategy</Filter>
     </ClCompile>
@@ -273,6 +276,9 @@
     <ClInclude Include="strategy\CStrategyEngine.h">
       <Filter>strategy</Filter>
     </ClInclude>
+	<ClInclude Include="strategy\CTradeService.h">
+	  <Filter>strategy</Filter>
+	</ClInclude>
     <ClInclude Include="strategy\CSimulatedTradingService.h">
       <Filter>strategy</Filter>
     </ClInclude>
@@ -285,6 +291,9 @@
     <ClInclude Include="strategy\IStrategyOrderSink.h">
       <Filter>strategy</Filter>
     </ClInclude>
+	<ClInclude Include="strategy\ITradeService.h">
+	  <Filter>strategy</Filter>
+	</ClInclude>
     <ClInclude Include="strategy\ITradingSnapshotProvider.h">
       <Filter>strategy</Filter>
     </ClInclude>

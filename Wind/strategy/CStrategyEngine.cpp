@@ -6,8 +6,8 @@
 #include "../request/request.h"
 #include "../request/request.pb.h"
 #include "../system/CSession.h"
-#include "CSimulatedTradingService.h"
 #include "CStrategyContext.h"
+#include "CTradeService.h"
 #include "strategies/CMovingAverageStrategy.h"
 
 #include <algorithm>
@@ -131,7 +131,7 @@ std::size_t CSignalKeyHash::operator()(const CSignalKey& key) const
 	return strategyHash ^ (signalHash + 0x9e3779b9U + (strategyHash << 6) + (strategyHash >> 2));
 }
 
-CStrategyEngine::CStrategyEngine(CSession* pSession) : m_pSession(pSession), m_tradingService(std::make_unique<CSimulatedTradingService>()), m_pOrderSink(m_tradingService.get()), m_pSnapshotProvider(m_tradingService.get())
+CStrategyEngine::CStrategyEngine(CSession* pSession) : m_pSession(pSession), m_trader(std::make_unique<CTradeService>())
 {
 	m_bMarketAvailable.store((nullptr != m_pSession) && m_pSession->IsAuthenticated());
 }
@@ -149,7 +149,12 @@ bool CStrategyEngine::Initialize()
 		m_strLastError = "Strategy session is unavailable";
 		return false;
 	}
-	m_tradingService->SetOrderEventHandler(std::bind_front(&CStrategyEngine::OnOrderEvent, this));
+	if (!m_trader->Initialize())
+	{
+		m_strLastError = m_trader->GetLastError();
+		return false;
+	}
+	m_trader->SetOrderEventHandler(std::bind_front(&CStrategyEngine::OnOrderEvent, this));
 	m_pSession->RegisterHandler(std::bind_front(&CStrategyEngine::OnHQMarketResponse, this));
 	m_pSession->RegisterStateHandler(std::bind_front(&CStrategyEngine::OnHQMarketState, this));
 	return LoadStrategies();
@@ -228,7 +233,7 @@ bool CStrategyEngine::CreateStrategy(const CStrategyConfig& cfg)
 	std::shared_ptr<CStrategyRuntime> runtime = std::make_shared<CStrategyRuntime>();
 	runtime->m_config = cfg;
 	runtime->m_strategy = std::move(strategy);
-	runtime->m_context = std::make_unique<CStrategyContext>(cfg.m_id, this, m_pSnapshotProvider);
+	runtime->m_context = std::make_unique<CStrategyContext>(cfg.m_id, this, m_trader.get());
 	if (!runtime->m_strategy->Initialize(*runtime->m_context, runtime->m_config))
 	{
 		return false;
@@ -408,9 +413,9 @@ void CStrategyEngine::StopAll()
 		WaitUntilIdle(runtime);
 		runtime->m_context->Disable();
 	}
-	if (nullptr != m_tradingService)
+	if (nullptr != m_trader)
 	{
-		m_tradingService->Stop();
+		m_trader->Stop();
 	}
 }
 
@@ -481,20 +486,20 @@ void CStrategyEngine::OnHQMarketState(SessionState state, const std::string& str
 	}
 }
 
-void CStrategyEngine::OnOrderEvent(const COrderEvent& event)
+void CStrategyEngine::OnOrderEvent(const COrderEvent& ev)
 {
-	_TyStrategyId id = event.m_strategyId;
+	_TyStrategyId id = ev.m_strategyId;
 	if (0 == id)
 	{
 		std::shared_lock<std::shared_mutex> lock(m_mtx_orders);
-		auto iter = m_orderRoutes.find(event.m_orderId);
+		auto iter = m_orderRoutes.find(ev.m_orderId);
 		if (m_orderRoutes.end() != iter)
 		{
 			id = iter->second;
 		}
 		else
 		{
-			auto clientIter = m_clientOrderRoutes.find(event.m_clientOrderId);
+			auto clientIter = m_clientOrderRoutes.find(ev.m_clientOrderId);
 			if (m_clientOrderRoutes.end() != clientIter)
 			{
 				id = clientIter->second;
@@ -508,24 +513,24 @@ void CStrategyEngine::OnOrderEvent(const COrderEvent& event)
 	}
 	{
 		std::lock_guard<std::mutex> lock(runtime->m_mtx_orders);
-		if (IsFinishedOrderStatus(event.m_status))
+		if (IsFinishedOrderStatus(ev.m_status))
 		{
-			runtime->m_activeOrderIds.erase(event.m_orderId);
+			runtime->m_activeOrderIds.erase(ev.m_orderId);
 		}
-		else if (0 != event.m_orderId)
+		else if (0 != ev.m_orderId)
 		{
-			runtime->m_activeOrderIds.emplace(event.m_orderId);
+			runtime->m_activeOrderIds.emplace(ev.m_orderId);
 		}
 	}
-	if (IsFinishedOrderStatus(event.m_status))
+	if (IsFinishedOrderStatus(ev.m_status))
 	{
 		std::unique_lock<std::shared_mutex> lock(m_mtx_orders);
-		m_orderRoutes.erase(event.m_orderId);
-		m_clientOrderRoutes.erase(event.m_clientOrderId);
+		m_orderRoutes.erase(ev.m_orderId);
+		m_clientOrderRoutes.erase(ev.m_clientOrderId);
 	}
 	CStrategyEvent strategyEvent;
 	strategyEvent.m_type = StrategyEventType::Order;
-	strategyEvent.m_data = event;
+	strategyEvent.m_data = ev;
 	EnqueueEvent(runtime, std::move(strategyEvent));
 }
 
@@ -548,7 +553,7 @@ void CStrategyEngine::OnTradeEvent(const CTradeEvent& ev)
 	}
 	CStrategyEvent v;
 	v.m_type = StrategyEventType::Trade;
-	v.m_data = event;
+	v.m_data = ev;
 	EnqueueEvent(runtime, std::move(v));
 }
 
@@ -664,7 +669,8 @@ bool CStrategyEngine::EnqueueEvent(const std::shared_ptr<CStrategyRuntime>& runt
 	}
 	if (bSchedule)
 	{
-		ThreadPoolPtr->PushTask(task_priority::em_normal, 0, [this, runtime]() { DrainEvents(runtime); });
+		ThreadPoolPtr->PushTask(task_priority::em_normal, 0, [this, runtime]()
+								{ DrainEvents(runtime); });
 	}
 	return true;
 }
@@ -939,7 +945,7 @@ void CStrategyEngine::RestoreRequiredSubscriptions()
 COrderSubmitResult CStrategyEngine::SubmitOrder(_TyStrategyId id, const COrderIntent& intent)
 {
 	std::shared_ptr<CStrategyRuntime> runtime = FindRuntime(id);
-	if ((nullptr == runtime) || (nullptr == m_pOrderSink) || (StrategyState::Running != runtime->m_state.load()) || !intent.IsValid())
+	if ((nullptr == runtime) || (nullptr == m_trader) || (StrategyState::Running != runtime->m_state.load()) || !intent.IsValid())
 	{
 		return { false, false, 0, 0, "Strategy cannot submit this order" };
 	}
@@ -955,7 +961,7 @@ COrderSubmitResult CStrategyEngine::SubmitOrder(_TyStrategyId id, const COrderIn
 			return { false, false, 0, 0, "Duplicate strategy signal" };
 		}
 	}
-	COrderSubmitResult result = m_pOrderSink->Submit(intent);
+	COrderSubmitResult result = m_trader->Submit(intent);
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_signals);
 		if (!result.m_bAccepted && result.m_bRetryable)
@@ -991,7 +997,7 @@ COrderSubmitResult CStrategyEngine::SubmitOrder(_TyStrategyId id, const COrderIn
 
 bool CStrategyEngine::CancelOrder(_TyStrategyId id, _TyOrderId orderId)
 {
-	if ((nullptr == m_pOrderSink) || (0 == orderId))
+	if ((nullptr == m_trader) || (0 == orderId))
 	{
 		return false;
 	}
@@ -1003,7 +1009,7 @@ bool CStrategyEngine::CancelOrder(_TyStrategyId id, _TyOrderId orderId)
 			return false;
 		}
 	}
-	return m_pOrderSink->Cancel(id, orderId);
+	return m_trader->Cancel(id, orderId);
 }
 
 CStrategySnapshot CStrategyEngine::MakeSnapshot(const std::shared_ptr<CStrategyRuntime>& runtime) const

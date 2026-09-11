@@ -22,7 +22,7 @@ COrderSubmitResult CSimulatedTradingService::Submit(const COrderIntent& intent)
 		std::lock_guard<std::mutex> lock(m_mtx_state);
 		m_orders.emplace(order.m_orderId, order);
 	}
-	OrderEventHandler handler;
+	_TyOrderEventHandler handler;
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
 		handler = m_orderEventHandler;
@@ -49,7 +49,7 @@ bool CSimulatedTradingService::Cancel(_TyStrategyId strategyId, _TyOrderId order
 		return false;
 	}
 	COrderEvent event;
-	OrderEventHandler handler;
+	_TyOrderEventHandler handler;
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
 		auto iter = m_orders.find(orderId);
@@ -93,7 +93,7 @@ CAccountSnapshot CSimulatedTradingService::GetAccount() const
 	return m_account;
 }
 
-void CSimulatedTradingService::SetOrderEventHandler(OrderEventHandler&& handler)
+void CSimulatedTradingService::SetOrderEventHandler(_TyOrderEventHandler&& handler)
 {
 	std::lock_guard<std::mutex> lock(m_mtx_state);
 	m_orderEventHandler = std::move(handler);
