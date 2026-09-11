@@ -1063,9 +1063,9 @@ void CStrategyEngine::WaitUntilIdle(const std::shared_ptr<CStrategyRuntime>& run
 							{ return runtime->m_events.empty() && !runtime->m_bScheduled && !runtime->m_bExecutingCallback; });
 }
 
-std::string CStrategyEngine::GetMarketKey(const CRequest& request)
+std::string CStrategyEngine::GetMarketKey(const CRequest& req)
 {
-	const _TyReqData& data = request.GetData();
+	const _TyReqData& data = req.GetData();
 	if (data.has_quote())
 	{
 		return MakeQuoteInfo(data.quote().instrument(), market::Channel::quote).String();
