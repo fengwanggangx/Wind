@@ -90,10 +90,10 @@ bool CBootLoader::Initialize()
 		return false;
 	}
 	db::_TyDBPtr db = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
-	if ((nullptr == db) || (0 != db->ExecSqlFile(m_exec / "sql" / "table_user.sql")))
+	if ((nullptr == db) || (0 != db->ExecSqlFile(m_exec / "sql" / "table_create.sql")))
 	{
 		m_nErrorCode = 6;
-		m_strLastError = "Failed to execute sql/table_user.sql";
+		m_strLastError = "Failed to initialize MySQL tables";
 		return false;
 	}
 

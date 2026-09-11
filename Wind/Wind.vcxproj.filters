@@ -296,8 +296,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="exec\debug\sql\table_user.sql">
-      <Filter>sql</Filter>
-    </None>
+	<None Include="exec\debug\sql\table_create.sql">
+	  <Filter>sql</Filter>
+	</None>
+	<None Include="exec\release\sql\table_create.sql">
+	  <Filter>sql</Filter>
+	</None>
   </ItemGroup>
 </Project>
