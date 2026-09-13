@@ -29,6 +29,7 @@ namespace net
 			bool IsConnected() const;
 
 			bool SendRequest(const CRequest& req);
+			bool SetReadTimeout(int nSeconds);
 
 			void ClearHandlers();
 			void RegisterHandler(_TyHandler&& handler);

@@ -301,6 +301,22 @@ namespace net
 		return Send(mIter->second->m_pEvent, ret->data(), ret->size());
 	}
 
+	bool CNetPool::SetReadTimeout(_TyConnectionId id, int nSeconds)
+	{
+		if (0 >= nSeconds)
+		{
+			return false;
+		}
+		std::shared_lock<std::shared_mutex> lock(m_shared_mtx_pool);
+		auto mIter = m_pool.find(id);
+		if ((m_pool.end() == mIter) || (nullptr == mIter->second->m_pEvent))
+		{
+			return false;
+		}
+		timeval readTimeout{ nSeconds, 0 };
+		return 0 == bufferevent_set_timeouts(mIter->second->m_pEvent, &readTimeout, nullptr);
+	}
+
 	std::size_t CNetPool::Count() const
 	{
 		std::shared_lock<std::shared_mutex> lock(m_shared_mtx_pool);

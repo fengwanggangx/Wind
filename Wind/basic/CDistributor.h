@@ -1,7 +1,10 @@
 #ifndef __CDISTRIBUTOR_H__
 #define __CDISTRIBUTOR_H__
+#include <algorithm>
+#include <chrono>
 #include <shared_mutex>
 #include <functional>
+#include <future>
 #include <memory>
 #include <mutex>
 #include "../common/defines.h"
@@ -15,7 +18,10 @@ class CDistributor
 
 public:
 	CDistributor() = default;
-	~CDistributor() = default;
+	~CDistributor()
+	{
+		StopAndWait();
+	}
 
 public:
 
@@ -23,6 +29,12 @@ public:
 	{
 		if constexpr (bAsyn)
 		{
+			std::lock_guard<std::mutex> taskLock(m_mtx_tasks);
+			if (m_bStopping)
+			{
+				return;
+			}
+			RemoveCompletedTasks();
 			if constexpr (IsContainer<_Ty>)
 			{
 				{
@@ -40,7 +52,10 @@ public:
 				std::unique_lock<std::shared_mutex> lock(m_mtx_data);
 				m_cache.emplace_back(std::move(data));
 			}
-			ThreadPoolPtr->PushTask(task_priority::em_normal, 0, [this]() { AsyncExecute(); });
+			m_tasks.emplace_back(ThreadPoolPtr->PushTask(task_priority::em_normal, 0, [this]()
+			{
+				return AsyncExecute();
+			}));
 		}
 		else
 		{
@@ -60,7 +75,32 @@ public:
 		m_handler.clear();
 	}
 
+	void StopAndWait()
+	{
+		if constexpr (bAsyn)
+		{
+			std::vector<std::future<int>> tasks;
+			{
+				std::lock_guard<std::mutex> lock(m_mtx_tasks);
+				m_bStopping = true;
+				tasks.swap(m_tasks);
+			}
+			for (auto& task : tasks)
+			{
+				task.wait();
+			}
+		}
+	}
+
 private:
+	void RemoveCompletedTasks()
+	{
+		m_tasks.erase(std::remove_if(m_tasks.begin(), m_tasks.end(), [](std::future<int>& task)
+		{
+			return std::future_status::ready == task.wait_for(std::chrono::seconds(0));
+		}), m_tasks.end());
+	}
+
 	int AsyncExecute()
 	{
 		_TyDataContainer data;
@@ -120,6 +160,10 @@ private:
 
 	std::shared_mutex m_mtx_handler;
 	std::vector<_TyHandler> m_handler;
+
+	std::mutex m_mtx_tasks;
+	std::vector<std::future<int>> m_tasks;
+	bool m_bStopping{ false };
 };
 
 #endif

@@ -71,8 +71,15 @@ void CSession::Stop()
 		m_thread_conn.join();
 	}
 	{
-		std::lock_guard<std::mutex> lock(m_mtx_client);
-		m_client.reset();
+		decltype(m_client) pClient;
+		{
+			std::lock_guard<std::mutex> lock(m_mtx_client);
+			pClient = std::move(m_client);
+		}
+		if (nullptr != pClient)
+		{
+			pClient->Release();
+		}
 	}
 	NotifyState(SessionState::Disconnected, "HQMarket session stopped");
 }
@@ -209,9 +216,14 @@ void CSession::ConnectionLoop()
 			std::cerr << "HQMarket connection initialization failed: " << nRet << '\n';
 		}
 		bool bAuthed = IsAuthenticated();
+		decltype(m_client) pClosedClient;
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_client);
-			m_client.reset();
+			pClosedClient = std::move(m_client);
+		}
+		if (nullptr != pClosedClient)
+		{
+			pClosedClient->Release();
 		}
 		if (m_bStopping.load())
 		{
@@ -310,6 +322,13 @@ void CSession::HandleResponse(const CRequest& req)
 			}
 		}
 		m_state.store(SessionState::Ready);
+		{
+			std::lock_guard<std::mutex> lock(m_mtx_client);
+			if (nullptr != m_client)
+			{
+				m_client->SetReadTimeout(20);
+			}
+		}
 		RestoreSubscriptions();
 		NotifyState(SessionState::Ready, "HQMarket session ready");
 		return;

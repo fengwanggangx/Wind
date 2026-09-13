@@ -36,6 +36,7 @@ namespace net
 
 			bool Send(_TyConnectionId id, const char* data, size_t nLength);
 			bool SendRequest(net::_TyConnectionId id, const CRequest& request);
+			bool SetReadTimeout(_TyConnectionId id, int nSeconds);
 
 			struct bufferevent* RegisterConnect(_TyConnectionId id, struct event_base* pNet, struct sockaddr* pAddr, int nLength, bufferevent_data_cb readcb, bufferevent_data_cb writecb, bufferevent_event_cb eventcb, void* cbarg);
 			

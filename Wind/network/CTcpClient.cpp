@@ -53,8 +53,6 @@ namespace net
 			return -3;
 		}
 		bufferevent_setcb(pEvent.get(), CTcpClient::Read_Callback, nullptr, CTcpClient::Event_Callback, this);
-		timeval readTimeout{ 20, 0 };
-		bufferevent_set_timeouts(pEvent.get(), &readTimeout, nullptr);
 		if (0 != bufferevent_enable(pEvent.get(), EV_READ | EV_WRITE))
 		{
 			return -4;
@@ -77,6 +75,10 @@ namespace net
 		m_pEvent.reset();
 		m_bConnected = false;
 		m_id = -1;
+		if (nullptr != m_dispatcher)
+		{
+			m_dispatcher->StopAndWait();
+		}
 	}
 
 	net::_TyConnectionId CTcpClient::GetId() const
@@ -101,6 +103,11 @@ namespace net
 		}
 
 		return net::SendRequest(GetId(), req);
+	}
+
+	bool CTcpClient::SetReadTimeout(int nSeconds)
+	{
+		return m_bConnected && (0 <= m_id) && CNetPool::InstancePtr()->SetReadTimeout(m_id, nSeconds);
 	}
 
 	void CTcpClient::RegisterHandler(_TyHandler&& handler)
