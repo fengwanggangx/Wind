@@ -62,43 +62,49 @@ bool CBootLoader::Initialize()
 	if (m_strPassword.empty())
 	{
 		m_nErrorCode = 4;
-		m_strLastError = "HQMarket token password is required in ini/system.ini";
+		m_strLastError = "HQMarket password is required in ini/system.ini";
 		return false;
 	}
 
-	std::string strTcpPort = hIni.GetValue(ini::Config::System, "System", "tcp_port", std::string());
-	std::string strHttpPort = hIni.GetValue(ini::Config::System, "System", "http_port", std::string());
-	if (strTcpPort.empty() || strHttpPort.empty())
+	std::string strMySqlHost = hIni.GetValue(ini::Config::System, "MySQL", "host", "");
+	int nMySqlPort = hIni.GetValue(ini::Config::System, "MySQL", "port", -1);
+
+	std::string strMySqlAccount = hIni.GetValue(ini::Config::System, "MySQL", "account", "");
+	std::string strMySqlPassword = hIni.GetValue(ini::Config::System, "MySQL", "password", "");
+	std::string strMySqlDatabase = hIni.GetValue(ini::Config::System, "MySQL", "database", "");
+
+	int nMySqlPoolSize = hIni.GetValue(ini::Config::System, "MySQL", "pool_size", -1);
+
+	if (strMySqlHost.empty() || (nMySqlPort <= 0) || strMySqlAccount.empty() || strMySqlPassword.empty() || strMySqlDatabase.empty() || (nMySqlPoolSize <= 0))
 	{
 		m_nErrorCode = 5;
-		m_strLastError = "HQMarket tcp_port && http_port is required in ini/system.ini";
+		m_strLastError = "HQMarket mysql param error";
 		return false;
 	}
 
-	std::string strMySqlHost = hIni.GetValue(ini::Config::System, "MySQL", "host", std::string("127.0.0.1"));
-	std::string strMySqlPort = hIni.GetValue(ini::Config::System, "MySQL", "port", std::string("3306"));
-	std::string strMySqlAccount = hIni.GetValue(ini::Config::System, "MySQL", "account", std::string("root"));
-	std::string strMySqlPassword = hIni.GetValue(ini::Config::System, "MySQL", "password", std::string());
-	std::string strMySqlDatabase = hIni.GetValue(ini::Config::System, "MySQL", "database", std::string("wind"));
-	int nMySqlPort = std::atoi(strMySqlPort.c_str());
-	int nMySqlPoolSize = std::atoi(hIni.GetValue(ini::Config::System, "MySQL", "pool_size", std::string("4")).c_str());
 	db::CConnectParam dbParam(strMySqlHost, static_cast<unsigned int>(nMySqlPort), strMySqlAccount, strMySqlPassword, strMySqlDatabase, "utf8mb4");
 	if (0 != CDBEngine::InstanceRef().Initialize(db::em_database::mysql, dbParam, nMySqlPoolSize))
 	{
-		m_nErrorCode = 5;
+		m_nErrorCode = 6;
 		m_strLastError = "MySQL initialization failed";
 		return false;
 	}
 	db::_TyDBPtr db = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
 	if ((nullptr == db) || (0 != db->ExecSqlFile(m_exec / "sql" / "table_create.sql")))
 	{
-		m_nErrorCode = 6;
+		m_nErrorCode = 7;
 		m_strLastError = "Failed to initialize MySQL tables";
 		return false;
 	}
 
-	int nTcpPort = std::atoi(strTcpPort.c_str());
-	int nHttpPort = std::atoi(strHttpPort.c_str());
+	int nTcpPort = hIni.GetValue(ini::Config::System, "System", "tcp_port", -1);
+	int nHttpPort = hIni.GetValue(ini::Config::System, "System", "http_port", -1);
+	if ((nTcpPort <= 0) || (nHttpPort <= 0))
+	{
+		m_nErrorCode = 8;
+		m_strLastError = "HQMarket tcp_port && http_port is required in ini/system.ini";
+		return false;
+	}
 
 	m_pTcpServer = std::make_unique<net::CTcpServer>(nTcpPort);
 	m_pHttpServer = std::make_unique<net::CHttpServer>(nHttpPort);
