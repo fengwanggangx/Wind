@@ -68,34 +68,37 @@ void CHostMgr::Initialize()
 {
 	auto entries = ini::CINIHandler::InstanceRef().GetSection(ini::Config::System, "Server");
 	m_hosts.clear();
-	m_hosts.reserve(entries.size());
-	for (const auto& [key, value] : entries)
+	for (const auto& [k, v] : entries)
 	{
-		if ("connect_fast" == key)
+		if ("connect_fast" == k)
 		{
-			m_bConnectFast = "1" == value;
+			m_bConnectFast = "1" == v;
 		}
-		else if (0 == key.find("host"))
+		else if (0 == k.find("host"))
 		{
 			CHostInfo host;
-			if (host.Deserialize(key, value))
+			if (host.Deserialize(k, v))
 			{
-				m_hosts.emplace(key, std::move(host));
+				m_hosts.emplace(k, std::move(host));
 			}
 		}
 	}
 }
 
-const std::unordered_map<std::string, CHostInfo>& CHostMgr::GetHosts() const
+std::string CHostMgr::Key() const
+{
+	return "host" + std::to_string(m_hosts.size());
+}
+const std::map<std::string, CHostInfo>& CHostMgr::GetHosts() const
 {
 	return m_hosts;
 }
 
 std::optional<CHostInfo> CHostMgr::GetActiveHost() const
 {
-	for (const auto& value : m_hosts)
+	for (const auto& v : m_hosts)
 	{
-		const CHostInfo& info = value.second;
+		const CHostInfo& info = v.second;
 		if (info.m_bEnabled && info.Valid())
 		{
 			return info;
