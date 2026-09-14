@@ -77,6 +77,7 @@ public:
 
 	void StopAndWait()
 	{
+		//等待所有任务结束，因为异步任务如果捕获的资源可能在断线等情况下释放重置导致失效，因此释放前要等异步任务执行完成后释放
 		if constexpr (bAsyn)
 		{
 			std::vector<std::future<int>> tasks;
