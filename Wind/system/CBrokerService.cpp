@@ -530,7 +530,7 @@ void CBrokerService::OnClientRequest(net::_TyConnectionId id, const CRequest& re
 		return;
 	}
 
-	if ("auth" == strCmd)
+	if (("auth" == strCmd) || ("register" == strCmd))
 	{
 		mIter->second(id, request);
 		return;
