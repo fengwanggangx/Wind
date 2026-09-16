@@ -8,7 +8,7 @@ class ITradingSnapshotProvider
   public:
 	virtual ~ITradingSnapshotProvider() = default;
 
-	virtual CPositionSnapshot GetPosition(const market::CSecurity& security) const = 0;
+	virtual CPositionSnapshot GetPosition(const CSecurity& security) const = 0;
 	virtual CAccountSnapshot GetAccount() const = 0;
 };
 

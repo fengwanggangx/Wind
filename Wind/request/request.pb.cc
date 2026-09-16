@@ -312,6 +312,8 @@ const ::uint32_t
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
+        ::_pbi::kInvalidFieldOffsetTag,
+        ::_pbi::kInvalidFieldOffsetTag,
         PROTOBUF_FIELD_OFFSET(::request::RequestData, _impl_.payload_),
 };
 
@@ -348,7 +350,7 @@ const char descriptor_table_protodef_request_2eproto[] ABSL_ATTRIBUTE_SECTION_VA
     "(\010\022\017\n\007enabled\030\010 \001(\010\0321\n\017ParametersEntry\022\013"
     "\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"9\n\014Strate"
     "gyList\022)\n\nstrategies\030\001 \003(\0132\025.request.Str"
-    "ategyInfo\"\240\010\n\013RequestData\022\"\n\004type\030\001 \001(\0162"
+    "ategyInfo\"\276\t\n\013RequestData\022\"\n\004type\030\001 \001(\0162"
     "\024.request.RequestType\022\013\n\003cmd\030\002 \001(\t\022.\n\005ex"
     "tra\030\003 \003(\0132\037.request.RequestData.ExtraEnt"
     "ry\022*\n\003ret\030\004 \003(\0132\035.request.RequestData.Re"
@@ -372,12 +374,16 @@ const char descriptor_table_protodef_request_2eproto[] ABSL_ATTRIBUTE_SECTION_VA
     "!.hqmarket.market.v1.QueryResponseH\000\022)\n\010"
     "strategy\030\026 \001(\0132\025.request.StrategyInfoH\000\022"
     ".\n\rstrategy_list\030\027 \001(\0132\025.request.Strateg"
-    "yListH\000\032,\n\nExtraEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005va"
-    "lue\030\002 \001(\t:\0028\001\032*\n\010RetEntry\022\013\n\003key\030\001 \001(\t\022\r"
-    "\n\005value\030\002 \001(\t:\0028\001B\t\n\007payload*z\n\013RequestT"
-    "ype\022\013\n\007UNKNOWN\020\000\022\016\n\nQUERY_AUTH\020\001\022\022\n\016QUER"
-    "Y_USERINFO\020\002\022\017\n\013UPDATE_AUTH\020\003\022\014\n\010STRATEG"
-    "Y\020\004\022\014\n\010HQMARKET\020\005\022\r\n\tHEARTBEAT\020\006b\006proto3"
+    "yListH\000\022L\n\027instrument_list_request\030\030 \001(\013"
+    "2).hqmarket.market.v1.InstrumentListRequ"
+    "estH\000\022N\n\030instrument_list_response\030\031 \001(\0132"
+    "*.hqmarket.market.v1.InstrumentListRespo"
+    "nseH\000\032,\n\nExtraEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005valu"
+    "e\030\002 \001(\t:\0028\001\032*\n\010RetEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005"
+    "value\030\002 \001(\t:\0028\001B\t\n\007payload*z\n\013RequestTyp"
+    "e\022\013\n\007UNKNOWN\020\000\022\016\n\nQUERY_AUTH\020\001\022\022\n\016QUERY_"
+    "USERINFO\020\002\022\017\n\013UPDATE_AUTH\020\003\022\014\n\010STRATEGY\020"
+    "\004\022\014\n\010HQMARKET\020\005\022\r\n\tHEARTBEAT\020\006b\006proto3"
 };
 static const ::_pbi::DescriptorTable* const descriptor_table_request_2eproto_deps[1] =
     {
@@ -387,7 +393,7 @@ static ::absl::once_flag descriptor_table_request_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_request_2eproto = {
     false,
     false,
-    1680,
+    1838,
     descriptor_table_protodef_request_2eproto,
     "request.proto",
     &descriptor_table_request_2eproto_once,
@@ -2009,6 +2015,54 @@ void RequestData::set_allocated_strategy_list(::request::StrategyList* strategy_
   }
   // @@protoc_insertion_point(field_set_allocated:request.RequestData.strategy_list)
 }
+void RequestData::set_allocated_instrument_list_request(::hqmarket::market::v1::InstrumentListRequest* instrument_list_request) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (instrument_list_request) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(instrument_list_request)->GetArena();
+    if (message_arena != submessage_arena) {
+      instrument_list_request = ::google::protobuf::internal::GetOwnedMessage(message_arena, instrument_list_request, submessage_arena);
+    }
+    set_has_instrument_list_request();
+    _impl_.payload_.instrument_list_request_ = instrument_list_request;
+  }
+  // @@protoc_insertion_point(field_set_allocated:request.RequestData.instrument_list_request)
+}
+void RequestData::clear_instrument_list_request() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kInstrumentListRequest) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.instrument_list_request_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.instrument_list_request_);
+    }
+    clear_has_payload();
+  }
+}
+void RequestData::set_allocated_instrument_list_response(::hqmarket::market::v1::InstrumentListResponse* instrument_list_response) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (instrument_list_response) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(instrument_list_response)->GetArena();
+    if (message_arena != submessage_arena) {
+      instrument_list_response = ::google::protobuf::internal::GetOwnedMessage(message_arena, instrument_list_response, submessage_arena);
+    }
+    set_has_instrument_list_response();
+    _impl_.payload_.instrument_list_response_ = instrument_list_response;
+  }
+  // @@protoc_insertion_point(field_set_allocated:request.RequestData.instrument_list_response)
+}
+void RequestData::clear_instrument_list_response() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kInstrumentListResponse) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.instrument_list_response_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.instrument_list_response_);
+    }
+    clear_has_payload();
+  }
+}
 RequestData::RequestData(::google::protobuf::Arena* arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, _class_data_.base()) {
@@ -2092,6 +2146,12 @@ RequestData::RequestData(
         break;
       case kStrategyList:
         _impl_.payload_.strategy_list_ = ::google::protobuf::Message::CopyConstruct<::request::StrategyList>(arena, *from._impl_.payload_.strategy_list_);
+        break;
+      case kInstrumentListRequest:
+        _impl_.payload_.instrument_list_request_ = ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::InstrumentListRequest>(arena, *from._impl_.payload_.instrument_list_request_);
+        break;
+      case kInstrumentListResponse:
+        _impl_.payload_.instrument_list_response_ = ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::InstrumentListResponse>(arena, *from._impl_.payload_.instrument_list_response_);
         break;
   }
 
@@ -2247,6 +2307,22 @@ void RequestData::clear_payload() {
       }
       break;
     }
+    case kInstrumentListRequest: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.instrument_list_request_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.instrument_list_request_);
+      }
+      break;
+    }
+    case kInstrumentListResponse: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.instrument_list_response_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.instrument_list_response_);
+      }
+      break;
+    }
     case PAYLOAD_NOT_SET: {
       break;
     }
@@ -2315,16 +2391,16 @@ const ::google::protobuf::internal::ClassData* RequestData::GetClassData() const
   return _class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 19, 16, 55, 2> RequestData::_table_ = {
+const ::_pbi::TcParseTable<3, 21, 18, 55, 2> RequestData::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    23, 56,  // max_field_number, fast_idx_mask
+    25, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4286579168,  // skipmap
+    4261413344,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    19,  // num_field_entries
-    16,  // num_aux_entries
+    21,  // num_field_entries
+    18,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     _class_data_.base(),
     nullptr,  // post_loop_handler
@@ -2357,10 +2433,10 @@ const ::_pbi::TcParseTable<3, 19, 16, 55, 2> RequestData::_table_ = {
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.cmd_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // map<string, string> extra = 3;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.extra_), 0, 14,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.extra_), 0, 16,
     (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
     // map<string, string> ret = 4;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.ret_), 0, 15,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.ret_), 0, 17,
     (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
     // uint64 id = 5;
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.id_), 0, 0,
@@ -2407,6 +2483,12 @@ const ::_pbi::TcParseTable<3, 19, 16, 55, 2> RequestData::_table_ = {
     // .request.StrategyList strategy_list = 23;
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.strategy_list_), _Internal::kOneofCaseOffset + 0, 13,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .hqmarket.market.v1.InstrumentListRequest instrument_list_request = 24;
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.instrument_list_request_), _Internal::kOneofCaseOffset + 0, 14,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .hqmarket.market.v1.InstrumentListResponse instrument_list_response = 25;
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.instrument_list_response_), _Internal::kOneofCaseOffset + 0, 15,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }}, {{
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::AuthRequest>()},
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SubscribeRequest>()},
@@ -2422,6 +2504,8 @@ const ::_pbi::TcParseTable<3, 19, 16, 55, 2> RequestData::_table_ = {
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::QueryResponse>()},
     {::_pbi::TcParser::GetTable<::request::StrategyInfo>()},
     {::_pbi::TcParser::GetTable<::request::StrategyList>()},
+    {::_pbi::TcParser::GetTable<::hqmarket::market::v1::InstrumentListRequest>()},
+    {::_pbi::TcParser::GetTable<::hqmarket::market::v1::InstrumentListResponse>()},
     {::_pbi::TcParser::GetMapAuxInfo<
         decltype(RequestData()._impl_.extra_)>(
         1, 0, 0, 9,
@@ -2644,6 +2728,18 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
                   stream);
               break;
             }
+            case kInstrumentListRequest: {
+              target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                  24, *this_._impl_.payload_.instrument_list_request_, this_._impl_.payload_.instrument_list_request_->GetCachedSize(), target,
+                  stream);
+              break;
+            }
+            case kInstrumentListResponse: {
+              target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                  25, *this_._impl_.payload_.instrument_list_response_, this_._impl_.payload_.instrument_list_response_->GetCachedSize(), target,
+                  stream);
+              break;
+            }
             default:
               break;
           }
@@ -2793,6 +2889,18 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
             case kStrategyList: {
               total_size += 2 +
                             ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.strategy_list_);
+              break;
+            }
+            // .hqmarket.market.v1.InstrumentListRequest instrument_list_request = 24;
+            case kInstrumentListRequest: {
+              total_size += 2 +
+                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.instrument_list_request_);
+              break;
+            }
+            // .hqmarket.market.v1.InstrumentListResponse instrument_list_response = 25;
+            case kInstrumentListResponse: {
+              total_size += 2 +
+                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.instrument_list_response_);
               break;
             }
             case PAYLOAD_NOT_SET: {
@@ -2957,6 +3065,24 @@ void RequestData::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goo
               ::google::protobuf::Message::CopyConstruct<::request::StrategyList>(arena, *from._impl_.payload_.strategy_list_);
         } else {
           _this->_impl_.payload_.strategy_list_->MergeFrom(from._internal_strategy_list());
+        }
+        break;
+      }
+      case kInstrumentListRequest: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.instrument_list_request_ =
+              ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::InstrumentListRequest>(arena, *from._impl_.payload_.instrument_list_request_);
+        } else {
+          _this->_impl_.payload_.instrument_list_request_->MergeFrom(from._internal_instrument_list_request());
+        }
+        break;
+      }
+      case kInstrumentListResponse: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.instrument_list_response_ =
+              ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::InstrumentListResponse>(arena, *from._impl_.payload_.instrument_list_response_);
+        } else {
+          _this->_impl_.payload_.instrument_list_response_->MergeFrom(from._internal_instrument_list_response());
         }
         break;
       }

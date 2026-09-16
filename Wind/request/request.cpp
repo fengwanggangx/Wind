@@ -10,7 +10,7 @@ CRequest::CRequest() : m_arena(std::make_unique<google::protobuf::Arena>())
 {
 	m_data = google::protobuf::Arena::CreateMessage<_TyReqData>(m_arena.get());
 
-	std::atomic<_TyRequestId> s_id{ 1 };
+	static std::atomic<_TyRequestId> s_id{ 1 };
 	SetId(s_id.fetch_add(1, std::memory_order_relaxed));
 }
 
@@ -115,6 +115,16 @@ void CRequest::SetData(const _TyDepthData& value)
 void CRequest::SetData(const _TyQueryResponse& value)
 {
 	m_data->mutable_query_response()->CopyFrom(value);
+}
+
+void CRequest::SetData(const _TyInstrumentListRequest& value)
+{
+	m_data->mutable_instrument_list_request()->CopyFrom(value);
+}
+
+void CRequest::SetData(const _TyInstrumentListResponse& value)
+{
+	m_data->mutable_instrument_list_response()->CopyFrom(value);
 }
 
 void CRequest::SetData(const _TyStrategyInfo& value)

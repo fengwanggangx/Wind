@@ -2,9 +2,9 @@
 
 #include <mutex>
 
-std::vector<market::CQuoteInfo> CSubscriptionMgr::Subscribe(net::_TyConnectionId id, const std::vector<market::CQuoteInfo>& subscriptions)
+std::vector<CQuoteInfo> CSubscriptionMgr::Subscribe(net::_TyConnectionId id, const std::vector<CQuoteInfo>& subscriptions)
 {
-	std::vector<market::CQuoteInfo> added;
+	std::vector<CQuoteInfo> added;
 	added.reserve(subscriptions.size());
 	std::lock_guard<std::shared_mutex> lock(m_mtx_info);
 	_TyClientSubscriptions& infos = m_id_infos[id];
@@ -25,9 +25,9 @@ std::vector<market::CQuoteInfo> CSubscriptionMgr::Subscribe(net::_TyConnectionId
 	return added;
 }
 
-std::vector<market::CQuoteInfo> CSubscriptionMgr::Unsubscribe(net::_TyConnectionId id, const std::vector<market::CQuoteInfo>& subscriptions)
+std::vector<CQuoteInfo> CSubscriptionMgr::Unsubscribe(net::_TyConnectionId id, const std::vector<CQuoteInfo>& subscriptions)
 {
-	std::vector<market::CQuoteInfo> removed;
+	std::vector<CQuoteInfo> removed;
 	removed.reserve(subscriptions.size());
 	std::lock_guard<std::shared_mutex> lock(m_mtx_info);
 	auto clientIter = m_id_infos.find(id);
@@ -62,9 +62,9 @@ std::vector<market::CQuoteInfo> CSubscriptionMgr::Unsubscribe(net::_TyConnection
 	return removed;
 }
 
-std::vector<market::CQuoteInfo> CSubscriptionMgr::RemoveClient(net::_TyConnectionId id)
+std::vector<CQuoteInfo> CSubscriptionMgr::RemoveClient(net::_TyConnectionId id)
 {
-	std::vector<market::CQuoteInfo> removed;
+	std::vector<CQuoteInfo> removed;
 	std::lock_guard<std::shared_mutex> lock(m_mtx_info);
 	auto clientIter = m_id_infos.find(id);
 	if (m_id_infos.end() == clientIter)
@@ -126,6 +126,31 @@ std::vector<net::_TyConnectionId> CSubscriptionMgr::GetSubscriberIds(const std::
 	return ids;
 }
 
+std::vector<CQuoteInfo> CSubscriptionMgr::GetSubscriptions() const
+{
+	std::vector<CQuoteInfo> subscriptions;
+	std::shared_lock<std::shared_mutex> lock(m_mtx_info);
+	subscriptions.reserve(m_info_ids.size());
+	for (const auto& item : m_info_ids)
+	{
+		for (net::_TyConnectionId id : item.second)
+		{
+			const auto clientIter = m_id_infos.find(id);
+			if (m_id_infos.end() == clientIter)
+			{
+				continue;
+			}
+			const auto infoIter = clientIter->second.find(item.first);
+			if (clientIter->second.end() != infoIter)
+			{
+				subscriptions.emplace_back(infoIter->second);
+			}
+			break;
+		}
+	}
+	return subscriptions;
+}
+
 std::size_t CSubscriptionMgr::GetSubscriptionCount(net::_TyConnectionId id) const
 {
 	std::shared_lock<std::shared_mutex> lock(m_mtx_info);
@@ -133,7 +158,7 @@ std::size_t CSubscriptionMgr::GetSubscriptionCount(net::_TyConnectionId id) cons
 	return m_id_infos.end() == clientIter ? 0 : clientIter->second.size();
 }
 
-std::size_t CSubscriptionMgr::GetSubscriptionCount(const market::CQuoteInfo& info) const
+std::size_t CSubscriptionMgr::GetSubscriptionCount(const CQuoteInfo& info) const
 {
 	std::string strKey = info.String();
 	if (strKey.empty())
@@ -145,7 +170,7 @@ std::size_t CSubscriptionMgr::GetSubscriptionCount(const market::CQuoteInfo& inf
 	return m_info_ids.end() == idsIter ? 0 : idsIter->second.size();
 }
 
-bool CSubscriptionMgr::IsSubscribed(net::_TyConnectionId id, const market::CQuoteInfo& info) const
+bool CSubscriptionMgr::IsSubscribed(net::_TyConnectionId id, const CQuoteInfo& info) const
 {
 	std::shared_lock<std::shared_mutex> lock(m_mtx_info);
 	auto clientIter = m_id_infos.find(id);

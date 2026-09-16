@@ -25,9 +25,9 @@ namespace
 {
 	thread_local _TyStrategyId CurrentStrategyId{ 0 };
 
-	market::CQuoteInfo MakeQuoteInfo(const hqmarket::market::v1::Instrument& instrument, market::Channel channel)
+	CQuoteInfo MakeQuoteInfo(const hqmarket::market::v1::Instrument& instrument, Channel channel)
 	{
-		return market::CQuoteInfo(instrument.symbol(), static_cast<market::Exchange>(static_cast<int>(instrument.exchange())), channel);
+		return CQuoteInfo(instrument.symbol(), static_cast<Exchange>(static_cast<int>(instrument.exchange())), channel);
 	}
 
 	bool ParseUnsigned(const std::string& strValue, std::uint64_t& value)
@@ -101,7 +101,7 @@ namespace
 			{
 				return false;
 			}
-			market::CQuoteInfo quote(item["security"].GetString(), market::ParseMarket(item["exchange"].GetString()), market::ParseChannel(item["channel"].GetString()));
+			CQuoteInfo quote(item["security"].GetString(), ParseMarket(item["exchange"].GetString()), ParseChannel(item["channel"].GetString()));
 			if (!quote.IsValid())
 			{
 				return false;
@@ -139,7 +139,7 @@ namespace
 		}
 		for (const request::StrategySubscription& item : info.subscriptions())
 		{
-			market::CQuoteInfo quote(item.security(), market::ParseMarket(item.exchange()), market::ParseChannel(item.channel()));
+			CQuoteInfo quote(item.security(), ParseMarket(item.exchange()), ParseChannel(item.channel()));
 			if (!quote.IsValid())
 			{
 				return false;
@@ -204,12 +204,12 @@ namespace
 		{
 			(*info.mutable_parameters())[strKey] = strValue;
 		}
-		for (const market::CQuoteInfo& quote : cfg.m_subscriptions)
+		for (const CQuoteInfo& quote : cfg.m_subscriptions)
 		{
 			request::StrategySubscription* pItem = info.add_subscriptions();
 			pItem->set_security(quote.m_security.m_strCode);
-			pItem->set_exchange(market::GetMarketString(quote.m_security.m_market));
-			pItem->set_channel(market::GetChannelString(quote.m_channel));
+			pItem->set_exchange(GetMarketString(quote.m_security.m_market));
+			pItem->set_channel(GetChannelString(quote.m_channel));
 		}
 		return true;
 	}
@@ -1184,7 +1184,7 @@ void CStrategyEngine::SubscribeRequiredQuotes(const CStrategyConfig& cfg)
 	{
 		return;
 	}
-	std::vector<market::CQuoteInfo> quotes;
+	std::vector<CQuoteInfo> quotes;
 	{
 		std::unique_lock<std::shared_mutex> lock(m_mtx_routes);
 		quotes.reserve(cfg.m_subscriptions.size());
@@ -1213,7 +1213,7 @@ void CStrategyEngine::SubscribeRequiredQuotes(const CStrategyConfig& cfg)
 
 void CStrategyEngine::UnsubscribeUnusedQuotes(const CStrategyConfig& cfg)
 {
-	std::vector<market::CQuoteInfo> quotes;
+	std::vector<CQuoteInfo> quotes;
 	{
 		std::unique_lock<std::shared_mutex> lock(m_mtx_routes);
 		for (const auto& quote : cfg.m_subscriptions)
@@ -1244,7 +1244,7 @@ void CStrategyEngine::RestoreRequiredSubscriptions()
 	{
 		return;
 	}
-	std::vector<market::CQuoteInfo> quotes;
+	std::vector<CQuoteInfo> quotes;
 	{
 		std::unique_lock<std::shared_mutex> lock(m_mtx_routes);
 		quotes.reserve(m_subscriptions.size());
@@ -1402,19 +1402,19 @@ std::string CStrategyEngine::GetMarketKey(const CRequest& req)
 	const _TyReqData& data = req.GetData();
 	if (data.has_quote())
 	{
-		return MakeQuoteInfo(data.quote().instrument(), market::Channel::quote).String();
+		return MakeQuoteInfo(data.quote().instrument(), Channel::quote).String();
 	}
 	if (data.has_depth())
 	{
-		return MakeQuoteInfo(data.depth().instrument(), market::Channel::depth).String();
+		return MakeQuoteInfo(data.depth().instrument(), Channel::depth).String();
 	}
 	if (data.has_trade())
 	{
-		return MakeQuoteInfo(data.trade().instrument(), market::Channel::trade).String();
+		return MakeQuoteInfo(data.trade().instrument(), Channel::trade).String();
 	}
 	if (data.has_bar())
 	{
-		market::Channel channel = static_cast<market::Channel>(static_cast<int>(data.bar().channel()));
+		Channel channel = static_cast<Channel>(static_cast<int>(data.bar().channel()));
 		return MakeQuoteInfo(data.bar().instrument(), channel).String();
 	}
 	return { };

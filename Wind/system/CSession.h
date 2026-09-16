@@ -1,7 +1,6 @@
 #ifndef WIND_HQMARKET_CSESSION_H
 #define WIND_HQMARKET_CSESSION_H
 
-#include "../request/MarketTypes.h"
 #include "../system/CHostMgr.h"
 #include "../request/request.h"
 #include <atomic>
@@ -13,7 +12,6 @@
 #include <optional>
 #include <string>
 #include <thread>
-#include <unordered_map>
 #include <vector>
 
 
@@ -44,8 +42,8 @@ enum class SessionState
 class CSession final
 {
 public:
-	using ResponseHandler = std::function<void(const CRequest&)>;
-	using StateHandler = std::function<void(SessionState, const std::string&)>;
+	using _TyResponseHandler = std::function<void(const CRequest&)>;
+	using _TyStateHandler = std::function<void(SessionState, const std::string&)>;
 
 	explicit CSession(const CLoginInfo& info);
 	~CSession();
@@ -55,31 +53,21 @@ public:
 	bool Start();
 	void Stop();
 	bool SendRequest(const CRequest& request);
-	bool SubscribeQuote(const market::CQuoteInfo& quote);
-	bool UnsubscribeQuote(const market::CQuoteInfo& quote);
-	void RegisterHandler(ResponseHandler&& handler);
-	void RegisterStateHandler(StateHandler&& handler);
-	void SetStateHandler(StateHandler&& handler);
+	void RegisterHandler(_TyResponseHandler&& handler);
+	void RegisterStateHandler(_TyStateHandler&& handler);
+	void SetStateHandler(_TyStateHandler&& handler);
 	SessionState GetState() const;
 	bool IsConnected() const;
 	bool IsAuthenticated() const;
 
 private:
-	struct Subscription
-	{
-		market::CQuoteInfo m_quote;
-		std::size_t m_referenceCount{ 1 };
-	};
-
 	void ConnectionLoop();
 	void MaintenanceLoop();
 	int OnNetEvent(const net::CNetEvent& ev);
 	void HandleResponse(const CRequest& req);
 	bool SendAuthentication();
-	void RestoreSubscriptions();
 	void NotifyState(SessionState state, const std::string& strMessage);
 	void Dispatch(const CRequest& req);
-	static std::string MakeSubscriptionKey(const market::CQuoteInfo& quote);
 
 private:
 	std::mutex m_mtx_client;
@@ -99,12 +87,10 @@ private:
 	std::optional<CLoginInfo> m_auth;
 	std::optional<CLoginInfo> m_login;
 
-	std::mutex m_mtx_subscriptions;
-	std::unordered_map<std::string, Subscription> m_subscriptions;
 	std::mutex m_mtx_handlers;
-	std::vector<ResponseHandler> m_handlers;
+	std::vector<_TyResponseHandler> m_handlers;
 
-	std::vector<StateHandler> m_stateHandlers;
+	std::vector<_TyStateHandler> m_stateHandlers;
 	int m_nHeartbeatSeconds{ 5 };
 	int m_nMaxReconnectSeconds{ 30 };
 };

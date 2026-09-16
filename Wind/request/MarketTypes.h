@@ -3,75 +3,80 @@
 
 #include <string>
 
-namespace market
+enum class Exchange
 {
-	// 交易所或市场类型。
-	enum class Exchange
+	unknown = 0,
+	sse,
+	szse,
+	bse,
+	hkex,
+	cffex,
+	shfe,
+	dce,
+	czce,
+	ine,
+	gfex,
+	nasdaq,
+	nyse,
+	crypto
+};
+
+enum class Channel
+{
+	unknown = 0,
+	quote,
+	depth,
+	trade,
+	bar_1m,
+	bar_1d,
+	market_status
+};
+
+enum class MarketState
+{
+	unknown = 0,
+	normal,
+	suspended,
+	delisted
+};
+
+struct CSecurity
+{
+	std::string m_strCode;
+	std::string m_strName;
+	Exchange m_market{ Exchange::unknown };
+	MarketState m_status{ MarketState::normal };
+
+	CSecurity() = default;
+	CSecurity(const std::string& strCode, Exchange mk, MarketState status = MarketState::unknown);
+	CSecurity(const CSecurity& arg);
+	CSecurity& operator=(const CSecurity& arg);
+	bool operator==(const CSecurity& arg) const;
+
+	bool IsValid() const;
+	std::string String() const;
+};
+
+std::string GetMarketString(Exchange exchange);
+std::string GetChannelString(Channel channel);
+std::string GetMarketStateString(MarketState status);
+Exchange ParseMarket(const std::string& strExchange);
+Channel ParseChannel(const std::string& strChannel);
+MarketState ParseMarketState(const std::string& strStatus);
+std::string FmtSecurityString(const std::string& strCode, Exchange mk);
+
+struct CQuoteInfo
+{
+	CQuoteInfo() = default;
+	CQuoteInfo(const std::string& strCode, Exchange mk, Channel channel) : m_security(strCode, mk), m_channel(channel)
 	{
-		unknown = 0, // 未知市场。
-		sse,         // 上海证券交易所。
-		szse,        // 深圳证券交易所。
-		bse,         // 北京证券交易所。
-		hkex,        // 香港交易所。
-		cffex,       // 中国金融期货交易所。
-		shfe,        // 上海期货交易所。
-		dce,         // 大连商品交易所。
-		czce,        // 郑州商品交易所。
-		ine,         // 上海国际能源交易中心。
-		gfex,        // 广州期货交易所。
-		nasdaq,      // 纳斯达克证券交易所。
-		nyse,        // 纽约证券交易所。
-		crypto       // 数字货币市场。
-	};
+	}
 
-	// 行情数据通道或数据周期。
-	enum class Channel
-	{
-		unknown = 0, // 未知数据类型。
-		quote,       // 最新行情快照。
-		depth,       // 买卖盘口深度。
-		trade,       // 逐笔成交。
-		bar_1m,      // 一分钟K线。
-		bar_1d,      // 日K线。
-		market_status // 市场开盘、休市或收盘等状态。
-	};
+	bool IsValid() const;
+	std::string String() const;
 
-	struct CSecurity
-	{
-		std::string m_strCode;
-		Exchange m_market{ Exchange::unknown };
-
-		CSecurity() = default;
-		CSecurity(const std::string& strCode, market::Exchange mk);
-		CSecurity(const CSecurity& arg);
-		CSecurity& operator=(const CSecurity& arg);
-		bool operator==(const CSecurity& arg) const;
-
-		bool IsValid() const;
-		std::string String() const;	
-	};
-
-	std::string GetMarketString(Exchange exchange);
-	std::string GetChannelString(Channel channel);
-	Exchange ParseMarket(const std::string& strExchange);
-	Channel ParseChannel(const std::string& strChannel);
-
-	std::string FmtSecurityString(const std::string& strCode, Exchange mk);
-
-	struct CQuoteInfo
-	{
-		CQuoteInfo() = default;
-		CQuoteInfo(const std::string& strCode, Exchange mk, Channel channel) : m_security(strCode, mk), m_channel(channel)
-		{
-		}
-
-		bool IsValid() const;
-		std::string String() const;
-
-		CSecurity m_security;
-		Channel m_channel{ Channel::unknown };
-	};
-
-}
+	CSecurity m_security;
+	Channel m_channel{ Channel::unknown };
+};
 
 #endif

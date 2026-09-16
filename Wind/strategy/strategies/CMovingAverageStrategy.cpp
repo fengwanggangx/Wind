@@ -99,7 +99,7 @@ void CMovingAverageStrategy::TryGenerateSignal(const _TyQuoteData& data)
 	COrderIntent intent;
 	intent.m_strategyId = m_strategyId;
 	intent.m_signalId = m_nextSignalId++;
-	intent.m_security = market::CSecurity(data.instrument().symbol(), static_cast<market::Exchange>(static_cast<int>(data.instrument().exchange())));
+	intent.m_security = CSecurity(data.instrument().symbol(), static_cast<Exchange>(static_cast<int>(data.instrument().exchange())));
 	intent.m_side = 0 < relation ? OrderSide::Buy : OrderSide::Sell;
 	intent.m_orderType = OrderType::Limit;
 	intent.m_positionEffect = 0 < relation ? PositionEffect::Open : PositionEffect::Close;

@@ -67,6 +67,15 @@ extern DepthDataDefaultTypeInternal _DepthData_default_instance_;
 class Instrument;
 struct InstrumentDefaultTypeInternal;
 extern InstrumentDefaultTypeInternal _Instrument_default_instance_;
+class InstrumentInfo;
+struct InstrumentInfoDefaultTypeInternal;
+extern InstrumentInfoDefaultTypeInternal _InstrumentInfo_default_instance_;
+class InstrumentListRequest;
+struct InstrumentListRequestDefaultTypeInternal;
+extern InstrumentListRequestDefaultTypeInternal _InstrumentListRequest_default_instance_;
+class InstrumentListResponse;
+struct InstrumentListResponseDefaultTypeInternal;
+extern InstrumentListResponseDefaultTypeInternal _InstrumentListResponse_default_instance_;
 class MarketStatusData;
 struct MarketStatusDataDefaultTypeInternal;
 extern MarketStatusDataDefaultTypeInternal _MarketStatusData_default_instance_;
@@ -259,7 +268,7 @@ class ProviderStatusData final : public ::google::protobuf::Message
     return reinterpret_cast<const ProviderStatusData*>(
         &_ProviderStatusData_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 12;
+  static constexpr int kIndexInFileMessages = 15;
   friend void swap(ProviderStatusData& a, ProviderStatusData& b) { a.Swap(&b); }
   inline void Swap(ProviderStatusData* other) {
     if (other == this) return;
@@ -485,7 +494,7 @@ class PriceLevel final : public ::google::protobuf::Message
     return reinterpret_cast<const PriceLevel*>(
         &_PriceLevel_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 1;
+  static constexpr int kIndexInFileMessages = 4;
   friend void swap(PriceLevel& a, PriceLevel& b) { a.Swap(&b); }
   inline void Swap(PriceLevel* other) {
     if (other == this) return;
@@ -699,7 +708,7 @@ class MarketStatusData final : public ::google::protobuf::Message
     return reinterpret_cast<const MarketStatusData*>(
         &_MarketStatusData_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 11;
+  static constexpr int kIndexInFileMessages = 14;
   friend void swap(MarketStatusData& a, MarketStatusData& b) { a.Swap(&b); }
   inline void Swap(MarketStatusData* other) {
     if (other == this) return;
@@ -852,6 +861,206 @@ class MarketStatusData final : public ::google::protobuf::Message
     ::google::protobuf::internal::ArenaStringPtr status_;
     ::int64_t exchange_time_ms_;
     int exchange_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_v1_2fmarket_2eproto;
+};
+// -------------------------------------------------------------------
+
+class InstrumentListRequest final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:hqmarket.market.v1.InstrumentListRequest) */ {
+ public:
+  inline InstrumentListRequest() : InstrumentListRequest(nullptr) {}
+  ~InstrumentListRequest() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(InstrumentListRequest* msg, std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(InstrumentListRequest));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR InstrumentListRequest(
+      ::google::protobuf::internal::ConstantInitialized);
+
+  inline InstrumentListRequest(const InstrumentListRequest& from) : InstrumentListRequest(nullptr, from) {}
+  inline InstrumentListRequest(InstrumentListRequest&& from) noexcept
+      : InstrumentListRequest(nullptr, std::move(from)) {}
+  inline InstrumentListRequest& operator=(const InstrumentListRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline InstrumentListRequest& operator=(InstrumentListRequest&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const InstrumentListRequest& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const InstrumentListRequest* internal_default_instance() {
+    return reinterpret_cast<const InstrumentListRequest*>(
+        &_InstrumentListRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 2;
+  friend void swap(InstrumentListRequest& a, InstrumentListRequest& b) { a.Swap(&b); }
+  inline void Swap(InstrumentListRequest* other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(InstrumentListRequest* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  InstrumentListRequest* New(::google::protobuf::Arena* arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<InstrumentListRequest>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const InstrumentListRequest& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const InstrumentListRequest& from) { InstrumentListRequest::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(
+      ::google::protobuf::MessageLite& to_msg,
+      const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* _InternalSerialize(
+      const MessageLite& msg, ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(InstrumentListRequest* other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(
+      ::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "hqmarket.market.v1.InstrumentListRequest"; }
+
+ protected:
+  explicit InstrumentListRequest(::google::protobuf::Arena* arena);
+  InstrumentListRequest(::google::protobuf::Arena* arena, const InstrumentListRequest& from);
+  InstrumentListRequest(::google::protobuf::Arena* arena, InstrumentListRequest&& from) noexcept
+      : InstrumentListRequest(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
+  static void* PlacementNew_(const void*, void* mem,
+                             ::google::protobuf::Arena* arena);
+  static constexpr auto InternalNewImpl_();
+  static const ::google::protobuf::internal::ClassDataFull _class_data_;
+
+ public:
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kExchangesFieldNumber = 1,
+  };
+  // repeated .hqmarket.market.v1.Exchange exchanges = 1;
+  int exchanges_size() const;
+  private:
+  int _internal_exchanges_size() const;
+
+  public:
+  void clear_exchanges() ;
+  public:
+  ::hqmarket::market::v1::Exchange exchanges(int index) const;
+  void set_exchanges(int index, ::hqmarket::market::v1::Exchange value);
+  void add_exchanges(::hqmarket::market::v1::Exchange value);
+  const ::google::protobuf::RepeatedField<int>& exchanges() const;
+  ::google::protobuf::RepeatedField<int>* mutable_exchanges();
+
+  private:
+  const ::google::protobuf::RepeatedField<int>& _internal_exchanges() const;
+  ::google::protobuf::RepeatedField<int>* _internal_mutable_exchanges();
+
+  public:
+  // @@protoc_insertion_point(class_scope:hqmarket.market.v1.InstrumentListRequest)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      0, 1, 0,
+      0, 2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(
+        ::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena);
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena, const Impl_& from,
+                          const InstrumentListRequest& from_msg);
+    ::google::protobuf::RepeatedField<int> exchanges_;
+    ::google::protobuf::internal::CachedSize _exchanges_cached_byte_size_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -1127,7 +1336,7 @@ class AuthRequest final : public ::google::protobuf::Message
     return reinterpret_cast<const AuthRequest*>(
         &_AuthRequest_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 2;
+  static constexpr int kIndexInFileMessages = 5;
   friend void swap(AuthRequest& a, AuthRequest& b) { a.Swap(&b); }
   inline void Swap(AuthRequest* other) {
     if (other == this) return;
@@ -1323,7 +1532,7 @@ class UnsubscribeRequest final : public ::google::protobuf::Message
     return reinterpret_cast<const UnsubscribeRequest*>(
         &_UnsubscribeRequest_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 4;
+  static constexpr int kIndexInFileMessages = 7;
   friend void swap(UnsubscribeRequest& a, UnsubscribeRequest& b) { a.Swap(&b); }
   inline void Swap(UnsubscribeRequest* other) {
     if (other == this) return;
@@ -1542,7 +1751,7 @@ class TradeData final : public ::google::protobuf::Message
     return reinterpret_cast<const TradeData*>(
         &_TradeData_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 9;
+  static constexpr int kIndexInFileMessages = 12;
   friend void swap(TradeData& a, TradeData& b) { a.Swap(&b); }
   inline void Swap(TradeData* other) {
     if (other == this) return;
@@ -1822,7 +2031,7 @@ class SubscriptionResult final : public ::google::protobuf::Message
     return reinterpret_cast<const SubscriptionResult*>(
         &_SubscriptionResult_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 5;
+  static constexpr int kIndexInFileMessages = 8;
   friend void swap(SubscriptionResult& a, SubscriptionResult& b) { a.Swap(&b); }
   inline void Swap(SubscriptionResult* other) {
     if (other == this) return;
@@ -2060,7 +2269,7 @@ class SubscribeRequest final : public ::google::protobuf::Message
     return reinterpret_cast<const SubscribeRequest*>(
         &_SubscribeRequest_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 3;
+  static constexpr int kIndexInFileMessages = 6;
   friend void swap(SubscribeRequest& a, SubscribeRequest& b) { a.Swap(&b); }
   inline void Swap(SubscribeRequest* other) {
     if (other == this) return;
@@ -2279,7 +2488,7 @@ class QuoteData final : public ::google::protobuf::Message
     return reinterpret_cast<const QuoteData*>(
         &_QuoteData_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 7;
+  static constexpr int kIndexInFileMessages = 10;
   friend void swap(QuoteData& a, QuoteData& b) { a.Swap(&b); }
   inline void Swap(QuoteData* other) {
     if (other == this) return;
@@ -2625,7 +2834,7 @@ class QueryRequest final : public ::google::protobuf::Message
     return reinterpret_cast<const QueryRequest*>(
         &_QueryRequest_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 13;
+  static constexpr int kIndexInFileMessages = 16;
   friend void swap(QueryRequest& a, QueryRequest& b) { a.Swap(&b); }
   inline void Swap(QueryRequest* other) {
     if (other == this) return;
@@ -2798,6 +3007,238 @@ class QueryRequest final : public ::google::protobuf::Message
 };
 // -------------------------------------------------------------------
 
+class InstrumentInfo final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:hqmarket.market.v1.InstrumentInfo) */ {
+ public:
+  inline InstrumentInfo() : InstrumentInfo(nullptr) {}
+  ~InstrumentInfo() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(InstrumentInfo* msg, std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(InstrumentInfo));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR InstrumentInfo(
+      ::google::protobuf::internal::ConstantInitialized);
+
+  inline InstrumentInfo(const InstrumentInfo& from) : InstrumentInfo(nullptr, from) {}
+  inline InstrumentInfo(InstrumentInfo&& from) noexcept
+      : InstrumentInfo(nullptr, std::move(from)) {}
+  inline InstrumentInfo& operator=(const InstrumentInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline InstrumentInfo& operator=(InstrumentInfo&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const InstrumentInfo& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const InstrumentInfo* internal_default_instance() {
+    return reinterpret_cast<const InstrumentInfo*>(
+        &_InstrumentInfo_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 1;
+  friend void swap(InstrumentInfo& a, InstrumentInfo& b) { a.Swap(&b); }
+  inline void Swap(InstrumentInfo* other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(InstrumentInfo* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  InstrumentInfo* New(::google::protobuf::Arena* arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<InstrumentInfo>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const InstrumentInfo& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const InstrumentInfo& from) { InstrumentInfo::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(
+      ::google::protobuf::MessageLite& to_msg,
+      const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* _InternalSerialize(
+      const MessageLite& msg, ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(InstrumentInfo* other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(
+      ::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "hqmarket.market.v1.InstrumentInfo"; }
+
+ protected:
+  explicit InstrumentInfo(::google::protobuf::Arena* arena);
+  InstrumentInfo(::google::protobuf::Arena* arena, const InstrumentInfo& from);
+  InstrumentInfo(::google::protobuf::Arena* arena, InstrumentInfo&& from) noexcept
+      : InstrumentInfo(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
+  static void* PlacementNew_(const void*, void* mem,
+                             ::google::protobuf::Arena* arena);
+  static constexpr auto InternalNewImpl_();
+  static const ::google::protobuf::internal::ClassDataFull _class_data_;
+
+ public:
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kNameFieldNumber = 2,
+    kStatusFieldNumber = 3,
+    kInstrumentFieldNumber = 1,
+  };
+  // string name = 2;
+  void clear_name() ;
+  const std::string& name() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_name(Arg_&& arg, Args_... args);
+  std::string* mutable_name();
+  PROTOBUF_NODISCARD std::string* release_name();
+  void set_allocated_name(std::string* value);
+
+  private:
+  const std::string& _internal_name() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_name(
+      const std::string& value);
+  std::string* _internal_mutable_name();
+
+  public:
+  // string status = 3;
+  void clear_status() ;
+  const std::string& status() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_status(Arg_&& arg, Args_... args);
+  std::string* mutable_status();
+  PROTOBUF_NODISCARD std::string* release_status();
+  void set_allocated_status(std::string* value);
+
+  private:
+  const std::string& _internal_status() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_status(
+      const std::string& value);
+  std::string* _internal_mutable_status();
+
+  public:
+  // .hqmarket.market.v1.Instrument instrument = 1;
+  bool has_instrument() const;
+  void clear_instrument() ;
+  const ::hqmarket::market::v1::Instrument& instrument() const;
+  PROTOBUF_NODISCARD ::hqmarket::market::v1::Instrument* release_instrument();
+  ::hqmarket::market::v1::Instrument* mutable_instrument();
+  void set_allocated_instrument(::hqmarket::market::v1::Instrument* value);
+  void unsafe_arena_set_allocated_instrument(::hqmarket::market::v1::Instrument* value);
+  ::hqmarket::market::v1::Instrument* unsafe_arena_release_instrument();
+
+  private:
+  const ::hqmarket::market::v1::Instrument& _internal_instrument() const;
+  ::hqmarket::market::v1::Instrument* _internal_mutable_instrument();
+
+  public:
+  // @@protoc_insertion_point(class_scope:hqmarket.market.v1.InstrumentInfo)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      2, 3, 1,
+      52, 2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(
+        ::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena);
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena, const Impl_& from,
+                          const InstrumentInfo& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::internal::ArenaStringPtr name_;
+    ::google::protobuf::internal::ArenaStringPtr status_;
+    ::hqmarket::market::v1::Instrument* instrument_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_v1_2fmarket_2eproto;
+};
+// -------------------------------------------------------------------
+
 class DepthData final : public ::google::protobuf::Message
 /* @@protoc_insertion_point(class_definition:hqmarket.market.v1.DepthData) */ {
  public:
@@ -2857,7 +3298,7 @@ class DepthData final : public ::google::protobuf::Message
     return reinterpret_cast<const DepthData*>(
         &_DepthData_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 8;
+  static constexpr int kIndexInFileMessages = 11;
   friend void swap(DepthData& a, DepthData& b) { a.Swap(&b); }
   inline void Swap(DepthData* other) {
     if (other == this) return;
@@ -3145,7 +3586,7 @@ class BarData final : public ::google::protobuf::Message
     return reinterpret_cast<const BarData*>(
         &_BarData_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 10;
+  static constexpr int kIndexInFileMessages = 13;
   friend void swap(BarData& a, BarData& b) { a.Swap(&b); }
   inline void Swap(BarData* other) {
     if (other == this) return;
@@ -3485,7 +3926,7 @@ class SubscriptionAck final : public ::google::protobuf::Message
     return reinterpret_cast<const SubscriptionAck*>(
         &_SubscriptionAck_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 6;
+  static constexpr int kIndexInFileMessages = 9;
   friend void swap(SubscriptionAck& a, SubscriptionAck& b) { a.Swap(&b); }
   inline void Swap(SubscriptionAck* other) {
     if (other == this) return;
@@ -3682,7 +4123,7 @@ class QueryResponse final : public ::google::protobuf::Message
     return reinterpret_cast<const QueryResponse*>(
         &_QueryResponse_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 14;
+  static constexpr int kIndexInFileMessages = 17;
   friend void swap(QueryResponse& a, QueryResponse& b) { a.Swap(&b); }
   inline void Swap(QueryResponse* other) {
     if (other == this) return;
@@ -3877,6 +4318,215 @@ class QueryResponse final : public ::google::protobuf::Message
   union { Impl_ _impl_; };
   friend struct ::TableStruct_v1_2fmarket_2eproto;
 };
+// -------------------------------------------------------------------
+
+class InstrumentListResponse final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:hqmarket.market.v1.InstrumentListResponse) */ {
+ public:
+  inline InstrumentListResponse() : InstrumentListResponse(nullptr) {}
+  ~InstrumentListResponse() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(InstrumentListResponse* msg, std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(InstrumentListResponse));
+  }
+#endif
+
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR InstrumentListResponse(
+      ::google::protobuf::internal::ConstantInitialized);
+
+  inline InstrumentListResponse(const InstrumentListResponse& from) : InstrumentListResponse(nullptr, from) {}
+  inline InstrumentListResponse(InstrumentListResponse&& from) noexcept
+      : InstrumentListResponse(nullptr, std::move(from)) {}
+  inline InstrumentListResponse& operator=(const InstrumentListResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline InstrumentListResponse& operator=(InstrumentListResponse&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const InstrumentListResponse& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const InstrumentListResponse* internal_default_instance() {
+    return reinterpret_cast<const InstrumentListResponse*>(
+        &_InstrumentListResponse_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 3;
+  friend void swap(InstrumentListResponse& a, InstrumentListResponse& b) { a.Swap(&b); }
+  inline void Swap(InstrumentListResponse* other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(InstrumentListResponse* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  InstrumentListResponse* New(::google::protobuf::Arena* arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<InstrumentListResponse>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const InstrumentListResponse& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const InstrumentListResponse& from) { InstrumentListResponse::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(
+      ::google::protobuf::MessageLite& to_msg,
+      const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  static ::uint8_t* _InternalSerialize(
+      const MessageLite& msg, ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream);
+
+  public:
+  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(InstrumentListResponse* other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(
+      ::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "hqmarket.market.v1.InstrumentListResponse"; }
+
+ protected:
+  explicit InstrumentListResponse(::google::protobuf::Arena* arena);
+  InstrumentListResponse(::google::protobuf::Arena* arena, const InstrumentListResponse& from);
+  InstrumentListResponse(::google::protobuf::Arena* arena, InstrumentListResponse&& from) noexcept
+      : InstrumentListResponse(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
+  static void* PlacementNew_(const void*, void* mem,
+                             ::google::protobuf::Arena* arena);
+  static constexpr auto InternalNewImpl_();
+  static const ::google::protobuf::internal::ClassDataFull _class_data_;
+
+ public:
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kInstrumentsFieldNumber = 1,
+    kVersionFieldNumber = 2,
+  };
+  // repeated .hqmarket.market.v1.InstrumentInfo instruments = 1;
+  int instruments_size() const;
+  private:
+  int _internal_instruments_size() const;
+
+  public:
+  void clear_instruments() ;
+  ::hqmarket::market::v1::InstrumentInfo* mutable_instruments(int index);
+  ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::InstrumentInfo>* mutable_instruments();
+
+  private:
+  const ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::InstrumentInfo>& _internal_instruments() const;
+  ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::InstrumentInfo>* _internal_mutable_instruments();
+  public:
+  const ::hqmarket::market::v1::InstrumentInfo& instruments(int index) const;
+  ::hqmarket::market::v1::InstrumentInfo* add_instruments();
+  const ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::InstrumentInfo>& instruments() const;
+  // int64 version = 2;
+  void clear_version() ;
+  ::int64_t version() const;
+  void set_version(::int64_t value);
+
+  private:
+  ::int64_t _internal_version() const;
+  void _internal_set_version(::int64_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:hqmarket.market.v1.InstrumentListResponse)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      1, 2, 1,
+      0, 2>
+      _table_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(
+        ::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena);
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena, const Impl_& from,
+                          const InstrumentListResponse& from_msg);
+    ::google::protobuf::RepeatedPtrField< ::hqmarket::market::v1::InstrumentInfo > instruments_;
+    ::int64_t version_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_v1_2fmarket_2eproto;
+};
 
 // ===================================================================
 
@@ -3962,6 +4612,326 @@ inline ::hqmarket::market::v1::Exchange Instrument::_internal_exchange() const {
 inline void Instrument::_internal_set_exchange(::hqmarket::market::v1::Exchange value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.exchange_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// InstrumentInfo
+
+// .hqmarket.market.v1.Instrument instrument = 1;
+inline bool InstrumentInfo::has_instrument() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000001u) != 0;
+  PROTOBUF_ASSUME(!value || _impl_.instrument_ != nullptr);
+  return value;
+}
+inline void InstrumentInfo::clear_instrument() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.instrument_ != nullptr) _impl_.instrument_->Clear();
+  _impl_._has_bits_[0] &= ~0x00000001u;
+}
+inline const ::hqmarket::market::v1::Instrument& InstrumentInfo::_internal_instrument() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::hqmarket::market::v1::Instrument* p = _impl_.instrument_;
+  return p != nullptr ? *p : reinterpret_cast<const ::hqmarket::market::v1::Instrument&>(::hqmarket::market::v1::_Instrument_default_instance_);
+}
+inline const ::hqmarket::market::v1::Instrument& InstrumentInfo::instrument() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.InstrumentInfo.instrument)
+  return _internal_instrument();
+}
+inline void InstrumentInfo::unsafe_arena_set_allocated_instrument(::hqmarket::market::v1::Instrument* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.instrument_);
+  }
+  _impl_.instrument_ = reinterpret_cast<::hqmarket::market::v1::Instrument*>(value);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000001u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000001u;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:hqmarket.market.v1.InstrumentInfo.instrument)
+}
+inline ::hqmarket::market::v1::Instrument* InstrumentInfo::release_instrument() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  _impl_._has_bits_[0] &= ~0x00000001u;
+  ::hqmarket::market::v1::Instrument* released = _impl_.instrument_;
+  _impl_.instrument_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::hqmarket::market::v1::Instrument* InstrumentInfo::unsafe_arena_release_instrument() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:hqmarket.market.v1.InstrumentInfo.instrument)
+
+  _impl_._has_bits_[0] &= ~0x00000001u;
+  ::hqmarket::market::v1::Instrument* temp = _impl_.instrument_;
+  _impl_.instrument_ = nullptr;
+  return temp;
+}
+inline ::hqmarket::market::v1::Instrument* InstrumentInfo::_internal_mutable_instrument() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.instrument_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::hqmarket::market::v1::Instrument>(GetArena());
+    _impl_.instrument_ = reinterpret_cast<::hqmarket::market::v1::Instrument*>(p);
+  }
+  return _impl_.instrument_;
+}
+inline ::hqmarket::market::v1::Instrument* InstrumentInfo::mutable_instrument() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  _impl_._has_bits_[0] |= 0x00000001u;
+  ::hqmarket::market::v1::Instrument* _msg = _internal_mutable_instrument();
+  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.InstrumentInfo.instrument)
+  return _msg;
+}
+inline void InstrumentInfo::set_allocated_instrument(::hqmarket::market::v1::Instrument* value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete (_impl_.instrument_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = (value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    _impl_._has_bits_[0] |= 0x00000001u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000001u;
+  }
+
+  _impl_.instrument_ = reinterpret_cast<::hqmarket::market::v1::Instrument*>(value);
+  // @@protoc_insertion_point(field_set_allocated:hqmarket.market.v1.InstrumentInfo.instrument)
+}
+
+// string name = 2;
+inline void InstrumentInfo::clear_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.name_.ClearToEmpty();
+}
+inline const std::string& InstrumentInfo::name() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.InstrumentInfo.name)
+  return _internal_name();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void InstrumentInfo::set_name(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:hqmarket.market.v1.InstrumentInfo.name)
+}
+inline std::string* InstrumentInfo::mutable_name() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_name();
+  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.InstrumentInfo.name)
+  return _s;
+}
+inline const std::string& InstrumentInfo::_internal_name() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.name_.Get();
+}
+inline void InstrumentInfo::_internal_set_name(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.name_.Set(value, GetArena());
+}
+inline std::string* InstrumentInfo::_internal_mutable_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.name_.Mutable( GetArena());
+}
+inline std::string* InstrumentInfo::release_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:hqmarket.market.v1.InstrumentInfo.name)
+  return _impl_.name_.Release();
+}
+inline void InstrumentInfo::set_allocated_name(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.name_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.name_.IsDefault()) {
+    _impl_.name_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:hqmarket.market.v1.InstrumentInfo.name)
+}
+
+// string status = 3;
+inline void InstrumentInfo::clear_status() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.status_.ClearToEmpty();
+}
+inline const std::string& InstrumentInfo::status() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.InstrumentInfo.status)
+  return _internal_status();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void InstrumentInfo::set_status(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.status_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:hqmarket.market.v1.InstrumentInfo.status)
+}
+inline std::string* InstrumentInfo::mutable_status() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_status();
+  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.InstrumentInfo.status)
+  return _s;
+}
+inline const std::string& InstrumentInfo::_internal_status() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.status_.Get();
+}
+inline void InstrumentInfo::_internal_set_status(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.status_.Set(value, GetArena());
+}
+inline std::string* InstrumentInfo::_internal_mutable_status() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.status_.Mutable( GetArena());
+}
+inline std::string* InstrumentInfo::release_status() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:hqmarket.market.v1.InstrumentInfo.status)
+  return _impl_.status_.Release();
+}
+inline void InstrumentInfo::set_allocated_status(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.status_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.status_.IsDefault()) {
+    _impl_.status_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:hqmarket.market.v1.InstrumentInfo.status)
+}
+
+// -------------------------------------------------------------------
+
+// InstrumentListRequest
+
+// repeated .hqmarket.market.v1.Exchange exchanges = 1;
+inline int InstrumentListRequest::_internal_exchanges_size() const {
+  return _internal_exchanges().size();
+}
+inline int InstrumentListRequest::exchanges_size() const {
+  return _internal_exchanges_size();
+}
+inline void InstrumentListRequest::clear_exchanges() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.exchanges_.Clear();
+}
+inline ::hqmarket::market::v1::Exchange InstrumentListRequest::exchanges(int index) const {
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.InstrumentListRequest.exchanges)
+  return static_cast<::hqmarket::market::v1::Exchange>(_internal_exchanges().Get(index));
+}
+inline void InstrumentListRequest::set_exchanges(int index, ::hqmarket::market::v1::Exchange value) {
+  _internal_mutable_exchanges()->Set(index, value);
+  // @@protoc_insertion_point(field_set:hqmarket.market.v1.InstrumentListRequest.exchanges)
+}
+inline void InstrumentListRequest::add_exchanges(::hqmarket::market::v1::Exchange value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _internal_mutable_exchanges()->Add(value);
+  // @@protoc_insertion_point(field_add:hqmarket.market.v1.InstrumentListRequest.exchanges)
+}
+inline const ::google::protobuf::RepeatedField<int>& InstrumentListRequest::exchanges() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:hqmarket.market.v1.InstrumentListRequest.exchanges)
+  return _internal_exchanges();
+}
+inline ::google::protobuf::RepeatedField<int>* InstrumentListRequest::mutable_exchanges()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable_list:hqmarket.market.v1.InstrumentListRequest.exchanges)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_exchanges();
+}
+inline const ::google::protobuf::RepeatedField<int>& InstrumentListRequest::_internal_exchanges()
+    const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.exchanges_;
+}
+inline ::google::protobuf::RepeatedField<int>* InstrumentListRequest::_internal_mutable_exchanges() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.exchanges_;
+}
+
+// -------------------------------------------------------------------
+
+// InstrumentListResponse
+
+// repeated .hqmarket.market.v1.InstrumentInfo instruments = 1;
+inline int InstrumentListResponse::_internal_instruments_size() const {
+  return _internal_instruments().size();
+}
+inline int InstrumentListResponse::instruments_size() const {
+  return _internal_instruments_size();
+}
+inline void InstrumentListResponse::clear_instruments() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.instruments_.Clear();
+}
+inline ::hqmarket::market::v1::InstrumentInfo* InstrumentListResponse::mutable_instruments(int index)
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.InstrumentListResponse.instruments)
+  return _internal_mutable_instruments()->Mutable(index);
+}
+inline ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::InstrumentInfo>* InstrumentListResponse::mutable_instruments()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable_list:hqmarket.market.v1.InstrumentListResponse.instruments)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_instruments();
+}
+inline const ::hqmarket::market::v1::InstrumentInfo& InstrumentListResponse::instruments(int index) const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.InstrumentListResponse.instruments)
+  return _internal_instruments().Get(index);
+}
+inline ::hqmarket::market::v1::InstrumentInfo* InstrumentListResponse::add_instruments() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::hqmarket::market::v1::InstrumentInfo* _add = _internal_mutable_instruments()->Add();
+  // @@protoc_insertion_point(field_add:hqmarket.market.v1.InstrumentListResponse.instruments)
+  return _add;
+}
+inline const ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::InstrumentInfo>& InstrumentListResponse::instruments() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:hqmarket.market.v1.InstrumentListResponse.instruments)
+  return _internal_instruments();
+}
+inline const ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::InstrumentInfo>&
+InstrumentListResponse::_internal_instruments() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.instruments_;
+}
+inline ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::InstrumentInfo>*
+InstrumentListResponse::_internal_mutable_instruments() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.instruments_;
+}
+
+// int64 version = 2;
+inline void InstrumentListResponse::clear_version() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.version_ = ::int64_t{0};
+}
+inline ::int64_t InstrumentListResponse::version() const {
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.InstrumentListResponse.version)
+  return _internal_version();
+}
+inline void InstrumentListResponse::set_version(::int64_t value) {
+  _internal_set_version(value);
+  // @@protoc_insertion_point(field_set:hqmarket.market.v1.InstrumentListResponse.version)
+}
+inline ::int64_t InstrumentListResponse::_internal_version() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.version_;
+}
+inline void InstrumentListResponse::_internal_set_version(::int64_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.version_ = value;
 }
 
 // -------------------------------------------------------------------

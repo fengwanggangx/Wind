@@ -22,6 +22,8 @@ namespace hqmarket::market::v1
 	class QuoteData;
 	class DepthData;
 	class QueryResponse;
+	class InstrumentListRequest;
+	class InstrumentListResponse;
 } // namespace hqmarket::market::v1
 
 namespace google::protobuf
@@ -37,6 +39,8 @@ using _TySubscriptionAck = hqmarket::market::v1::SubscriptionAck;
 using _TyQuoteData = hqmarket::market::v1::QuoteData;
 using _TyDepthData = hqmarket::market::v1::DepthData;
 using _TyQueryResponse = hqmarket::market::v1::QueryResponse;
+using _TyInstrumentListRequest = hqmarket::market::v1::InstrumentListRequest;
+using _TyInstrumentListResponse = hqmarket::market::v1::InstrumentListResponse;
 
 class CRequest
 {
@@ -82,6 +86,8 @@ class CRequest
 	void SetData(const _TyQuoteData& value);
 	void SetData(const _TyDepthData& value);
 	void SetData(const _TyQueryResponse& value);
+	void SetData(const _TyInstrumentListRequest& value);
+	void SetData(const _TyInstrumentListResponse& value);
 	void SetData(const _TyStrategyInfo& value);
 	void SetData(const _TyStrategyList& value);
 	const _TyReqData& GetData() const;

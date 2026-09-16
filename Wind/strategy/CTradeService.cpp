@@ -65,7 +65,7 @@ bool CTradeService::Cancel(_TyStrategyId strategyId, _TyOrderId orderId)
 	return (nullptr != m_service) && m_service->Cancel(strategyId, orderId);
 }
 
-CPositionSnapshot CTradeService::GetPosition(const market::CSecurity& security) const
+CPositionSnapshot CTradeService::GetPosition(const CSecurity& security) const
 {
 	if (nullptr == m_service)
 	{

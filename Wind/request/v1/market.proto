@@ -5,6 +5,9 @@ enum Exchange { EXCHANGE_UNSPECIFIED = 0; SSE = 1; SZSE = 2; BSE = 3; HKEX = 4; 
 enum Channel { CHANNEL_UNSPECIFIED = 0; CHANNEL_QUOTE = 1; CHANNEL_DEPTH = 2; CHANNEL_TRADE = 3; CHANNEL_BAR_1M = 4; CHANNEL_BAR_1D = 5; CHANNEL_MARKET_STATUS = 6; }
 
 message Instrument { string symbol = 1; Exchange exchange = 2; }
+message InstrumentInfo { Instrument instrument = 1; string name = 2; string status = 3; }
+message InstrumentListRequest { repeated Exchange exchanges = 1; }
+message InstrumentListResponse { repeated InstrumentInfo instruments = 1; int64 version = 2; }
 message PriceLevel { int64 price = 1; int64 volume = 2; int32 price_scale = 3; }
 message AuthRequest { string token = 1; }
 message SubscribeRequest { repeated Instrument instruments = 1; repeated Channel channels = 2; }

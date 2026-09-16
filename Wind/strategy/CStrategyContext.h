@@ -15,7 +15,7 @@ class CStrategyContext final : public IStrategyContext
 
 	COrderSubmitResult SubmitOrder(const COrderIntent& intent) override;
 	bool CancelOrder(_TyOrderId orderId) override;
-	CPositionSnapshot GetPosition(const market::CSecurity& security) const override;
+	CPositionSnapshot GetPosition(const CSecurity& security) const override;
 	CAccountSnapshot GetAccount() const override;
 	void WriteLog(LogLevel level, const std::string& strMessage) override;
 	bool IsMarketAvailable() const override;

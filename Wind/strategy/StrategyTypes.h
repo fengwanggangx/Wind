@@ -81,7 +81,7 @@ struct CStrategyConfig
 	std::string m_strType;
 	std::string m_strName;
 	std::unordered_map<std::string, std::string> m_parameters;
-	std::vector<market::CQuoteInfo> m_subscriptions;
+	std::vector<CQuoteInfo> m_subscriptions;
 	std::size_t m_eventQueueLimit{ 4096 };
 	bool m_bAutoStart{ false };
 
@@ -92,7 +92,7 @@ struct COrderIntent
 {
 	_TyStrategyId m_strategyId{ 0 };
 	_TySignalId m_signalId{ 0 };
-	market::CSecurity m_security;
+	CSecurity m_security;
 	OrderSide m_side{ OrderSide::Unknown };
 	OrderType m_orderType{ OrderType::Limit };
 	PositionEffect m_positionEffect{ PositionEffect::Unknown };
@@ -118,7 +118,7 @@ struct COrderEvent
 	_TySignalId m_signalId{ 0 };
 	_TyClientOrderId m_clientOrderId{ 0 };
 	_TyOrderId m_orderId{ 0 };
-	market::CSecurity m_security;
+	CSecurity m_security;
 	OrderStatus m_status{ OrderStatus::Unknown };
 	std::int64_t m_quantity{ 0 };
 	std::int64_t m_filledQuantity{ 0 };
@@ -133,7 +133,7 @@ struct CTradeEvent
 	_TyClientOrderId m_clientOrderId{ 0 };
 	_TyOrderId m_orderId{ 0 };
 	std::string m_strTradeId;
-	market::CSecurity m_security;
+	CSecurity m_security;
 	OrderSide m_side{ OrderSide::Unknown };
 	std::int64_t m_price{ 0 };
 	std::int64_t m_quantity{ 0 };
@@ -148,7 +148,7 @@ struct CTimerEvent
 
 struct CPositionSnapshot
 {
-	market::CSecurity m_security;
+	CSecurity m_security;
 	std::int64_t m_totalQuantity{ 0 };
 	std::int64_t m_availableQuantity{ 0 };
 	std::int64_t m_frozenQuantity{ 0 };

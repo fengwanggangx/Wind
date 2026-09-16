@@ -7,6 +7,7 @@
 #include "../request/request.h"
 
 #include <functional>
+#include <atomic>
 #include <chrono>
 #include <mutex>
 #include <string>
@@ -30,8 +31,23 @@ class CBrokerService final
 	{
 		net::_TyConnectionId m_id{ -1 };
 		_TyRequestId m_requestId{ 0 };
-		market::CQuoteInfo m_quote;
+		CQuoteInfo m_quote;
 		std::chrono::steady_clock::time_point m_deadline;
+	};
+
+	struct CPendingQueryClient
+	{
+		net::_TyConnectionId m_id{ -1 };
+		_TyRequestId m_requestId{ 0 };
+	};
+
+	struct CPendingQuery
+	{
+		_TyRequestId m_upstreamRequestId{ 0 };
+		std::string m_strKey;
+		std::string m_strCmd;
+		std::chrono::steady_clock::time_point m_deadline;
+		std::vector<CPendingQueryClient> m_clients;
 	};
 
   public:
@@ -47,6 +63,7 @@ class CBrokerService final
 	bool HandleAuth(net::_TyConnectionId id, const CRequest& req);
 	bool HandleRegisterAuth(net::_TyConnectionId id, const CRequest& req);
 	bool HandleSubscription(net::_TyConnectionId id, const CRequest& req);
+	bool HandleMarketQuery(net::_TyConnectionId id, const CRequest& req);
 	bool HandleHeartbeat(net::_TyConnectionId id, const CRequest& req);
 	bool HandleStrategy(net::_TyConnectionId id, const CRequest& req);
 
@@ -56,12 +73,17 @@ class CBrokerService final
 	void OnHQMarketState(SessionState state, const std::string& strMessage);
 	void ExpirePendingSubscriptions();
 	void FailPendingSubscriptions(const std::string& strReason);
+	void ExpirePendingQueries();
+	void FailPendingQueries(const std::string& strReason);
+	bool DispatchQueryResponse(const CRequest& response);
 
 private:
 	bool IsAuthenticated(net::_TyConnectionId id) const;
-	market::CQuoteInfo GetQuoteInfo(const CRequest& req) const;
+	CQuoteInfo GetQuoteInfo(const CRequest& req) const;
 	void SendSubscriptionResponse(net::_TyConnectionId id, _TyRequestId requestId, bool bAccepted, const std::string& strReason) const;
 	std::string GetMarketResponseKey(const CRequest& req) const;
+	std::string GetQueryKey(const CRequest& req) const;
+	void SendQueryError(const CPendingQueryClient& client, const std::string& strCmd, int nErrorCode, const std::string& strMessage) const;
 	void SendResponse(const CRequest& req, int nErrorCode, const std::string& strMessage) const;
 	bool Login(const CRequest& req, std::string& strToken);
 
@@ -74,6 +96,9 @@ private:
 
 	CSubscriptionMgr m_subscriptions;
 	std::unordered_map<std::string, std::vector<PendingSubscription>> m_pendingSubscriptions;
+	std::unordered_map<std::string, CPendingQuery> m_pendingQueries;
+	std::unordered_map<_TyRequestId, std::string> m_queryKeysByRequestId;
+	std::atomic_uint64_t m_nextUpstreamRequestId{ std::uint64_t(1) << 63 };
 
 private:
 	net::CTcpServer* m_pTcpServer{ nullptr };

@@ -7,11 +7,13 @@
 #include "../network/CTcpServer.h"
 #include "../network/common_net.h"
 #include "../request/request.h"
+#include "../request/RequestCenter.h"
 #include "../request/request.pb.h"
 #include "../request/v1/market.pb.h"
 #include "../strategy/CStrategyEngine.h"
 #include "CSession.h"
 
+#include <algorithm>
 #include <cctype>
 #include <functional>
 #include <iterator>
@@ -33,6 +35,10 @@ namespace
 	constexpr std::size_t MaxPasswordLength = 128;
 	constexpr int AuthenticationRequired = 1005;
 	constexpr int InvalidSubscription = 1006;
+	constexpr int UpstreamUnavailable = 1007;
+	constexpr int UpstreamTimeout = 1008;
+	constexpr int TooManyPendingQueries = 1009;
+	constexpr std::size_t MaxPendingQueries = 256;
 	constexpr std::chrono::hours TokenLifetime{ 24 };
 	constexpr std::chrono::seconds UpstreamRequestTimeout{ 10 };
 } // namespace
@@ -66,6 +72,9 @@ CBrokerService::CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession, 
 		{ "heartbeat", std::bind_front(&CBrokerService::HandleHeartbeat, this) },
 		{ "subscribe", std::bind_front(&CBrokerService::HandleSubscription, this) },
 		{ "unsubscribe", std::bind_front(&CBrokerService::HandleSubscription, this) },
+		{ "query_quote", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
+		{ "query_bars", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
+		{ "query_instruments", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
 		{ "strategy_add", std::bind_front(&CBrokerService::HandleStrategy, this) },
 		{ "strategy_modify", std::bind_front(&CBrokerService::HandleStrategy, this) },
 		{ "strategy_query", std::bind_front(&CBrokerService::HandleStrategy, this) },
@@ -85,7 +94,7 @@ bool CBrokerService::Initialize()
 	return true;
 }
 
-market::CQuoteInfo CBrokerService::GetQuoteInfo(const CRequest& req) const
+CQuoteInfo CBrokerService::GetQuoteInfo(const CRequest& req) const
 {
 	std::string strSecurity = req.GetExtraData("security");
 	std::size_t nDot = strSecurity.rfind('.');
@@ -93,7 +102,7 @@ market::CQuoteInfo CBrokerService::GetQuoteInfo(const CRequest& req) const
 	{
 		return { };
 	}
-	return market::CQuoteInfo(strSecurity.substr(0, nDot), market::ParseMarket(strSecurity.substr(nDot + 1)), market::ParseChannel(req.GetExtraData("channel")));
+	return CQuoteInfo(strSecurity.substr(0, nDot), ParseMarket(strSecurity.substr(nDot + 1)), ParseChannel(req.GetExtraData("channel")));
 }
 
 void CBrokerService::SendSubscriptionResponse(net::_TyConnectionId id, _TyRequestId requestId, bool bAccepted, const std::string& strReason) const
@@ -124,16 +133,16 @@ std::string CBrokerService::GetMarketResponseKey(const CRequest& req) const
 	}
 	if (hqmarket::market::v1::CHANNEL_UNSPECIFIED != channel)
 	{
-		market::Exchange exchange = static_cast<market::Exchange>(static_cast<int>(instrument.exchange()));
-		market::Channel marketChannel = static_cast<market::Channel>(static_cast<int>(channel));
-		return market::CQuoteInfo(instrument.symbol(), exchange, marketChannel).String();
+		Exchange exchange = static_cast<Exchange>(static_cast<int>(instrument.exchange()));
+		Channel marketChannel = static_cast<Channel>(static_cast<int>(channel));
+		return CQuoteInfo(instrument.symbol(), exchange, marketChannel).String();
 	}
 	if (message.has_subscription_ack() && (0 != message.subscription_ack().results_size()))
 	{
 		const hqmarket::market::v1::SubscriptionResult& result = message.subscription_ack().results(0);
-		market::Exchange exchange = static_cast<market::Exchange>(static_cast<int>(result.instrument().exchange()));
-		market::Channel channel = static_cast<market::Channel>(static_cast<int>(result.channel()));
-		return market::CQuoteInfo(result.instrument().symbol(), exchange, channel).String();
+		Exchange exchange = static_cast<Exchange>(static_cast<int>(result.instrument().exchange()));
+		Channel channel = static_cast<Channel>(static_cast<int>(result.channel()));
+		return CQuoteInfo(result.instrument().symbol(), exchange, channel).String();
 	}
 	return { };
 }
@@ -141,6 +150,11 @@ std::string CBrokerService::GetMarketResponseKey(const CRequest& req) const
 void CBrokerService::OnHQMarketResponse(const CRequest& req)
 {
 	ExpirePendingSubscriptions();
+	ExpirePendingQueries();
+	if (DispatchQueryResponse(req))
+	{
+		return;
+	}
 	std::string strKey = GetMarketResponseKey(req);
 	if (strKey.empty())
 	{
@@ -193,9 +207,192 @@ void CBrokerService::OnHQMarketResponse(const CRequest& req)
 
 void CBrokerService::OnHQMarketState(SessionState state, const std::string& strMessage)
 {
+	if (SessionState::Ready == state)
+	{
+		for (const CQuoteInfo& quote : m_subscriptions.GetSubscriptions())
+		{
+			m_pSession->SendRequest(request::Subscription(quote));
+		}
+		return;
+	}
 	if ((SessionState::Disconnected == state) || (SessionState::Stopping == state))
 	{
 		FailPendingSubscriptions(strMessage.empty() ? "HQMarket connection lost" : strMessage);
+		FailPendingQueries(strMessage.empty() ? "HQMarket connection lost" : strMessage);
+	}
+}
+
+std::string CBrokerService::GetQueryKey(const CRequest& req) const
+{
+	std::string strCmd = req.GetCmd();
+	if ("query_quote" == strCmd)
+	{
+		return strCmd + ":" + req.GetExtraData("security");
+	}
+	if ("query_instruments" == strCmd)
+	{
+		return strCmd;
+	}
+	if ("query_bars" == strCmd)
+	{
+		return strCmd + ":" + req.GetExtraData("security") + ":" + req.GetExtraData("channel") + ":" + req.GetExtraData("begin_time_ms") + ":" + req.GetExtraData("end_time_ms");
+	}
+	return { };
+}
+
+bool CBrokerService::HandleMarketQuery(net::_TyConnectionId id, const CRequest& req)
+{
+	std::string strKey = GetQueryKey(req);
+	if (strKey.empty())
+	{
+		net::SendError(id, req, InvalidRequest, "invalid market query");
+		return false;
+	}
+
+	_TyRequestId upstreamRequestId = 0;
+	bool bTooManyPending = false;
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_state);
+		auto queryIter = m_pendingQueries.find(strKey);
+		if (m_pendingQueries.end() != queryIter)
+		{
+			queryIter->second.m_clients.emplace_back(CPendingQueryClient{ id, req.GetId() });
+			return true;
+		}
+		if (MaxPendingQueries <= m_pendingQueries.size())
+		{
+			bTooManyPending = true;
+		}
+		else
+		{
+			upstreamRequestId = m_nextUpstreamRequestId.fetch_add(1);
+			CPendingQuery pending;
+			pending.m_upstreamRequestId = upstreamRequestId;
+			pending.m_strKey = strKey;
+			pending.m_strCmd = req.GetCmd();
+			pending.m_deadline = std::chrono::steady_clock::now() + UpstreamRequestTimeout;
+			pending.m_clients.emplace_back(CPendingQueryClient{ id, req.GetId() });
+			m_pendingQueries.emplace(strKey, std::move(pending));
+			m_queryKeysByRequestId.emplace(upstreamRequestId, strKey);
+		}
+	}
+	if (bTooManyPending)
+	{
+		net::SendError(id, req, TooManyPendingQueries, "too many pending market queries");
+		return false;
+	}
+
+	CRequest upstream = req;
+	upstream.SetId(upstreamRequestId);
+	if ((nullptr != m_pSession) && m_pSession->SendRequest(upstream))
+	{
+		return true;
+	}
+	CPendingQuery failed;
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_state);
+		auto queryIter = m_pendingQueries.find(strKey);
+		if (m_pendingQueries.end() != queryIter)
+		{
+			failed = std::move(queryIter->second);
+			m_pendingQueries.erase(queryIter);
+		}
+		m_queryKeysByRequestId.erase(upstreamRequestId);
+	}
+	for (const CPendingQueryClient& client : failed.m_clients)
+	{
+		SendQueryError(client, failed.m_strCmd, UpstreamUnavailable, "HQMarket is unavailable");
+	}
+	return false;
+}
+
+bool CBrokerService::DispatchQueryResponse(const CRequest& response)
+{
+	CPendingQuery pending;
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_state);
+		auto keyIter = m_queryKeysByRequestId.find(response.GetId());
+		if (m_queryKeysByRequestId.end() == keyIter)
+		{
+			return false;
+		}
+		auto queryIter = m_pendingQueries.find(keyIter->second);
+		if (m_pendingQueries.end() == queryIter)
+		{
+			m_queryKeysByRequestId.erase(keyIter);
+			return true;
+		}
+		pending = std::move(queryIter->second);
+		m_pendingQueries.erase(queryIter);
+		m_queryKeysByRequestId.erase(keyIter);
+	}
+	for (const CPendingQueryClient& client : pending.m_clients)
+	{
+		CRequest downstream = response;
+		downstream.SetId(client.m_requestId);
+		net::SendRequest(client.m_id, downstream);
+	}
+	return true;
+}
+
+void CBrokerService::SendQueryError(const CPendingQueryClient& client, const std::string& strCmd, int nErrorCode, const std::string& strMessage) const
+{
+	CRequest response;
+	response.SetId(client.m_requestId);
+	response.SetType(CRequest::Type::HQMARKET);
+	response.SetCmd(strCmd);
+	net::SetError(response, nErrorCode, strMessage);
+	net::SendRequest(client.m_id, response);
+}
+
+void CBrokerService::ExpirePendingQueries()
+{
+	std::vector<CPendingQuery> expired;
+	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_state);
+		for (auto queryIter = m_pendingQueries.begin(); m_pendingQueries.end() != queryIter;)
+		{
+			if (queryIter->second.m_deadline <= now)
+			{
+				m_queryKeysByRequestId.erase(queryIter->second.m_upstreamRequestId);
+				expired.emplace_back(std::move(queryIter->second));
+				queryIter = m_pendingQueries.erase(queryIter);
+			}
+			else
+			{
+				++queryIter;
+			}
+		}
+	}
+	for (const CPendingQuery& pending : expired)
+	{
+		for (const CPendingQueryClient& client : pending.m_clients)
+		{
+			SendQueryError(client, pending.m_strCmd, UpstreamTimeout, "HQMarket request timeout");
+		}
+	}
+}
+
+void CBrokerService::FailPendingQueries(const std::string& strReason)
+{
+	std::vector<CPendingQuery> failed;
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_state);
+		failed.reserve(m_pendingQueries.size());
+		for (auto& item : m_pendingQueries)
+		{
+			failed.emplace_back(std::move(item.second));
+		}
+		m_pendingQueries.clear();
+		m_queryKeysByRequestId.clear();
+	}
+	for (const CPendingQuery& pending : failed)
+	{
+		for (const CPendingQueryClient& client : pending.m_clients)
+		{
+			SendQueryError(client, pending.m_strCmd, UpstreamUnavailable, strReason);
+		}
 	}
 }
 
@@ -228,7 +425,7 @@ void CBrokerService::ExpirePendingSubscriptions()
 		m_subscriptions.Unsubscribe(pending.m_id, { pending.m_quote });
 		if (nullptr != m_pSession)
 		{
-			m_pSession->UnsubscribeQuote(pending.m_quote);
+			m_pSession->SendRequest(request::UnSubscription(pending.m_quote));
 		}
 		SendSubscriptionResponse(pending.m_id, pending.m_requestId, false, "HQMarket request timeout");
 	}
@@ -250,7 +447,7 @@ void CBrokerService::FailPendingSubscriptions(const std::string& strReason)
 		m_subscriptions.Unsubscribe(pending.m_id, { pending.m_quote });
 		if (nullptr != m_pSession)
 		{
-			m_pSession->UnsubscribeQuote(pending.m_quote);
+			m_pSession->SendRequest(request::UnSubscription(pending.m_quote));
 		}
 		SendSubscriptionResponse(pending.m_id, pending.m_requestId, false, strReason);
 	}
@@ -372,7 +569,7 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 		net::SendError(id, req, InvalidSubscription, "unsupported request");
 		return false;
 	}
-	market::CQuoteInfo quote = GetQuoteInfo(req);
+	CQuoteInfo quote = GetQuoteInfo(req);
 	if (!quote.IsValid())
 	{
 		net::SendError(id, req, InvalidSubscription, "invalid security or unsupported subscription channel");
@@ -387,7 +584,7 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 			SendSubscriptionResponse(id, req.GetId(), true, "already subscribed");
 			return true;
 		}
-		std::vector<market::CQuoteInfo> subscriptions{ quote };
+		std::vector<CQuoteInfo> subscriptions{ quote };
 		bool bSendUpstream = !m_subscriptions.Subscribe(id, subscriptions).empty();
 		bool bPending = false;
 		{
@@ -400,7 +597,7 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 		}
 		if (bSendUpstream)
 		{
-			if ((nullptr == m_pSession) || !m_pSession->SubscribeQuote(quote))
+			if ((nullptr == m_pSession) || !m_pSession->SendRequest(request::Subscription(quote)))
 			{
 				m_subscriptions.Unsubscribe(id, subscriptions);
 				{
@@ -424,7 +621,7 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 		SendSubscriptionResponse(id, req.GetId(), true, "not subscribed");
 		return true;
 	}
-	std::vector<market::CQuoteInfo> subscriptions{ quote };
+	std::vector<CQuoteInfo> subscriptions{ quote };
 	bool bSendUpstream = !m_subscriptions.Unsubscribe(id, subscriptions).empty();
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
@@ -433,7 +630,7 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 			m_pendingSubscriptions.erase(strKey);
 		}
 	}
-	if (bSendUpstream && ((nullptr == m_pSession) || !m_pSession->UnsubscribeQuote(quote)))
+	if (bSendUpstream && ((nullptr == m_pSession) || !m_pSession->SendRequest(request::UnSubscription(quote))))
 	{
 		SendSubscriptionResponse(id, req.GetId(), false, "HQMarket is unavailable");
 		return false;
@@ -444,21 +641,38 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 
 int CBrokerService::HandleDisconnected(net::_TyConnectionId id)
 {
-	std::vector<market::CQuoteInfo> removed = m_subscriptions.RemoveClient(id);
+	std::vector<CQuoteInfo> removed = m_subscriptions.RemoveClient(id);
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
 		m_auth_clients.erase(id);
-		for (const market::CQuoteInfo& quote : removed)
+		for (const CQuoteInfo& quote : removed)
 		{
 			std::string strKey = quote.String();
 			m_pendingSubscriptions.erase(strKey);
 		}
+		for (auto queryIter = m_pendingQueries.begin(); m_pendingQueries.end() != queryIter;)
+		{
+			std::vector<CPendingQueryClient>& clients = queryIter->second.m_clients;
+			clients.erase(std::remove_if(clients.begin(), clients.end(), [id](const CPendingQueryClient& client)
+			{
+				return id == client.m_id;
+			}), clients.end());
+			if (clients.empty())
+			{
+				m_queryKeysByRequestId.erase(queryIter->second.m_upstreamRequestId);
+				queryIter = m_pendingQueries.erase(queryIter);
+			}
+			else
+			{
+				++queryIter;
+			}
+		}
 	}
 	if (nullptr != m_pSession)
 	{
-		for (const market::CQuoteInfo& quote : removed)
+		for (const CQuoteInfo& quote : removed)
 		{
-			m_pSession->UnsubscribeQuote(quote);
+			m_pSession->SendRequest(request::UnSubscription(quote));
 		}
 	}
 	return 1;
@@ -522,6 +736,7 @@ bool CBrokerService::HandleAuth(net::_TyConnectionId id, const CRequest& req)
 
 void CBrokerService::OnClientRequest(net::_TyConnectionId id, const CRequest& request)
 {
+	ExpirePendingQueries();
 	std::string strCmd = request.GetCmd();
 	const auto mIter = m_handler.find(strCmd);
 	if (m_handler.end() == mIter)

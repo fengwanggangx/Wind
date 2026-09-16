@@ -56,5 +56,7 @@ message RequestData {
 		hqmarket.market.v1.QueryResponse query_response = 21;
 		StrategyInfo strategy = 22;
 		StrategyList strategy_list = 23;
+		hqmarket.market.v1.InstrumentListRequest instrument_list_request = 24;
+		hqmarket.market.v1.InstrumentListResponse instrument_list_response = 25;
 	}
 }

@@ -74,7 +74,7 @@ bool CSimulatedTradingService::Cancel(_TyStrategyId strategyId, _TyOrderId order
 	return true;
 }
 
-CPositionSnapshot CSimulatedTradingService::GetPosition(const market::CSecurity& security) const
+CPositionSnapshot CSimulatedTradingService::GetPosition(const CSecurity& security) const
 {
 	std::lock_guard<std::mutex> lock(m_mtx_state);
 	auto iter = m_positions.find(MakePositionKey(security));
@@ -106,7 +106,7 @@ void CSimulatedTradingService::Stop()
 	m_orderEventHandler = nullptr;
 }
 
-std::string CSimulatedTradingService::MakePositionKey(const market::CSecurity& security)
+std::string CSimulatedTradingService::MakePositionKey(const CSecurity& security)
 {
 	return security.String();
 }

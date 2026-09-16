@@ -1,4 +1,5 @@
 #include "RequestCenter.h"
+#include "v1/market.pb.h"
 
 #include <chrono>
 
@@ -23,24 +24,24 @@ namespace request
 		return req;
 	}
 
-	CRequest Subscription(const market::CQuoteInfo& quote)
+	CRequest Subscription(const CQuoteInfo& quote)
 	{
 		CRequest req;
 		req.SetType(CRequest::Type::HQMARKET);
 		req.SetCmd("subscribe");
 		req.SetExtraData("security", quote.m_security.String());
-		req.SetExtraData("channel", market::GetChannelString(quote.m_channel));
+		req.SetExtraData("channel", GetChannelString(quote.m_channel));
 		return req;
 	}
 
-	CRequest UnSubscription(const market::CQuoteInfo& quote)
+	CRequest UnSubscription(const CQuoteInfo& quote)
 	{
 		CRequest req = Subscription(quote);
 		req.SetCmd("unsubscribe");
 		return req;
 	}
 
-	CRequest QueryQuote(const market::CSecurity& security)
+	CRequest QueryQuote(const CSecurity& security)
 	{
 		CRequest req;
 		req.SetType(CRequest::Type::HQMARKET);
@@ -49,15 +50,25 @@ namespace request
 		return req;
 	}
 
-	CRequest QueryBars(const market::CSecurity& security, market::Channel channel, std::int64_t nBeginTime, std::int64_t nEndTime)
+	CRequest QueryBars(const CSecurity& security, Channel channel, std::int64_t nBeginTime, std::int64_t nEndTime)
 	{
 		CRequest req;
 		req.SetType(CRequest::Type::HQMARKET);
 		req.SetCmd("query_bars");
 		req.SetExtraData("security", security.String());
-		req.SetExtraData("channel", market::GetChannelString(channel));
+		req.SetExtraData("channel", GetChannelString(channel));
 		req.SetExtraData("begin_time_ms", std::to_string(nBeginTime));
 		req.SetExtraData("end_time_ms", std::to_string(nEndTime));
+		return req;
+	}
+
+	CRequest QueryInstruments()
+	{
+		CRequest req;
+		req.SetType(CRequest::Type::HQMARKET);
+		req.SetCmd("query_instruments");
+		hqmarket::market::v1::InstrumentListRequest value;
+		req.SetData(value);
 		return req;
 	}
 

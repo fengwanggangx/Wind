@@ -32,7 +32,7 @@ bool CStrategyContext::CancelOrder(_TyOrderId orderId)
 	return m_bEnabled.load() && (nullptr != m_pEngine) && m_pEngine->CancelOrder(m_strategyId, orderId);
 }
 
-CPositionSnapshot CStrategyContext::GetPosition(const market::CSecurity& security) const
+CPositionSnapshot CStrategyContext::GetPosition(const CSecurity& security) const
 {
 	if (nullptr == m_pSnapshotProvider)
 	{

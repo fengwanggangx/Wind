@@ -96,59 +96,13 @@ bool CSession::SendRequest(const CRequest& request)
 	return (nullptr != m_client) && m_client->SendRequest(request);
 }
 
-bool CSession::SubscribeQuote(const market::CQuoteInfo& quote)
-{
-	if (!quote.IsValid())
-	{
-		return false;
-	}
-	std::lock_guard<std::mutex> lock(m_mtx_subscriptions);
-	std::string strKey = MakeSubscriptionKey(quote);
-	auto iter = m_subscriptions.find(strKey);
-	if (m_subscriptions.end() != iter)
-	{
-		++iter->second.m_referenceCount;
-		return true;
-	}
-	m_subscriptions.emplace(strKey, Subscription{ quote, 1 });
-	bool bSent = SendRequest(request::Subscription(quote));
-	if (!bSent)
-	{
-		m_subscriptions.erase(strKey);
-	}
-	return bSent;
-}
-
-bool CSession::UnsubscribeQuote(const market::CQuoteInfo& quote)
-{
-	if (!quote.IsValid())
-	{
-		return false;
-	}
-	std::string strKey = MakeSubscriptionKey(quote);
-	std::lock_guard<std::mutex> lock(m_mtx_subscriptions);
-	auto iter = m_subscriptions.find(strKey);
-	if (m_subscriptions.end() == iter)
-	{
-		return false;
-	}
-	if (1 < iter->second.m_referenceCount)
-	{
-		--iter->second.m_referenceCount;
-		return true;
-	}
-	bool bSent = SendRequest(request::UnSubscription(quote));
-	m_subscriptions.erase(iter);
-	return bSent;
-}
-
-void CSession::RegisterHandler(ResponseHandler&& handler)
+void CSession::RegisterHandler(_TyResponseHandler&& handler)
 {
 	std::lock_guard<std::mutex> lock(m_mtx_handlers);
 	m_handlers.emplace_back(std::move(handler));
 }
 
-void CSession::SetStateHandler(StateHandler&& handler)
+void CSession::SetStateHandler(_TyStateHandler&& handler)
 {
 	std::lock_guard<std::mutex> lock(m_mtx_handlers);
 	m_stateHandlers.clear();
@@ -158,7 +112,7 @@ void CSession::SetStateHandler(StateHandler&& handler)
 	}
 }
 
-void CSession::RegisterStateHandler(StateHandler&& handler)
+void CSession::RegisterStateHandler(_TyStateHandler&& handler)
 {
 	if (nullptr == handler)
 	{
@@ -262,7 +216,6 @@ void CSession::MaintenanceLoop()
 		}
 	}
 }
-
 int CSession::OnNetEvent(const net::CNetEvent& ev)
 {
 	if (net::em_event::connected == ev.m_event)
@@ -329,7 +282,6 @@ void CSession::HandleResponse(const CRequest& req)
 				m_client->SetReadTimeout(20);
 			}
 		}
-		RestoreSubscriptions();
 		NotifyState(SessionState::Ready, "HQMarket session ready");
 		return;
 	}
@@ -356,27 +308,10 @@ bool CSession::SendAuthentication()
 	return SendRequest(request::Auth(info->m_strAccount, info->m_strPassword));
 }
 
-void CSession::RestoreSubscriptions()
-{
-	std::vector<Subscription> subscriptions;
-	{
-		std::lock_guard<std::mutex> lock(m_mtx_subscriptions);
-		subscriptions.reserve(m_subscriptions.size());
-		for (const auto& [strKey, subscription] : m_subscriptions)
-		{
-			subscriptions.emplace_back(subscription);
-		}
-	}
-	for (const auto& subscription : subscriptions)
-	{
-		SendRequest(request::Subscription(subscription.m_quote));
-	}
-}
-
 void CSession::NotifyState(SessionState state, const std::string& strMessage)
 {
 	m_state.store(state);
-	std::vector<StateHandler> handlers;
+	std::vector<_TyStateHandler> handlers;
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_handlers);
 		handlers = m_stateHandlers;
@@ -392,7 +327,7 @@ void CSession::NotifyState(SessionState state, const std::string& strMessage)
 
 void CSession::Dispatch(const CRequest& req)
 {
-	std::vector<ResponseHandler> handlers;
+	std::vector<_TyResponseHandler> handlers;
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_handlers);
 		handlers = m_handlers;
@@ -404,9 +339,4 @@ void CSession::Dispatch(const CRequest& req)
 			handler(req);
 		}
 	}
-}
-
-std::string CSession::MakeSubscriptionKey(const market::CQuoteInfo& quote)
-{
-	return quote.m_security.String() + ':' + market::GetChannelString(quote.m_channel);
 }

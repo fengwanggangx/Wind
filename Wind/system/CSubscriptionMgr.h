@@ -13,17 +13,18 @@
 class CSubscriptionMgr final
 {
   public:
-	std::vector<market::CQuoteInfo> Subscribe(net::_TyConnectionId id, const std::vector<market::CQuoteInfo>& subscriptions);
-	std::vector<market::CQuoteInfo> Unsubscribe(net::_TyConnectionId id, const std::vector<market::CQuoteInfo>& subscriptions);
-	std::vector<market::CQuoteInfo> RemoveClient(net::_TyConnectionId id);
+	std::vector<CQuoteInfo> Subscribe(net::_TyConnectionId id, const std::vector<CQuoteInfo>& subscriptions);
+	std::vector<CQuoteInfo> Unsubscribe(net::_TyConnectionId id, const std::vector<CQuoteInfo>& subscriptions);
+	std::vector<CQuoteInfo> RemoveClient(net::_TyConnectionId id);
 	void RemoveSubscription(const std::string& strKey);
 	std::vector<net::_TyConnectionId> GetSubscriberIds(const std::string& strKey) const;
+	std::vector<CQuoteInfo> GetSubscriptions() const;
 	std::size_t GetSubscriptionCount(net::_TyConnectionId id) const;
-	std::size_t GetSubscriptionCount(const market::CQuoteInfo& info) const;
-	bool IsSubscribed(net::_TyConnectionId id, const market::CQuoteInfo& info) const;
+	std::size_t GetSubscriptionCount(const CQuoteInfo& info) const;
+	bool IsSubscribed(net::_TyConnectionId id, const CQuoteInfo& info) const;
 
   private:
-	using _TyClientSubscriptions = std::unordered_map<std::string, market::CQuoteInfo>;
+	using _TyClientSubscriptions = std::unordered_map<std::string, CQuoteInfo>;
 	using _TySubscriberIds = std::unordered_set<net::_TyConnectionId>;
 
 	mutable std::shared_mutex m_mtx_info;

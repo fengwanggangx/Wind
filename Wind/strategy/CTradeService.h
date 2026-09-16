@@ -26,7 +26,7 @@ class CTradeService final : public IStrategyOrderSink, public ITradingSnapshotPr
 
 	COrderSubmitResult Submit(const COrderIntent& intent) override;
 	bool Cancel(_TyStrategyId strategyId, _TyOrderId orderId) override;
-	CPositionSnapshot GetPosition(const market::CSecurity& security) const override;
+	CPositionSnapshot GetPosition(const CSecurity& security) const override;
 	CAccountSnapshot GetAccount() const override;
 
 	TradeServiceMode GetMode() const;

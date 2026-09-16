@@ -78,7 +78,7 @@ struct CStrategyRuntime
 
 struct CSubscriptionEntry
 {
-	market::CQuoteInfo m_quote;
+	CQuoteInfo m_quote;
 	std::unordered_set<_TyStrategyId> m_strategyIds;
 	bool m_bSubscribed{ false };
 	bool m_bSubscribing{ false };
