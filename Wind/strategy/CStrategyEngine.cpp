@@ -11,6 +11,7 @@
 #include "CStrategyContext.h"
 #include "CTradeService.h"
 #include "strategies/CMovingAverageStrategy.h"
+#include "../request/RequestCenter.h"
 
 #include <algorithm>
 #include <charconv>
@@ -1200,7 +1201,7 @@ void CStrategyEngine::SubscribeRequiredQuotes(const CStrategyConfig& cfg)
 	}
 	for (const auto& quote : quotes)
 	{
-		bool bSubscribed = m_pSession->SubscribeQuote(quote);
+		bool bSubscribed = m_pSession->SendRequest(request::Subscription(quote));
 		std::unique_lock<std::shared_mutex> lock(m_mtx_routes);
 		auto mIter = m_subscriptions.find(quote.String());
 		if (m_subscriptions.end() != mIter)
@@ -1233,7 +1234,7 @@ void CStrategyEngine::UnsubscribeUnusedQuotes(const CStrategyConfig& cfg)
 	{
 		for (const auto& quote : quotes)
 		{
-			m_pSession->UnsubscribeQuote(quote);
+			m_pSession->SendRequest(request::UnSubscription(quote));
 		}
 	}
 }
@@ -1259,7 +1260,7 @@ void CStrategyEngine::RestoreRequiredSubscriptions()
 	}
 	for (const auto& quote : quotes)
 	{
-		bool bSubscribed = m_pSession->SubscribeQuote(quote);
+		bool bSubscribed = m_pSession->SendRequest(request::Subscription(quote));
 		std::unique_lock<std::shared_mutex> lock(m_mtx_routes);
 		auto iter = m_subscriptions.find(quote.String());
 		if (m_subscriptions.end() != iter)

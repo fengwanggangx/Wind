@@ -239,7 +239,8 @@ int CSession::OnNetEvent(const net::CNetEvent& ev)
 
 void CSession::HandleResponse(const CRequest& req)
 {
-	if ("auth" == req.GetCmd())
+	std::string strCmd = req.GetCmd();
+	if ("auth" == strCmd)
 	{
 		if (!IsAccepted(req))
 		{
@@ -285,6 +286,7 @@ void CSession::HandleResponse(const CRequest& req)
 		NotifyState(SessionState::Ready, "HQMarket session ready");
 		return;
 	}
+
 	Dispatch(req);
 }
 

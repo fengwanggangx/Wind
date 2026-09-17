@@ -59,7 +59,7 @@ class CBrokerService final
 
   private:
 	int OnNetEvent(const net::CNetEvent& ev);
-	void OnClientRequest(net::_TyConnectionId id, const CRequest& request);
+	void OnClientRequest(net::_TyConnectionId id, const CRequest& req);
 	bool HandleAuth(net::_TyConnectionId id, const CRequest& req);
 	bool HandleRegisterAuth(net::_TyConnectionId id, const CRequest& req);
 	bool HandleSubscription(net::_TyConnectionId id, const CRequest& req);
