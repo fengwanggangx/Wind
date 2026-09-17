@@ -36,7 +36,10 @@ message StrategyList {
 }
 
 message RequestData {
-    RequestType type = 1;
+	reserved 24;
+	reserved "security_list_request";
+	reserved "security_list_response";
+	RequestType type = 1;
     string cmd = 2;
     map<string, string> extra = 3;
     map<string, string> ret = 4;
@@ -56,7 +59,6 @@ message RequestData {
 		hqmarket.market.v1.QueryResponse query_response = 21;
 		StrategyInfo strategy = 22;
 		StrategyList strategy_list = 23;
-		hqmarket.market.v1.InstrumentListRequest instrument_list_request = 24;
-		hqmarket.market.v1.InstrumentListResponse instrument_list_response = 25;
+		hqmarket.market.v1.SecurityList security_list = 25;
 	}
 }

@@ -4,21 +4,20 @@ package hqmarket.market.v1;
 enum Exchange { EXCHANGE_UNSPECIFIED = 0; SSE = 1; SZSE = 2; BSE = 3; HKEX = 4; CFFEX = 5; SHFE = 6; DCE = 7; CZCE = 8; INE = 9; GFEX = 10; NASDAQ = 11; NYSE = 12; CRYPTO = 13; }
 enum Channel { CHANNEL_UNSPECIFIED = 0; CHANNEL_QUOTE = 1; CHANNEL_DEPTH = 2; CHANNEL_TRADE = 3; CHANNEL_BAR_1M = 4; CHANNEL_BAR_1D = 5; CHANNEL_MARKET_STATUS = 6; }
 
-message Instrument { string symbol = 1; Exchange exchange = 2; }
-message InstrumentInfo { Instrument instrument = 1; string name = 2; string status = 3; }
-message InstrumentListRequest { repeated Exchange exchanges = 1; }
-message InstrumentListResponse { repeated InstrumentInfo instruments = 1; int64 version = 2; }
+message Security { string symbol = 1; Exchange exchange = 2; }
+message SecurityInfo { Security security = 1; string name = 2; string status = 3; }
+message SecurityList { repeated SecurityInfo securities = 1; int64 version = 2; }
 message PriceLevel { int64 price = 1; int64 volume = 2; int32 price_scale = 3; }
 message AuthRequest { string token = 1; }
-message SubscribeRequest { repeated Instrument instruments = 1; repeated Channel channels = 2; }
-message UnsubscribeRequest { repeated Instrument instruments = 1; repeated Channel channels = 2; }
-message SubscriptionResult { Instrument instrument = 1; Channel channel = 2; bool accepted = 3; string reason = 4; }
+message SubscribeRequest { repeated Security securities = 1; repeated Channel channels = 2; }
+message UnsubscribeRequest { repeated Security securities = 1; repeated Channel channels = 2; }
+message SubscriptionResult { Security security = 1; Channel channel = 2; bool accepted = 3; string reason = 4; }
 message SubscriptionAck { repeated SubscriptionResult results = 1; }
-message QuoteData { Instrument instrument = 1; int64 exchange_time_ms = 2; int64 receive_time_ms = 3; int64 last_price = 4; int64 open_price = 5; int64 high_price = 6; int64 low_price = 7; int64 pre_close = 8; int64 volume = 9; int64 turnover = 10; int32 price_scale = 11; string source = 12; bool stale = 13; }
-message DepthData { Instrument instrument = 1; int64 exchange_time_ms = 2; int64 receive_time_ms = 3; repeated PriceLevel bids = 4; repeated PriceLevel asks = 5; string source = 6; bool stale = 7; }
-message TradeData { Instrument instrument = 1; int64 exchange_time_ms = 2; int64 price = 3; int64 volume = 4; int32 price_scale = 5; string trade_id = 6; string source = 7; }
-message BarData { Instrument instrument = 1; Channel channel = 2; int64 begin_time_ms = 3; int64 open_price = 4; int64 high_price = 5; int64 low_price = 6; int64 close_price = 7; int64 volume = 8; int64 turnover = 9; int32 price_scale = 10; string adjustment = 11; string source = 12; }
+message QuoteData { Security security = 1; int64 exchange_time_ms = 2; int64 receive_time_ms = 3; int64 last_price = 4; int64 open_price = 5; int64 high_price = 6; int64 low_price = 7; int64 pre_close = 8; int64 volume = 9; int64 turnover = 10; int32 price_scale = 11; string source = 12; bool stale = 13; }
+message DepthData { Security security = 1; int64 exchange_time_ms = 2; int64 receive_time_ms = 3; repeated PriceLevel bids = 4; repeated PriceLevel asks = 5; string source = 6; bool stale = 7; }
+message TradeData { Security security = 1; int64 exchange_time_ms = 2; int64 price = 3; int64 volume = 4; int32 price_scale = 5; string trade_id = 6; string source = 7; }
+message BarData { Security security = 1; Channel channel = 2; int64 begin_time_ms = 3; int64 open_price = 4; int64 high_price = 5; int64 low_price = 6; int64 close_price = 7; int64 volume = 8; int64 turnover = 9; int32 price_scale = 10; string adjustment = 11; string source = 12; }
 message MarketStatusData { Exchange exchange = 1; string status = 2; int64 exchange_time_ms = 3; }
 message ProviderStatusData { string provider = 1; bool healthy = 2; string detail = 3; }
-message QueryRequest { Instrument instrument = 1; Channel channel = 2; int64 begin_time_ms = 3; int64 end_time_ms = 4; }
-message QueryResponse { Instrument instrument = 1; Channel channel = 2; QuoteData quote = 3; repeated BarData bars = 4; bool found = 5; }
+message QueryRequest { Security security = 1; Channel channel = 2; int64 begin_time_ms = 3; int64 end_time_ms = 4; }
+message QueryResponse { Security security = 1; Channel channel = 2; QuoteData quote = 3; repeated BarData bars = 4; bool found = 5; }

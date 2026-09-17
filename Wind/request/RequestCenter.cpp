@@ -62,13 +62,11 @@ namespace request
 		return req;
 	}
 
-	CRequest QueryInstruments()
+	CRequest QuerySecurities()
 	{
 		CRequest req;
 		req.SetType(CRequest::Type::HQMARKET);
-		req.SetCmd("query_instruments");
-		hqmarket::market::v1::InstrumentListRequest value;
-		req.SetData(value);
+		req.SetCmd("query_securities");
 		return req;
 	}
 

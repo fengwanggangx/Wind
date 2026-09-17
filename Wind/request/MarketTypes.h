@@ -3,6 +3,31 @@
 
 #include <string>
 
+namespace hqmarket::market::v1
+{
+	enum Exchange : int;
+	class Security;
+	class SecurityInfo;
+	class SecurityList;
+	class PriceLevel;
+	class SubscriptionAck;
+	class QuoteData;
+	class DepthData;
+	class QueryResponse;
+	class BarData;
+} // namespace hqmarket::market::v1
+
+using _TyMarketExchange = hqmarket::market::v1::Exchange;
+using _TySecurity = hqmarket::market::v1::Security;
+using _TySecurityInfo = hqmarket::market::v1::SecurityInfo;
+using _TySecurityList = hqmarket::market::v1::SecurityList;
+using _TyPriceLevel = hqmarket::market::v1::PriceLevel;
+using _TySubscriptionAck = hqmarket::market::v1::SubscriptionAck;
+using _TyQuoteData = hqmarket::market::v1::QuoteData;
+using _TyDepthData = hqmarket::market::v1::DepthData;
+using _TyQueryResponse = hqmarket::market::v1::QueryResponse;
+using _TyBarData = hqmarket::market::v1::BarData;
+
 enum class Exchange
 {
 	unknown = 0,

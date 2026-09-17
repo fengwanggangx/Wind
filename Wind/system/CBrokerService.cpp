@@ -74,7 +74,7 @@ CBrokerService::CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession, 
 		{ "unsubscribe", std::bind_front(&CBrokerService::HandleSubscription, this) },
 		{ "query_quote", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
 		{ "query_bars", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
-		{ "query_instruments", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
+		{ "query_securities", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
 		{ "strategy_add", std::bind_front(&CBrokerService::HandleStrategy, this) },
 		{ "strategy_modify", std::bind_front(&CBrokerService::HandleStrategy, this) },
 		{ "strategy_query", std::bind_front(&CBrokerService::HandleStrategy, this) },
@@ -119,30 +119,30 @@ void CBrokerService::SendSubscriptionResponse(net::_TyConnectionId id, _TyReques
 std::string CBrokerService::GetMarketResponseKey(const CRequest& req) const
 {
 	const _TyReqData& message = req.GetData();
-	hqmarket::market::v1::Instrument instrument;
+	hqmarket::market::v1::Security security;
 	hqmarket::market::v1::Channel channel = hqmarket::market::v1::CHANNEL_UNSPECIFIED;
 	if (message.has_quote())
 	{
-		instrument = message.quote().instrument();
+		security = message.quote().security();
 		channel = hqmarket::market::v1::CHANNEL_QUOTE;
 	}
 	else if (message.has_depth())
 	{
-		instrument = message.depth().instrument();
+		security = message.depth().security();
 		channel = hqmarket::market::v1::CHANNEL_DEPTH;
 	}
 	if (hqmarket::market::v1::CHANNEL_UNSPECIFIED != channel)
 	{
-		Exchange exchange = static_cast<Exchange>(static_cast<int>(instrument.exchange()));
+		Exchange exchange = static_cast<Exchange>(static_cast<int>(security.exchange()));
 		Channel marketChannel = static_cast<Channel>(static_cast<int>(channel));
-		return CQuoteInfo(instrument.symbol(), exchange, marketChannel).String();
+		return CQuoteInfo(security.symbol(), exchange, marketChannel).String();
 	}
 	if (message.has_subscription_ack() && (0 != message.subscription_ack().results_size()))
 	{
 		const hqmarket::market::v1::SubscriptionResult& result = message.subscription_ack().results(0);
-		Exchange exchange = static_cast<Exchange>(static_cast<int>(result.instrument().exchange()));
+		Exchange exchange = static_cast<Exchange>(static_cast<int>(result.security().exchange()));
 		Channel channel = static_cast<Channel>(static_cast<int>(result.channel()));
-		return CQuoteInfo(result.instrument().symbol(), exchange, channel).String();
+		return CQuoteInfo(result.security().symbol(), exchange, channel).String();
 	}
 	return { };
 }
@@ -229,7 +229,7 @@ std::string CBrokerService::GetQueryKey(const CRequest& req) const
 	{
 		return strCmd + ":" + req.GetExtraData("security");
 	}
-	if ("query_instruments" == strCmd)
+	if ("query_securities" == strCmd)
 	{
 		return strCmd;
 	}

@@ -15,7 +15,7 @@ namespace request
 	CRequest UnSubscription(const CQuoteInfo& quote);
 	CRequest QueryQuote(const CSecurity& security);
 	CRequest QueryBars(const CSecurity& security, Channel channel, std::int64_t nBeginTime, std::int64_t nEndTime);
-	CRequest QueryInstruments();
+	CRequest QuerySecurities();
 	CRequest HeartBeat();
 }
 

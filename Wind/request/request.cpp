@@ -117,14 +117,9 @@ void CRequest::SetData(const _TyQueryResponse& value)
 	m_data->mutable_query_response()->CopyFrom(value);
 }
 
-void CRequest::SetData(const _TyInstrumentListRequest& value)
+void CRequest::SetData(const _TySecurityList& value)
 {
-	m_data->mutable_instrument_list_request()->CopyFrom(value);
-}
-
-void CRequest::SetData(const _TyInstrumentListResponse& value)
-{
-	m_data->mutable_instrument_list_response()->CopyFrom(value);
+	m_data->mutable_security_list()->CopyFrom(value);
 }
 
 void CRequest::SetData(const _TyStrategyInfo& value)

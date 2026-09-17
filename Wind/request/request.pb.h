@@ -1046,8 +1046,7 @@ class RequestData final : public ::google::protobuf::Message
     kQueryResponse = 21,
     kStrategy = 22,
     kStrategyList = 23,
-    kInstrumentListRequest = 24,
-    kInstrumentListResponse = 25,
+    kSecurityList = 25,
     PAYLOAD_NOT_SET = 0,
   };
   static inline const RequestData* internal_default_instance() {
@@ -1160,8 +1159,7 @@ class RequestData final : public ::google::protobuf::Message
     kQueryResponseFieldNumber = 21,
     kStrategyFieldNumber = 22,
     kStrategyListFieldNumber = 23,
-    kInstrumentListRequestFieldNumber = 24,
-    kInstrumentListResponseFieldNumber = 25,
+    kSecurityListFieldNumber = 25,
   };
   // map<string, string> extra = 3;
   int extra_size() const;
@@ -1495,42 +1493,23 @@ class RequestData final : public ::google::protobuf::Message
   ::request::StrategyList* _internal_mutable_strategy_list();
 
   public:
-  // .hqmarket.market.v1.InstrumentListRequest instrument_list_request = 24;
-  bool has_instrument_list_request() const;
+  // .hqmarket.market.v1.SecurityList security_list = 25;
+  bool has_security_list() const;
   private:
-  bool _internal_has_instrument_list_request() const;
+  bool _internal_has_security_list() const;
 
   public:
-  void clear_instrument_list_request() ;
-  const ::hqmarket::market::v1::InstrumentListRequest& instrument_list_request() const;
-  PROTOBUF_NODISCARD ::hqmarket::market::v1::InstrumentListRequest* release_instrument_list_request();
-  ::hqmarket::market::v1::InstrumentListRequest* mutable_instrument_list_request();
-  void set_allocated_instrument_list_request(::hqmarket::market::v1::InstrumentListRequest* value);
-  void unsafe_arena_set_allocated_instrument_list_request(::hqmarket::market::v1::InstrumentListRequest* value);
-  ::hqmarket::market::v1::InstrumentListRequest* unsafe_arena_release_instrument_list_request();
+  void clear_security_list() ;
+  const ::hqmarket::market::v1::SecurityList& security_list() const;
+  PROTOBUF_NODISCARD ::hqmarket::market::v1::SecurityList* release_security_list();
+  ::hqmarket::market::v1::SecurityList* mutable_security_list();
+  void set_allocated_security_list(::hqmarket::market::v1::SecurityList* value);
+  void unsafe_arena_set_allocated_security_list(::hqmarket::market::v1::SecurityList* value);
+  ::hqmarket::market::v1::SecurityList* unsafe_arena_release_security_list();
 
   private:
-  const ::hqmarket::market::v1::InstrumentListRequest& _internal_instrument_list_request() const;
-  ::hqmarket::market::v1::InstrumentListRequest* _internal_mutable_instrument_list_request();
-
-  public:
-  // .hqmarket.market.v1.InstrumentListResponse instrument_list_response = 25;
-  bool has_instrument_list_response() const;
-  private:
-  bool _internal_has_instrument_list_response() const;
-
-  public:
-  void clear_instrument_list_response() ;
-  const ::hqmarket::market::v1::InstrumentListResponse& instrument_list_response() const;
-  PROTOBUF_NODISCARD ::hqmarket::market::v1::InstrumentListResponse* release_instrument_list_response();
-  ::hqmarket::market::v1::InstrumentListResponse* mutable_instrument_list_response();
-  void set_allocated_instrument_list_response(::hqmarket::market::v1::InstrumentListResponse* value);
-  void unsafe_arena_set_allocated_instrument_list_response(::hqmarket::market::v1::InstrumentListResponse* value);
-  ::hqmarket::market::v1::InstrumentListResponse* unsafe_arena_release_instrument_list_response();
-
-  private:
-  const ::hqmarket::market::v1::InstrumentListResponse& _internal_instrument_list_response() const;
-  ::hqmarket::market::v1::InstrumentListResponse* _internal_mutable_instrument_list_response();
+  const ::hqmarket::market::v1::SecurityList& _internal_security_list() const;
+  ::hqmarket::market::v1::SecurityList* _internal_mutable_security_list();
 
   public:
   void clear_payload();
@@ -1552,13 +1531,12 @@ class RequestData final : public ::google::protobuf::Message
   void set_has_query_response();
   void set_has_strategy();
   void set_has_strategy_list();
-  void set_has_instrument_list_request();
-  void set_has_instrument_list_response();
+  void set_has_security_list();
   inline bool has_payload() const;
   inline void clear_has_payload();
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      3, 21, 18,
+      3, 20, 17,
       55, 2>
       _table_;
 
@@ -1604,8 +1582,7 @@ class RequestData final : public ::google::protobuf::Message
       ::hqmarket::market::v1::QueryResponse* query_response_;
       ::request::StrategyInfo* strategy_;
       ::request::StrategyList* strategy_list_;
-      ::hqmarket::market::v1::InstrumentListRequest* instrument_list_request_;
-      ::hqmarket::market::v1::InstrumentListResponse* instrument_list_response_;
+      ::hqmarket::market::v1::SecurityList* security_list_;
     } payload_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::uint32_t _oneof_case_[1];
@@ -3225,139 +3202,71 @@ inline ::request::StrategyList* RequestData::mutable_strategy_list() ABSL_ATTRIB
   return _msg;
 }
 
-// .hqmarket.market.v1.InstrumentListRequest instrument_list_request = 24;
-inline bool RequestData::has_instrument_list_request() const {
-  return payload_case() == kInstrumentListRequest;
+// .hqmarket.market.v1.SecurityList security_list = 25;
+inline bool RequestData::has_security_list() const {
+  return payload_case() == kSecurityList;
 }
-inline bool RequestData::_internal_has_instrument_list_request() const {
-  return payload_case() == kInstrumentListRequest;
+inline bool RequestData::_internal_has_security_list() const {
+  return payload_case() == kSecurityList;
 }
-inline void RequestData::set_has_instrument_list_request() {
-  _impl_._oneof_case_[0] = kInstrumentListRequest;
+inline void RequestData::set_has_security_list() {
+  _impl_._oneof_case_[0] = kSecurityList;
 }
-inline ::hqmarket::market::v1::InstrumentListRequest* RequestData::release_instrument_list_request() {
-  // @@protoc_insertion_point(field_release:request.RequestData.instrument_list_request)
-  if (payload_case() == kInstrumentListRequest) {
+inline ::hqmarket::market::v1::SecurityList* RequestData::release_security_list() {
+  // @@protoc_insertion_point(field_release:request.RequestData.security_list)
+  if (payload_case() == kSecurityList) {
     clear_has_payload();
-    auto* temp = _impl_.payload_.instrument_list_request_;
+    auto* temp = _impl_.payload_.security_list_;
     if (GetArena() != nullptr) {
       temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
     }
-    _impl_.payload_.instrument_list_request_ = nullptr;
+    _impl_.payload_.security_list_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline const ::hqmarket::market::v1::InstrumentListRequest& RequestData::_internal_instrument_list_request() const {
-  return payload_case() == kInstrumentListRequest ? *_impl_.payload_.instrument_list_request_ : reinterpret_cast<::hqmarket::market::v1::InstrumentListRequest&>(::hqmarket::market::v1::_InstrumentListRequest_default_instance_);
+inline const ::hqmarket::market::v1::SecurityList& RequestData::_internal_security_list() const {
+  return payload_case() == kSecurityList ? *_impl_.payload_.security_list_ : reinterpret_cast<::hqmarket::market::v1::SecurityList&>(::hqmarket::market::v1::_SecurityList_default_instance_);
 }
-inline const ::hqmarket::market::v1::InstrumentListRequest& RequestData::instrument_list_request() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:request.RequestData.instrument_list_request)
-  return _internal_instrument_list_request();
+inline const ::hqmarket::market::v1::SecurityList& RequestData::security_list() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:request.RequestData.security_list)
+  return _internal_security_list();
 }
-inline ::hqmarket::market::v1::InstrumentListRequest* RequestData::unsafe_arena_release_instrument_list_request() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:request.RequestData.instrument_list_request)
-  if (payload_case() == kInstrumentListRequest) {
+inline ::hqmarket::market::v1::SecurityList* RequestData::unsafe_arena_release_security_list() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:request.RequestData.security_list)
+  if (payload_case() == kSecurityList) {
     clear_has_payload();
-    auto* temp = _impl_.payload_.instrument_list_request_;
-    _impl_.payload_.instrument_list_request_ = nullptr;
+    auto* temp = _impl_.payload_.security_list_;
+    _impl_.payload_.security_list_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline void RequestData::unsafe_arena_set_allocated_instrument_list_request(::hqmarket::market::v1::InstrumentListRequest* value) {
+inline void RequestData::unsafe_arena_set_allocated_security_list(::hqmarket::market::v1::SecurityList* value) {
   // We rely on the oneof clear method to free the earlier contents
   // of this oneof. We can directly use the pointer we're given to
   // set the new value.
   clear_payload();
   if (value) {
-    set_has_instrument_list_request();
-    _impl_.payload_.instrument_list_request_ = value;
+    set_has_security_list();
+    _impl_.payload_.security_list_ = value;
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:request.RequestData.instrument_list_request)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:request.RequestData.security_list)
 }
-inline ::hqmarket::market::v1::InstrumentListRequest* RequestData::_internal_mutable_instrument_list_request() {
-  if (payload_case() != kInstrumentListRequest) {
+inline ::hqmarket::market::v1::SecurityList* RequestData::_internal_mutable_security_list() {
+  if (payload_case() != kSecurityList) {
     clear_payload();
-    set_has_instrument_list_request();
-    _impl_.payload_.instrument_list_request_ =
-        ::google::protobuf::Message::DefaultConstruct<::hqmarket::market::v1::InstrumentListRequest>(GetArena());
+    set_has_security_list();
+    _impl_.payload_.security_list_ =
+        ::google::protobuf::Message::DefaultConstruct<::hqmarket::market::v1::SecurityList>(GetArena());
   }
-  return _impl_.payload_.instrument_list_request_;
+  return _impl_.payload_.security_list_;
 }
-inline ::hqmarket::market::v1::InstrumentListRequest* RequestData::mutable_instrument_list_request() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::hqmarket::market::v1::InstrumentListRequest* _msg = _internal_mutable_instrument_list_request();
-  // @@protoc_insertion_point(field_mutable:request.RequestData.instrument_list_request)
-  return _msg;
-}
-
-// .hqmarket.market.v1.InstrumentListResponse instrument_list_response = 25;
-inline bool RequestData::has_instrument_list_response() const {
-  return payload_case() == kInstrumentListResponse;
-}
-inline bool RequestData::_internal_has_instrument_list_response() const {
-  return payload_case() == kInstrumentListResponse;
-}
-inline void RequestData::set_has_instrument_list_response() {
-  _impl_._oneof_case_[0] = kInstrumentListResponse;
-}
-inline ::hqmarket::market::v1::InstrumentListResponse* RequestData::release_instrument_list_response() {
-  // @@protoc_insertion_point(field_release:request.RequestData.instrument_list_response)
-  if (payload_case() == kInstrumentListResponse) {
-    clear_has_payload();
-    auto* temp = _impl_.payload_.instrument_list_response_;
-    if (GetArena() != nullptr) {
-      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
-    }
-    _impl_.payload_.instrument_list_response_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline const ::hqmarket::market::v1::InstrumentListResponse& RequestData::_internal_instrument_list_response() const {
-  return payload_case() == kInstrumentListResponse ? *_impl_.payload_.instrument_list_response_ : reinterpret_cast<::hqmarket::market::v1::InstrumentListResponse&>(::hqmarket::market::v1::_InstrumentListResponse_default_instance_);
-}
-inline const ::hqmarket::market::v1::InstrumentListResponse& RequestData::instrument_list_response() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:request.RequestData.instrument_list_response)
-  return _internal_instrument_list_response();
-}
-inline ::hqmarket::market::v1::InstrumentListResponse* RequestData::unsafe_arena_release_instrument_list_response() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:request.RequestData.instrument_list_response)
-  if (payload_case() == kInstrumentListResponse) {
-    clear_has_payload();
-    auto* temp = _impl_.payload_.instrument_list_response_;
-    _impl_.payload_.instrument_list_response_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline void RequestData::unsafe_arena_set_allocated_instrument_list_response(::hqmarket::market::v1::InstrumentListResponse* value) {
-  // We rely on the oneof clear method to free the earlier contents
-  // of this oneof. We can directly use the pointer we're given to
-  // set the new value.
-  clear_payload();
-  if (value) {
-    set_has_instrument_list_response();
-    _impl_.payload_.instrument_list_response_ = value;
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:request.RequestData.instrument_list_response)
-}
-inline ::hqmarket::market::v1::InstrumentListResponse* RequestData::_internal_mutable_instrument_list_response() {
-  if (payload_case() != kInstrumentListResponse) {
-    clear_payload();
-    set_has_instrument_list_response();
-    _impl_.payload_.instrument_list_response_ =
-        ::google::protobuf::Message::DefaultConstruct<::hqmarket::market::v1::InstrumentListResponse>(GetArena());
-  }
-  return _impl_.payload_.instrument_list_response_;
-}
-inline ::hqmarket::market::v1::InstrumentListResponse* RequestData::mutable_instrument_list_response() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::hqmarket::market::v1::InstrumentListResponse* _msg = _internal_mutable_instrument_list_response();
-  // @@protoc_insertion_point(field_mutable:request.RequestData.instrument_list_response)
+inline ::hqmarket::market::v1::SecurityList* RequestData::mutable_security_list() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::hqmarket::market::v1::SecurityList* _msg = _internal_mutable_security_list();
+  // @@protoc_insertion_point(field_mutable:request.RequestData.security_list)
   return _msg;
 }
 

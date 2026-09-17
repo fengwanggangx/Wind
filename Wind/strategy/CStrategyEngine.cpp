@@ -25,9 +25,9 @@ namespace
 {
 	thread_local _TyStrategyId CurrentStrategyId{ 0 };
 
-	CQuoteInfo MakeQuoteInfo(const hqmarket::market::v1::Instrument& instrument, Channel channel)
+	CQuoteInfo MakeQuoteInfo(const hqmarket::market::v1::Security& security, Channel channel)
 	{
-		return CQuoteInfo(instrument.symbol(), static_cast<Exchange>(static_cast<int>(instrument.exchange())), channel);
+		return CQuoteInfo(security.symbol(), static_cast<Exchange>(static_cast<int>(security.exchange())), channel);
 	}
 
 	bool ParseUnsigned(const std::string& strValue, std::uint64_t& value)
@@ -1402,20 +1402,20 @@ std::string CStrategyEngine::GetMarketKey(const CRequest& req)
 	const _TyReqData& data = req.GetData();
 	if (data.has_quote())
 	{
-		return MakeQuoteInfo(data.quote().instrument(), Channel::quote).String();
+		return MakeQuoteInfo(data.quote().security(), Channel::quote).String();
 	}
 	if (data.has_depth())
 	{
-		return MakeQuoteInfo(data.depth().instrument(), Channel::depth).String();
+		return MakeQuoteInfo(data.depth().security(), Channel::depth).String();
 	}
 	if (data.has_trade())
 	{
-		return MakeQuoteInfo(data.trade().instrument(), Channel::trade).String();
+		return MakeQuoteInfo(data.trade().security(), Channel::trade).String();
 	}
 	if (data.has_bar())
 	{
 		Channel channel = static_cast<Channel>(static_cast<int>(data.bar().channel()));
-		return MakeQuoteInfo(data.bar().instrument(), channel).String();
+		return MakeQuoteInfo(data.bar().security(), channel).String();
 	}
 	return { };
 }
