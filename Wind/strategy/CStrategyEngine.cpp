@@ -129,7 +129,7 @@ namespace
 
 	bool MakeStrategyConfig(const request::StrategyInfo& info, CStrategyConfig& cfg)
 	{
-		cfg.m_id = info.strategy_id();
+		cfg.m_router_id = info.strategy_id();
 		cfg.m_strType = info.strategy_type();
 		cfg.m_strName = info.strategy_name();
 		cfg.m_eventQueueLimit = (0 == info.event_queue_limit()) ? 4096 : info.event_queue_limit();
@@ -345,7 +345,7 @@ bool CStrategyEngine::AddStrategy(const CRequest& req)
 		net::SendError(req.GetConnectionId(), req, 1106, "failed to obtain strategy id");
 		return false;
 	}
-	cfg.m_id = id;
+	cfg.m_router_id = id;
 	if (info.enabled() && !CreateStrategy(cfg))
 	{
 		pDB->ExecUpdate("DELETE FROM table_strategy WHERE strategy_id=" + std::to_string(id));
@@ -386,18 +386,18 @@ bool CStrategyEngine::ModifyStrategy(const CRequest& req)
 		net::SendError(req.GetConnectionId(), req, 1104, "strategy database is unavailable");
 		return false;
 	}
-	const db::_TyTableInfo& existing = pDB->ExecQuery("SELECT strategy_id FROM table_strategy WHERE strategy_id=" + std::to_string(cfg.m_id));
+	const db::_TyTableInfo& existing = pDB->ExecQuery("SELECT strategy_id FROM table_strategy WHERE strategy_id=" + std::to_string(cfg.m_router_id));
 	if (existing.second.empty())
 	{
 		net::SendError(req.GetConnectionId(), req, 1110, "strategy does not exist");
 		return false;
 	}
-	std::shared_ptr<CStrategyRuntime> oldRuntime = FindRuntime(cfg.m_id);
+	std::shared_ptr<CStrategyRuntime> oldRuntime = FindRuntime(cfg.m_router_id);
 	CStrategyConfig oldConfig;
 	if (nullptr != oldRuntime)
 	{
 		oldConfig = oldRuntime->m_config;
-		if (!StopStrategy(cfg.m_id) || !RemoveStrategy(cfg.m_id))
+		if (!StopStrategy(cfg.m_router_id) || !RemoveStrategy(cfg.m_router_id))
 		{
 			net::SendError(req.GetConnectionId(), req, 1108, "strategy runtime cannot be replaced");
 			return false;
@@ -412,13 +412,13 @@ bool CStrategyEngine::ModifyStrategy(const CRequest& req)
 		net::SendError(req.GetConnectionId(), req, 1107, "failed to create strategy runtime");
 		return false;
 	}
-	std::string strSQL = "UPDATE table_strategy SET strategy_type=" + utility::Utf8Literal(info.strategy_type()) + ",strategy_name=" + utility::Utf8Literal(info.strategy_name()) + ",parameters=" + utility::Utf8Literal(SerializeParameters(info)) + ",subscriptions=" + utility::Utf8Literal(SerializeSubscriptions(info)) + ",event_queue_limit=" + std::to_string(info.event_queue_limit()) + ",auto_start=" + (info.auto_start() ? "1" : "0") + ",enabled=" + (info.enabled() ? "1" : "0") + " WHERE strategy_id=" + std::to_string(cfg.m_id);
+	std::string strSQL = "UPDATE table_strategy SET strategy_type=" + utility::Utf8Literal(info.strategy_type()) + ",strategy_name=" + utility::Utf8Literal(info.strategy_name()) + ",parameters=" + utility::Utf8Literal(SerializeParameters(info)) + ",subscriptions=" + utility::Utf8Literal(SerializeSubscriptions(info)) + ",event_queue_limit=" + std::to_string(info.event_queue_limit()) + ",auto_start=" + (info.auto_start() ? "1" : "0") + ",enabled=" + (info.enabled() ? "1" : "0") + " WHERE strategy_id=" + std::to_string(cfg.m_router_id);
 	if (0 != pDB->ExecUpdate(strSQL))
 	{
 		if (info.enabled())
 		{
-			StopStrategy(cfg.m_id);
-			RemoveStrategy(cfg.m_id);
+			StopStrategy(cfg.m_router_id);
+			RemoveStrategy(cfg.m_router_id);
 		}
 		if (nullptr != oldRuntime)
 		{
@@ -525,7 +525,7 @@ bool CStrategyEngine::LoadStrategies()
 			m_strLastError = "table_strategy contains invalid numeric fields";
 			return false;
 		}
-		cfg.m_id = id;
+		cfg.m_router_id = id;
 		cfg.m_strType = row[1];
 		cfg.m_strName = row[2];
 		cfg.m_eventQueueLimit = static_cast<std::size_t>(eventQueueLimit);
@@ -562,7 +562,7 @@ bool CStrategyEngine::CreateStrategy(const CStrategyConfig& cfg)
 	std::shared_ptr<CStrategyRuntime> runtime = std::make_shared<CStrategyRuntime>();
 	runtime->m_config = cfg;
 	runtime->m_strategy = std::move(strategy);
-	runtime->m_context = std::make_unique<CStrategyContext>(cfg.m_id, this, m_trader.get());
+	runtime->m_context = std::make_unique<CStrategyContext>(cfg.m_router_id, this, m_trader.get());
 	if (!runtime->m_strategy->Initialize(*runtime->m_context, runtime->m_config))
 	{
 		return false;
@@ -571,16 +571,16 @@ bool CStrategyEngine::CreateStrategy(const CStrategyConfig& cfg)
 
 	{
 		std::unique_lock<std::shared_mutex> lock(m_mtx_strategies);
-		if (!m_runtimes.emplace(cfg.m_id, runtime).second)
+		if (!m_runtimes.emplace(cfg.m_router_id, runtime).second)
 		{
 			return false;
 		}
 	}
 
 	NotifySnapshot(runtime);
-	if (cfg.m_bAutoStart && !StartStrategy(cfg.m_id))
+	if (cfg.m_bAutoStart && !StartStrategy(cfg.m_router_id))
 	{
-		RemoveStrategy(cfg.m_id);
+		RemoveStrategy(cfg.m_router_id);
 		return false;
 	}
 	return true;
@@ -732,7 +732,7 @@ void CStrategyEngine::StopAll()
 		StrategyState state = runtime->m_state.load();
 		if ((StrategyState::Initialized != state) && (StrategyState::Stopped != state))
 		{
-			StopStrategy(runtime->m_config.m_id);
+			StopStrategy(runtime->m_config.m_router_id);
 		}
 		RemoveRoutes(runtime->m_config);
 		UnsubscribeUnusedQuotes(runtime->m_config);
@@ -1039,7 +1039,7 @@ bool CStrategyEngine::DispatchEvent(CStrategyRuntime& runtime, CStrategyEvent& e
 	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 	bool bResult = true;
 	_TyStrategyId previousStrategyId = CurrentStrategyId;
-	CurrentStrategyId = runtime.m_config.m_id;
+	CurrentStrategyId = runtime.m_config.m_router_id;
 	try
 	{
 		switch (event.m_type)
@@ -1098,7 +1098,7 @@ bool CStrategyEngine::DispatchEvent(CStrategyRuntime& runtime, CStrategyEvent& e
 		runtime.m_lastCallbackDurationUs = duration;
 		runtime.m_maxCallbackDurationUs = (std::max)(runtime.m_maxCallbackDurationUs, duration);
 	}
-	std::shared_ptr<CStrategyRuntime> runtimeHandle = FindRuntime(runtime.m_config.m_id);
+	std::shared_ptr<CStrategyRuntime> runtimeHandle = FindRuntime(runtime.m_config.m_router_id);
 	if (nullptr != runtimeHandle)
 	{
 		NotifySnapshot(runtimeHandle);
@@ -1149,10 +1149,10 @@ void CStrategyEngine::AddRoutes(const CStrategyConfig& cfg)
 	for (const auto& quote : cfg.m_subscriptions)
 	{
 		std::string strKey = quote.String();
-		m_marketRoutes[strKey].emplace(cfg.m_id);
+		m_marketRoutes[strKey].emplace(cfg.m_router_id);
 		CSubscriptionEntry& entry = m_subscriptions[strKey];
 		entry.m_quote = quote;
-		entry.m_strategyIds.emplace(cfg.m_id);
+		entry.m_strategyIds.emplace(cfg.m_router_id);
 	}
 }
 
@@ -1165,7 +1165,7 @@ void CStrategyEngine::RemoveRoutes(const CStrategyConfig& cfg)
 		auto routeIter = m_marketRoutes.find(strKey);
 		if (m_marketRoutes.end() != routeIter)
 		{
-			routeIter->second.erase(cfg.m_id);
+			routeIter->second.erase(cfg.m_router_id);
 			if (routeIter->second.empty())
 			{
 				m_marketRoutes.erase(routeIter);
@@ -1174,7 +1174,7 @@ void CStrategyEngine::RemoveRoutes(const CStrategyConfig& cfg)
 		auto subscriptionIter = m_subscriptions.find(strKey);
 		if (m_subscriptions.end() != subscriptionIter)
 		{
-			subscriptionIter->second.m_strategyIds.erase(cfg.m_id);
+			subscriptionIter->second.m_strategyIds.erase(cfg.m_router_id);
 		}
 	}
 }
@@ -1344,7 +1344,7 @@ bool CStrategyEngine::CancelOrder(_TyStrategyId id, _TyOrderId orderId)
 CStrategySnapshot CStrategyEngine::MakeSnapshot(const std::shared_ptr<CStrategyRuntime>& runtime) const
 {
 	CStrategySnapshot snapshot;
-	snapshot.m_strategyId = runtime->m_config.m_id;
+	snapshot.m_strategyId = runtime->m_config.m_router_id;
 	snapshot.m_strType = runtime->m_config.m_strType;
 	snapshot.m_strName = runtime->m_config.m_strName;
 	snapshot.m_state = runtime->m_state.load();

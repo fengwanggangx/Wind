@@ -20,6 +20,16 @@ namespace request
 		return (req.GetType() == CRequest::Type::HQMARKET) && (req.GetCmd() == "query_securities");
 	}
 
+	bool IsSubscriptionRequest(const CString& req)
+	{
+		return (req.GetType() == CRequest::Type::HQMARKET) && (req.GetCmd() == "subscribe");
+	}
+
+	bool IsUnSubscriptionRequest(const CString& req)
+	{
+		return (req.GetType() == CRequest::Type::HQMARKET) && (req.GetCmd() == "unsubscribe");
+	}
+
 	CRequest Auth(const std::string& strAccount, const std::string& strPassword)
 	{
 		CRequest req;

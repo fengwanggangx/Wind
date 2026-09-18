@@ -29,7 +29,7 @@ class CBrokerService final
   private:
 	struct PendingSubscription
 	{
-		net::_TyConnectionId m_id{ -1 };
+		net::_TyConnectionId m_router_id{ -1 };
 		_TyRequestId m_requestId{ 0 };
 		CQuoteInfo m_quote;
 		std::chrono::steady_clock::time_point m_deadline;
@@ -37,13 +37,13 @@ class CBrokerService final
 
 	struct CPendingQueryClient
 	{
-		net::_TyConnectionId m_id{ -1 };
+		net::_TyConnectionId m_router_id{ -1 };
 		_TyRequestId m_requestId{ 0 };
 	};
 
 	struct CPendingQuery
 	{
-		_TyRequestId m_upstreamRequestId{ 0 };
+		_TyRequestId m_router_id{ 0 };
 		std::string m_strKey;
 		std::string m_strCmd;
 		std::chrono::steady_clock::time_point m_deadline;
@@ -95,10 +95,9 @@ private:
 	std::unordered_map<std::string, std::chrono::steady_clock::time_point> m_client_tokens;
 
 	CSubscriptionMgr m_subscriptions;
-	std::unordered_map<std::string, std::vector<PendingSubscription>> m_pendingSubscriptions;
-	std::unordered_map<std::string, CPendingQuery> m_pendingQueries;
-	std::unordered_map<_TyRequestId, std::string> m_queryKeysByRequestId;
-	std::atomic_uint64_t m_nextUpstreamRequestId{ std::uint64_t(1) << 63 };
+	std::unordered_map<std::string, std::vector<PendingSubscription>> m_pending_subscriptions;
+	std::unordered_map<std::string, CPendingQuery> m_pending_queries;
+	std::atomic_uint64_t m_router_id{ std::uint64_t(1) << 63 };
 
 private:
 	net::CTcpServer* m_pTcpServer{ nullptr };

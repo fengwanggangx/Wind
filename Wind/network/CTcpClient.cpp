@@ -68,13 +68,13 @@ namespace net
 	void CTcpClient::Release()
 	{
 		ShutDown();
-		if (m_bConnected && (0 <= m_id))
+		if (m_bConnected && (0 <= m_router_id))
 		{
-			CNetPool::InstancePtr()->CloseAConnection(m_id);
+			CNetPool::InstancePtr()->CloseAConnection(m_router_id);
 		}
 		m_pEvent.reset();
 		m_bConnected = false;
-		m_id = -1;
+		m_router_id = -1;
 		if (nullptr != m_dispatcher)
 		{
 			m_dispatcher->StopAndWait();
@@ -83,7 +83,7 @@ namespace net
 
 	net::_TyConnectionId CTcpClient::GetId() const
 	{
-		return m_id;
+		return m_router_id;
 	}
 
 	bool CTcpClient::Send(const void* pData, std::size_t nLength)
@@ -97,7 +97,7 @@ namespace net
 
 	bool CTcpClient::SendRequest(const CRequest& req)
 	{
-		if (!m_bConnected || (0 > m_id))
+		if (!m_bConnected || (0 > m_router_id))
 		{
 			return false;
 		}
@@ -107,7 +107,7 @@ namespace net
 
 	bool CTcpClient::SetReadTimeout(int nSeconds)
 	{
-		return m_bConnected && (0 <= m_id) && CNetPool::InstancePtr()->SetReadTimeout(m_id, nSeconds);
+		return m_bConnected && (0 <= m_router_id) && CNetPool::InstancePtr()->SetReadTimeout(m_router_id, nSeconds);
 	}
 
 	void CTcpClient::RegisterHandler(_TyHandler&& handler)
@@ -153,8 +153,8 @@ namespace net
 	void CTcpClient::OnConnected(bufferevent* pEvent)
 	{
 		m_bConnected = true;
-		m_id = CNetPool::InstancePtr()->RegisterAConnection(pEvent);
-		if (0 <= m_id)
+		m_router_id = CNetPool::InstancePtr()->RegisterAConnection(pEvent);
+		if (0 <= m_router_id)
 		{
 			m_pEvent.release();
 		}
@@ -179,7 +179,7 @@ namespace net
 
 		_TyConnectionId id = CNetPool::InstancePtr()->CloseAConnection(pEvent);
 		m_bConnected = false;
-		m_id = -1;
+		m_router_id = -1;
 		if ((id >= 0) && (nullptr != m_dispatcher))
 		{
 			std::vector<CNetEvent> events;

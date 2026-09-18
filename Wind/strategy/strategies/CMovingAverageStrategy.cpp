@@ -14,7 +14,7 @@ bool CMovingAverageStrategy::Initialize(IStrategyContext& context, const CStrate
 		return false;
 	}
 	m_pContext = &context;
-	m_strategyId = config.m_id;
+	m_strategyId = config.m_router_id;
 	m_shortWindow = shortWindow;
 	m_longWindow = longWindow;
 	return true;

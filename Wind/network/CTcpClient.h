@@ -58,7 +58,7 @@ namespace net
 			std::string m_strAddr;
 			int m_nPort{ -1 };
 
-			net::_TyConnectionId m_id{ 0 };
+			net::_TyConnectionId m_router_id{ 0 };
 	};
 } // namespace net
 #endif
