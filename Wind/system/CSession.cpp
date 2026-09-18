@@ -11,7 +11,7 @@ namespace
 	bool IsAccepted(const CRequest& response)
 	{
 		std::string strAccepted = response.GetReturnData("accepted");
-		return strAccepted.empty() ? ("ok" == response.GetReturnData("status")) : ("1" == strAccepted);
+		return ("1" == strAccepted);
 	}
 }
 
@@ -237,57 +237,63 @@ int CSession::OnNetEvent(const net::CNetEvent& ev)
 	return 0;
 }
 
-void CSession::HandleResponse(const CRequest& req)
+bool CSession::HandleAuthRequest(const CRequest& req)
 {
-	std::string strCmd = req.GetCmd();
-	if ("auth" == strCmd)
+	if (!IsAccepted(req))
 	{
-		if (!IsAccepted(req))
-		{
-			bool bRetryWithCredentials = false;
-			{
-				std::lock_guard<std::mutex> lock(m_mtx_auth);
-				if (m_login.has_value() && !m_login->m_strToken.empty())
-				{
-					m_login->m_strToken.clear();
-					bRetryWithCredentials = !m_login->m_strAccount.empty() && !m_login->m_strPassword.empty();
-				}
-			}
-			if (bRetryWithCredentials)
-			{
-				SendAuthentication();
-				return;
-			}
-			std::optional<std::pair<int, std::string>> errorInfo = req.GetErrorInfo();
-			NotifyState(SessionState::Connected, "HQMarket authentication failed: " + (errorInfo.has_value() ? errorInfo->second : req.GetReturnData("reason")));
-			return;
-		}
+		bool bRetryWithCredentials = false;
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_auth);
-			if (m_auth.has_value())
+			if (m_login.has_value() && !m_login->m_strToken.empty())
 			{
-				m_auth->m_strToken = req.GetReturnData("token");
-				m_login = std::move(m_auth);
-				m_auth.reset();
-			}
-			else if (m_login.has_value() && !req.GetReturnData("token").empty())
-			{
-				m_login->m_strToken = req.GetReturnData("token");
+				m_login->m_strToken.clear();
+				bRetryWithCredentials = !m_login->m_strAccount.empty() && !m_login->m_strPassword.empty();
 			}
 		}
-		m_state.store(SessionState::Ready);
+		if (bRetryWithCredentials)
 		{
-			std::lock_guard<std::mutex> lock(m_mtx_client);
-			if (nullptr != m_client)
-			{
-				m_client->SetReadTimeout(20);
-			}
+			SendAuthentication();
+			return false;
 		}
-		NotifyState(SessionState::Ready, "HQMarket session ready");
-		return;
+		std::optional<std::pair<int, std::string>> errorInfo = req.GetErrorInfo();
+		NotifyState(SessionState::Connected, "HQMarket authentication failed: " + (errorInfo.has_value() ? errorInfo->second : req.GetReturnData("reason")));
+		return false;
 	}
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_auth);
+		if (m_auth.has_value())
+		{
+			m_auth->m_strToken = req.GetReturnData("token");
+			m_login = std::move(m_auth);
+			m_auth.reset();
+		}
+		else if (m_login.has_value() && !req.GetReturnData("token").empty())
+		{
+			m_login->m_strToken = req.GetReturnData("token");
+		}
+	}
+	m_state.store(SessionState::Ready);
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_client);
+		if (nullptr != m_client)
+		{
+			m_client->SetReadTimeout(20);
+		}
+	}
+	NotifyState(SessionState::Ready, "HQMarket session ready");
+	return true;
+}
 
-	Dispatch(req);
+void CSession::HandleResponse(const CRequest& req)
+{
+	if (request::IsAuthRequest(req))
+	{
+		HandleAuthRequest(req);
+	}
+	else
+	{
+		Dispatch(req);
+	}
 }
 
 bool CSession::SendAuthentication()

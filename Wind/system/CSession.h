@@ -65,6 +65,7 @@ private:
 	void MaintenanceLoop();
 	int OnNetEvent(const net::CNetEvent& ev);
 	void HandleResponse(const CRequest& req);
+	bool HandleAuthRequest(const CRequest& req);
 	bool SendAuthentication();
 	void NotifyState(SessionState state, const std::string& strMessage);
 	void Dispatch(const CRequest& req);

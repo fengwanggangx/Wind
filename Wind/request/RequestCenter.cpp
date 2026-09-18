@@ -5,6 +5,21 @@
 
 namespace request
 {
+	bool IsAuthRequest(const CString& req)
+	{
+		return (req.GetType() == CRequest::Type::QUERY_AUTH) && (req.GetCmd() == "auth");
+	}
+
+	bool IsRegisterAccountRequest(const CString& req)
+	{
+		return (req.GetType() == CRequest::Type::QUERY_AUTH) && (req.GetCmd() == "register");
+	}
+
+	bool IsQuerySecurityRequest(const CString& req)
+	{
+		return (req.GetType() == CRequest::Type::HQMARKET) && (req.GetCmd() == "query_securities");
+	}
+
 	CRequest Auth(const std::string& strAccount, const std::string& strPassword)
 	{
 		CRequest req;

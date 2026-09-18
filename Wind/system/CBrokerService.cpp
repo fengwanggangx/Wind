@@ -151,7 +151,7 @@ void CBrokerService::OnHQMarketResponse(const CRequest& req)
 {
 	ExpirePendingSubscriptions();
 	ExpirePendingQueries();
-	if (DispatchQueryResponse(req))
+	if (RouteQueryRequest(req))
 	{
 		return;
 	}
@@ -306,7 +306,7 @@ bool CBrokerService::HandleMarketQuery(net::_TyConnectionId id, const CRequest& 
 	return false;
 }
 
-bool CBrokerService::DispatchQueryResponse(const CRequest& req)
+bool CBrokerService::RouteQueryRequest(const CRequest& req)
 {
 	CPendingQuery pending;
 	{

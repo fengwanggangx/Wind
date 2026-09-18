@@ -75,7 +75,7 @@ class CBrokerService final
 	void FailPendingSubscriptions(const std::string& strReason);
 	void ExpirePendingQueries();
 	void FailPendingQueries(const std::string& strReason);
-	bool DispatchQueryResponse(const CRequest& response);
+	bool RouteQueryRequest(const CRequest& response);
 
 private:
 	bool IsAuthenticated(net::_TyConnectionId id) const;
