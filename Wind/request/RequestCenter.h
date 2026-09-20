@@ -9,11 +9,11 @@
 
 namespace request
 {
-	bool IsAuthRequest(const CString& req);
-	bool IsRegisterAccountRequest(const CString& req);
-	bool IsQuerySecurityRequest(const CString& req);
-	bool IsSubscriptionRequest(const CString& req);
-	bool IsUnSubscriptionRequest(const CString& req);
+	bool IsAuthRequest(const CRequest& req);
+	bool IsRegisterAccountRequest(const CRequest& req);
+	bool IsQuerySecurityRequest(const CRequest& req);
+	bool IsSubscriptionRequest(const CRequest& req);
+	bool IsUnSubscriptionRequest(const CRequest& req);
 
 	CRequest Auth(const std::string& strAccount, const std::string& strPassword);
 	CRequest Auth(const std::string& strToken);

@@ -5,27 +5,27 @@
 
 namespace request
 {
-	bool IsAuthRequest(const CString& req)
+	bool IsAuthRequest(const CRequest& req)
 	{
 		return (req.GetType() == CRequest::Type::QUERY_AUTH) && (req.GetCmd() == "auth");
 	}
 
-	bool IsRegisterAccountRequest(const CString& req)
+	bool IsRegisterAccountRequest(const CRequest& req)
 	{
 		return (req.GetType() == CRequest::Type::QUERY_AUTH) && (req.GetCmd() == "register");
 	}
 
-	bool IsQuerySecurityRequest(const CString& req)
+	bool IsQuerySecurityRequest(const CRequest& req)
 	{
 		return (req.GetType() == CRequest::Type::HQMARKET) && (req.GetCmd() == "query_securities");
 	}
 
-	bool IsSubscriptionRequest(const CString& req)
+	bool IsSubscriptionRequest(const CRequest& req)
 	{
 		return (req.GetType() == CRequest::Type::HQMARKET) && (req.GetCmd() == "subscribe");
 	}
 
-	bool IsUnSubscriptionRequest(const CString& req)
+	bool IsUnSubscriptionRequest(const CRequest& req)
 	{
 		return (req.GetType() == CRequest::Type::HQMARKET) && (req.GetCmd() == "unsubscribe");
 	}

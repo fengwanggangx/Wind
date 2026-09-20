@@ -56,6 +56,59 @@ struct SecurityDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SecurityDefaultTypeInternal _Security_default_instance_;
 
+inline constexpr SectorListRequest::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : type_{static_cast< ::hqmarket::market::v1::SectorType >(0)},
+        _cached_size_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR SectorListRequest::SectorListRequest(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct SectorListRequestDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR SectorListRequestDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~SectorListRequestDefaultTypeInternal() {}
+  union {
+    SectorListRequest _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SectorListRequestDefaultTypeInternal _SectorListRequest_default_instance_;
+
+inline constexpr SectorConstituentsRequest::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : sector_code_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        type_{static_cast< ::hqmarket::market::v1::SectorType >(0)},
+        _cached_size_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR SectorConstituentsRequest::SectorConstituentsRequest(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct SectorConstituentsRequestDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR SectorConstituentsRequestDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~SectorConstituentsRequestDefaultTypeInternal() {}
+  union {
+    SectorConstituentsRequest _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SectorConstituentsRequestDefaultTypeInternal _SectorConstituentsRequest_default_instance_;
+
 inline constexpr ProviderStatusData::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : provider_(
@@ -320,6 +373,47 @@ struct SecurityInfoDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SecurityInfoDefaultTypeInternal _SecurityInfo_default_instance_;
 
+inline constexpr SectorInfo::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        code_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        leading_name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        leading_security_{nullptr},
+        change_percent_{::int64_t{0}},
+        percent_scale_{0},
+        rising_count_{0},
+        falling_count_{0},
+        flat_count_{0},
+        snapshot_time_ms_{::int64_t{0}},
+        member_count_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR SectorInfo::SectorInfo(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct SectorInfoDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR SectorInfoDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~SectorInfoDefaultTypeInternal() {}
+  union {
+    SectorInfo _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SectorInfoDefaultTypeInternal _SectorInfo_default_instance_;
+
 inline constexpr QuoteData::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
@@ -511,6 +605,67 @@ struct SecurityListDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SecurityListDefaultTypeInternal _SecurityList_default_instance_;
 
+inline constexpr SectorListResponse::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : sectors_{},
+        source_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        snapshot_time_ms_{::int64_t{0}},
+        type_{static_cast< ::hqmarket::market::v1::SectorType >(0)},
+        _cached_size_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR SectorListResponse::SectorListResponse(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct SectorListResponseDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR SectorListResponseDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~SectorListResponseDefaultTypeInternal() {}
+  union {
+    SectorListResponse _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SectorListResponseDefaultTypeInternal _SectorListResponse_default_instance_;
+
+inline constexpr SectorConstituentsResponse::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        securities_{},
+        source_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        sector_{nullptr},
+        snapshot_time_ms_{::int64_t{0}},
+        type_{static_cast< ::hqmarket::market::v1::SectorType >(0)} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR SectorConstituentsResponse::SectorConstituentsResponse(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct SectorConstituentsResponseDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR SectorConstituentsResponseDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~SectorConstituentsResponseDefaultTypeInternal() {}
+  union {
+    SectorConstituentsResponse _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SectorConstituentsResponseDefaultTypeInternal _SectorConstituentsResponse_default_instance_;
+
 inline constexpr QueryResponse::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
@@ -542,7 +697,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 }  // namespace v1
 }  // namespace market
 }  // namespace hqmarket
-static const ::_pb::EnumDescriptor* file_level_enum_descriptors_v1_2fmarket_2eproto[2];
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_v1_2fmarket_2eproto[3];
 static constexpr const ::_pb::ServiceDescriptor**
     file_level_service_descriptors_v1_2fmarket_2eproto = nullptr;
 const ::uint32_t
@@ -813,6 +968,85 @@ const ::uint32_t
         1,
         ~0u,
         ~0u,
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorInfo, _impl_._has_bits_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorInfo, _internal_metadata_),
+        ~0u,  // no _extensions_
+        ~0u,  // no _oneof_case_
+        ~0u,  // no _weak_field_map_
+        ~0u,  // no _inlined_string_donated_
+        ~0u,  // no _split_
+        ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorInfo, _impl_.code_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorInfo, _impl_.name_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorInfo, _impl_.change_percent_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorInfo, _impl_.percent_scale_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorInfo, _impl_.rising_count_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorInfo, _impl_.falling_count_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorInfo, _impl_.flat_count_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorInfo, _impl_.member_count_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorInfo, _impl_.leading_security_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorInfo, _impl_.leading_name_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorInfo, _impl_.snapshot_time_ms_),
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        0,
+        ~0u,
+        ~0u,
+        ~0u,  // no _has_bits_
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorListRequest, _internal_metadata_),
+        ~0u,  // no _extensions_
+        ~0u,  // no _oneof_case_
+        ~0u,  // no _weak_field_map_
+        ~0u,  // no _inlined_string_donated_
+        ~0u,  // no _split_
+        ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorListRequest, _impl_.type_),
+        ~0u,  // no _has_bits_
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorListResponse, _internal_metadata_),
+        ~0u,  // no _extensions_
+        ~0u,  // no _oneof_case_
+        ~0u,  // no _weak_field_map_
+        ~0u,  // no _inlined_string_donated_
+        ~0u,  // no _split_
+        ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorListResponse, _impl_.type_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorListResponse, _impl_.sectors_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorListResponse, _impl_.snapshot_time_ms_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorListResponse, _impl_.source_),
+        ~0u,  // no _has_bits_
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorConstituentsRequest, _internal_metadata_),
+        ~0u,  // no _extensions_
+        ~0u,  // no _oneof_case_
+        ~0u,  // no _weak_field_map_
+        ~0u,  // no _inlined_string_donated_
+        ~0u,  // no _split_
+        ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorConstituentsRequest, _impl_.type_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorConstituentsRequest, _impl_.sector_code_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorConstituentsResponse, _impl_._has_bits_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorConstituentsResponse, _internal_metadata_),
+        ~0u,  // no _extensions_
+        ~0u,  // no _oneof_case_
+        ~0u,  // no _weak_field_map_
+        ~0u,  // no _inlined_string_donated_
+        ~0u,  // no _split_
+        ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorConstituentsResponse, _impl_.type_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorConstituentsResponse, _impl_.sector_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorConstituentsResponse, _impl_.securities_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorConstituentsResponse, _impl_.snapshot_time_ms_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SectorConstituentsResponse, _impl_.source_),
+        ~0u,
+        0,
+        ~0u,
+        ~0u,
+        ~0u,
 };
 
 static const ::_pbi::MigrationSchema
@@ -834,6 +1068,11 @@ static const ::_pbi::MigrationSchema
         {220, -1, -1, sizeof(::hqmarket::market::v1::ProviderStatusData)},
         {231, 243, -1, sizeof(::hqmarket::market::v1::QueryRequest)},
         {247, 260, -1, sizeof(::hqmarket::market::v1::QueryResponse)},
+        {265, 284, -1, sizeof(::hqmarket::market::v1::SectorInfo)},
+        {295, -1, -1, sizeof(::hqmarket::market::v1::SectorListRequest)},
+        {304, -1, -1, sizeof(::hqmarket::market::v1::SectorListResponse)},
+        {316, -1, -1, sizeof(::hqmarket::market::v1::SectorConstituentsRequest)},
+        {326, 339, -1, sizeof(::hqmarket::market::v1::SectorConstituentsResponse)},
 };
 static const ::_pb::Message* const file_default_instances[] = {
     &::hqmarket::market::v1::_Security_default_instance_._instance,
@@ -853,6 +1092,11 @@ static const ::_pb::Message* const file_default_instances[] = {
     &::hqmarket::market::v1::_ProviderStatusData_default_instance_._instance,
     &::hqmarket::market::v1::_QueryRequest_default_instance_._instance,
     &::hqmarket::market::v1::_QueryResponse_default_instance_._instance,
+    &::hqmarket::market::v1::_SectorInfo_default_instance_._instance,
+    &::hqmarket::market::v1::_SectorListRequest_default_instance_._instance,
+    &::hqmarket::market::v1::_SectorListResponse_default_instance_._instance,
+    &::hqmarket::market::v1::_SectorConstituentsRequest_default_instance_._instance,
+    &::hqmarket::market::v1::_SectorConstituentsResponse_default_instance_._instance,
 };
 const char descriptor_table_protodef_v1_2fmarket_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
@@ -916,27 +1160,51 @@ const char descriptor_table_protodef_v1_2fmarket_2eproto[] ABSL_ATTRIBUTE_SECTIO
     "\0162\033.hqmarket.market.v1.Channel\022,\n\005quote\030"
     "\003 \001(\0132\035.hqmarket.market.v1.QuoteData\022)\n\004"
     "bars\030\004 \003(\0132\033.hqmarket.market.v1.BarData\022"
-    "\r\n\005found\030\005 \001(\010*\247\001\n\010Exchange\022\030\n\024EXCHANGE_"
-    "UNSPECIFIED\020\000\022\007\n\003SSE\020\001\022\010\n\004SZSE\020\002\022\007\n\003BSE\020"
-    "\003\022\010\n\004HKEX\020\004\022\t\n\005CFFEX\020\005\022\010\n\004SHFE\020\006\022\007\n\003DCE\020"
-    "\007\022\010\n\004CZCE\020\010\022\007\n\003INE\020\t\022\010\n\004GFEX\020\n\022\n\n\006NASDAQ"
-    "\020\013\022\010\n\004NYSE\020\014\022\n\n\006CRYPTO\020\r*\236\001\n\007Channel\022\027\n\023"
-    "CHANNEL_UNSPECIFIED\020\000\022\021\n\rCHANNEL_QUOTE\020\001"
-    "\022\021\n\rCHANNEL_DEPTH\020\002\022\021\n\rCHANNEL_TRADE\020\003\022\022"
-    "\n\016CHANNEL_BAR_1M\020\004\022\022\n\016CHANNEL_BAR_1D\020\005\022\031"
-    "\n\025CHANNEL_MARKET_STATUS\020\006b\006proto3"
+    "\r\n\005found\030\005 \001(\010\"\226\002\n\nSectorInfo\022\014\n\004code\030\001 "
+    "\001(\t\022\014\n\004name\030\002 \001(\t\022\026\n\016change_percent\030\003 \001("
+    "\003\022\025\n\rpercent_scale\030\004 \001(\005\022\024\n\014rising_count"
+    "\030\005 \001(\005\022\025\n\rfalling_count\030\006 \001(\005\022\022\n\nflat_co"
+    "unt\030\007 \001(\005\022\024\n\014member_count\030\010 \001(\005\0226\n\020leadi"
+    "ng_security\030\t \001(\0132\034.hqmarket.market.v1.S"
+    "ecurity\022\024\n\014leading_name\030\n \001(\t\022\030\n\020snapsho"
+    "t_time_ms\030\013 \001(\003\"A\n\021SectorListRequest\022,\n\004"
+    "type\030\001 \001(\0162\036.hqmarket.market.v1.SectorTy"
+    "pe\"\235\001\n\022SectorListResponse\022,\n\004type\030\001 \001(\0162"
+    "\036.hqmarket.market.v1.SectorType\022/\n\007secto"
+    "rs\030\002 \003(\0132\036.hqmarket.market.v1.SectorInfo"
+    "\022\030\n\020snapshot_time_ms\030\003 \001(\003\022\016\n\006source\030\004 \001"
+    "(\t\"^\n\031SectorConstituentsRequest\022,\n\004type\030"
+    "\001 \001(\0162\036.hqmarket.market.v1.SectorType\022\023\n"
+    "\013sector_code\030\002 \001(\t\"\332\001\n\032SectorConstituent"
+    "sResponse\022,\n\004type\030\001 \001(\0162\036.hqmarket.marke"
+    "t.v1.SectorType\022.\n\006sector\030\002 \001(\0132\036.hqmark"
+    "et.market.v1.SectorInfo\0224\n\nsecurities\030\003 "
+    "\003(\0132 .hqmarket.market.v1.SecurityInfo\022\030\n"
+    "\020snapshot_time_ms\030\004 \001(\003\022\016\n\006source\030\005 \001(\t*"
+    "\247\001\n\010Exchange\022\030\n\024EXCHANGE_UNSPECIFIED\020\000\022\007"
+    "\n\003SSE\020\001\022\010\n\004SZSE\020\002\022\007\n\003BSE\020\003\022\010\n\004HKEX\020\004\022\t\n\005"
+    "CFFEX\020\005\022\010\n\004SHFE\020\006\022\007\n\003DCE\020\007\022\010\n\004CZCE\020\010\022\007\n\003"
+    "INE\020\t\022\010\n\004GFEX\020\n\022\n\n\006NASDAQ\020\013\022\010\n\004NYSE\020\014\022\n\n"
+    "\006CRYPTO\020\r*\236\001\n\007Channel\022\027\n\023CHANNEL_UNSPECI"
+    "FIED\020\000\022\021\n\rCHANNEL_QUOTE\020\001\022\021\n\rCHANNEL_DEP"
+    "TH\020\002\022\021\n\rCHANNEL_TRADE\020\003\022\022\n\016CHANNEL_BAR_1"
+    "M\020\004\022\022\n\016CHANNEL_BAR_1D\020\005\022\031\n\025CHANNEL_MARKE"
+    "T_STATUS\020\006*t\n\nSectorType\022\033\n\027SECTOR_TYPE_"
+    "UNSPECIFIED\020\000\022\030\n\024SECTOR_TYPE_INDUSTRY\020\001\022"
+    "\027\n\023SECTOR_TYPE_CONCEPT\020\002\022\026\n\022SECTOR_TYPE_"
+    "REGION\020\003b\006proto3"
 };
 static ::absl::once_flag descriptor_table_v1_2fmarket_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_v1_2fmarket_2eproto = {
     false,
     false,
-    2753,
+    3696,
     descriptor_table_protodef_v1_2fmarket_2eproto,
     "v1/market.proto",
     &descriptor_table_v1_2fmarket_2eproto_once,
     nullptr,
     0,
-    17,
+    22,
     schemas,
     file_default_instances,
     TableStruct_v1_2fmarket_2eproto::offsets,
@@ -963,6 +1231,15 @@ PROTOBUF_CONSTINIT const uint32_t Channel_internal_data_[] = {
     458752u, 0u, };
 bool Channel_IsValid(int value) {
   return 0 <= value && value <= 6;
+}
+const ::google::protobuf::EnumDescriptor* SectorType_descriptor() {
+  ::google::protobuf::internal::AssignDescriptors(&descriptor_table_v1_2fmarket_2eproto);
+  return file_level_enum_descriptors_v1_2fmarket_2eproto[2];
+}
+PROTOBUF_CONSTINIT const uint32_t SectorType_internal_data_[] = {
+    262144u, 0u, };
+bool SectorType_IsValid(int value) {
+  return 0 <= value && value <= 3;
 }
 // ===================================================================
 
@@ -6692,6 +6969,1722 @@ void QueryResponse::InternalSwap(QueryResponse* PROTOBUF_RESTRICT other) {
 }
 
 ::google::protobuf::Metadata QueryResponse::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class SectorInfo::_Internal {
+ public:
+  using HasBits =
+      decltype(std::declval<SectorInfo>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_._has_bits_);
+};
+
+SectorInfo::SectorInfo(::google::protobuf::Arena* arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:hqmarket.market.v1.SectorInfo)
+}
+inline PROTOBUF_NDEBUG_INLINE SectorInfo::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::hqmarket::market::v1::SectorInfo& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        code_(arena, from.code_),
+        name_(arena, from.name_),
+        leading_name_(arena, from.leading_name_) {}
+
+SectorInfo::SectorInfo(
+    ::google::protobuf::Arena* arena,
+    const SectorInfo& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SectorInfo* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.leading_security_ = (cached_has_bits & 0x00000001u) ? ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::Security>(
+                              arena, *from._impl_.leading_security_)
+                        : nullptr;
+  ::memcpy(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, change_percent_),
+           reinterpret_cast<const char *>(&from._impl_) +
+               offsetof(Impl_, change_percent_),
+           offsetof(Impl_, member_count_) -
+               offsetof(Impl_, change_percent_) +
+               sizeof(Impl_::member_count_));
+
+  // @@protoc_insertion_point(copy_constructor:hqmarket.market.v1.SectorInfo)
+}
+inline PROTOBUF_NDEBUG_INLINE SectorInfo::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : _cached_size_{0},
+        code_(arena),
+        name_(arena),
+        leading_name_(arena) {}
+
+inline void SectorInfo::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, leading_security_),
+           0,
+           offsetof(Impl_, member_count_) -
+               offsetof(Impl_, leading_security_) +
+               sizeof(Impl_::member_count_));
+}
+SectorInfo::~SectorInfo() {
+  // @@protoc_insertion_point(destructor:hqmarket.market.v1.SectorInfo)
+  SharedDtor(*this);
+}
+inline void SectorInfo::SharedDtor(MessageLite& self) {
+  SectorInfo& this_ = static_cast<SectorInfo&>(self);
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.code_.Destroy();
+  this_._impl_.name_.Destroy();
+  this_._impl_.leading_name_.Destroy();
+  delete this_._impl_.leading_security_;
+  this_._impl_.~Impl_();
+}
+
+inline void* SectorInfo::PlacementNew_(const void*, void* mem,
+                                        ::google::protobuf::Arena* arena) {
+  return ::new (mem) SectorInfo(arena);
+}
+constexpr auto SectorInfo::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(SectorInfo),
+                                            alignof(SectorInfo));
+}
+PROTOBUF_CONSTINIT
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::google::protobuf::internal::ClassDataFull SectorInfo::_class_data_ = {
+    ::google::protobuf::internal::ClassData{
+        &_SectorInfo_default_instance_._instance,
+        &_table_.header,
+        nullptr,  // OnDemandRegisterArenaDtor
+        nullptr,  // IsInitialized
+        &SectorInfo::MergeImpl,
+        ::google::protobuf::Message::GetNewImpl<SectorInfo>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        &SectorInfo::SharedDtor,
+        ::google::protobuf::Message::GetClearImpl<SectorInfo>(), &SectorInfo::ByteSizeLong,
+            &SectorInfo::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+        PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_._cached_size_),
+        false,
+    },
+    &SectorInfo::kDescriptorMethods,
+    &descriptor_table_v1_2fmarket_2eproto,
+    nullptr,  // tracker
+};
+const ::google::protobuf::internal::ClassData* SectorInfo::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
+  return _class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<4, 11, 1, 66, 2> SectorInfo::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_._has_bits_),
+    0, // no _extensions_
+    11, 120,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294965248,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    11,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    _class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::hqmarket::market::v1::SectorInfo>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // string code = 1;
+    {::_pbi::TcParser::FastUS1,
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.code_)}},
+    // string name = 2;
+    {::_pbi::TcParser::FastUS1,
+     {18, 63, 0, PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.name_)}},
+    // int64 change_percent = 3;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(SectorInfo, _impl_.change_percent_), 63>(),
+     {24, 63, 0, PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.change_percent_)}},
+    // int32 percent_scale = 4;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SectorInfo, _impl_.percent_scale_), 63>(),
+     {32, 63, 0, PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.percent_scale_)}},
+    // int32 rising_count = 5;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SectorInfo, _impl_.rising_count_), 63>(),
+     {40, 63, 0, PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.rising_count_)}},
+    // int32 falling_count = 6;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SectorInfo, _impl_.falling_count_), 63>(),
+     {48, 63, 0, PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.falling_count_)}},
+    // int32 flat_count = 7;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SectorInfo, _impl_.flat_count_), 63>(),
+     {56, 63, 0, PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.flat_count_)}},
+    // int32 member_count = 8;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SectorInfo, _impl_.member_count_), 63>(),
+     {64, 63, 0, PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.member_count_)}},
+    // .hqmarket.market.v1.Security leading_security = 9;
+    {::_pbi::TcParser::FastMtS1,
+     {74, 0, 0, PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.leading_security_)}},
+    // string leading_name = 10;
+    {::_pbi::TcParser::FastUS1,
+     {82, 63, 0, PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.leading_name_)}},
+    // int64 snapshot_time_ms = 11;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(SectorInfo, _impl_.snapshot_time_ms_), 63>(),
+     {88, 63, 0, PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.snapshot_time_ms_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // string code = 1;
+    {PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.code_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // string name = 2;
+    {PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.name_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // int64 change_percent = 3;
+    {PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.change_percent_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
+    // int32 percent_scale = 4;
+    {PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.percent_scale_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // int32 rising_count = 5;
+    {PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.rising_count_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // int32 falling_count = 6;
+    {PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.falling_count_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // int32 flat_count = 7;
+    {PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.flat_count_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // int32 member_count = 8;
+    {PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.member_count_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // .hqmarket.market.v1.Security leading_security = 9;
+    {PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.leading_security_), _Internal::kHasBitsOffset + 0, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // string leading_name = 10;
+    {PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.leading_name_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // int64 snapshot_time_ms = 11;
+    {PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.snapshot_time_ms_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
+  }}, {{
+    {::_pbi::TcParser::GetTable<::hqmarket::market::v1::Security>()},
+  }}, {{
+    "\35\4\4\0\0\0\0\0\0\0\14\0\0\0\0\0"
+    "hqmarket.market.v1.SectorInfo"
+    "code"
+    "name"
+    "leading_name"
+  }},
+};
+
+PROTOBUF_NOINLINE void SectorInfo::Clear() {
+// @@protoc_insertion_point(message_clear_start:hqmarket.market.v1.SectorInfo)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.code_.ClearToEmpty();
+  _impl_.name_.ClearToEmpty();
+  _impl_.leading_name_.ClearToEmpty();
+  cached_has_bits = _impl_._has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    ABSL_DCHECK(_impl_.leading_security_ != nullptr);
+    _impl_.leading_security_->Clear();
+  }
+  ::memset(&_impl_.change_percent_, 0, static_cast<::size_t>(
+      reinterpret_cast<char*>(&_impl_.member_count_) -
+      reinterpret_cast<char*>(&_impl_.change_percent_)) + sizeof(_impl_.member_count_));
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::uint8_t* SectorInfo::_InternalSerialize(
+            const MessageLite& base, ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) {
+          const SectorInfo& this_ = static_cast<const SectorInfo&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::uint8_t* SectorInfo::_InternalSerialize(
+            ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+          const SectorInfo& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(serialize_to_array_start:hqmarket.market.v1.SectorInfo)
+          ::uint32_t cached_has_bits = 0;
+          (void)cached_has_bits;
+
+          // string code = 1;
+          if (!this_._internal_code().empty()) {
+            const std::string& _s = this_._internal_code();
+            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "hqmarket.market.v1.SectorInfo.code");
+            target = stream->WriteStringMaybeAliased(1, _s, target);
+          }
+
+          // string name = 2;
+          if (!this_._internal_name().empty()) {
+            const std::string& _s = this_._internal_name();
+            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "hqmarket.market.v1.SectorInfo.name");
+            target = stream->WriteStringMaybeAliased(2, _s, target);
+          }
+
+          // int64 change_percent = 3;
+          if (this_._internal_change_percent() != 0) {
+            target = ::google::protobuf::internal::WireFormatLite::
+                WriteInt64ToArrayWithField<3>(
+                    stream, this_._internal_change_percent(), target);
+          }
+
+          // int32 percent_scale = 4;
+          if (this_._internal_percent_scale() != 0) {
+            target = ::google::protobuf::internal::WireFormatLite::
+                WriteInt32ToArrayWithField<4>(
+                    stream, this_._internal_percent_scale(), target);
+          }
+
+          // int32 rising_count = 5;
+          if (this_._internal_rising_count() != 0) {
+            target = ::google::protobuf::internal::WireFormatLite::
+                WriteInt32ToArrayWithField<5>(
+                    stream, this_._internal_rising_count(), target);
+          }
+
+          // int32 falling_count = 6;
+          if (this_._internal_falling_count() != 0) {
+            target = ::google::protobuf::internal::WireFormatLite::
+                WriteInt32ToArrayWithField<6>(
+                    stream, this_._internal_falling_count(), target);
+          }
+
+          // int32 flat_count = 7;
+          if (this_._internal_flat_count() != 0) {
+            target = ::google::protobuf::internal::WireFormatLite::
+                WriteInt32ToArrayWithField<7>(
+                    stream, this_._internal_flat_count(), target);
+          }
+
+          // int32 member_count = 8;
+          if (this_._internal_member_count() != 0) {
+            target = ::google::protobuf::internal::WireFormatLite::
+                WriteInt32ToArrayWithField<8>(
+                    stream, this_._internal_member_count(), target);
+          }
+
+          cached_has_bits = this_._impl_._has_bits_[0];
+          // .hqmarket.market.v1.Security leading_security = 9;
+          if (cached_has_bits & 0x00000001u) {
+            target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                9, *this_._impl_.leading_security_, this_._impl_.leading_security_->GetCachedSize(), target,
+                stream);
+          }
+
+          // string leading_name = 10;
+          if (!this_._internal_leading_name().empty()) {
+            const std::string& _s = this_._internal_leading_name();
+            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "hqmarket.market.v1.SectorInfo.leading_name");
+            target = stream->WriteStringMaybeAliased(10, _s, target);
+          }
+
+          // int64 snapshot_time_ms = 11;
+          if (this_._internal_snapshot_time_ms() != 0) {
+            target = ::google::protobuf::internal::WireFormatLite::
+                WriteInt64ToArrayWithField<11>(
+                    stream, this_._internal_snapshot_time_ms(), target);
+          }
+
+          if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+            target =
+                ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                    this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+          }
+          // @@protoc_insertion_point(serialize_to_array_end:hqmarket.market.v1.SectorInfo)
+          return target;
+        }
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::size_t SectorInfo::ByteSizeLong(const MessageLite& base) {
+          const SectorInfo& this_ = static_cast<const SectorInfo&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::size_t SectorInfo::ByteSizeLong() const {
+          const SectorInfo& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(message_byte_size_start:hqmarket.market.v1.SectorInfo)
+          ::size_t total_size = 0;
+
+          ::uint32_t cached_has_bits = 0;
+          // Prevent compiler warnings about cached_has_bits being unused
+          (void)cached_has_bits;
+
+          ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+           {
+            // string code = 1;
+            if (!this_._internal_code().empty()) {
+              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                              this_._internal_code());
+            }
+            // string name = 2;
+            if (!this_._internal_name().empty()) {
+              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                              this_._internal_name());
+            }
+            // string leading_name = 10;
+            if (!this_._internal_leading_name().empty()) {
+              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                              this_._internal_leading_name());
+            }
+          }
+           {
+            // .hqmarket.market.v1.Security leading_security = 9;
+            cached_has_bits = this_._impl_._has_bits_[0];
+            if (cached_has_bits & 0x00000001u) {
+              total_size += 1 +
+                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.leading_security_);
+            }
+          }
+           {
+            // int64 change_percent = 3;
+            if (this_._internal_change_percent() != 0) {
+              total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+                  this_._internal_change_percent());
+            }
+            // int32 percent_scale = 4;
+            if (this_._internal_percent_scale() != 0) {
+              total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+                  this_._internal_percent_scale());
+            }
+            // int32 rising_count = 5;
+            if (this_._internal_rising_count() != 0) {
+              total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+                  this_._internal_rising_count());
+            }
+            // int32 falling_count = 6;
+            if (this_._internal_falling_count() != 0) {
+              total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+                  this_._internal_falling_count());
+            }
+            // int32 flat_count = 7;
+            if (this_._internal_flat_count() != 0) {
+              total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+                  this_._internal_flat_count());
+            }
+            // int64 snapshot_time_ms = 11;
+            if (this_._internal_snapshot_time_ms() != 0) {
+              total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+                  this_._internal_snapshot_time_ms());
+            }
+            // int32 member_count = 8;
+            if (this_._internal_member_count() != 0) {
+              total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+                  this_._internal_member_count());
+            }
+          }
+          return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                                     &this_._impl_._cached_size_);
+        }
+
+void SectorInfo::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<SectorInfo*>(&to_msg);
+  auto& from = static_cast<const SectorInfo&>(from_msg);
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:hqmarket.market.v1.SectorInfo)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!from._internal_code().empty()) {
+    _this->_internal_set_code(from._internal_code());
+  }
+  if (!from._internal_name().empty()) {
+    _this->_internal_set_name(from._internal_name());
+  }
+  if (!from._internal_leading_name().empty()) {
+    _this->_internal_set_leading_name(from._internal_leading_name());
+  }
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    ABSL_DCHECK(from._impl_.leading_security_ != nullptr);
+    if (_this->_impl_.leading_security_ == nullptr) {
+      _this->_impl_.leading_security_ =
+          ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::Security>(arena, *from._impl_.leading_security_);
+    } else {
+      _this->_impl_.leading_security_->MergeFrom(*from._impl_.leading_security_);
+    }
+  }
+  if (from._internal_change_percent() != 0) {
+    _this->_impl_.change_percent_ = from._impl_.change_percent_;
+  }
+  if (from._internal_percent_scale() != 0) {
+    _this->_impl_.percent_scale_ = from._impl_.percent_scale_;
+  }
+  if (from._internal_rising_count() != 0) {
+    _this->_impl_.rising_count_ = from._impl_.rising_count_;
+  }
+  if (from._internal_falling_count() != 0) {
+    _this->_impl_.falling_count_ = from._impl_.falling_count_;
+  }
+  if (from._internal_flat_count() != 0) {
+    _this->_impl_.flat_count_ = from._impl_.flat_count_;
+  }
+  if (from._internal_snapshot_time_ms() != 0) {
+    _this->_impl_.snapshot_time_ms_ = from._impl_.snapshot_time_ms_;
+  }
+  if (from._internal_member_count() != 0) {
+    _this->_impl_.member_count_ = from._impl_.member_count_;
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void SectorInfo::CopyFrom(const SectorInfo& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:hqmarket.market.v1.SectorInfo)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void SectorInfo::InternalSwap(SectorInfo* PROTOBUF_RESTRICT other) {
+  using std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.code_, &other->_impl_.code_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.leading_name_, &other->_impl_.leading_name_, arena);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.member_count_)
+      + sizeof(SectorInfo::_impl_.member_count_)
+      - PROTOBUF_FIELD_OFFSET(SectorInfo, _impl_.leading_security_)>(
+          reinterpret_cast<char*>(&_impl_.leading_security_),
+          reinterpret_cast<char*>(&other->_impl_.leading_security_));
+}
+
+::google::protobuf::Metadata SectorInfo::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class SectorListRequest::_Internal {
+ public:
+};
+
+SectorListRequest::SectorListRequest(::google::protobuf::Arena* arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:hqmarket.market.v1.SectorListRequest)
+}
+SectorListRequest::SectorListRequest(
+    ::google::protobuf::Arena* arena, const SectorListRequest& from)
+    : SectorListRequest(arena) {
+  MergeFrom(from);
+}
+inline PROTOBUF_NDEBUG_INLINE SectorListRequest::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : _cached_size_{0} {}
+
+inline void SectorListRequest::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.type_ = {};
+}
+SectorListRequest::~SectorListRequest() {
+  // @@protoc_insertion_point(destructor:hqmarket.market.v1.SectorListRequest)
+  SharedDtor(*this);
+}
+inline void SectorListRequest::SharedDtor(MessageLite& self) {
+  SectorListRequest& this_ = static_cast<SectorListRequest&>(self);
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.~Impl_();
+}
+
+inline void* SectorListRequest::PlacementNew_(const void*, void* mem,
+                                        ::google::protobuf::Arena* arena) {
+  return ::new (mem) SectorListRequest(arena);
+}
+constexpr auto SectorListRequest::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(SectorListRequest),
+                                            alignof(SectorListRequest));
+}
+PROTOBUF_CONSTINIT
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::google::protobuf::internal::ClassDataFull SectorListRequest::_class_data_ = {
+    ::google::protobuf::internal::ClassData{
+        &_SectorListRequest_default_instance_._instance,
+        &_table_.header,
+        nullptr,  // OnDemandRegisterArenaDtor
+        nullptr,  // IsInitialized
+        &SectorListRequest::MergeImpl,
+        ::google::protobuf::Message::GetNewImpl<SectorListRequest>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        &SectorListRequest::SharedDtor,
+        ::google::protobuf::Message::GetClearImpl<SectorListRequest>(), &SectorListRequest::ByteSizeLong,
+            &SectorListRequest::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+        PROTOBUF_FIELD_OFFSET(SectorListRequest, _impl_._cached_size_),
+        false,
+    },
+    &SectorListRequest::kDescriptorMethods,
+    &descriptor_table_v1_2fmarket_2eproto,
+    nullptr,  // tracker
+};
+const ::google::protobuf::internal::ClassData* SectorListRequest::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
+  return _class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 1, 0, 0, 2> SectorListRequest::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    1, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967294,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    1,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    _class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::hqmarket::market::v1::SectorListRequest>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // .hqmarket.market.v1.SectorType type = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SectorListRequest, _impl_.type_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(SectorListRequest, _impl_.type_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .hqmarket.market.v1.SectorType type = 1;
+    {PROTOBUF_FIELD_OFFSET(SectorListRequest, _impl_.type_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
+  }},
+  // no aux_entries
+  {{
+  }},
+};
+
+PROTOBUF_NOINLINE void SectorListRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:hqmarket.market.v1.SectorListRequest)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.type_ = 0;
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::uint8_t* SectorListRequest::_InternalSerialize(
+            const MessageLite& base, ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) {
+          const SectorListRequest& this_ = static_cast<const SectorListRequest&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::uint8_t* SectorListRequest::_InternalSerialize(
+            ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+          const SectorListRequest& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(serialize_to_array_start:hqmarket.market.v1.SectorListRequest)
+          ::uint32_t cached_has_bits = 0;
+          (void)cached_has_bits;
+
+          // .hqmarket.market.v1.SectorType type = 1;
+          if (this_._internal_type() != 0) {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteEnumToArray(
+                1, this_._internal_type(), target);
+          }
+
+          if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+            target =
+                ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                    this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+          }
+          // @@protoc_insertion_point(serialize_to_array_end:hqmarket.market.v1.SectorListRequest)
+          return target;
+        }
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::size_t SectorListRequest::ByteSizeLong(const MessageLite& base) {
+          const SectorListRequest& this_ = static_cast<const SectorListRequest&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::size_t SectorListRequest::ByteSizeLong() const {
+          const SectorListRequest& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(message_byte_size_start:hqmarket.market.v1.SectorListRequest)
+          ::size_t total_size = 0;
+
+          ::uint32_t cached_has_bits = 0;
+          // Prevent compiler warnings about cached_has_bits being unused
+          (void)cached_has_bits;
+
+           {
+            // .hqmarket.market.v1.SectorType type = 1;
+            if (this_._internal_type() != 0) {
+              total_size += 1 +
+                            ::_pbi::WireFormatLite::EnumSize(this_._internal_type());
+            }
+          }
+          return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                                     &this_._impl_._cached_size_);
+        }
+
+void SectorListRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<SectorListRequest*>(&to_msg);
+  auto& from = static_cast<const SectorListRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:hqmarket.market.v1.SectorListRequest)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from._internal_type() != 0) {
+    _this->_impl_.type_ = from._impl_.type_;
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void SectorListRequest::CopyFrom(const SectorListRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:hqmarket.market.v1.SectorListRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void SectorListRequest::InternalSwap(SectorListRequest* PROTOBUF_RESTRICT other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_.type_, other->_impl_.type_);
+}
+
+::google::protobuf::Metadata SectorListRequest::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class SectorListResponse::_Internal {
+ public:
+};
+
+SectorListResponse::SectorListResponse(::google::protobuf::Arena* arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:hqmarket.market.v1.SectorListResponse)
+}
+inline PROTOBUF_NDEBUG_INLINE SectorListResponse::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::hqmarket::market::v1::SectorListResponse& from_msg)
+      : sectors_{visibility, arena, from.sectors_},
+        source_(arena, from.source_),
+        _cached_size_{0} {}
+
+SectorListResponse::SectorListResponse(
+    ::google::protobuf::Arena* arena,
+    const SectorListResponse& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SectorListResponse* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::memcpy(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, snapshot_time_ms_),
+           reinterpret_cast<const char *>(&from._impl_) +
+               offsetof(Impl_, snapshot_time_ms_),
+           offsetof(Impl_, type_) -
+               offsetof(Impl_, snapshot_time_ms_) +
+               sizeof(Impl_::type_));
+
+  // @@protoc_insertion_point(copy_constructor:hqmarket.market.v1.SectorListResponse)
+}
+inline PROTOBUF_NDEBUG_INLINE SectorListResponse::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : sectors_{visibility, arena},
+        source_(arena),
+        _cached_size_{0} {}
+
+inline void SectorListResponse::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, snapshot_time_ms_),
+           0,
+           offsetof(Impl_, type_) -
+               offsetof(Impl_, snapshot_time_ms_) +
+               sizeof(Impl_::type_));
+}
+SectorListResponse::~SectorListResponse() {
+  // @@protoc_insertion_point(destructor:hqmarket.market.v1.SectorListResponse)
+  SharedDtor(*this);
+}
+inline void SectorListResponse::SharedDtor(MessageLite& self) {
+  SectorListResponse& this_ = static_cast<SectorListResponse&>(self);
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.source_.Destroy();
+  this_._impl_.~Impl_();
+}
+
+inline void* SectorListResponse::PlacementNew_(const void*, void* mem,
+                                        ::google::protobuf::Arena* arena) {
+  return ::new (mem) SectorListResponse(arena);
+}
+constexpr auto SectorListResponse::InternalNewImpl_() {
+  constexpr auto arena_bits = ::google::protobuf::internal::EncodePlacementArenaOffsets({
+      PROTOBUF_FIELD_OFFSET(SectorListResponse, _impl_.sectors_) +
+          decltype(SectorListResponse::_impl_.sectors_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+  });
+  if (arena_bits.has_value()) {
+    return ::google::protobuf::internal::MessageCreator::CopyInit(
+        sizeof(SectorListResponse), alignof(SectorListResponse), *arena_bits);
+  } else {
+    return ::google::protobuf::internal::MessageCreator(&SectorListResponse::PlacementNew_,
+                                 sizeof(SectorListResponse),
+                                 alignof(SectorListResponse));
+  }
+}
+PROTOBUF_CONSTINIT
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::google::protobuf::internal::ClassDataFull SectorListResponse::_class_data_ = {
+    ::google::protobuf::internal::ClassData{
+        &_SectorListResponse_default_instance_._instance,
+        &_table_.header,
+        nullptr,  // OnDemandRegisterArenaDtor
+        nullptr,  // IsInitialized
+        &SectorListResponse::MergeImpl,
+        ::google::protobuf::Message::GetNewImpl<SectorListResponse>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        &SectorListResponse::SharedDtor,
+        ::google::protobuf::Message::GetClearImpl<SectorListResponse>(), &SectorListResponse::ByteSizeLong,
+            &SectorListResponse::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+        PROTOBUF_FIELD_OFFSET(SectorListResponse, _impl_._cached_size_),
+        false,
+    },
+    &SectorListResponse::kDescriptorMethods,
+    &descriptor_table_v1_2fmarket_2eproto,
+    nullptr,  // tracker
+};
+const ::google::protobuf::internal::ClassData* SectorListResponse::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
+  return _class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<2, 4, 1, 52, 2> SectorListResponse::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    4, 24,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967280,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    4,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    _class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::hqmarket::market::v1::SectorListResponse>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // string source = 4;
+    {::_pbi::TcParser::FastUS1,
+     {34, 63, 0, PROTOBUF_FIELD_OFFSET(SectorListResponse, _impl_.source_)}},
+    // .hqmarket.market.v1.SectorType type = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SectorListResponse, _impl_.type_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(SectorListResponse, _impl_.type_)}},
+    // repeated .hqmarket.market.v1.SectorInfo sectors = 2;
+    {::_pbi::TcParser::FastMtR1,
+     {18, 63, 0, PROTOBUF_FIELD_OFFSET(SectorListResponse, _impl_.sectors_)}},
+    // int64 snapshot_time_ms = 3;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(SectorListResponse, _impl_.snapshot_time_ms_), 63>(),
+     {24, 63, 0, PROTOBUF_FIELD_OFFSET(SectorListResponse, _impl_.snapshot_time_ms_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .hqmarket.market.v1.SectorType type = 1;
+    {PROTOBUF_FIELD_OFFSET(SectorListResponse, _impl_.type_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
+    // repeated .hqmarket.market.v1.SectorInfo sectors = 2;
+    {PROTOBUF_FIELD_OFFSET(SectorListResponse, _impl_.sectors_), 0, 0,
+    (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
+    // int64 snapshot_time_ms = 3;
+    {PROTOBUF_FIELD_OFFSET(SectorListResponse, _impl_.snapshot_time_ms_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
+    // string source = 4;
+    {PROTOBUF_FIELD_OFFSET(SectorListResponse, _impl_.source_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }}, {{
+    {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SectorInfo>()},
+  }}, {{
+    "\45\0\0\0\6\0\0\0"
+    "hqmarket.market.v1.SectorListResponse"
+    "source"
+  }},
+};
+
+PROTOBUF_NOINLINE void SectorListResponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:hqmarket.market.v1.SectorListResponse)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.sectors_.Clear();
+  _impl_.source_.ClearToEmpty();
+  ::memset(&_impl_.snapshot_time_ms_, 0, static_cast<::size_t>(
+      reinterpret_cast<char*>(&_impl_.type_) -
+      reinterpret_cast<char*>(&_impl_.snapshot_time_ms_)) + sizeof(_impl_.type_));
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::uint8_t* SectorListResponse::_InternalSerialize(
+            const MessageLite& base, ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) {
+          const SectorListResponse& this_ = static_cast<const SectorListResponse&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::uint8_t* SectorListResponse::_InternalSerialize(
+            ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+          const SectorListResponse& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(serialize_to_array_start:hqmarket.market.v1.SectorListResponse)
+          ::uint32_t cached_has_bits = 0;
+          (void)cached_has_bits;
+
+          // .hqmarket.market.v1.SectorType type = 1;
+          if (this_._internal_type() != 0) {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteEnumToArray(
+                1, this_._internal_type(), target);
+          }
+
+          // repeated .hqmarket.market.v1.SectorInfo sectors = 2;
+          for (unsigned i = 0, n = static_cast<unsigned>(
+                                   this_._internal_sectors_size());
+               i < n; i++) {
+            const auto& repfield = this_._internal_sectors().Get(i);
+            target =
+                ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                    2, repfield, repfield.GetCachedSize(),
+                    target, stream);
+          }
+
+          // int64 snapshot_time_ms = 3;
+          if (this_._internal_snapshot_time_ms() != 0) {
+            target = ::google::protobuf::internal::WireFormatLite::
+                WriteInt64ToArrayWithField<3>(
+                    stream, this_._internal_snapshot_time_ms(), target);
+          }
+
+          // string source = 4;
+          if (!this_._internal_source().empty()) {
+            const std::string& _s = this_._internal_source();
+            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "hqmarket.market.v1.SectorListResponse.source");
+            target = stream->WriteStringMaybeAliased(4, _s, target);
+          }
+
+          if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+            target =
+                ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                    this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+          }
+          // @@protoc_insertion_point(serialize_to_array_end:hqmarket.market.v1.SectorListResponse)
+          return target;
+        }
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::size_t SectorListResponse::ByteSizeLong(const MessageLite& base) {
+          const SectorListResponse& this_ = static_cast<const SectorListResponse&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::size_t SectorListResponse::ByteSizeLong() const {
+          const SectorListResponse& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(message_byte_size_start:hqmarket.market.v1.SectorListResponse)
+          ::size_t total_size = 0;
+
+          ::uint32_t cached_has_bits = 0;
+          // Prevent compiler warnings about cached_has_bits being unused
+          (void)cached_has_bits;
+
+          ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+           {
+            // repeated .hqmarket.market.v1.SectorInfo sectors = 2;
+            {
+              total_size += 1UL * this_._internal_sectors_size();
+              for (const auto& msg : this_._internal_sectors()) {
+                total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
+              }
+            }
+          }
+           {
+            // string source = 4;
+            if (!this_._internal_source().empty()) {
+              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                              this_._internal_source());
+            }
+            // int64 snapshot_time_ms = 3;
+            if (this_._internal_snapshot_time_ms() != 0) {
+              total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+                  this_._internal_snapshot_time_ms());
+            }
+            // .hqmarket.market.v1.SectorType type = 1;
+            if (this_._internal_type() != 0) {
+              total_size += 1 +
+                            ::_pbi::WireFormatLite::EnumSize(this_._internal_type());
+            }
+          }
+          return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                                     &this_._impl_._cached_size_);
+        }
+
+void SectorListResponse::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<SectorListResponse*>(&to_msg);
+  auto& from = static_cast<const SectorListResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:hqmarket.market.v1.SectorListResponse)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  _this->_internal_mutable_sectors()->MergeFrom(
+      from._internal_sectors());
+  if (!from._internal_source().empty()) {
+    _this->_internal_set_source(from._internal_source());
+  }
+  if (from._internal_snapshot_time_ms() != 0) {
+    _this->_impl_.snapshot_time_ms_ = from._impl_.snapshot_time_ms_;
+  }
+  if (from._internal_type() != 0) {
+    _this->_impl_.type_ = from._impl_.type_;
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void SectorListResponse::CopyFrom(const SectorListResponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:hqmarket.market.v1.SectorListResponse)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void SectorListResponse::InternalSwap(SectorListResponse* PROTOBUF_RESTRICT other) {
+  using std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  _impl_.sectors_.InternalSwap(&other->_impl_.sectors_);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.source_, &other->_impl_.source_, arena);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(SectorListResponse, _impl_.type_)
+      + sizeof(SectorListResponse::_impl_.type_)
+      - PROTOBUF_FIELD_OFFSET(SectorListResponse, _impl_.snapshot_time_ms_)>(
+          reinterpret_cast<char*>(&_impl_.snapshot_time_ms_),
+          reinterpret_cast<char*>(&other->_impl_.snapshot_time_ms_));
+}
+
+::google::protobuf::Metadata SectorListResponse::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class SectorConstituentsRequest::_Internal {
+ public:
+};
+
+SectorConstituentsRequest::SectorConstituentsRequest(::google::protobuf::Arena* arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:hqmarket.market.v1.SectorConstituentsRequest)
+}
+inline PROTOBUF_NDEBUG_INLINE SectorConstituentsRequest::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::hqmarket::market::v1::SectorConstituentsRequest& from_msg)
+      : sector_code_(arena, from.sector_code_),
+        _cached_size_{0} {}
+
+SectorConstituentsRequest::SectorConstituentsRequest(
+    ::google::protobuf::Arena* arena,
+    const SectorConstituentsRequest& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SectorConstituentsRequest* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  _impl_.type_ = from._impl_.type_;
+
+  // @@protoc_insertion_point(copy_constructor:hqmarket.market.v1.SectorConstituentsRequest)
+}
+inline PROTOBUF_NDEBUG_INLINE SectorConstituentsRequest::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : sector_code_(arena),
+        _cached_size_{0} {}
+
+inline void SectorConstituentsRequest::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.type_ = {};
+}
+SectorConstituentsRequest::~SectorConstituentsRequest() {
+  // @@protoc_insertion_point(destructor:hqmarket.market.v1.SectorConstituentsRequest)
+  SharedDtor(*this);
+}
+inline void SectorConstituentsRequest::SharedDtor(MessageLite& self) {
+  SectorConstituentsRequest& this_ = static_cast<SectorConstituentsRequest&>(self);
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.sector_code_.Destroy();
+  this_._impl_.~Impl_();
+}
+
+inline void* SectorConstituentsRequest::PlacementNew_(const void*, void* mem,
+                                        ::google::protobuf::Arena* arena) {
+  return ::new (mem) SectorConstituentsRequest(arena);
+}
+constexpr auto SectorConstituentsRequest::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(SectorConstituentsRequest),
+                                            alignof(SectorConstituentsRequest));
+}
+PROTOBUF_CONSTINIT
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::google::protobuf::internal::ClassDataFull SectorConstituentsRequest::_class_data_ = {
+    ::google::protobuf::internal::ClassData{
+        &_SectorConstituentsRequest_default_instance_._instance,
+        &_table_.header,
+        nullptr,  // OnDemandRegisterArenaDtor
+        nullptr,  // IsInitialized
+        &SectorConstituentsRequest::MergeImpl,
+        ::google::protobuf::Message::GetNewImpl<SectorConstituentsRequest>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        &SectorConstituentsRequest::SharedDtor,
+        ::google::protobuf::Message::GetClearImpl<SectorConstituentsRequest>(), &SectorConstituentsRequest::ByteSizeLong,
+            &SectorConstituentsRequest::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+        PROTOBUF_FIELD_OFFSET(SectorConstituentsRequest, _impl_._cached_size_),
+        false,
+    },
+    &SectorConstituentsRequest::kDescriptorMethods,
+    &descriptor_table_v1_2fmarket_2eproto,
+    nullptr,  // tracker
+};
+const ::google::protobuf::internal::ClassData* SectorConstituentsRequest::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
+  return _class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<1, 2, 0, 64, 2> SectorConstituentsRequest::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    2, 8,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    _class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::hqmarket::market::v1::SectorConstituentsRequest>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // string sector_code = 2;
+    {::_pbi::TcParser::FastUS1,
+     {18, 63, 0, PROTOBUF_FIELD_OFFSET(SectorConstituentsRequest, _impl_.sector_code_)}},
+    // .hqmarket.market.v1.SectorType type = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SectorConstituentsRequest, _impl_.type_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(SectorConstituentsRequest, _impl_.type_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .hqmarket.market.v1.SectorType type = 1;
+    {PROTOBUF_FIELD_OFFSET(SectorConstituentsRequest, _impl_.type_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
+    // string sector_code = 2;
+    {PROTOBUF_FIELD_OFFSET(SectorConstituentsRequest, _impl_.sector_code_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  // no aux_entries
+  {{
+    "\54\0\13\0\0\0\0\0"
+    "hqmarket.market.v1.SectorConstituentsRequest"
+    "sector_code"
+  }},
+};
+
+PROTOBUF_NOINLINE void SectorConstituentsRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:hqmarket.market.v1.SectorConstituentsRequest)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.sector_code_.ClearToEmpty();
+  _impl_.type_ = 0;
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::uint8_t* SectorConstituentsRequest::_InternalSerialize(
+            const MessageLite& base, ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) {
+          const SectorConstituentsRequest& this_ = static_cast<const SectorConstituentsRequest&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::uint8_t* SectorConstituentsRequest::_InternalSerialize(
+            ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+          const SectorConstituentsRequest& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(serialize_to_array_start:hqmarket.market.v1.SectorConstituentsRequest)
+          ::uint32_t cached_has_bits = 0;
+          (void)cached_has_bits;
+
+          // .hqmarket.market.v1.SectorType type = 1;
+          if (this_._internal_type() != 0) {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteEnumToArray(
+                1, this_._internal_type(), target);
+          }
+
+          // string sector_code = 2;
+          if (!this_._internal_sector_code().empty()) {
+            const std::string& _s = this_._internal_sector_code();
+            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "hqmarket.market.v1.SectorConstituentsRequest.sector_code");
+            target = stream->WriteStringMaybeAliased(2, _s, target);
+          }
+
+          if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+            target =
+                ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                    this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+          }
+          // @@protoc_insertion_point(serialize_to_array_end:hqmarket.market.v1.SectorConstituentsRequest)
+          return target;
+        }
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::size_t SectorConstituentsRequest::ByteSizeLong(const MessageLite& base) {
+          const SectorConstituentsRequest& this_ = static_cast<const SectorConstituentsRequest&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::size_t SectorConstituentsRequest::ByteSizeLong() const {
+          const SectorConstituentsRequest& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(message_byte_size_start:hqmarket.market.v1.SectorConstituentsRequest)
+          ::size_t total_size = 0;
+
+          ::uint32_t cached_has_bits = 0;
+          // Prevent compiler warnings about cached_has_bits being unused
+          (void)cached_has_bits;
+
+          ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+           {
+            // string sector_code = 2;
+            if (!this_._internal_sector_code().empty()) {
+              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                              this_._internal_sector_code());
+            }
+            // .hqmarket.market.v1.SectorType type = 1;
+            if (this_._internal_type() != 0) {
+              total_size += 1 +
+                            ::_pbi::WireFormatLite::EnumSize(this_._internal_type());
+            }
+          }
+          return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                                     &this_._impl_._cached_size_);
+        }
+
+void SectorConstituentsRequest::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<SectorConstituentsRequest*>(&to_msg);
+  auto& from = static_cast<const SectorConstituentsRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:hqmarket.market.v1.SectorConstituentsRequest)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!from._internal_sector_code().empty()) {
+    _this->_internal_set_sector_code(from._internal_sector_code());
+  }
+  if (from._internal_type() != 0) {
+    _this->_impl_.type_ = from._impl_.type_;
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void SectorConstituentsRequest::CopyFrom(const SectorConstituentsRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:hqmarket.market.v1.SectorConstituentsRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void SectorConstituentsRequest::InternalSwap(SectorConstituentsRequest* PROTOBUF_RESTRICT other) {
+  using std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.sector_code_, &other->_impl_.sector_code_, arena);
+  swap(_impl_.type_, other->_impl_.type_);
+}
+
+::google::protobuf::Metadata SectorConstituentsRequest::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class SectorConstituentsResponse::_Internal {
+ public:
+  using HasBits =
+      decltype(std::declval<SectorConstituentsResponse>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(SectorConstituentsResponse, _impl_._has_bits_);
+};
+
+SectorConstituentsResponse::SectorConstituentsResponse(::google::protobuf::Arena* arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:hqmarket.market.v1.SectorConstituentsResponse)
+}
+inline PROTOBUF_NDEBUG_INLINE SectorConstituentsResponse::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::hqmarket::market::v1::SectorConstituentsResponse& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        securities_{visibility, arena, from.securities_},
+        source_(arena, from.source_) {}
+
+SectorConstituentsResponse::SectorConstituentsResponse(
+    ::google::protobuf::Arena* arena,
+    const SectorConstituentsResponse& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SectorConstituentsResponse* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.sector_ = (cached_has_bits & 0x00000001u) ? ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::SectorInfo>(
+                              arena, *from._impl_.sector_)
+                        : nullptr;
+  ::memcpy(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, snapshot_time_ms_),
+           reinterpret_cast<const char *>(&from._impl_) +
+               offsetof(Impl_, snapshot_time_ms_),
+           offsetof(Impl_, type_) -
+               offsetof(Impl_, snapshot_time_ms_) +
+               sizeof(Impl_::type_));
+
+  // @@protoc_insertion_point(copy_constructor:hqmarket.market.v1.SectorConstituentsResponse)
+}
+inline PROTOBUF_NDEBUG_INLINE SectorConstituentsResponse::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : _cached_size_{0},
+        securities_{visibility, arena},
+        source_(arena) {}
+
+inline void SectorConstituentsResponse::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, sector_),
+           0,
+           offsetof(Impl_, type_) -
+               offsetof(Impl_, sector_) +
+               sizeof(Impl_::type_));
+}
+SectorConstituentsResponse::~SectorConstituentsResponse() {
+  // @@protoc_insertion_point(destructor:hqmarket.market.v1.SectorConstituentsResponse)
+  SharedDtor(*this);
+}
+inline void SectorConstituentsResponse::SharedDtor(MessageLite& self) {
+  SectorConstituentsResponse& this_ = static_cast<SectorConstituentsResponse&>(self);
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.source_.Destroy();
+  delete this_._impl_.sector_;
+  this_._impl_.~Impl_();
+}
+
+inline void* SectorConstituentsResponse::PlacementNew_(const void*, void* mem,
+                                        ::google::protobuf::Arena* arena) {
+  return ::new (mem) SectorConstituentsResponse(arena);
+}
+constexpr auto SectorConstituentsResponse::InternalNewImpl_() {
+  constexpr auto arena_bits = ::google::protobuf::internal::EncodePlacementArenaOffsets({
+      PROTOBUF_FIELD_OFFSET(SectorConstituentsResponse, _impl_.securities_) +
+          decltype(SectorConstituentsResponse::_impl_.securities_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+  });
+  if (arena_bits.has_value()) {
+    return ::google::protobuf::internal::MessageCreator::CopyInit(
+        sizeof(SectorConstituentsResponse), alignof(SectorConstituentsResponse), *arena_bits);
+  } else {
+    return ::google::protobuf::internal::MessageCreator(&SectorConstituentsResponse::PlacementNew_,
+                                 sizeof(SectorConstituentsResponse),
+                                 alignof(SectorConstituentsResponse));
+  }
+}
+PROTOBUF_CONSTINIT
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::google::protobuf::internal::ClassDataFull SectorConstituentsResponse::_class_data_ = {
+    ::google::protobuf::internal::ClassData{
+        &_SectorConstituentsResponse_default_instance_._instance,
+        &_table_.header,
+        nullptr,  // OnDemandRegisterArenaDtor
+        nullptr,  // IsInitialized
+        &SectorConstituentsResponse::MergeImpl,
+        ::google::protobuf::Message::GetNewImpl<SectorConstituentsResponse>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        &SectorConstituentsResponse::SharedDtor,
+        ::google::protobuf::Message::GetClearImpl<SectorConstituentsResponse>(), &SectorConstituentsResponse::ByteSizeLong,
+            &SectorConstituentsResponse::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+        PROTOBUF_FIELD_OFFSET(SectorConstituentsResponse, _impl_._cached_size_),
+        false,
+    },
+    &SectorConstituentsResponse::kDescriptorMethods,
+    &descriptor_table_v1_2fmarket_2eproto,
+    nullptr,  // tracker
+};
+const ::google::protobuf::internal::ClassData* SectorConstituentsResponse::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
+  return _class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<3, 5, 2, 60, 2> SectorConstituentsResponse::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(SectorConstituentsResponse, _impl_._has_bits_),
+    0, // no _extensions_
+    5, 56,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967264,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    5,  // num_field_entries
+    2,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    _class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::hqmarket::market::v1::SectorConstituentsResponse>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // .hqmarket.market.v1.SectorType type = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(SectorConstituentsResponse, _impl_.type_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(SectorConstituentsResponse, _impl_.type_)}},
+    // .hqmarket.market.v1.SectorInfo sector = 2;
+    {::_pbi::TcParser::FastMtS1,
+     {18, 0, 0, PROTOBUF_FIELD_OFFSET(SectorConstituentsResponse, _impl_.sector_)}},
+    // repeated .hqmarket.market.v1.SecurityInfo securities = 3;
+    {::_pbi::TcParser::FastMtR1,
+     {26, 63, 1, PROTOBUF_FIELD_OFFSET(SectorConstituentsResponse, _impl_.securities_)}},
+    // int64 snapshot_time_ms = 4;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(SectorConstituentsResponse, _impl_.snapshot_time_ms_), 63>(),
+     {32, 63, 0, PROTOBUF_FIELD_OFFSET(SectorConstituentsResponse, _impl_.snapshot_time_ms_)}},
+    // string source = 5;
+    {::_pbi::TcParser::FastUS1,
+     {42, 63, 0, PROTOBUF_FIELD_OFFSET(SectorConstituentsResponse, _impl_.source_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .hqmarket.market.v1.SectorType type = 1;
+    {PROTOBUF_FIELD_OFFSET(SectorConstituentsResponse, _impl_.type_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
+    // .hqmarket.market.v1.SectorInfo sector = 2;
+    {PROTOBUF_FIELD_OFFSET(SectorConstituentsResponse, _impl_.sector_), _Internal::kHasBitsOffset + 0, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // repeated .hqmarket.market.v1.SecurityInfo securities = 3;
+    {PROTOBUF_FIELD_OFFSET(SectorConstituentsResponse, _impl_.securities_), -1, 1,
+    (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
+    // int64 snapshot_time_ms = 4;
+    {PROTOBUF_FIELD_OFFSET(SectorConstituentsResponse, _impl_.snapshot_time_ms_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
+    // string source = 5;
+    {PROTOBUF_FIELD_OFFSET(SectorConstituentsResponse, _impl_.source_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }}, {{
+    {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SectorInfo>()},
+    {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SecurityInfo>()},
+  }}, {{
+    "\55\0\0\0\0\6\0\0"
+    "hqmarket.market.v1.SectorConstituentsResponse"
+    "source"
+  }},
+};
+
+PROTOBUF_NOINLINE void SectorConstituentsResponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:hqmarket.market.v1.SectorConstituentsResponse)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.securities_.Clear();
+  _impl_.source_.ClearToEmpty();
+  cached_has_bits = _impl_._has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    ABSL_DCHECK(_impl_.sector_ != nullptr);
+    _impl_.sector_->Clear();
+  }
+  ::memset(&_impl_.snapshot_time_ms_, 0, static_cast<::size_t>(
+      reinterpret_cast<char*>(&_impl_.type_) -
+      reinterpret_cast<char*>(&_impl_.snapshot_time_ms_)) + sizeof(_impl_.type_));
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::uint8_t* SectorConstituentsResponse::_InternalSerialize(
+            const MessageLite& base, ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) {
+          const SectorConstituentsResponse& this_ = static_cast<const SectorConstituentsResponse&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::uint8_t* SectorConstituentsResponse::_InternalSerialize(
+            ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+          const SectorConstituentsResponse& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(serialize_to_array_start:hqmarket.market.v1.SectorConstituentsResponse)
+          ::uint32_t cached_has_bits = 0;
+          (void)cached_has_bits;
+
+          // .hqmarket.market.v1.SectorType type = 1;
+          if (this_._internal_type() != 0) {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteEnumToArray(
+                1, this_._internal_type(), target);
+          }
+
+          cached_has_bits = this_._impl_._has_bits_[0];
+          // .hqmarket.market.v1.SectorInfo sector = 2;
+          if (cached_has_bits & 0x00000001u) {
+            target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                2, *this_._impl_.sector_, this_._impl_.sector_->GetCachedSize(), target,
+                stream);
+          }
+
+          // repeated .hqmarket.market.v1.SecurityInfo securities = 3;
+          for (unsigned i = 0, n = static_cast<unsigned>(
+                                   this_._internal_securities_size());
+               i < n; i++) {
+            const auto& repfield = this_._internal_securities().Get(i);
+            target =
+                ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                    3, repfield, repfield.GetCachedSize(),
+                    target, stream);
+          }
+
+          // int64 snapshot_time_ms = 4;
+          if (this_._internal_snapshot_time_ms() != 0) {
+            target = ::google::protobuf::internal::WireFormatLite::
+                WriteInt64ToArrayWithField<4>(
+                    stream, this_._internal_snapshot_time_ms(), target);
+          }
+
+          // string source = 5;
+          if (!this_._internal_source().empty()) {
+            const std::string& _s = this_._internal_source();
+            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "hqmarket.market.v1.SectorConstituentsResponse.source");
+            target = stream->WriteStringMaybeAliased(5, _s, target);
+          }
+
+          if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+            target =
+                ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                    this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+          }
+          // @@protoc_insertion_point(serialize_to_array_end:hqmarket.market.v1.SectorConstituentsResponse)
+          return target;
+        }
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::size_t SectorConstituentsResponse::ByteSizeLong(const MessageLite& base) {
+          const SectorConstituentsResponse& this_ = static_cast<const SectorConstituentsResponse&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::size_t SectorConstituentsResponse::ByteSizeLong() const {
+          const SectorConstituentsResponse& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(message_byte_size_start:hqmarket.market.v1.SectorConstituentsResponse)
+          ::size_t total_size = 0;
+
+          ::uint32_t cached_has_bits = 0;
+          // Prevent compiler warnings about cached_has_bits being unused
+          (void)cached_has_bits;
+
+          ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+           {
+            // repeated .hqmarket.market.v1.SecurityInfo securities = 3;
+            {
+              total_size += 1UL * this_._internal_securities_size();
+              for (const auto& msg : this_._internal_securities()) {
+                total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
+              }
+            }
+          }
+           {
+            // string source = 5;
+            if (!this_._internal_source().empty()) {
+              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                              this_._internal_source());
+            }
+          }
+           {
+            // .hqmarket.market.v1.SectorInfo sector = 2;
+            cached_has_bits = this_._impl_._has_bits_[0];
+            if (cached_has_bits & 0x00000001u) {
+              total_size += 1 +
+                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.sector_);
+            }
+          }
+           {
+            // int64 snapshot_time_ms = 4;
+            if (this_._internal_snapshot_time_ms() != 0) {
+              total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+                  this_._internal_snapshot_time_ms());
+            }
+            // .hqmarket.market.v1.SectorType type = 1;
+            if (this_._internal_type() != 0) {
+              total_size += 1 +
+                            ::_pbi::WireFormatLite::EnumSize(this_._internal_type());
+            }
+          }
+          return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                                     &this_._impl_._cached_size_);
+        }
+
+void SectorConstituentsResponse::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<SectorConstituentsResponse*>(&to_msg);
+  auto& from = static_cast<const SectorConstituentsResponse&>(from_msg);
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:hqmarket.market.v1.SectorConstituentsResponse)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  _this->_internal_mutable_securities()->MergeFrom(
+      from._internal_securities());
+  if (!from._internal_source().empty()) {
+    _this->_internal_set_source(from._internal_source());
+  }
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    ABSL_DCHECK(from._impl_.sector_ != nullptr);
+    if (_this->_impl_.sector_ == nullptr) {
+      _this->_impl_.sector_ =
+          ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::SectorInfo>(arena, *from._impl_.sector_);
+    } else {
+      _this->_impl_.sector_->MergeFrom(*from._impl_.sector_);
+    }
+  }
+  if (from._internal_snapshot_time_ms() != 0) {
+    _this->_impl_.snapshot_time_ms_ = from._impl_.snapshot_time_ms_;
+  }
+  if (from._internal_type() != 0) {
+    _this->_impl_.type_ = from._impl_.type_;
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void SectorConstituentsResponse::CopyFrom(const SectorConstituentsResponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:hqmarket.market.v1.SectorConstituentsResponse)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void SectorConstituentsResponse::InternalSwap(SectorConstituentsResponse* PROTOBUF_RESTRICT other) {
+  using std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  _impl_.securities_.InternalSwap(&other->_impl_.securities_);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.source_, &other->_impl_.source_, arena);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(SectorConstituentsResponse, _impl_.type_)
+      + sizeof(SectorConstituentsResponse::_impl_.type_)
+      - PROTOBUF_FIELD_OFFSET(SectorConstituentsResponse, _impl_.sector_)>(
+          reinterpret_cast<char*>(&_impl_.sector_),
+          reinterpret_cast<char*>(&other->_impl_.sector_));
+}
+
+::google::protobuf::Metadata SectorConstituentsResponse::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // @@protoc_insertion_point(namespace_scope)

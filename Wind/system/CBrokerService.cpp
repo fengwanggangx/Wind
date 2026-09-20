@@ -75,6 +75,8 @@ CBrokerService::CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession, 
 		{ "query_quote", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
 		{ "query_bars", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
 		{ "query_securities", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
+		{ "query_sectors", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
+		{ "query_sector_constituents", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
 		{ "strategy_add", std::bind_front(&CBrokerService::HandleStrategy, this) },
 		{ "strategy_modify", std::bind_front(&CBrokerService::HandleStrategy, this) },
 		{ "strategy_query", std::bind_front(&CBrokerService::HandleStrategy, this) },
@@ -100,7 +102,7 @@ CQuoteInfo CBrokerService::GetQuoteInfo(const CRequest& req) const
 	std::size_t nDot = strSecurity.rfind('.');
 	if ((std::string::npos == nDot) || (0 == nDot) || (strSecurity.size() - 1 == nDot))
 	{
-		return { };
+		return {};
 	}
 	return CQuoteInfo(strSecurity.substr(0, nDot), ParseMarket(strSecurity.substr(nDot + 1)), ParseChannel(req.GetExtraData("channel")));
 }
@@ -144,7 +146,7 @@ std::string CBrokerService::GetMarketResponseKey(const CRequest& req) const
 		Channel channel = static_cast<Channel>(static_cast<int>(result.channel()));
 		return CQuoteInfo(result.security().symbol(), exchange, channel).String();
 	}
-	return { };
+	return {};
 }
 
 void CBrokerService::OnHQMarketResponse(const CRequest& req)
@@ -233,11 +235,22 @@ std::string CBrokerService::GetQueryKey(const CRequest& req) const
 	{
 		return strCmd;
 	}
+	if ("query_sectors" == strCmd)
+	{
+		std::string strSectorType = req.GetExtraData("sector_type");
+		return strSectorType.empty() ? std::string() : strCmd + ":" + strSectorType;
+	}
+	if ("query_sector_constituents" == strCmd)
+	{
+		std::string strSectorType = req.GetExtraData("sector_type");
+		std::string strSectorCode = req.GetExtraData("sector_code");
+		return strSectorType.empty() || strSectorCode.empty() ? std::string() : strCmd + ":" + strSectorType + ":" + strSectorCode;
+	}
 	if ("query_bars" == strCmd)
 	{
 		return strCmd + ":" + req.GetExtraData("security") + ":" + req.GetExtraData("channel") + ":" + req.GetExtraData("begin_time_ms") + ":" + req.GetExtraData("end_time_ms");
 	}
-	return { };
+	return {};
 }
 
 bool CBrokerService::HandleMarketQuery(net::_TyConnectionId id, const CRequest& req)
@@ -311,9 +324,7 @@ bool CBrokerService::RouteQueryRequest(const CRequest& req)
 		std::lock_guard<std::mutex> lock(m_mtx_state);
 		_TyRequestId routerId = req.GetId();
 		auto mIter = std::find_if(m_pending_queries.begin(), m_pending_queries.end(), [routerId](const auto& item)
-		{
-			return routerId == item.second.m_router_id;
-		});
+								  { return routerId == item.second.m_router_id; });
 		if (m_pending_queries.end() == mIter)
 		{
 			return false;
@@ -649,9 +660,8 @@ int CBrokerService::HandleDisconnected(net::_TyConnectionId id)
 		{
 			std::vector<CPendingQueryClient>& clients = mIter->second.m_clients;
 			clients.erase(std::remove_if(clients.begin(), clients.end(), [id](const CPendingQueryClient& client)
-			{
-				return id == client.m_router_id;
-			}), clients.end());
+										 { return id == client.m_router_id; }),
+						  clients.end());
 			if (clients.empty())
 			{
 				mIter = m_pending_queries.erase(mIter);

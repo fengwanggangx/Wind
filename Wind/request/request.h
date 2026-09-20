@@ -72,6 +72,10 @@ class CRequest
 	void SetData(const _TyDepthData& value);
 	void SetData(const _TyQueryResponse& value);
 	void SetData(const _TySecurityList& value);
+	void SetData(const _TySectorListRequest& value);
+	void SetData(const _TySectorListResponse& value);
+	void SetData(const _TySectorConstituentsRequest& value);
+	void SetData(const _TySectorConstituentsResponse& value);
 	void SetData(const _TyStrategyInfo& value);
 	void SetData(const _TyStrategyList& value);
 	const _TyReqData& GetData() const;

@@ -60,5 +60,9 @@ message RequestData {
 		StrategyInfo strategy = 22;
 		StrategyList strategy_list = 23;
 		hqmarket.market.v1.SecurityList security_list = 25;
+		hqmarket.market.v1.SectorListRequest sector_list_request = 26;
+		hqmarket.market.v1.SectorListResponse sector_list_response = 27;
+		hqmarket.market.v1.SectorConstituentsRequest sector_constituents_request = 28;
+		hqmarket.market.v1.SectorConstituentsResponse sector_constituents_response = 29;
 	}
 }

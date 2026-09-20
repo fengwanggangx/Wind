@@ -313,6 +313,10 @@ const ::uint32_t
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
+        ::_pbi::kInvalidFieldOffsetTag,
+        ::_pbi::kInvalidFieldOffsetTag,
+        ::_pbi::kInvalidFieldOffsetTag,
+        ::_pbi::kInvalidFieldOffsetTag,
         PROTOBUF_FIELD_OFFSET(::request::RequestData, _impl_.payload_),
 };
 
@@ -349,7 +353,7 @@ const char descriptor_table_protodef_request_2eproto[] ABSL_ATTRIBUTE_SECTION_VA
     "(\010\022\017\n\007enabled\030\010 \001(\010\0321\n\017ParametersEntry\022\013"
     "\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"9\n\014Strate"
     "gyList\022)\n\nstrategies\030\001 \003(\0132\025.request.Str"
-    "ategyInfo\"\220\t\n\013RequestData\022\"\n\004type\030\001 \001(\0162"
+    "ategyInfo\"\314\013\n\013RequestData\022\"\n\004type\030\001 \001(\0162"
     "\024.request.RequestType\022\013\n\003cmd\030\002 \001(\t\022.\n\005ex"
     "tra\030\003 \003(\0132\037.request.RequestData.ExtraEnt"
     "ry\022*\n\003ret\030\004 \003(\0132\035.request.RequestData.Re"
@@ -374,14 +378,22 @@ const char descriptor_table_protodef_request_2eproto[] ABSL_ATTRIBUTE_SECTION_VA
     "strategy\030\026 \001(\0132\025.request.StrategyInfoH\000\022"
     ".\n\rstrategy_list\030\027 \001(\0132\025.request.Strateg"
     "yListH\000\0229\n\rsecurity_list\030\031 \001(\0132 .hqmarke"
-    "t.market.v1.SecurityListH\000\032,\n\nExtraEntry"
-    "\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\032*\n\010RetE"
-    "ntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001B\t\n\007"
-    "payloadJ\004\010\030\020\031R\025security_list_requestR\026se"
-    "curity_list_response*z\n\013RequestType\022\013\n\007U"
-    "NKNOWN\020\000\022\016\n\nQUERY_AUTH\020\001\022\022\n\016QUERY_USERIN"
-    "FO\020\002\022\017\n\013UPDATE_AUTH\020\003\022\014\n\010STRATEGY\020\004\022\014\n\010H"
-    "QMARKET\020\005\022\r\n\tHEARTBEAT\020\006b\006proto3"
+    "t.market.v1.SecurityListH\000\022D\n\023sector_lis"
+    "t_request\030\032 \001(\0132%.hqmarket.market.v1.Sec"
+    "torListRequestH\000\022F\n\024sector_list_response"
+    "\030\033 \001(\0132&.hqmarket.market.v1.SectorListRe"
+    "sponseH\000\022T\n\033sector_constituents_request\030"
+    "\034 \001(\0132-.hqmarket.market.v1.SectorConstit"
+    "uentsRequestH\000\022V\n\034sector_constituents_re"
+    "sponse\030\035 \001(\0132..hqmarket.market.v1.Sector"
+    "ConstituentsResponseH\000\032,\n\nExtraEntry\022\013\n\003"
+    "key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\032*\n\010RetEntry"
+    "\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001B\t\n\007payl"
+    "oadJ\004\010\030\020\031R\025security_list_requestR\026securi"
+    "ty_list_response*z\n\013RequestType\022\013\n\007UNKNO"
+    "WN\020\000\022\016\n\nQUERY_AUTH\020\001\022\022\n\016QUERY_USERINFO\020\002"
+    "\022\017\n\013UPDATE_AUTH\020\003\022\014\n\010STRATEGY\020\004\022\014\n\010HQMAR"
+    "KET\020\005\022\r\n\tHEARTBEAT\020\006b\006proto3"
 };
 static const ::_pbi::DescriptorTable* const descriptor_table_request_2eproto_deps[1] =
     {
@@ -391,7 +403,7 @@ static ::absl::once_flag descriptor_table_request_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_request_2eproto = {
     false,
     false,
-    1792,
+    2108,
     descriptor_table_protodef_request_2eproto,
     "request.proto",
     &descriptor_table_request_2eproto_once,
@@ -2037,6 +2049,102 @@ void RequestData::clear_security_list() {
     clear_has_payload();
   }
 }
+void RequestData::set_allocated_sector_list_request(::hqmarket::market::v1::SectorListRequest* sector_list_request) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (sector_list_request) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(sector_list_request)->GetArena();
+    if (message_arena != submessage_arena) {
+      sector_list_request = ::google::protobuf::internal::GetOwnedMessage(message_arena, sector_list_request, submessage_arena);
+    }
+    set_has_sector_list_request();
+    _impl_.payload_.sector_list_request_ = sector_list_request;
+  }
+  // @@protoc_insertion_point(field_set_allocated:request.RequestData.sector_list_request)
+}
+void RequestData::clear_sector_list_request() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kSectorListRequest) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.sector_list_request_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.sector_list_request_);
+    }
+    clear_has_payload();
+  }
+}
+void RequestData::set_allocated_sector_list_response(::hqmarket::market::v1::SectorListResponse* sector_list_response) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (sector_list_response) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(sector_list_response)->GetArena();
+    if (message_arena != submessage_arena) {
+      sector_list_response = ::google::protobuf::internal::GetOwnedMessage(message_arena, sector_list_response, submessage_arena);
+    }
+    set_has_sector_list_response();
+    _impl_.payload_.sector_list_response_ = sector_list_response;
+  }
+  // @@protoc_insertion_point(field_set_allocated:request.RequestData.sector_list_response)
+}
+void RequestData::clear_sector_list_response() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kSectorListResponse) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.sector_list_response_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.sector_list_response_);
+    }
+    clear_has_payload();
+  }
+}
+void RequestData::set_allocated_sector_constituents_request(::hqmarket::market::v1::SectorConstituentsRequest* sector_constituents_request) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (sector_constituents_request) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(sector_constituents_request)->GetArena();
+    if (message_arena != submessage_arena) {
+      sector_constituents_request = ::google::protobuf::internal::GetOwnedMessage(message_arena, sector_constituents_request, submessage_arena);
+    }
+    set_has_sector_constituents_request();
+    _impl_.payload_.sector_constituents_request_ = sector_constituents_request;
+  }
+  // @@protoc_insertion_point(field_set_allocated:request.RequestData.sector_constituents_request)
+}
+void RequestData::clear_sector_constituents_request() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kSectorConstituentsRequest) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.sector_constituents_request_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.sector_constituents_request_);
+    }
+    clear_has_payload();
+  }
+}
+void RequestData::set_allocated_sector_constituents_response(::hqmarket::market::v1::SectorConstituentsResponse* sector_constituents_response) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (sector_constituents_response) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(sector_constituents_response)->GetArena();
+    if (message_arena != submessage_arena) {
+      sector_constituents_response = ::google::protobuf::internal::GetOwnedMessage(message_arena, sector_constituents_response, submessage_arena);
+    }
+    set_has_sector_constituents_response();
+    _impl_.payload_.sector_constituents_response_ = sector_constituents_response;
+  }
+  // @@protoc_insertion_point(field_set_allocated:request.RequestData.sector_constituents_response)
+}
+void RequestData::clear_sector_constituents_response() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kSectorConstituentsResponse) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.sector_constituents_response_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.sector_constituents_response_);
+    }
+    clear_has_payload();
+  }
+}
 RequestData::RequestData(::google::protobuf::Arena* arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, _class_data_.base()) {
@@ -2123,6 +2231,18 @@ RequestData::RequestData(
         break;
       case kSecurityList:
         _impl_.payload_.security_list_ = ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::SecurityList>(arena, *from._impl_.payload_.security_list_);
+        break;
+      case kSectorListRequest:
+        _impl_.payload_.sector_list_request_ = ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::SectorListRequest>(arena, *from._impl_.payload_.sector_list_request_);
+        break;
+      case kSectorListResponse:
+        _impl_.payload_.sector_list_response_ = ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::SectorListResponse>(arena, *from._impl_.payload_.sector_list_response_);
+        break;
+      case kSectorConstituentsRequest:
+        _impl_.payload_.sector_constituents_request_ = ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::SectorConstituentsRequest>(arena, *from._impl_.payload_.sector_constituents_request_);
+        break;
+      case kSectorConstituentsResponse:
+        _impl_.payload_.sector_constituents_response_ = ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::SectorConstituentsResponse>(arena, *from._impl_.payload_.sector_constituents_response_);
         break;
   }
 
@@ -2286,6 +2406,38 @@ void RequestData::clear_payload() {
       }
       break;
     }
+    case kSectorListRequest: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.sector_list_request_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.sector_list_request_);
+      }
+      break;
+    }
+    case kSectorListResponse: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.sector_list_response_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.sector_list_response_);
+      }
+      break;
+    }
+    case kSectorConstituentsRequest: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.sector_constituents_request_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.sector_constituents_request_);
+      }
+      break;
+    }
+    case kSectorConstituentsResponse: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.sector_constituents_response_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.sector_constituents_response_);
+      }
+      break;
+    }
     case PAYLOAD_NOT_SET: {
       break;
     }
@@ -2354,16 +2506,16 @@ const ::google::protobuf::internal::ClassData* RequestData::GetClassData() const
   return _class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 20, 17, 55, 2> RequestData::_table_ = {
+const ::_pbi::TcParseTable<3, 24, 21, 63, 2> RequestData::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    25, 56,  // max_field_number, fast_idx_mask
+    29, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4269801952,  // skipmap
+    3766485472,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    20,  // num_field_entries
-    17,  // num_aux_entries
+    24,  // num_field_entries
+    21,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     _class_data_.base(),
     nullptr,  // post_loop_handler
@@ -2396,10 +2548,10 @@ const ::_pbi::TcParseTable<3, 20, 17, 55, 2> RequestData::_table_ = {
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.cmd_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // map<string, string> extra = 3;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.extra_), 0, 15,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.extra_), 0, 19,
     (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
     // map<string, string> ret = 4;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.ret_), 0, 16,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.ret_), 0, 20,
     (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
     // uint64 id = 5;
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.id_), 0, 0,
@@ -2449,6 +2601,18 @@ const ::_pbi::TcParseTable<3, 20, 17, 55, 2> RequestData::_table_ = {
     // .hqmarket.market.v1.SecurityList security_list = 25;
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.security_list_), _Internal::kOneofCaseOffset + 0, 14,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .hqmarket.market.v1.SectorListRequest sector_list_request = 26;
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.sector_list_request_), _Internal::kOneofCaseOffset + 0, 15,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .hqmarket.market.v1.SectorListResponse sector_list_response = 27;
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.sector_list_response_), _Internal::kOneofCaseOffset + 0, 16,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .hqmarket.market.v1.SectorConstituentsRequest sector_constituents_request = 28;
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.sector_constituents_request_), _Internal::kOneofCaseOffset + 0, 17,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .hqmarket.market.v1.SectorConstituentsResponse sector_constituents_response = 29;
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.sector_constituents_response_), _Internal::kOneofCaseOffset + 0, 18,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }}, {{
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::AuthRequest>()},
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SubscribeRequest>()},
@@ -2465,6 +2629,10 @@ const ::_pbi::TcParseTable<3, 20, 17, 55, 2> RequestData::_table_ = {
     {::_pbi::TcParser::GetTable<::request::StrategyInfo>()},
     {::_pbi::TcParser::GetTable<::request::StrategyList>()},
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SecurityList>()},
+    {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SectorListRequest>()},
+    {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SectorListResponse>()},
+    {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SectorConstituentsRequest>()},
+    {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SectorConstituentsResponse>()},
     {::_pbi::TcParser::GetMapAuxInfo<
         decltype(RequestData()._impl_.extra_)>(
         1, 0, 0, 9,
@@ -2474,7 +2642,7 @@ const ::_pbi::TcParseTable<3, 20, 17, 55, 2> RequestData::_table_ = {
         1, 0, 0, 9,
         9)},
   }}, {{
-    "\23\0\3\5\3\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+    "\23\0\3\5\3\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
     "request.RequestData"
     "cmd"
     "extra"
@@ -2693,6 +2861,30 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
                   stream);
               break;
             }
+            case kSectorListRequest: {
+              target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                  26, *this_._impl_.payload_.sector_list_request_, this_._impl_.payload_.sector_list_request_->GetCachedSize(), target,
+                  stream);
+              break;
+            }
+            case kSectorListResponse: {
+              target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                  27, *this_._impl_.payload_.sector_list_response_, this_._impl_.payload_.sector_list_response_->GetCachedSize(), target,
+                  stream);
+              break;
+            }
+            case kSectorConstituentsRequest: {
+              target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                  28, *this_._impl_.payload_.sector_constituents_request_, this_._impl_.payload_.sector_constituents_request_->GetCachedSize(), target,
+                  stream);
+              break;
+            }
+            case kSectorConstituentsResponse: {
+              target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                  29, *this_._impl_.payload_.sector_constituents_response_, this_._impl_.payload_.sector_constituents_response_->GetCachedSize(), target,
+                  stream);
+              break;
+            }
             default:
               break;
           }
@@ -2848,6 +3040,30 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
             case kSecurityList: {
               total_size += 2 +
                             ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.security_list_);
+              break;
+            }
+            // .hqmarket.market.v1.SectorListRequest sector_list_request = 26;
+            case kSectorListRequest: {
+              total_size += 2 +
+                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.sector_list_request_);
+              break;
+            }
+            // .hqmarket.market.v1.SectorListResponse sector_list_response = 27;
+            case kSectorListResponse: {
+              total_size += 2 +
+                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.sector_list_response_);
+              break;
+            }
+            // .hqmarket.market.v1.SectorConstituentsRequest sector_constituents_request = 28;
+            case kSectorConstituentsRequest: {
+              total_size += 2 +
+                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.sector_constituents_request_);
+              break;
+            }
+            // .hqmarket.market.v1.SectorConstituentsResponse sector_constituents_response = 29;
+            case kSectorConstituentsResponse: {
+              total_size += 2 +
+                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.sector_constituents_response_);
               break;
             }
             case PAYLOAD_NOT_SET: {
@@ -3021,6 +3237,42 @@ void RequestData::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goo
               ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::SecurityList>(arena, *from._impl_.payload_.security_list_);
         } else {
           _this->_impl_.payload_.security_list_->MergeFrom(from._internal_security_list());
+        }
+        break;
+      }
+      case kSectorListRequest: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.sector_list_request_ =
+              ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::SectorListRequest>(arena, *from._impl_.payload_.sector_list_request_);
+        } else {
+          _this->_impl_.payload_.sector_list_request_->MergeFrom(from._internal_sector_list_request());
+        }
+        break;
+      }
+      case kSectorListResponse: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.sector_list_response_ =
+              ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::SectorListResponse>(arena, *from._impl_.payload_.sector_list_response_);
+        } else {
+          _this->_impl_.payload_.sector_list_response_->MergeFrom(from._internal_sector_list_response());
+        }
+        break;
+      }
+      case kSectorConstituentsRequest: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.sector_constituents_request_ =
+              ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::SectorConstituentsRequest>(arena, *from._impl_.payload_.sector_constituents_request_);
+        } else {
+          _this->_impl_.payload_.sector_constituents_request_->MergeFrom(from._internal_sector_constituents_request());
+        }
+        break;
+      }
+      case kSectorConstituentsResponse: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.sector_constituents_response_ =
+              ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::SectorConstituentsResponse>(arena, *from._impl_.payload_.sector_constituents_response_);
+        } else {
+          _this->_impl_.payload_.sector_constituents_response_->MergeFrom(from._internal_sector_constituents_response());
         }
         break;
       }
