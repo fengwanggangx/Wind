@@ -23,7 +23,5 @@ message ProviderStatusData { string provider = 1; bool healthy = 2; string detai
 message QueryRequest { Security security = 1; Channel channel = 2; int64 begin_time_ms = 3; int64 end_time_ms = 4; }
 message QueryResponse { Security security = 1; Channel channel = 2; QuoteData quote = 3; repeated BarData bars = 4; bool found = 5; }
 message SectorInfo { string code = 1; string name = 2; int64 change_percent = 3; int32 percent_scale = 4; int32 rising_count = 5; int32 falling_count = 6; int32 flat_count = 7; int32 member_count = 8; Security leading_security = 9; string leading_name = 10; int64 snapshot_time_ms = 11; }
-message SectorListRequest { SectorType type = 1; }
-message SectorListResponse { SectorType type = 1; repeated SectorInfo sectors = 2; int64 snapshot_time_ms = 3; string source = 4; }
-message SectorConstituentsRequest { SectorType type = 1; string sector_code = 2; }
-message SectorConstituentsResponse { SectorType type = 1; SectorInfo sector = 2; repeated SecurityInfo securities = 3; int64 snapshot_time_ms = 4; string source = 5; }
+message SectorList { SectorType type = 1; repeated SectorInfo sectors = 2; int64 snapshot_time_ms = 3; string source = 4; }
+message SectorConstituents { SectorType type = 1; SectorInfo sector = 2; repeated SecurityInfo securities = 3; int64 snapshot_time_ms = 4; string source = 5; }

@@ -82,21 +82,15 @@ extern QueryResponseDefaultTypeInternal _QueryResponse_default_instance_;
 class QuoteData;
 struct QuoteDataDefaultTypeInternal;
 extern QuoteDataDefaultTypeInternal _QuoteData_default_instance_;
-class SectorConstituentsRequest;
-struct SectorConstituentsRequestDefaultTypeInternal;
-extern SectorConstituentsRequestDefaultTypeInternal _SectorConstituentsRequest_default_instance_;
-class SectorConstituentsResponse;
-struct SectorConstituentsResponseDefaultTypeInternal;
-extern SectorConstituentsResponseDefaultTypeInternal _SectorConstituentsResponse_default_instance_;
+class SectorConstituents;
+struct SectorConstituentsDefaultTypeInternal;
+extern SectorConstituentsDefaultTypeInternal _SectorConstituents_default_instance_;
 class SectorInfo;
 struct SectorInfoDefaultTypeInternal;
 extern SectorInfoDefaultTypeInternal _SectorInfo_default_instance_;
-class SectorListRequest;
-struct SectorListRequestDefaultTypeInternal;
-extern SectorListRequestDefaultTypeInternal _SectorListRequest_default_instance_;
-class SectorListResponse;
-struct SectorListResponseDefaultTypeInternal;
-extern SectorListResponseDefaultTypeInternal _SectorListResponse_default_instance_;
+class SectorList;
+struct SectorListDefaultTypeInternal;
+extern SectorListDefaultTypeInternal _SectorList_default_instance_;
 class Security;
 struct SecurityDefaultTypeInternal;
 extern SecurityDefaultTypeInternal _Security_default_instance_;
@@ -456,404 +450,6 @@ class Security final : public ::google::protobuf::Message
                           const Security& from_msg);
     ::google::protobuf::internal::ArenaStringPtr symbol_;
     int exchange_;
-    ::google::protobuf::internal::CachedSize _cached_size_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_v1_2fmarket_2eproto;
-};
-// -------------------------------------------------------------------
-
-class SectorListRequest final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:hqmarket.market.v1.SectorListRequest) */ {
- public:
-  inline SectorListRequest() : SectorListRequest(nullptr) {}
-  ~SectorListRequest() PROTOBUF_FINAL;
-
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(SectorListRequest* msg, std::destroying_delete_t) {
-    SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(SectorListRequest));
-  }
-#endif
-
-  template <typename = void>
-  explicit PROTOBUF_CONSTEXPR SectorListRequest(
-      ::google::protobuf::internal::ConstantInitialized);
-
-  inline SectorListRequest(const SectorListRequest& from) : SectorListRequest(nullptr, from) {}
-  inline SectorListRequest(SectorListRequest&& from) noexcept
-      : SectorListRequest(nullptr, std::move(from)) {}
-  inline SectorListRequest& operator=(const SectorListRequest& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline SectorListRequest& operator=(SectorListRequest&& from) noexcept {
-    if (this == &from) return *this;
-    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const SectorListRequest& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const SectorListRequest* internal_default_instance() {
-    return reinterpret_cast<const SectorListRequest*>(
-        &_SectorListRequest_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages = 18;
-  friend void swap(SectorListRequest& a, SectorListRequest& b) { a.Swap(&b); }
-  inline void Swap(SectorListRequest* other) {
-    if (other == this) return;
-    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(SectorListRequest* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  SectorListRequest* New(::google::protobuf::Arena* arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<SectorListRequest>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const SectorListRequest& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const SectorListRequest& from) { SectorListRequest::MergeImpl(*this, from); }
-
-  private:
-  static void MergeImpl(
-      ::google::protobuf::MessageLite& to_msg,
-      const ::google::protobuf::MessageLite& from_msg);
-
-  public:
-  bool IsInitialized() const {
-    return true;
-  }
-  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
-  #if defined(PROTOBUF_CUSTOM_VTABLE)
-  private:
-  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
-  static ::uint8_t* _InternalSerialize(
-      const MessageLite& msg, ::uint8_t* target,
-      ::google::protobuf::io::EpsCopyOutputStream* stream);
-
-  public:
-  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target,
-      ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-    return _InternalSerialize(*this, target, stream);
-  }
-  #else   // PROTOBUF_CUSTOM_VTABLE
-  ::size_t ByteSizeLong() const final;
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target,
-      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
-  #endif  // PROTOBUF_CUSTOM_VTABLE
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  void SharedCtor(::google::protobuf::Arena* arena);
-  static void SharedDtor(MessageLite& self);
-  void InternalSwap(SectorListRequest* other);
- private:
-  template <typename T>
-  friend ::absl::string_view(
-      ::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "hqmarket.market.v1.SectorListRequest"; }
-
- protected:
-  explicit SectorListRequest(::google::protobuf::Arena* arena);
-  SectorListRequest(::google::protobuf::Arena* arena, const SectorListRequest& from);
-  SectorListRequest(::google::protobuf::Arena* arena, SectorListRequest&& from) noexcept
-      : SectorListRequest(arena) {
-    *this = ::std::move(from);
-  }
-  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
-  static void* PlacementNew_(const void*, void* mem,
-                             ::google::protobuf::Arena* arena);
-  static constexpr auto InternalNewImpl_();
-  static const ::google::protobuf::internal::ClassDataFull _class_data_;
-
- public:
-  ::google::protobuf::Metadata GetMetadata() const;
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-  enum : int {
-    kTypeFieldNumber = 1,
-  };
-  // .hqmarket.market.v1.SectorType type = 1;
-  void clear_type() ;
-  ::hqmarket::market::v1::SectorType type() const;
-  void set_type(::hqmarket::market::v1::SectorType value);
-
-  private:
-  ::hqmarket::market::v1::SectorType _internal_type() const;
-  void _internal_set_type(::hqmarket::market::v1::SectorType value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:hqmarket.market.v1.SectorListRequest)
- private:
-  class _Internal;
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 0,
-      0, 2>
-      _table_;
-
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-    inline explicit constexpr Impl_(
-        ::google::protobuf::internal::ConstantInitialized) noexcept;
-    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                          ::google::protobuf::Arena* arena);
-    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                          ::google::protobuf::Arena* arena, const Impl_& from,
-                          const SectorListRequest& from_msg);
-    int type_;
-    ::google::protobuf::internal::CachedSize _cached_size_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_v1_2fmarket_2eproto;
-};
-// -------------------------------------------------------------------
-
-class SectorConstituentsRequest final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:hqmarket.market.v1.SectorConstituentsRequest) */ {
- public:
-  inline SectorConstituentsRequest() : SectorConstituentsRequest(nullptr) {}
-  ~SectorConstituentsRequest() PROTOBUF_FINAL;
-
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(SectorConstituentsRequest* msg, std::destroying_delete_t) {
-    SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(SectorConstituentsRequest));
-  }
-#endif
-
-  template <typename = void>
-  explicit PROTOBUF_CONSTEXPR SectorConstituentsRequest(
-      ::google::protobuf::internal::ConstantInitialized);
-
-  inline SectorConstituentsRequest(const SectorConstituentsRequest& from) : SectorConstituentsRequest(nullptr, from) {}
-  inline SectorConstituentsRequest(SectorConstituentsRequest&& from) noexcept
-      : SectorConstituentsRequest(nullptr, std::move(from)) {}
-  inline SectorConstituentsRequest& operator=(const SectorConstituentsRequest& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline SectorConstituentsRequest& operator=(SectorConstituentsRequest&& from) noexcept {
-    if (this == &from) return *this;
-    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::google::protobuf::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::google::protobuf::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const SectorConstituentsRequest& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const SectorConstituentsRequest* internal_default_instance() {
-    return reinterpret_cast<const SectorConstituentsRequest*>(
-        &_SectorConstituentsRequest_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages = 20;
-  friend void swap(SectorConstituentsRequest& a, SectorConstituentsRequest& b) { a.Swap(&b); }
-  inline void Swap(SectorConstituentsRequest* other) {
-    if (other == this) return;
-    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(SectorConstituentsRequest* other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  SectorConstituentsRequest* New(::google::protobuf::Arena* arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<SectorConstituentsRequest>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const SectorConstituentsRequest& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const SectorConstituentsRequest& from) { SectorConstituentsRequest::MergeImpl(*this, from); }
-
-  private:
-  static void MergeImpl(
-      ::google::protobuf::MessageLite& to_msg,
-      const ::google::protobuf::MessageLite& from_msg);
-
-  public:
-  bool IsInitialized() const {
-    return true;
-  }
-  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
-  #if defined(PROTOBUF_CUSTOM_VTABLE)
-  private:
-  static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
-  static ::uint8_t* _InternalSerialize(
-      const MessageLite& msg, ::uint8_t* target,
-      ::google::protobuf::io::EpsCopyOutputStream* stream);
-
-  public:
-  ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target,
-      ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-    return _InternalSerialize(*this, target, stream);
-  }
-  #else   // PROTOBUF_CUSTOM_VTABLE
-  ::size_t ByteSizeLong() const final;
-  ::uint8_t* _InternalSerialize(
-      ::uint8_t* target,
-      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
-  #endif  // PROTOBUF_CUSTOM_VTABLE
-  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
-
-  private:
-  void SharedCtor(::google::protobuf::Arena* arena);
-  static void SharedDtor(MessageLite& self);
-  void InternalSwap(SectorConstituentsRequest* other);
- private:
-  template <typename T>
-  friend ::absl::string_view(
-      ::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "hqmarket.market.v1.SectorConstituentsRequest"; }
-
- protected:
-  explicit SectorConstituentsRequest(::google::protobuf::Arena* arena);
-  SectorConstituentsRequest(::google::protobuf::Arena* arena, const SectorConstituentsRequest& from);
-  SectorConstituentsRequest(::google::protobuf::Arena* arena, SectorConstituentsRequest&& from) noexcept
-      : SectorConstituentsRequest(arena) {
-    *this = ::std::move(from);
-  }
-  const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
-  static void* PlacementNew_(const void*, void* mem,
-                             ::google::protobuf::Arena* arena);
-  static constexpr auto InternalNewImpl_();
-  static const ::google::protobuf::internal::ClassDataFull _class_data_;
-
- public:
-  ::google::protobuf::Metadata GetMetadata() const;
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-  enum : int {
-    kSectorCodeFieldNumber = 2,
-    kTypeFieldNumber = 1,
-  };
-  // string sector_code = 2;
-  void clear_sector_code() ;
-  const std::string& sector_code() const;
-  template <typename Arg_ = const std::string&, typename... Args_>
-  void set_sector_code(Arg_&& arg, Args_... args);
-  std::string* mutable_sector_code();
-  PROTOBUF_NODISCARD std::string* release_sector_code();
-  void set_allocated_sector_code(std::string* value);
-
-  private:
-  const std::string& _internal_sector_code() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_sector_code(
-      const std::string& value);
-  std::string* _internal_mutable_sector_code();
-
-  public:
-  // .hqmarket.market.v1.SectorType type = 1;
-  void clear_type() ;
-  ::hqmarket::market::v1::SectorType type() const;
-  void set_type(::hqmarket::market::v1::SectorType value);
-
-  private:
-  ::hqmarket::market::v1::SectorType _internal_type() const;
-  void _internal_set_type(::hqmarket::market::v1::SectorType value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:hqmarket.market.v1.SectorConstituentsRequest)
- private:
-  class _Internal;
-  friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<
-      1, 2, 0,
-      64, 2>
-      _table_;
-
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-    inline explicit constexpr Impl_(
-        ::google::protobuf::internal::ConstantInitialized) noexcept;
-    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                          ::google::protobuf::Arena* arena);
-    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                          ::google::protobuf::Arena* arena, const Impl_& from,
-                          const SectorConstituentsRequest& from_msg);
-    ::google::protobuf::internal::ArenaStringPtr sector_code_;
-    int type_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -4852,31 +4448,31 @@ class SecurityList final : public ::google::protobuf::Message
 };
 // -------------------------------------------------------------------
 
-class SectorListResponse final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:hqmarket.market.v1.SectorListResponse) */ {
+class SectorList final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:hqmarket.market.v1.SectorList) */ {
  public:
-  inline SectorListResponse() : SectorListResponse(nullptr) {}
-  ~SectorListResponse() PROTOBUF_FINAL;
+  inline SectorList() : SectorList(nullptr) {}
+  ~SectorList() PROTOBUF_FINAL;
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(SectorListResponse* msg, std::destroying_delete_t) {
+  void operator delete(SectorList* msg, std::destroying_delete_t) {
     SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(SectorListResponse));
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(SectorList));
   }
 #endif
 
   template <typename = void>
-  explicit PROTOBUF_CONSTEXPR SectorListResponse(
+  explicit PROTOBUF_CONSTEXPR SectorList(
       ::google::protobuf::internal::ConstantInitialized);
 
-  inline SectorListResponse(const SectorListResponse& from) : SectorListResponse(nullptr, from) {}
-  inline SectorListResponse(SectorListResponse&& from) noexcept
-      : SectorListResponse(nullptr, std::move(from)) {}
-  inline SectorListResponse& operator=(const SectorListResponse& from) {
+  inline SectorList(const SectorList& from) : SectorList(nullptr, from) {}
+  inline SectorList(SectorList&& from) noexcept
+      : SectorList(nullptr, std::move(from)) {}
+  inline SectorList& operator=(const SectorList& from) {
     CopyFrom(from);
     return *this;
   }
-  inline SectorListResponse& operator=(SectorListResponse&& from) noexcept {
+  inline SectorList& operator=(SectorList&& from) noexcept {
     if (this == &from) return *this;
     if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
       InternalSwap(&from);
@@ -4904,16 +4500,16 @@ class SectorListResponse final : public ::google::protobuf::Message
   static const ::google::protobuf::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const SectorListResponse& default_instance() {
+  static const SectorList& default_instance() {
     return *internal_default_instance();
   }
-  static inline const SectorListResponse* internal_default_instance() {
-    return reinterpret_cast<const SectorListResponse*>(
-        &_SectorListResponse_default_instance_);
+  static inline const SectorList* internal_default_instance() {
+    return reinterpret_cast<const SectorList*>(
+        &_SectorList_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 19;
-  friend void swap(SectorListResponse& a, SectorListResponse& b) { a.Swap(&b); }
-  inline void Swap(SectorListResponse* other) {
+  static constexpr int kIndexInFileMessages = 18;
+  friend void swap(SectorList& a, SectorList& b) { a.Swap(&b); }
+  inline void Swap(SectorList* other) {
     if (other == this) return;
     if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
       InternalSwap(other);
@@ -4921,7 +4517,7 @@ class SectorListResponse final : public ::google::protobuf::Message
       ::google::protobuf::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(SectorListResponse* other) {
+  void UnsafeArenaSwap(SectorList* other) {
     if (other == this) return;
     ABSL_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -4929,13 +4525,13 @@ class SectorListResponse final : public ::google::protobuf::Message
 
   // implements Message ----------------------------------------------
 
-  SectorListResponse* New(::google::protobuf::Arena* arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<SectorListResponse>(arena);
+  SectorList* New(::google::protobuf::Arena* arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<SectorList>(arena);
   }
   using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const SectorListResponse& from);
+  void CopyFrom(const SectorList& from);
   using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const SectorListResponse& from) { SectorListResponse::MergeImpl(*this, from); }
+  void MergeFrom(const SectorList& from) { SectorList::MergeImpl(*this, from); }
 
   private:
   static void MergeImpl(
@@ -4972,18 +4568,18 @@ class SectorListResponse final : public ::google::protobuf::Message
   private:
   void SharedCtor(::google::protobuf::Arena* arena);
   static void SharedDtor(MessageLite& self);
-  void InternalSwap(SectorListResponse* other);
+  void InternalSwap(SectorList* other);
  private:
   template <typename T>
   friend ::absl::string_view(
       ::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "hqmarket.market.v1.SectorListResponse"; }
+  static ::absl::string_view FullMessageName() { return "hqmarket.market.v1.SectorList"; }
 
  protected:
-  explicit SectorListResponse(::google::protobuf::Arena* arena);
-  SectorListResponse(::google::protobuf::Arena* arena, const SectorListResponse& from);
-  SectorListResponse(::google::protobuf::Arena* arena, SectorListResponse&& from) noexcept
-      : SectorListResponse(arena) {
+  explicit SectorList(::google::protobuf::Arena* arena);
+  SectorList(::google::protobuf::Arena* arena, const SectorList& from);
+  SectorList(::google::protobuf::Arena* arena, SectorList&& from) noexcept
+      : SectorList(arena) {
     *this = ::std::move(from);
   }
   const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
@@ -5056,13 +4652,13 @@ class SectorListResponse final : public ::google::protobuf::Message
   void _internal_set_type(::hqmarket::market::v1::SectorType value);
 
   public:
-  // @@protoc_insertion_point(class_scope:hqmarket.market.v1.SectorListResponse)
+  // @@protoc_insertion_point(class_scope:hqmarket.market.v1.SectorList)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
       2, 4, 1,
-      52, 2>
+      44, 2>
       _table_;
 
   friend class ::google::protobuf::MessageLite;
@@ -5078,7 +4674,7 @@ class SectorListResponse final : public ::google::protobuf::Message
                           ::google::protobuf::Arena* arena);
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
-                          const SectorListResponse& from_msg);
+                          const SectorList& from_msg);
     ::google::protobuf::RepeatedPtrField< ::hqmarket::market::v1::SectorInfo > sectors_;
     ::google::protobuf::internal::ArenaStringPtr source_;
     ::int64_t snapshot_time_ms_;
@@ -5091,31 +4687,31 @@ class SectorListResponse final : public ::google::protobuf::Message
 };
 // -------------------------------------------------------------------
 
-class SectorConstituentsResponse final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:hqmarket.market.v1.SectorConstituentsResponse) */ {
+class SectorConstituents final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:hqmarket.market.v1.SectorConstituents) */ {
  public:
-  inline SectorConstituentsResponse() : SectorConstituentsResponse(nullptr) {}
-  ~SectorConstituentsResponse() PROTOBUF_FINAL;
+  inline SectorConstituents() : SectorConstituents(nullptr) {}
+  ~SectorConstituents() PROTOBUF_FINAL;
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(SectorConstituentsResponse* msg, std::destroying_delete_t) {
+  void operator delete(SectorConstituents* msg, std::destroying_delete_t) {
     SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(SectorConstituentsResponse));
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(SectorConstituents));
   }
 #endif
 
   template <typename = void>
-  explicit PROTOBUF_CONSTEXPR SectorConstituentsResponse(
+  explicit PROTOBUF_CONSTEXPR SectorConstituents(
       ::google::protobuf::internal::ConstantInitialized);
 
-  inline SectorConstituentsResponse(const SectorConstituentsResponse& from) : SectorConstituentsResponse(nullptr, from) {}
-  inline SectorConstituentsResponse(SectorConstituentsResponse&& from) noexcept
-      : SectorConstituentsResponse(nullptr, std::move(from)) {}
-  inline SectorConstituentsResponse& operator=(const SectorConstituentsResponse& from) {
+  inline SectorConstituents(const SectorConstituents& from) : SectorConstituents(nullptr, from) {}
+  inline SectorConstituents(SectorConstituents&& from) noexcept
+      : SectorConstituents(nullptr, std::move(from)) {}
+  inline SectorConstituents& operator=(const SectorConstituents& from) {
     CopyFrom(from);
     return *this;
   }
-  inline SectorConstituentsResponse& operator=(SectorConstituentsResponse&& from) noexcept {
+  inline SectorConstituents& operator=(SectorConstituents&& from) noexcept {
     if (this == &from) return *this;
     if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
       InternalSwap(&from);
@@ -5143,16 +4739,16 @@ class SectorConstituentsResponse final : public ::google::protobuf::Message
   static const ::google::protobuf::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const SectorConstituentsResponse& default_instance() {
+  static const SectorConstituents& default_instance() {
     return *internal_default_instance();
   }
-  static inline const SectorConstituentsResponse* internal_default_instance() {
-    return reinterpret_cast<const SectorConstituentsResponse*>(
-        &_SectorConstituentsResponse_default_instance_);
+  static inline const SectorConstituents* internal_default_instance() {
+    return reinterpret_cast<const SectorConstituents*>(
+        &_SectorConstituents_default_instance_);
   }
-  static constexpr int kIndexInFileMessages = 21;
-  friend void swap(SectorConstituentsResponse& a, SectorConstituentsResponse& b) { a.Swap(&b); }
-  inline void Swap(SectorConstituentsResponse* other) {
+  static constexpr int kIndexInFileMessages = 19;
+  friend void swap(SectorConstituents& a, SectorConstituents& b) { a.Swap(&b); }
+  inline void Swap(SectorConstituents* other) {
     if (other == this) return;
     if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
       InternalSwap(other);
@@ -5160,7 +4756,7 @@ class SectorConstituentsResponse final : public ::google::protobuf::Message
       ::google::protobuf::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(SectorConstituentsResponse* other) {
+  void UnsafeArenaSwap(SectorConstituents* other) {
     if (other == this) return;
     ABSL_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -5168,13 +4764,13 @@ class SectorConstituentsResponse final : public ::google::protobuf::Message
 
   // implements Message ----------------------------------------------
 
-  SectorConstituentsResponse* New(::google::protobuf::Arena* arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<SectorConstituentsResponse>(arena);
+  SectorConstituents* New(::google::protobuf::Arena* arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<SectorConstituents>(arena);
   }
   using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const SectorConstituentsResponse& from);
+  void CopyFrom(const SectorConstituents& from);
   using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const SectorConstituentsResponse& from) { SectorConstituentsResponse::MergeImpl(*this, from); }
+  void MergeFrom(const SectorConstituents& from) { SectorConstituents::MergeImpl(*this, from); }
 
   private:
   static void MergeImpl(
@@ -5211,18 +4807,18 @@ class SectorConstituentsResponse final : public ::google::protobuf::Message
   private:
   void SharedCtor(::google::protobuf::Arena* arena);
   static void SharedDtor(MessageLite& self);
-  void InternalSwap(SectorConstituentsResponse* other);
+  void InternalSwap(SectorConstituents* other);
  private:
   template <typename T>
   friend ::absl::string_view(
       ::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "hqmarket.market.v1.SectorConstituentsResponse"; }
+  static ::absl::string_view FullMessageName() { return "hqmarket.market.v1.SectorConstituents"; }
 
  protected:
-  explicit SectorConstituentsResponse(::google::protobuf::Arena* arena);
-  SectorConstituentsResponse(::google::protobuf::Arena* arena, const SectorConstituentsResponse& from);
-  SectorConstituentsResponse(::google::protobuf::Arena* arena, SectorConstituentsResponse&& from) noexcept
-      : SectorConstituentsResponse(arena) {
+  explicit SectorConstituents(::google::protobuf::Arena* arena);
+  SectorConstituents(::google::protobuf::Arena* arena, const SectorConstituents& from);
+  SectorConstituents(::google::protobuf::Arena* arena, SectorConstituents&& from) noexcept
+      : SectorConstituents(arena) {
     *this = ::std::move(from);
   }
   const ::google::protobuf::internal::ClassData* GetClassData() const PROTOBUF_FINAL;
@@ -5311,13 +4907,13 @@ class SectorConstituentsResponse final : public ::google::protobuf::Message
   void _internal_set_type(::hqmarket::market::v1::SectorType value);
 
   public:
-  // @@protoc_insertion_point(class_scope:hqmarket.market.v1.SectorConstituentsResponse)
+  // @@protoc_insertion_point(class_scope:hqmarket.market.v1.SectorConstituents)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
       3, 5, 2,
-      60, 2>
+      52, 2>
       _table_;
 
   friend class ::google::protobuf::MessageLite;
@@ -5333,7 +4929,7 @@ class SectorConstituentsResponse final : public ::google::protobuf::Message
                           ::google::protobuf::Arena* arena);
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
-                          const SectorConstituentsResponse& from_msg);
+                          const SectorConstituents& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::RepeatedPtrField< ::hqmarket::market::v1::SecurityInfo > securities_;
@@ -8976,296 +8572,196 @@ inline void SectorInfo::_internal_set_snapshot_time_ms(::int64_t value) {
 
 // -------------------------------------------------------------------
 
-// SectorListRequest
+// SectorList
 
 // .hqmarket.market.v1.SectorType type = 1;
-inline void SectorListRequest::clear_type() {
+inline void SectorList::clear_type() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.type_ = 0;
 }
-inline ::hqmarket::market::v1::SectorType SectorListRequest::type() const {
-  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorListRequest.type)
+inline ::hqmarket::market::v1::SectorType SectorList::type() const {
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorList.type)
   return _internal_type();
 }
-inline void SectorListRequest::set_type(::hqmarket::market::v1::SectorType value) {
+inline void SectorList::set_type(::hqmarket::market::v1::SectorType value) {
   _internal_set_type(value);
-  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SectorListRequest.type)
+  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SectorList.type)
 }
-inline ::hqmarket::market::v1::SectorType SectorListRequest::_internal_type() const {
+inline ::hqmarket::market::v1::SectorType SectorList::_internal_type() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return static_cast<::hqmarket::market::v1::SectorType>(_impl_.type_);
 }
-inline void SectorListRequest::_internal_set_type(::hqmarket::market::v1::SectorType value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.type_ = value;
-}
-
-// -------------------------------------------------------------------
-
-// SectorListResponse
-
-// .hqmarket.market.v1.SectorType type = 1;
-inline void SectorListResponse::clear_type() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.type_ = 0;
-}
-inline ::hqmarket::market::v1::SectorType SectorListResponse::type() const {
-  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorListResponse.type)
-  return _internal_type();
-}
-inline void SectorListResponse::set_type(::hqmarket::market::v1::SectorType value) {
-  _internal_set_type(value);
-  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SectorListResponse.type)
-}
-inline ::hqmarket::market::v1::SectorType SectorListResponse::_internal_type() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return static_cast<::hqmarket::market::v1::SectorType>(_impl_.type_);
-}
-inline void SectorListResponse::_internal_set_type(::hqmarket::market::v1::SectorType value) {
+inline void SectorList::_internal_set_type(::hqmarket::market::v1::SectorType value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.type_ = value;
 }
 
 // repeated .hqmarket.market.v1.SectorInfo sectors = 2;
-inline int SectorListResponse::_internal_sectors_size() const {
+inline int SectorList::_internal_sectors_size() const {
   return _internal_sectors().size();
 }
-inline int SectorListResponse::sectors_size() const {
+inline int SectorList::sectors_size() const {
   return _internal_sectors_size();
 }
-inline void SectorListResponse::clear_sectors() {
+inline void SectorList::clear_sectors() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.sectors_.Clear();
 }
-inline ::hqmarket::market::v1::SectorInfo* SectorListResponse::mutable_sectors(int index)
+inline ::hqmarket::market::v1::SectorInfo* SectorList::mutable_sectors(int index)
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.SectorListResponse.sectors)
+  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.SectorList.sectors)
   return _internal_mutable_sectors()->Mutable(index);
 }
-inline ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::SectorInfo>* SectorListResponse::mutable_sectors()
+inline ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::SectorInfo>* SectorList::mutable_sectors()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_mutable_list:hqmarket.market.v1.SectorListResponse.sectors)
+  // @@protoc_insertion_point(field_mutable_list:hqmarket.market.v1.SectorList.sectors)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   return _internal_mutable_sectors();
 }
-inline const ::hqmarket::market::v1::SectorInfo& SectorListResponse::sectors(int index) const
+inline const ::hqmarket::market::v1::SectorInfo& SectorList::sectors(int index) const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorListResponse.sectors)
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorList.sectors)
   return _internal_sectors().Get(index);
 }
-inline ::hqmarket::market::v1::SectorInfo* SectorListResponse::add_sectors() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+inline ::hqmarket::market::v1::SectorInfo* SectorList::add_sectors() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::hqmarket::market::v1::SectorInfo* _add = _internal_mutable_sectors()->Add();
-  // @@protoc_insertion_point(field_add:hqmarket.market.v1.SectorListResponse.sectors)
+  // @@protoc_insertion_point(field_add:hqmarket.market.v1.SectorList.sectors)
   return _add;
 }
-inline const ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::SectorInfo>& SectorListResponse::sectors() const
+inline const ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::SectorInfo>& SectorList::sectors() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_list:hqmarket.market.v1.SectorListResponse.sectors)
+  // @@protoc_insertion_point(field_list:hqmarket.market.v1.SectorList.sectors)
   return _internal_sectors();
 }
 inline const ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::SectorInfo>&
-SectorListResponse::_internal_sectors() const {
+SectorList::_internal_sectors() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.sectors_;
 }
 inline ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::SectorInfo>*
-SectorListResponse::_internal_mutable_sectors() {
+SectorList::_internal_mutable_sectors() {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return &_impl_.sectors_;
 }
 
 // int64 snapshot_time_ms = 3;
-inline void SectorListResponse::clear_snapshot_time_ms() {
+inline void SectorList::clear_snapshot_time_ms() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.snapshot_time_ms_ = ::int64_t{0};
 }
-inline ::int64_t SectorListResponse::snapshot_time_ms() const {
-  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorListResponse.snapshot_time_ms)
+inline ::int64_t SectorList::snapshot_time_ms() const {
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorList.snapshot_time_ms)
   return _internal_snapshot_time_ms();
 }
-inline void SectorListResponse::set_snapshot_time_ms(::int64_t value) {
+inline void SectorList::set_snapshot_time_ms(::int64_t value) {
   _internal_set_snapshot_time_ms(value);
-  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SectorListResponse.snapshot_time_ms)
+  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SectorList.snapshot_time_ms)
 }
-inline ::int64_t SectorListResponse::_internal_snapshot_time_ms() const {
+inline ::int64_t SectorList::_internal_snapshot_time_ms() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.snapshot_time_ms_;
 }
-inline void SectorListResponse::_internal_set_snapshot_time_ms(::int64_t value) {
+inline void SectorList::_internal_set_snapshot_time_ms(::int64_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.snapshot_time_ms_ = value;
 }
 
 // string source = 4;
-inline void SectorListResponse::clear_source() {
+inline void SectorList::clear_source() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.source_.ClearToEmpty();
 }
-inline const std::string& SectorListResponse::source() const
+inline const std::string& SectorList::source() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorListResponse.source)
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorList.source)
   return _internal_source();
 }
 template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void SectorListResponse::set_source(Arg_&& arg,
+inline PROTOBUF_ALWAYS_INLINE void SectorList::set_source(Arg_&& arg,
                                                      Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.source_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SectorListResponse.source)
+  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SectorList.source)
 }
-inline std::string* SectorListResponse::mutable_source() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+inline std::string* SectorList::mutable_source() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   std::string* _s = _internal_mutable_source();
-  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.SectorListResponse.source)
+  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.SectorList.source)
   return _s;
 }
-inline const std::string& SectorListResponse::_internal_source() const {
+inline const std::string& SectorList::_internal_source() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.source_.Get();
 }
-inline void SectorListResponse::_internal_set_source(const std::string& value) {
+inline void SectorList::_internal_set_source(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.source_.Set(value, GetArena());
 }
-inline std::string* SectorListResponse::_internal_mutable_source() {
+inline std::string* SectorList::_internal_mutable_source() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   return _impl_.source_.Mutable( GetArena());
 }
-inline std::string* SectorListResponse::release_source() {
+inline std::string* SectorList::release_source() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:hqmarket.market.v1.SectorListResponse.source)
+  // @@protoc_insertion_point(field_release:hqmarket.market.v1.SectorList.source)
   return _impl_.source_.Release();
 }
-inline void SectorListResponse::set_allocated_source(std::string* value) {
+inline void SectorList::set_allocated_source(std::string* value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.source_.SetAllocated(value, GetArena());
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.source_.IsDefault()) {
     _impl_.source_.Set("", GetArena());
   }
-  // @@protoc_insertion_point(field_set_allocated:hqmarket.market.v1.SectorListResponse.source)
+  // @@protoc_insertion_point(field_set_allocated:hqmarket.market.v1.SectorList.source)
 }
 
 // -------------------------------------------------------------------
 
-// SectorConstituentsRequest
+// SectorConstituents
 
 // .hqmarket.market.v1.SectorType type = 1;
-inline void SectorConstituentsRequest::clear_type() {
+inline void SectorConstituents::clear_type() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.type_ = 0;
 }
-inline ::hqmarket::market::v1::SectorType SectorConstituentsRequest::type() const {
-  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorConstituentsRequest.type)
+inline ::hqmarket::market::v1::SectorType SectorConstituents::type() const {
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorConstituents.type)
   return _internal_type();
 }
-inline void SectorConstituentsRequest::set_type(::hqmarket::market::v1::SectorType value) {
+inline void SectorConstituents::set_type(::hqmarket::market::v1::SectorType value) {
   _internal_set_type(value);
-  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SectorConstituentsRequest.type)
+  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SectorConstituents.type)
 }
-inline ::hqmarket::market::v1::SectorType SectorConstituentsRequest::_internal_type() const {
+inline ::hqmarket::market::v1::SectorType SectorConstituents::_internal_type() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return static_cast<::hqmarket::market::v1::SectorType>(_impl_.type_);
 }
-inline void SectorConstituentsRequest::_internal_set_type(::hqmarket::market::v1::SectorType value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.type_ = value;
-}
-
-// string sector_code = 2;
-inline void SectorConstituentsRequest::clear_sector_code() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.sector_code_.ClearToEmpty();
-}
-inline const std::string& SectorConstituentsRequest::sector_code() const
-    ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorConstituentsRequest.sector_code)
-  return _internal_sector_code();
-}
-template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void SectorConstituentsRequest::set_sector_code(Arg_&& arg,
-                                                     Args_... args) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.sector_code_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SectorConstituentsRequest.sector_code)
-}
-inline std::string* SectorConstituentsRequest::mutable_sector_code() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  std::string* _s = _internal_mutable_sector_code();
-  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.SectorConstituentsRequest.sector_code)
-  return _s;
-}
-inline const std::string& SectorConstituentsRequest::_internal_sector_code() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.sector_code_.Get();
-}
-inline void SectorConstituentsRequest::_internal_set_sector_code(const std::string& value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.sector_code_.Set(value, GetArena());
-}
-inline std::string* SectorConstituentsRequest::_internal_mutable_sector_code() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  return _impl_.sector_code_.Mutable( GetArena());
-}
-inline std::string* SectorConstituentsRequest::release_sector_code() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:hqmarket.market.v1.SectorConstituentsRequest.sector_code)
-  return _impl_.sector_code_.Release();
-}
-inline void SectorConstituentsRequest::set_allocated_sector_code(std::string* value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.sector_code_.SetAllocated(value, GetArena());
-  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.sector_code_.IsDefault()) {
-    _impl_.sector_code_.Set("", GetArena());
-  }
-  // @@protoc_insertion_point(field_set_allocated:hqmarket.market.v1.SectorConstituentsRequest.sector_code)
-}
-
-// -------------------------------------------------------------------
-
-// SectorConstituentsResponse
-
-// .hqmarket.market.v1.SectorType type = 1;
-inline void SectorConstituentsResponse::clear_type() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.type_ = 0;
-}
-inline ::hqmarket::market::v1::SectorType SectorConstituentsResponse::type() const {
-  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorConstituentsResponse.type)
-  return _internal_type();
-}
-inline void SectorConstituentsResponse::set_type(::hqmarket::market::v1::SectorType value) {
-  _internal_set_type(value);
-  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SectorConstituentsResponse.type)
-}
-inline ::hqmarket::market::v1::SectorType SectorConstituentsResponse::_internal_type() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return static_cast<::hqmarket::market::v1::SectorType>(_impl_.type_);
-}
-inline void SectorConstituentsResponse::_internal_set_type(::hqmarket::market::v1::SectorType value) {
+inline void SectorConstituents::_internal_set_type(::hqmarket::market::v1::SectorType value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.type_ = value;
 }
 
 // .hqmarket.market.v1.SectorInfo sector = 2;
-inline bool SectorConstituentsResponse::has_sector() const {
+inline bool SectorConstituents::has_sector() const {
   bool value = (_impl_._has_bits_[0] & 0x00000001u) != 0;
   PROTOBUF_ASSUME(!value || _impl_.sector_ != nullptr);
   return value;
 }
-inline void SectorConstituentsResponse::clear_sector() {
+inline void SectorConstituents::clear_sector() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.sector_ != nullptr) _impl_.sector_->Clear();
   _impl_._has_bits_[0] &= ~0x00000001u;
 }
-inline const ::hqmarket::market::v1::SectorInfo& SectorConstituentsResponse::_internal_sector() const {
+inline const ::hqmarket::market::v1::SectorInfo& SectorConstituents::_internal_sector() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   const ::hqmarket::market::v1::SectorInfo* p = _impl_.sector_;
   return p != nullptr ? *p : reinterpret_cast<const ::hqmarket::market::v1::SectorInfo&>(::hqmarket::market::v1::_SectorInfo_default_instance_);
 }
-inline const ::hqmarket::market::v1::SectorInfo& SectorConstituentsResponse::sector() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorConstituentsResponse.sector)
+inline const ::hqmarket::market::v1::SectorInfo& SectorConstituents::sector() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorConstituents.sector)
   return _internal_sector();
 }
-inline void SectorConstituentsResponse::unsafe_arena_set_allocated_sector(::hqmarket::market::v1::SectorInfo* value) {
+inline void SectorConstituents::unsafe_arena_set_allocated_sector(::hqmarket::market::v1::SectorInfo* value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (GetArena() == nullptr) {
     delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.sector_);
@@ -9276,9 +8772,9 @@ inline void SectorConstituentsResponse::unsafe_arena_set_allocated_sector(::hqma
   } else {
     _impl_._has_bits_[0] &= ~0x00000001u;
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:hqmarket.market.v1.SectorConstituentsResponse.sector)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:hqmarket.market.v1.SectorConstituents.sector)
 }
-inline ::hqmarket::market::v1::SectorInfo* SectorConstituentsResponse::release_sector() {
+inline ::hqmarket::market::v1::SectorInfo* SectorConstituents::release_sector() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
   _impl_._has_bits_[0] &= ~0x00000001u;
@@ -9297,16 +8793,16 @@ inline ::hqmarket::market::v1::SectorInfo* SectorConstituentsResponse::release_s
   }
   return released;
 }
-inline ::hqmarket::market::v1::SectorInfo* SectorConstituentsResponse::unsafe_arena_release_sector() {
+inline ::hqmarket::market::v1::SectorInfo* SectorConstituents::unsafe_arena_release_sector() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:hqmarket.market.v1.SectorConstituentsResponse.sector)
+  // @@protoc_insertion_point(field_release:hqmarket.market.v1.SectorConstituents.sector)
 
   _impl_._has_bits_[0] &= ~0x00000001u;
   ::hqmarket::market::v1::SectorInfo* temp = _impl_.sector_;
   _impl_.sector_ = nullptr;
   return temp;
 }
-inline ::hqmarket::market::v1::SectorInfo* SectorConstituentsResponse::_internal_mutable_sector() {
+inline ::hqmarket::market::v1::SectorInfo* SectorConstituents::_internal_mutable_sector() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.sector_ == nullptr) {
     auto* p = ::google::protobuf::Message::DefaultConstruct<::hqmarket::market::v1::SectorInfo>(GetArena());
@@ -9314,13 +8810,13 @@ inline ::hqmarket::market::v1::SectorInfo* SectorConstituentsResponse::_internal
   }
   return _impl_.sector_;
 }
-inline ::hqmarket::market::v1::SectorInfo* SectorConstituentsResponse::mutable_sector() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+inline ::hqmarket::market::v1::SectorInfo* SectorConstituents::mutable_sector() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   _impl_._has_bits_[0] |= 0x00000001u;
   ::hqmarket::market::v1::SectorInfo* _msg = _internal_mutable_sector();
-  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.SectorConstituentsResponse.sector)
+  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.SectorConstituents.sector)
   return _msg;
 }
-inline void SectorConstituentsResponse::set_allocated_sector(::hqmarket::market::v1::SectorInfo* value) {
+inline void SectorConstituents::set_allocated_sector(::hqmarket::market::v1::SectorInfo* value) {
   ::google::protobuf::Arena* message_arena = GetArena();
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (message_arena == nullptr) {
@@ -9338,126 +8834,126 @@ inline void SectorConstituentsResponse::set_allocated_sector(::hqmarket::market:
   }
 
   _impl_.sector_ = reinterpret_cast<::hqmarket::market::v1::SectorInfo*>(value);
-  // @@protoc_insertion_point(field_set_allocated:hqmarket.market.v1.SectorConstituentsResponse.sector)
+  // @@protoc_insertion_point(field_set_allocated:hqmarket.market.v1.SectorConstituents.sector)
 }
 
 // repeated .hqmarket.market.v1.SecurityInfo securities = 3;
-inline int SectorConstituentsResponse::_internal_securities_size() const {
+inline int SectorConstituents::_internal_securities_size() const {
   return _internal_securities().size();
 }
-inline int SectorConstituentsResponse::securities_size() const {
+inline int SectorConstituents::securities_size() const {
   return _internal_securities_size();
 }
-inline void SectorConstituentsResponse::clear_securities() {
+inline void SectorConstituents::clear_securities() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.securities_.Clear();
 }
-inline ::hqmarket::market::v1::SecurityInfo* SectorConstituentsResponse::mutable_securities(int index)
+inline ::hqmarket::market::v1::SecurityInfo* SectorConstituents::mutable_securities(int index)
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.SectorConstituentsResponse.securities)
+  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.SectorConstituents.securities)
   return _internal_mutable_securities()->Mutable(index);
 }
-inline ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::SecurityInfo>* SectorConstituentsResponse::mutable_securities()
+inline ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::SecurityInfo>* SectorConstituents::mutable_securities()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_mutable_list:hqmarket.market.v1.SectorConstituentsResponse.securities)
+  // @@protoc_insertion_point(field_mutable_list:hqmarket.market.v1.SectorConstituents.securities)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   return _internal_mutable_securities();
 }
-inline const ::hqmarket::market::v1::SecurityInfo& SectorConstituentsResponse::securities(int index) const
+inline const ::hqmarket::market::v1::SecurityInfo& SectorConstituents::securities(int index) const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorConstituentsResponse.securities)
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorConstituents.securities)
   return _internal_securities().Get(index);
 }
-inline ::hqmarket::market::v1::SecurityInfo* SectorConstituentsResponse::add_securities() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+inline ::hqmarket::market::v1::SecurityInfo* SectorConstituents::add_securities() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::hqmarket::market::v1::SecurityInfo* _add = _internal_mutable_securities()->Add();
-  // @@protoc_insertion_point(field_add:hqmarket.market.v1.SectorConstituentsResponse.securities)
+  // @@protoc_insertion_point(field_add:hqmarket.market.v1.SectorConstituents.securities)
   return _add;
 }
-inline const ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::SecurityInfo>& SectorConstituentsResponse::securities() const
+inline const ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::SecurityInfo>& SectorConstituents::securities() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_list:hqmarket.market.v1.SectorConstituentsResponse.securities)
+  // @@protoc_insertion_point(field_list:hqmarket.market.v1.SectorConstituents.securities)
   return _internal_securities();
 }
 inline const ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::SecurityInfo>&
-SectorConstituentsResponse::_internal_securities() const {
+SectorConstituents::_internal_securities() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.securities_;
 }
 inline ::google::protobuf::RepeatedPtrField<::hqmarket::market::v1::SecurityInfo>*
-SectorConstituentsResponse::_internal_mutable_securities() {
+SectorConstituents::_internal_mutable_securities() {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return &_impl_.securities_;
 }
 
 // int64 snapshot_time_ms = 4;
-inline void SectorConstituentsResponse::clear_snapshot_time_ms() {
+inline void SectorConstituents::clear_snapshot_time_ms() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.snapshot_time_ms_ = ::int64_t{0};
 }
-inline ::int64_t SectorConstituentsResponse::snapshot_time_ms() const {
-  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorConstituentsResponse.snapshot_time_ms)
+inline ::int64_t SectorConstituents::snapshot_time_ms() const {
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorConstituents.snapshot_time_ms)
   return _internal_snapshot_time_ms();
 }
-inline void SectorConstituentsResponse::set_snapshot_time_ms(::int64_t value) {
+inline void SectorConstituents::set_snapshot_time_ms(::int64_t value) {
   _internal_set_snapshot_time_ms(value);
-  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SectorConstituentsResponse.snapshot_time_ms)
+  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SectorConstituents.snapshot_time_ms)
 }
-inline ::int64_t SectorConstituentsResponse::_internal_snapshot_time_ms() const {
+inline ::int64_t SectorConstituents::_internal_snapshot_time_ms() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.snapshot_time_ms_;
 }
-inline void SectorConstituentsResponse::_internal_set_snapshot_time_ms(::int64_t value) {
+inline void SectorConstituents::_internal_set_snapshot_time_ms(::int64_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.snapshot_time_ms_ = value;
 }
 
 // string source = 5;
-inline void SectorConstituentsResponse::clear_source() {
+inline void SectorConstituents::clear_source() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.source_.ClearToEmpty();
 }
-inline const std::string& SectorConstituentsResponse::source() const
+inline const std::string& SectorConstituents::source() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorConstituentsResponse.source)
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SectorConstituents.source)
   return _internal_source();
 }
 template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void SectorConstituentsResponse::set_source(Arg_&& arg,
+inline PROTOBUF_ALWAYS_INLINE void SectorConstituents::set_source(Arg_&& arg,
                                                      Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.source_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SectorConstituentsResponse.source)
+  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SectorConstituents.source)
 }
-inline std::string* SectorConstituentsResponse::mutable_source() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+inline std::string* SectorConstituents::mutable_source() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   std::string* _s = _internal_mutable_source();
-  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.SectorConstituentsResponse.source)
+  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.SectorConstituents.source)
   return _s;
 }
-inline const std::string& SectorConstituentsResponse::_internal_source() const {
+inline const std::string& SectorConstituents::_internal_source() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.source_.Get();
 }
-inline void SectorConstituentsResponse::_internal_set_source(const std::string& value) {
+inline void SectorConstituents::_internal_set_source(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.source_.Set(value, GetArena());
 }
-inline std::string* SectorConstituentsResponse::_internal_mutable_source() {
+inline std::string* SectorConstituents::_internal_mutable_source() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   return _impl_.source_.Mutable( GetArena());
 }
-inline std::string* SectorConstituentsResponse::release_source() {
+inline std::string* SectorConstituents::release_source() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:hqmarket.market.v1.SectorConstituentsResponse.source)
+  // @@protoc_insertion_point(field_release:hqmarket.market.v1.SectorConstituents.source)
   return _impl_.source_.Release();
 }
-inline void SectorConstituentsResponse::set_allocated_source(std::string* value) {
+inline void SectorConstituents::set_allocated_source(std::string* value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.source_.SetAllocated(value, GetArena());
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.source_.IsDefault()) {
     _impl_.source_.Set("", GetArena());
   }
-  // @@protoc_insertion_point(field_set_allocated:hqmarket.market.v1.SectorConstituentsResponse.source)
+  // @@protoc_insertion_point(field_set_allocated:hqmarket.market.v1.SectorConstituents.source)
 }
 
 #ifdef __GNUC__

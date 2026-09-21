@@ -15,10 +15,8 @@ namespace hqmarket::market::v1
 	class DepthData;
 	class QueryResponse;
 	class BarData;
-	class SectorListRequest;
-	class SectorListResponse;
-	class SectorConstituentsRequest;
-	class SectorConstituentsResponse;
+	class SectorList;
+	class SectorConstituents;
 } // namespace hqmarket::market::v1
 
 using _TyMarketExchange = hqmarket::market::v1::Exchange;
@@ -31,10 +29,8 @@ using _TyQuoteData = hqmarket::market::v1::QuoteData;
 using _TyDepthData = hqmarket::market::v1::DepthData;
 using _TyQueryResponse = hqmarket::market::v1::QueryResponse;
 using _TyBarData = hqmarket::market::v1::BarData;
-using _TySectorListRequest = hqmarket::market::v1::SectorListRequest;
-using _TySectorListResponse = hqmarket::market::v1::SectorListResponse;
-using _TySectorConstituentsRequest = hqmarket::market::v1::SectorConstituentsRequest;
-using _TySectorConstituentsResponse = hqmarket::market::v1::SectorConstituentsResponse;
+using _TySectorList = hqmarket::market::v1::SectorList;
+using _TySectorConstituents = hqmarket::market::v1::SectorConstituents;
 
 enum class Exchange
 {

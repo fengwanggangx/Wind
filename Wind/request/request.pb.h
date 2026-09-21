@@ -1047,10 +1047,8 @@ class RequestData final : public ::google::protobuf::Message
     kStrategy = 22,
     kStrategyList = 23,
     kSecurityList = 25,
-    kSectorListRequest = 26,
-    kSectorListResponse = 27,
-    kSectorConstituentsRequest = 28,
-    kSectorConstituentsResponse = 29,
+    kSectorList = 27,
+    kSectorConstituents = 29,
     PAYLOAD_NOT_SET = 0,
   };
   static inline const RequestData* internal_default_instance() {
@@ -1164,10 +1162,8 @@ class RequestData final : public ::google::protobuf::Message
     kStrategyFieldNumber = 22,
     kStrategyListFieldNumber = 23,
     kSecurityListFieldNumber = 25,
-    kSectorListRequestFieldNumber = 26,
-    kSectorListResponseFieldNumber = 27,
-    kSectorConstituentsRequestFieldNumber = 28,
-    kSectorConstituentsResponseFieldNumber = 29,
+    kSectorListFieldNumber = 27,
+    kSectorConstituentsFieldNumber = 29,
   };
   // map<string, string> extra = 3;
   int extra_size() const;
@@ -1520,80 +1516,42 @@ class RequestData final : public ::google::protobuf::Message
   ::hqmarket::market::v1::SecurityList* _internal_mutable_security_list();
 
   public:
-  // .hqmarket.market.v1.SectorListRequest sector_list_request = 26;
-  bool has_sector_list_request() const;
+  // .hqmarket.market.v1.SectorList sector_list = 27;
+  bool has_sector_list() const;
   private:
-  bool _internal_has_sector_list_request() const;
+  bool _internal_has_sector_list() const;
 
   public:
-  void clear_sector_list_request() ;
-  const ::hqmarket::market::v1::SectorListRequest& sector_list_request() const;
-  PROTOBUF_NODISCARD ::hqmarket::market::v1::SectorListRequest* release_sector_list_request();
-  ::hqmarket::market::v1::SectorListRequest* mutable_sector_list_request();
-  void set_allocated_sector_list_request(::hqmarket::market::v1::SectorListRequest* value);
-  void unsafe_arena_set_allocated_sector_list_request(::hqmarket::market::v1::SectorListRequest* value);
-  ::hqmarket::market::v1::SectorListRequest* unsafe_arena_release_sector_list_request();
+  void clear_sector_list() ;
+  const ::hqmarket::market::v1::SectorList& sector_list() const;
+  PROTOBUF_NODISCARD ::hqmarket::market::v1::SectorList* release_sector_list();
+  ::hqmarket::market::v1::SectorList* mutable_sector_list();
+  void set_allocated_sector_list(::hqmarket::market::v1::SectorList* value);
+  void unsafe_arena_set_allocated_sector_list(::hqmarket::market::v1::SectorList* value);
+  ::hqmarket::market::v1::SectorList* unsafe_arena_release_sector_list();
 
   private:
-  const ::hqmarket::market::v1::SectorListRequest& _internal_sector_list_request() const;
-  ::hqmarket::market::v1::SectorListRequest* _internal_mutable_sector_list_request();
+  const ::hqmarket::market::v1::SectorList& _internal_sector_list() const;
+  ::hqmarket::market::v1::SectorList* _internal_mutable_sector_list();
 
   public:
-  // .hqmarket.market.v1.SectorListResponse sector_list_response = 27;
-  bool has_sector_list_response() const;
+  // .hqmarket.market.v1.SectorConstituents sector_constituents = 29;
+  bool has_sector_constituents() const;
   private:
-  bool _internal_has_sector_list_response() const;
+  bool _internal_has_sector_constituents() const;
 
   public:
-  void clear_sector_list_response() ;
-  const ::hqmarket::market::v1::SectorListResponse& sector_list_response() const;
-  PROTOBUF_NODISCARD ::hqmarket::market::v1::SectorListResponse* release_sector_list_response();
-  ::hqmarket::market::v1::SectorListResponse* mutable_sector_list_response();
-  void set_allocated_sector_list_response(::hqmarket::market::v1::SectorListResponse* value);
-  void unsafe_arena_set_allocated_sector_list_response(::hqmarket::market::v1::SectorListResponse* value);
-  ::hqmarket::market::v1::SectorListResponse* unsafe_arena_release_sector_list_response();
+  void clear_sector_constituents() ;
+  const ::hqmarket::market::v1::SectorConstituents& sector_constituents() const;
+  PROTOBUF_NODISCARD ::hqmarket::market::v1::SectorConstituents* release_sector_constituents();
+  ::hqmarket::market::v1::SectorConstituents* mutable_sector_constituents();
+  void set_allocated_sector_constituents(::hqmarket::market::v1::SectorConstituents* value);
+  void unsafe_arena_set_allocated_sector_constituents(::hqmarket::market::v1::SectorConstituents* value);
+  ::hqmarket::market::v1::SectorConstituents* unsafe_arena_release_sector_constituents();
 
   private:
-  const ::hqmarket::market::v1::SectorListResponse& _internal_sector_list_response() const;
-  ::hqmarket::market::v1::SectorListResponse* _internal_mutable_sector_list_response();
-
-  public:
-  // .hqmarket.market.v1.SectorConstituentsRequest sector_constituents_request = 28;
-  bool has_sector_constituents_request() const;
-  private:
-  bool _internal_has_sector_constituents_request() const;
-
-  public:
-  void clear_sector_constituents_request() ;
-  const ::hqmarket::market::v1::SectorConstituentsRequest& sector_constituents_request() const;
-  PROTOBUF_NODISCARD ::hqmarket::market::v1::SectorConstituentsRequest* release_sector_constituents_request();
-  ::hqmarket::market::v1::SectorConstituentsRequest* mutable_sector_constituents_request();
-  void set_allocated_sector_constituents_request(::hqmarket::market::v1::SectorConstituentsRequest* value);
-  void unsafe_arena_set_allocated_sector_constituents_request(::hqmarket::market::v1::SectorConstituentsRequest* value);
-  ::hqmarket::market::v1::SectorConstituentsRequest* unsafe_arena_release_sector_constituents_request();
-
-  private:
-  const ::hqmarket::market::v1::SectorConstituentsRequest& _internal_sector_constituents_request() const;
-  ::hqmarket::market::v1::SectorConstituentsRequest* _internal_mutable_sector_constituents_request();
-
-  public:
-  // .hqmarket.market.v1.SectorConstituentsResponse sector_constituents_response = 29;
-  bool has_sector_constituents_response() const;
-  private:
-  bool _internal_has_sector_constituents_response() const;
-
-  public:
-  void clear_sector_constituents_response() ;
-  const ::hqmarket::market::v1::SectorConstituentsResponse& sector_constituents_response() const;
-  PROTOBUF_NODISCARD ::hqmarket::market::v1::SectorConstituentsResponse* release_sector_constituents_response();
-  ::hqmarket::market::v1::SectorConstituentsResponse* mutable_sector_constituents_response();
-  void set_allocated_sector_constituents_response(::hqmarket::market::v1::SectorConstituentsResponse* value);
-  void unsafe_arena_set_allocated_sector_constituents_response(::hqmarket::market::v1::SectorConstituentsResponse* value);
-  ::hqmarket::market::v1::SectorConstituentsResponse* unsafe_arena_release_sector_constituents_response();
-
-  private:
-  const ::hqmarket::market::v1::SectorConstituentsResponse& _internal_sector_constituents_response() const;
-  ::hqmarket::market::v1::SectorConstituentsResponse* _internal_mutable_sector_constituents_response();
+  const ::hqmarket::market::v1::SectorConstituents& _internal_sector_constituents() const;
+  ::hqmarket::market::v1::SectorConstituents* _internal_mutable_sector_constituents();
 
   public:
   void clear_payload();
@@ -1616,16 +1574,14 @@ class RequestData final : public ::google::protobuf::Message
   void set_has_strategy();
   void set_has_strategy_list();
   void set_has_security_list();
-  void set_has_sector_list_request();
-  void set_has_sector_list_response();
-  void set_has_sector_constituents_request();
-  void set_has_sector_constituents_response();
+  void set_has_sector_list();
+  void set_has_sector_constituents();
   inline bool has_payload() const;
   inline void clear_has_payload();
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      3, 24, 21,
-      63, 2>
+      3, 22, 19,
+      55, 2>
       _table_;
 
   friend class ::google::protobuf::MessageLite;
@@ -1671,10 +1627,8 @@ class RequestData final : public ::google::protobuf::Message
       ::request::StrategyInfo* strategy_;
       ::request::StrategyList* strategy_list_;
       ::hqmarket::market::v1::SecurityList* security_list_;
-      ::hqmarket::market::v1::SectorListRequest* sector_list_request_;
-      ::hqmarket::market::v1::SectorListResponse* sector_list_response_;
-      ::hqmarket::market::v1::SectorConstituentsRequest* sector_constituents_request_;
-      ::hqmarket::market::v1::SectorConstituentsResponse* sector_constituents_response_;
+      ::hqmarket::market::v1::SectorList* sector_list_;
+      ::hqmarket::market::v1::SectorConstituents* sector_constituents_;
     } payload_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::uint32_t _oneof_case_[1];
@@ -3362,275 +3316,139 @@ inline ::hqmarket::market::v1::SecurityList* RequestData::mutable_security_list(
   return _msg;
 }
 
-// .hqmarket.market.v1.SectorListRequest sector_list_request = 26;
-inline bool RequestData::has_sector_list_request() const {
-  return payload_case() == kSectorListRequest;
+// .hqmarket.market.v1.SectorList sector_list = 27;
+inline bool RequestData::has_sector_list() const {
+  return payload_case() == kSectorList;
 }
-inline bool RequestData::_internal_has_sector_list_request() const {
-  return payload_case() == kSectorListRequest;
+inline bool RequestData::_internal_has_sector_list() const {
+  return payload_case() == kSectorList;
 }
-inline void RequestData::set_has_sector_list_request() {
-  _impl_._oneof_case_[0] = kSectorListRequest;
+inline void RequestData::set_has_sector_list() {
+  _impl_._oneof_case_[0] = kSectorList;
 }
-inline ::hqmarket::market::v1::SectorListRequest* RequestData::release_sector_list_request() {
-  // @@protoc_insertion_point(field_release:request.RequestData.sector_list_request)
-  if (payload_case() == kSectorListRequest) {
+inline ::hqmarket::market::v1::SectorList* RequestData::release_sector_list() {
+  // @@protoc_insertion_point(field_release:request.RequestData.sector_list)
+  if (payload_case() == kSectorList) {
     clear_has_payload();
-    auto* temp = _impl_.payload_.sector_list_request_;
+    auto* temp = _impl_.payload_.sector_list_;
     if (GetArena() != nullptr) {
       temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
     }
-    _impl_.payload_.sector_list_request_ = nullptr;
+    _impl_.payload_.sector_list_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline const ::hqmarket::market::v1::SectorListRequest& RequestData::_internal_sector_list_request() const {
-  return payload_case() == kSectorListRequest ? *_impl_.payload_.sector_list_request_ : reinterpret_cast<::hqmarket::market::v1::SectorListRequest&>(::hqmarket::market::v1::_SectorListRequest_default_instance_);
+inline const ::hqmarket::market::v1::SectorList& RequestData::_internal_sector_list() const {
+  return payload_case() == kSectorList ? *_impl_.payload_.sector_list_ : reinterpret_cast<::hqmarket::market::v1::SectorList&>(::hqmarket::market::v1::_SectorList_default_instance_);
 }
-inline const ::hqmarket::market::v1::SectorListRequest& RequestData::sector_list_request() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:request.RequestData.sector_list_request)
-  return _internal_sector_list_request();
+inline const ::hqmarket::market::v1::SectorList& RequestData::sector_list() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:request.RequestData.sector_list)
+  return _internal_sector_list();
 }
-inline ::hqmarket::market::v1::SectorListRequest* RequestData::unsafe_arena_release_sector_list_request() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:request.RequestData.sector_list_request)
-  if (payload_case() == kSectorListRequest) {
+inline ::hqmarket::market::v1::SectorList* RequestData::unsafe_arena_release_sector_list() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:request.RequestData.sector_list)
+  if (payload_case() == kSectorList) {
     clear_has_payload();
-    auto* temp = _impl_.payload_.sector_list_request_;
-    _impl_.payload_.sector_list_request_ = nullptr;
+    auto* temp = _impl_.payload_.sector_list_;
+    _impl_.payload_.sector_list_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline void RequestData::unsafe_arena_set_allocated_sector_list_request(::hqmarket::market::v1::SectorListRequest* value) {
+inline void RequestData::unsafe_arena_set_allocated_sector_list(::hqmarket::market::v1::SectorList* value) {
   // We rely on the oneof clear method to free the earlier contents
   // of this oneof. We can directly use the pointer we're given to
   // set the new value.
   clear_payload();
   if (value) {
-    set_has_sector_list_request();
-    _impl_.payload_.sector_list_request_ = value;
+    set_has_sector_list();
+    _impl_.payload_.sector_list_ = value;
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:request.RequestData.sector_list_request)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:request.RequestData.sector_list)
 }
-inline ::hqmarket::market::v1::SectorListRequest* RequestData::_internal_mutable_sector_list_request() {
-  if (payload_case() != kSectorListRequest) {
+inline ::hqmarket::market::v1::SectorList* RequestData::_internal_mutable_sector_list() {
+  if (payload_case() != kSectorList) {
     clear_payload();
-    set_has_sector_list_request();
-    _impl_.payload_.sector_list_request_ =
-        ::google::protobuf::Message::DefaultConstruct<::hqmarket::market::v1::SectorListRequest>(GetArena());
+    set_has_sector_list();
+    _impl_.payload_.sector_list_ =
+        ::google::protobuf::Message::DefaultConstruct<::hqmarket::market::v1::SectorList>(GetArena());
   }
-  return _impl_.payload_.sector_list_request_;
+  return _impl_.payload_.sector_list_;
 }
-inline ::hqmarket::market::v1::SectorListRequest* RequestData::mutable_sector_list_request() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::hqmarket::market::v1::SectorListRequest* _msg = _internal_mutable_sector_list_request();
-  // @@protoc_insertion_point(field_mutable:request.RequestData.sector_list_request)
+inline ::hqmarket::market::v1::SectorList* RequestData::mutable_sector_list() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::hqmarket::market::v1::SectorList* _msg = _internal_mutable_sector_list();
+  // @@protoc_insertion_point(field_mutable:request.RequestData.sector_list)
   return _msg;
 }
 
-// .hqmarket.market.v1.SectorListResponse sector_list_response = 27;
-inline bool RequestData::has_sector_list_response() const {
-  return payload_case() == kSectorListResponse;
+// .hqmarket.market.v1.SectorConstituents sector_constituents = 29;
+inline bool RequestData::has_sector_constituents() const {
+  return payload_case() == kSectorConstituents;
 }
-inline bool RequestData::_internal_has_sector_list_response() const {
-  return payload_case() == kSectorListResponse;
+inline bool RequestData::_internal_has_sector_constituents() const {
+  return payload_case() == kSectorConstituents;
 }
-inline void RequestData::set_has_sector_list_response() {
-  _impl_._oneof_case_[0] = kSectorListResponse;
+inline void RequestData::set_has_sector_constituents() {
+  _impl_._oneof_case_[0] = kSectorConstituents;
 }
-inline ::hqmarket::market::v1::SectorListResponse* RequestData::release_sector_list_response() {
-  // @@protoc_insertion_point(field_release:request.RequestData.sector_list_response)
-  if (payload_case() == kSectorListResponse) {
+inline ::hqmarket::market::v1::SectorConstituents* RequestData::release_sector_constituents() {
+  // @@protoc_insertion_point(field_release:request.RequestData.sector_constituents)
+  if (payload_case() == kSectorConstituents) {
     clear_has_payload();
-    auto* temp = _impl_.payload_.sector_list_response_;
+    auto* temp = _impl_.payload_.sector_constituents_;
     if (GetArena() != nullptr) {
       temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
     }
-    _impl_.payload_.sector_list_response_ = nullptr;
+    _impl_.payload_.sector_constituents_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline const ::hqmarket::market::v1::SectorListResponse& RequestData::_internal_sector_list_response() const {
-  return payload_case() == kSectorListResponse ? *_impl_.payload_.sector_list_response_ : reinterpret_cast<::hqmarket::market::v1::SectorListResponse&>(::hqmarket::market::v1::_SectorListResponse_default_instance_);
+inline const ::hqmarket::market::v1::SectorConstituents& RequestData::_internal_sector_constituents() const {
+  return payload_case() == kSectorConstituents ? *_impl_.payload_.sector_constituents_ : reinterpret_cast<::hqmarket::market::v1::SectorConstituents&>(::hqmarket::market::v1::_SectorConstituents_default_instance_);
 }
-inline const ::hqmarket::market::v1::SectorListResponse& RequestData::sector_list_response() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:request.RequestData.sector_list_response)
-  return _internal_sector_list_response();
+inline const ::hqmarket::market::v1::SectorConstituents& RequestData::sector_constituents() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:request.RequestData.sector_constituents)
+  return _internal_sector_constituents();
 }
-inline ::hqmarket::market::v1::SectorListResponse* RequestData::unsafe_arena_release_sector_list_response() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:request.RequestData.sector_list_response)
-  if (payload_case() == kSectorListResponse) {
+inline ::hqmarket::market::v1::SectorConstituents* RequestData::unsafe_arena_release_sector_constituents() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:request.RequestData.sector_constituents)
+  if (payload_case() == kSectorConstituents) {
     clear_has_payload();
-    auto* temp = _impl_.payload_.sector_list_response_;
-    _impl_.payload_.sector_list_response_ = nullptr;
+    auto* temp = _impl_.payload_.sector_constituents_;
+    _impl_.payload_.sector_constituents_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline void RequestData::unsafe_arena_set_allocated_sector_list_response(::hqmarket::market::v1::SectorListResponse* value) {
+inline void RequestData::unsafe_arena_set_allocated_sector_constituents(::hqmarket::market::v1::SectorConstituents* value) {
   // We rely on the oneof clear method to free the earlier contents
   // of this oneof. We can directly use the pointer we're given to
   // set the new value.
   clear_payload();
   if (value) {
-    set_has_sector_list_response();
-    _impl_.payload_.sector_list_response_ = value;
+    set_has_sector_constituents();
+    _impl_.payload_.sector_constituents_ = value;
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:request.RequestData.sector_list_response)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:request.RequestData.sector_constituents)
 }
-inline ::hqmarket::market::v1::SectorListResponse* RequestData::_internal_mutable_sector_list_response() {
-  if (payload_case() != kSectorListResponse) {
+inline ::hqmarket::market::v1::SectorConstituents* RequestData::_internal_mutable_sector_constituents() {
+  if (payload_case() != kSectorConstituents) {
     clear_payload();
-    set_has_sector_list_response();
-    _impl_.payload_.sector_list_response_ =
-        ::google::protobuf::Message::DefaultConstruct<::hqmarket::market::v1::SectorListResponse>(GetArena());
+    set_has_sector_constituents();
+    _impl_.payload_.sector_constituents_ =
+        ::google::protobuf::Message::DefaultConstruct<::hqmarket::market::v1::SectorConstituents>(GetArena());
   }
-  return _impl_.payload_.sector_list_response_;
+  return _impl_.payload_.sector_constituents_;
 }
-inline ::hqmarket::market::v1::SectorListResponse* RequestData::mutable_sector_list_response() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::hqmarket::market::v1::SectorListResponse* _msg = _internal_mutable_sector_list_response();
-  // @@protoc_insertion_point(field_mutable:request.RequestData.sector_list_response)
-  return _msg;
-}
-
-// .hqmarket.market.v1.SectorConstituentsRequest sector_constituents_request = 28;
-inline bool RequestData::has_sector_constituents_request() const {
-  return payload_case() == kSectorConstituentsRequest;
-}
-inline bool RequestData::_internal_has_sector_constituents_request() const {
-  return payload_case() == kSectorConstituentsRequest;
-}
-inline void RequestData::set_has_sector_constituents_request() {
-  _impl_._oneof_case_[0] = kSectorConstituentsRequest;
-}
-inline ::hqmarket::market::v1::SectorConstituentsRequest* RequestData::release_sector_constituents_request() {
-  // @@protoc_insertion_point(field_release:request.RequestData.sector_constituents_request)
-  if (payload_case() == kSectorConstituentsRequest) {
-    clear_has_payload();
-    auto* temp = _impl_.payload_.sector_constituents_request_;
-    if (GetArena() != nullptr) {
-      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
-    }
-    _impl_.payload_.sector_constituents_request_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline const ::hqmarket::market::v1::SectorConstituentsRequest& RequestData::_internal_sector_constituents_request() const {
-  return payload_case() == kSectorConstituentsRequest ? *_impl_.payload_.sector_constituents_request_ : reinterpret_cast<::hqmarket::market::v1::SectorConstituentsRequest&>(::hqmarket::market::v1::_SectorConstituentsRequest_default_instance_);
-}
-inline const ::hqmarket::market::v1::SectorConstituentsRequest& RequestData::sector_constituents_request() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:request.RequestData.sector_constituents_request)
-  return _internal_sector_constituents_request();
-}
-inline ::hqmarket::market::v1::SectorConstituentsRequest* RequestData::unsafe_arena_release_sector_constituents_request() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:request.RequestData.sector_constituents_request)
-  if (payload_case() == kSectorConstituentsRequest) {
-    clear_has_payload();
-    auto* temp = _impl_.payload_.sector_constituents_request_;
-    _impl_.payload_.sector_constituents_request_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline void RequestData::unsafe_arena_set_allocated_sector_constituents_request(::hqmarket::market::v1::SectorConstituentsRequest* value) {
-  // We rely on the oneof clear method to free the earlier contents
-  // of this oneof. We can directly use the pointer we're given to
-  // set the new value.
-  clear_payload();
-  if (value) {
-    set_has_sector_constituents_request();
-    _impl_.payload_.sector_constituents_request_ = value;
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:request.RequestData.sector_constituents_request)
-}
-inline ::hqmarket::market::v1::SectorConstituentsRequest* RequestData::_internal_mutable_sector_constituents_request() {
-  if (payload_case() != kSectorConstituentsRequest) {
-    clear_payload();
-    set_has_sector_constituents_request();
-    _impl_.payload_.sector_constituents_request_ =
-        ::google::protobuf::Message::DefaultConstruct<::hqmarket::market::v1::SectorConstituentsRequest>(GetArena());
-  }
-  return _impl_.payload_.sector_constituents_request_;
-}
-inline ::hqmarket::market::v1::SectorConstituentsRequest* RequestData::mutable_sector_constituents_request() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::hqmarket::market::v1::SectorConstituentsRequest* _msg = _internal_mutable_sector_constituents_request();
-  // @@protoc_insertion_point(field_mutable:request.RequestData.sector_constituents_request)
-  return _msg;
-}
-
-// .hqmarket.market.v1.SectorConstituentsResponse sector_constituents_response = 29;
-inline bool RequestData::has_sector_constituents_response() const {
-  return payload_case() == kSectorConstituentsResponse;
-}
-inline bool RequestData::_internal_has_sector_constituents_response() const {
-  return payload_case() == kSectorConstituentsResponse;
-}
-inline void RequestData::set_has_sector_constituents_response() {
-  _impl_._oneof_case_[0] = kSectorConstituentsResponse;
-}
-inline ::hqmarket::market::v1::SectorConstituentsResponse* RequestData::release_sector_constituents_response() {
-  // @@protoc_insertion_point(field_release:request.RequestData.sector_constituents_response)
-  if (payload_case() == kSectorConstituentsResponse) {
-    clear_has_payload();
-    auto* temp = _impl_.payload_.sector_constituents_response_;
-    if (GetArena() != nullptr) {
-      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
-    }
-    _impl_.payload_.sector_constituents_response_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline const ::hqmarket::market::v1::SectorConstituentsResponse& RequestData::_internal_sector_constituents_response() const {
-  return payload_case() == kSectorConstituentsResponse ? *_impl_.payload_.sector_constituents_response_ : reinterpret_cast<::hqmarket::market::v1::SectorConstituentsResponse&>(::hqmarket::market::v1::_SectorConstituentsResponse_default_instance_);
-}
-inline const ::hqmarket::market::v1::SectorConstituentsResponse& RequestData::sector_constituents_response() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:request.RequestData.sector_constituents_response)
-  return _internal_sector_constituents_response();
-}
-inline ::hqmarket::market::v1::SectorConstituentsResponse* RequestData::unsafe_arena_release_sector_constituents_response() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:request.RequestData.sector_constituents_response)
-  if (payload_case() == kSectorConstituentsResponse) {
-    clear_has_payload();
-    auto* temp = _impl_.payload_.sector_constituents_response_;
-    _impl_.payload_.sector_constituents_response_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
-  }
-}
-inline void RequestData::unsafe_arena_set_allocated_sector_constituents_response(::hqmarket::market::v1::SectorConstituentsResponse* value) {
-  // We rely on the oneof clear method to free the earlier contents
-  // of this oneof. We can directly use the pointer we're given to
-  // set the new value.
-  clear_payload();
-  if (value) {
-    set_has_sector_constituents_response();
-    _impl_.payload_.sector_constituents_response_ = value;
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:request.RequestData.sector_constituents_response)
-}
-inline ::hqmarket::market::v1::SectorConstituentsResponse* RequestData::_internal_mutable_sector_constituents_response() {
-  if (payload_case() != kSectorConstituentsResponse) {
-    clear_payload();
-    set_has_sector_constituents_response();
-    _impl_.payload_.sector_constituents_response_ =
-        ::google::protobuf::Message::DefaultConstruct<::hqmarket::market::v1::SectorConstituentsResponse>(GetArena());
-  }
-  return _impl_.payload_.sector_constituents_response_;
-}
-inline ::hqmarket::market::v1::SectorConstituentsResponse* RequestData::mutable_sector_constituents_response() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  ::hqmarket::market::v1::SectorConstituentsResponse* _msg = _internal_mutable_sector_constituents_response();
-  // @@protoc_insertion_point(field_mutable:request.RequestData.sector_constituents_response)
+inline ::hqmarket::market::v1::SectorConstituents* RequestData::mutable_sector_constituents() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::hqmarket::market::v1::SectorConstituents* _msg = _internal_mutable_sector_constituents();
+  // @@protoc_insertion_point(field_mutable:request.RequestData.sector_constituents)
   return _msg;
 }
 

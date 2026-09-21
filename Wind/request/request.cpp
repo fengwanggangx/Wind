@@ -122,24 +122,14 @@ void CRequest::SetData(const _TySecurityList& value)
 	m_data->mutable_security_list()->CopyFrom(value);
 }
 
-void CRequest::SetData(const _TySectorListRequest& value)
+void CRequest::SetData(const _TySectorList& value)
 {
-	m_data->mutable_sector_list_request()->CopyFrom(value);
+	m_data->mutable_sector_list()->CopyFrom(value);
 }
 
-void CRequest::SetData(const _TySectorListResponse& value)
+void CRequest::SetData(const _TySectorConstituents& value)
 {
-	m_data->mutable_sector_list_response()->CopyFrom(value);
-}
-
-void CRequest::SetData(const _TySectorConstituentsRequest& value)
-{
-	m_data->mutable_sector_constituents_request()->CopyFrom(value);
-}
-
-void CRequest::SetData(const _TySectorConstituentsResponse& value)
-{
-	m_data->mutable_sector_constituents_response()->CopyFrom(value);
+	m_data->mutable_sector_constituents()->CopyFrom(value);
 }
 
 void CRequest::SetData(const _TyStrategyInfo& value)
