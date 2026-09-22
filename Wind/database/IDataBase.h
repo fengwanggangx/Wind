@@ -4,31 +4,15 @@
 #include <filesystem>
 #include <string>
 #include <vector>
-#include "common_db.h"
+#include "CQueryTable.h"
 
 namespace db
 {
-	struct CColumnInfo
-	{
-		unsigned int m_uId{ 0 };
-		std::string m_strName;
-		db::em_data_types m_type{ db::em_data_types::em_string };
-		int m_nDecimal{ -1 };
-	};
-
 	enum class status
 	{
 		free,
 		busy
 	};
-
-	using _TyColumnInfo = db::CColumnInfo;
-
-	using _TyColumns = std::vector<db::CColumnInfo>;
-
-	using _TyRows = std::vector<std::vector<std::string>>;
-
-	using _TyTableInfo = std::pair<_TyColumns, _TyRows>;
 
 	class IDataBase
 	{
@@ -43,7 +27,7 @@ namespace db
 
 			virtual int ExecUpdate(const std::string& strSQL) = 0;
 			virtual int ExecScript(const std::string& strSQL);
-			virtual const _TyTableInfo& ExecQuery(const std::string& strSQL) = 0;
+			virtual const CQueryTable& ExecQuery(const std::string& strSQL) = 0;
 
 			int ExecSqlFile(const std::filesystem::path& filePath);
 

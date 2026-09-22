@@ -64,13 +64,13 @@ namespace db
 		return 0;
 	}
 
-	const _TyTableInfo& CMySQL::ExecQuery(const std::string& strSQL)
+	const CQueryTable& CMySQL::ExecQuery(const std::string& strSQL)
 	{
-		thread_local _TyTableInfo s_table;
+		thread_local CQueryTable s_table;
 		std::lock_guard<std::mutex> lock(m_mtx);
 
-		_TyColumns& columns = s_table.first;
-		_TyRows& rows = s_table.second;
+		CQueryTable::_TyColumns& columns = s_table.m_columns;
+		CQueryTable::_TyRows& rows = s_table.m_rows;
 
 		columns.clear();
 		rows.clear();
@@ -105,7 +105,7 @@ namespace db
 		for (int i = 0; i < nFields; ++i)
 		{
 			columns.emplace_back();
-			_TyColumnInfo& col = columns.back();
+			CQueryColumn& col = columns.back();
 			col.m_uId = static_cast<unsigned int>(i);
 			col.m_strName = pFields[i].name;
 			col.m_type = db::GetDataType(em_database::mysql, pFields[i].type);
@@ -116,7 +116,7 @@ namespace db
 		MYSQL_ROW row;
 		while ((row = mysql_fetch_row(result.get())))
 		{
-			std::vector<std::string> rowData;
+			_TyQueryRow rowData;
 			rowData.reserve(nFields);
 			unsigned long* lengths = mysql_fetch_lengths(result.get());
 
@@ -124,7 +124,7 @@ namespace db
 			{
 				if (row[i])
 				{
-					rowData.emplace_back(row[i], lengths[i]);
+					rowData.emplace_back(std::string(row[i], lengths[i]));
 				}
 				else
 				{

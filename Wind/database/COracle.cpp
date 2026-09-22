@@ -27,9 +27,9 @@ namespace db
 		return -1;
 	}
 
-	const _TyTableInfo& COracle::ExecQuery(const std::string& strSQL)
+	const CQueryTable& COracle::ExecQuery(const std::string& strSQL)
 	{
-		static _TyTableInfo t;
+		static CQueryTable t;
 		return t;
 	}
 

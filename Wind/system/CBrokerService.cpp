@@ -493,8 +493,8 @@ bool CBrokerService::Login(const CRequest& req, std::string& strToken)
 	}
 
 	std::string strSql = "SELECT user_id, account FROM table_user WHERE account=" + utility::Utf8Literal(strAccount) + " AND password_hash=UNHEX(SHA2(CONCAT(password_salt,UNHEX('" + utility::ToHex(strPassword) + "')),256)) AND status=1 LIMIT 1";
-	const db::_TyTableInfo& table = db->ExecQuery(strSql);
-	if (table.second.empty())
+	const db::CQueryTable& table = db->ExecQuery(strSql);
+	if (table.m_rows.empty())
 	{
 		SendResponse(req, InvalidCredentials, "账号或密码错误");
 		return false;
@@ -505,8 +505,8 @@ bool CBrokerService::Login(const CRequest& req, std::string& strToken)
 	response.SetType(req.GetType());
 	response.SetCmd(req.GetCmd());
 	response.SetReturnData("status", "ok");
-	response.SetReturnData("user_id", table.second.front().at(0));
-	response.SetReturnData("account", table.second.front().at(1));
+	response.SetReturnData("user_id", db::QueryValueToString(table.m_rows.front().at(0)));
+	response.SetReturnData("account", db::QueryValueToString(table.m_rows.front().at(1)));
 	strToken = utility::MakeSaltHex();
 	response.SetReturnData("token", strToken);
 	net::SendRequest(req.GetConnectionId(), response);
@@ -536,8 +536,8 @@ bool CBrokerService::HandleRegisterAuth(net::_TyConnectionId, const CRequest& re
 	}
 
 	std::string strAccountLiteral = utility::Utf8Literal(strAccount);
-	const db::_TyTableInfo& table = db->ExecQuery("SELECT user_id FROM table_user WHERE account=" + strAccountLiteral + " LIMIT 1");
-	if (!table.second.empty())
+	const db::CQueryTable& table = db->ExecQuery("SELECT user_id FROM table_user WHERE account=" + strAccountLiteral + " LIMIT 1");
+	if (!table.m_rows.empty())
 	{
 		SendResponse(req, AccountExists, "账号已存在");
 		return false;

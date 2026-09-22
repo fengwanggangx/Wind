@@ -17,7 +17,7 @@ namespace db
 
 			int ExecUpdate(const std::string& strSQL) override;
 			int ExecScript(const std::string& strSQL) override;
-			const _TyTableInfo& ExecQuery(const std::string& strSQL) override;
+			const CQueryTable& ExecQuery(const std::string& strSQL) override;
 
 			bool BeginTransaction() override;
 			bool EndTransaction() override;
