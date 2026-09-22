@@ -34,7 +34,11 @@ namespace net
 			return -1;
 		}
 
-		int nOptions = net::IsThreadEnable() ? (BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE) : BEV_OPT_CLOSE_ON_FREE;
+		int nOptions = BEV_OPT_CLOSE_ON_FREE | BEV_OPT_DEFER_CALLBACKS | BEV_OPT_UNLOCK_CALLBACKS;
+		if (net::IsThreadEnable())
+		{
+			nOptions |= BEV_OPT_THREADSAFE;
+		}
 		if (nullptr != m_pEvent)
 		{
 			return 0;

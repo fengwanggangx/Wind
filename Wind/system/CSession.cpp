@@ -6,16 +6,6 @@
 #include <iostream>
 #include <utility>
 
-namespace
-{
-	bool IsAccepted(const CRequest& response)
-	{
-		std::string strAccepted = response.GetReturnData("accepted");
-		return ("1" == strAccepted);
-	}
-}
-
-
 CSession::CSession(const CLoginInfo& info)
 {
 	m_auth = info;
@@ -239,7 +229,7 @@ int CSession::OnNetEvent(const net::CNetEvent& ev)
 
 bool CSession::HandleAuthRequest(const CRequest& req)
 {
-	if (!IsAccepted(req))
+	if (req.GetReturnData("accepted") != "1")
 	{
 		bool bRetryWithCredentials = false;
 		{
