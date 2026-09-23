@@ -6,7 +6,7 @@ enum Channel { CHANNEL_UNSPECIFIED = 0; CHANNEL_QUOTE = 1; CHANNEL_DEPTH = 2; CH
 enum SectorType { SECTOR_TYPE_UNSPECIFIED = 0; SECTOR_TYPE_INDUSTRY = 1; SECTOR_TYPE_CONCEPT = 2; SECTOR_TYPE_REGION = 3; }
 
 message Security { string symbol = 1; Exchange exchange = 2; }
-message SecurityInfo { Security security = 1; string name = 2; string status = 3; }
+message SecurityInfo { Security security = 1; string name = 2; string status = 3; repeated string pinyin_full_aliases = 4; repeated string pinyin_short_aliases = 5; }
 message SecurityList { repeated SecurityInfo securities = 1; int64 version = 2; }
 message PriceLevel { int64 price = 1; int64 volume = 2; int32 price_scale = 3; }
 message AuthRequest { string token = 1; }

@@ -2416,10 +2416,56 @@ class SecurityInfo final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
+    kPinyinFullAliasesFieldNumber = 4,
+    kPinyinShortAliasesFieldNumber = 5,
     kNameFieldNumber = 2,
     kStatusFieldNumber = 3,
     kSecurityFieldNumber = 1,
   };
+  // repeated string pinyin_full_aliases = 4;
+  int pinyin_full_aliases_size() const;
+  private:
+  int _internal_pinyin_full_aliases_size() const;
+
+  public:
+  void clear_pinyin_full_aliases() ;
+  const std::string& pinyin_full_aliases(int index) const;
+  std::string* mutable_pinyin_full_aliases(int index);
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_pinyin_full_aliases(int index, Arg_&& value, Args_... args);
+  std::string* add_pinyin_full_aliases();
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void add_pinyin_full_aliases(Arg_&& value, Args_... args);
+  const ::google::protobuf::RepeatedPtrField<std::string>& pinyin_full_aliases() const;
+  ::google::protobuf::RepeatedPtrField<std::string>* mutable_pinyin_full_aliases();
+
+  private:
+  const ::google::protobuf::RepeatedPtrField<std::string>& _internal_pinyin_full_aliases() const;
+  ::google::protobuf::RepeatedPtrField<std::string>* _internal_mutable_pinyin_full_aliases();
+
+  public:
+  // repeated string pinyin_short_aliases = 5;
+  int pinyin_short_aliases_size() const;
+  private:
+  int _internal_pinyin_short_aliases_size() const;
+
+  public:
+  void clear_pinyin_short_aliases() ;
+  const std::string& pinyin_short_aliases(int index) const;
+  std::string* mutable_pinyin_short_aliases(int index);
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_pinyin_short_aliases(int index, Arg_&& value, Args_... args);
+  std::string* add_pinyin_short_aliases();
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void add_pinyin_short_aliases(Arg_&& value, Args_... args);
+  const ::google::protobuf::RepeatedPtrField<std::string>& pinyin_short_aliases() const;
+  ::google::protobuf::RepeatedPtrField<std::string>* mutable_pinyin_short_aliases();
+
+  private:
+  const ::google::protobuf::RepeatedPtrField<std::string>& _internal_pinyin_short_aliases() const;
+  ::google::protobuf::RepeatedPtrField<std::string>* _internal_mutable_pinyin_short_aliases();
+
+  public:
   // string name = 2;
   void clear_name() ;
   const std::string& name() const;
@@ -2472,8 +2518,8 @@ class SecurityInfo final : public ::google::protobuf::Message
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      2, 3, 1,
-      50, 2>
+      3, 5, 1,
+      89, 2>
       _table_;
 
   friend class ::google::protobuf::MessageLite;
@@ -2492,6 +2538,8 @@ class SecurityInfo final : public ::google::protobuf::Message
                           const SecurityInfo& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::RepeatedPtrField<std::string> pinyin_full_aliases_;
+    ::google::protobuf::RepeatedPtrField<std::string> pinyin_short_aliases_;
     ::google::protobuf::internal::ArenaStringPtr name_;
     ::google::protobuf::internal::ArenaStringPtr status_;
     ::hqmarket::market::v1::Security* security_;
@@ -5479,6 +5527,134 @@ inline void SecurityInfo::set_allocated_status(std::string* value) {
     _impl_.status_.Set("", GetArena());
   }
   // @@protoc_insertion_point(field_set_allocated:hqmarket.market.v1.SecurityInfo.status)
+}
+
+// repeated string pinyin_full_aliases = 4;
+inline int SecurityInfo::_internal_pinyin_full_aliases_size() const {
+  return _internal_pinyin_full_aliases().size();
+}
+inline int SecurityInfo::pinyin_full_aliases_size() const {
+  return _internal_pinyin_full_aliases_size();
+}
+inline void SecurityInfo::clear_pinyin_full_aliases() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.pinyin_full_aliases_.Clear();
+}
+inline std::string* SecurityInfo::add_pinyin_full_aliases() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  std::string* _s = _internal_mutable_pinyin_full_aliases()->Add();
+  // @@protoc_insertion_point(field_add_mutable:hqmarket.market.v1.SecurityInfo.pinyin_full_aliases)
+  return _s;
+}
+inline const std::string& SecurityInfo::pinyin_full_aliases(int index) const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SecurityInfo.pinyin_full_aliases)
+  return _internal_pinyin_full_aliases().Get(index);
+}
+inline std::string* SecurityInfo::mutable_pinyin_full_aliases(int index)
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.SecurityInfo.pinyin_full_aliases)
+  return _internal_mutable_pinyin_full_aliases()->Mutable(index);
+}
+template <typename Arg_, typename... Args_>
+inline void SecurityInfo::set_pinyin_full_aliases(int index, Arg_&& value, Args_... args) {
+  ::google::protobuf::internal::AssignToString(
+      *_internal_mutable_pinyin_full_aliases()->Mutable(index),
+      std::forward<Arg_>(value), args... );
+  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SecurityInfo.pinyin_full_aliases)
+}
+template <typename Arg_, typename... Args_>
+inline void SecurityInfo::add_pinyin_full_aliases(Arg_&& value, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::google::protobuf::internal::AddToRepeatedPtrField(*_internal_mutable_pinyin_full_aliases(),
+                               std::forward<Arg_>(value),
+                               args... );
+  // @@protoc_insertion_point(field_add:hqmarket.market.v1.SecurityInfo.pinyin_full_aliases)
+}
+inline const ::google::protobuf::RepeatedPtrField<std::string>&
+SecurityInfo::pinyin_full_aliases() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:hqmarket.market.v1.SecurityInfo.pinyin_full_aliases)
+  return _internal_pinyin_full_aliases();
+}
+inline ::google::protobuf::RepeatedPtrField<std::string>*
+SecurityInfo::mutable_pinyin_full_aliases() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable_list:hqmarket.market.v1.SecurityInfo.pinyin_full_aliases)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_pinyin_full_aliases();
+}
+inline const ::google::protobuf::RepeatedPtrField<std::string>&
+SecurityInfo::_internal_pinyin_full_aliases() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.pinyin_full_aliases_;
+}
+inline ::google::protobuf::RepeatedPtrField<std::string>*
+SecurityInfo::_internal_mutable_pinyin_full_aliases() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.pinyin_full_aliases_;
+}
+
+// repeated string pinyin_short_aliases = 5;
+inline int SecurityInfo::_internal_pinyin_short_aliases_size() const {
+  return _internal_pinyin_short_aliases().size();
+}
+inline int SecurityInfo::pinyin_short_aliases_size() const {
+  return _internal_pinyin_short_aliases_size();
+}
+inline void SecurityInfo::clear_pinyin_short_aliases() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.pinyin_short_aliases_.Clear();
+}
+inline std::string* SecurityInfo::add_pinyin_short_aliases() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  std::string* _s = _internal_mutable_pinyin_short_aliases()->Add();
+  // @@protoc_insertion_point(field_add_mutable:hqmarket.market.v1.SecurityInfo.pinyin_short_aliases)
+  return _s;
+}
+inline const std::string& SecurityInfo::pinyin_short_aliases(int index) const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:hqmarket.market.v1.SecurityInfo.pinyin_short_aliases)
+  return _internal_pinyin_short_aliases().Get(index);
+}
+inline std::string* SecurityInfo::mutable_pinyin_short_aliases(int index)
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable:hqmarket.market.v1.SecurityInfo.pinyin_short_aliases)
+  return _internal_mutable_pinyin_short_aliases()->Mutable(index);
+}
+template <typename Arg_, typename... Args_>
+inline void SecurityInfo::set_pinyin_short_aliases(int index, Arg_&& value, Args_... args) {
+  ::google::protobuf::internal::AssignToString(
+      *_internal_mutable_pinyin_short_aliases()->Mutable(index),
+      std::forward<Arg_>(value), args... );
+  // @@protoc_insertion_point(field_set:hqmarket.market.v1.SecurityInfo.pinyin_short_aliases)
+}
+template <typename Arg_, typename... Args_>
+inline void SecurityInfo::add_pinyin_short_aliases(Arg_&& value, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::google::protobuf::internal::AddToRepeatedPtrField(*_internal_mutable_pinyin_short_aliases(),
+                               std::forward<Arg_>(value),
+                               args... );
+  // @@protoc_insertion_point(field_add:hqmarket.market.v1.SecurityInfo.pinyin_short_aliases)
+}
+inline const ::google::protobuf::RepeatedPtrField<std::string>&
+SecurityInfo::pinyin_short_aliases() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:hqmarket.market.v1.SecurityInfo.pinyin_short_aliases)
+  return _internal_pinyin_short_aliases();
+}
+inline ::google::protobuf::RepeatedPtrField<std::string>*
+SecurityInfo::mutable_pinyin_short_aliases() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable_list:hqmarket.market.v1.SecurityInfo.pinyin_short_aliases)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_pinyin_short_aliases();
+}
+inline const ::google::protobuf::RepeatedPtrField<std::string>&
+SecurityInfo::_internal_pinyin_short_aliases() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.pinyin_short_aliases_;
+}
+inline ::google::protobuf::RepeatedPtrField<std::string>*
+SecurityInfo::_internal_mutable_pinyin_short_aliases() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.pinyin_short_aliases_;
 }
 
 // -------------------------------------------------------------------

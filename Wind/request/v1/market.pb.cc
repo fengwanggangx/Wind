@@ -292,6 +292,8 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 inline constexpr SecurityInfo::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
+        pinyin_full_aliases_{},
+        pinyin_short_aliases_{},
         name_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
@@ -671,7 +673,11 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SecurityInfo, _impl_.security_),
         PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SecurityInfo, _impl_.name_),
         PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SecurityInfo, _impl_.status_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SecurityInfo, _impl_.pinyin_full_aliases_),
+        PROTOBUF_FIELD_OFFSET(::hqmarket::market::v1::SecurityInfo, _impl_.pinyin_short_aliases_),
         0,
+        ~0u,
+        ~0u,
         ~0u,
         ~0u,
         ~0u,  // no _has_bits_
@@ -980,25 +986,25 @@ const ::uint32_t
 static const ::_pbi::MigrationSchema
     schemas[] ABSL_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
         {0, -1, -1, sizeof(::hqmarket::market::v1::Security)},
-        {10, 21, -1, sizeof(::hqmarket::market::v1::SecurityInfo)},
-        {24, -1, -1, sizeof(::hqmarket::market::v1::SecurityList)},
-        {34, -1, -1, sizeof(::hqmarket::market::v1::PriceLevel)},
-        {45, -1, -1, sizeof(::hqmarket::market::v1::AuthRequest)},
-        {54, -1, -1, sizeof(::hqmarket::market::v1::SubscribeRequest)},
-        {64, -1, -1, sizeof(::hqmarket::market::v1::UnsubscribeRequest)},
-        {74, 86, -1, sizeof(::hqmarket::market::v1::SubscriptionResult)},
-        {90, -1, -1, sizeof(::hqmarket::market::v1::SubscriptionAck)},
-        {99, 120, -1, sizeof(::hqmarket::market::v1::QuoteData)},
-        {133, 148, -1, sizeof(::hqmarket::market::v1::DepthData)},
-        {155, 170, -1, sizeof(::hqmarket::market::v1::TradeData)},
-        {177, 197, -1, sizeof(::hqmarket::market::v1::BarData)},
-        {209, -1, -1, sizeof(::hqmarket::market::v1::MarketStatusData)},
-        {220, -1, -1, sizeof(::hqmarket::market::v1::ProviderStatusData)},
-        {231, 243, -1, sizeof(::hqmarket::market::v1::QueryRequest)},
-        {247, 260, -1, sizeof(::hqmarket::market::v1::QueryResponse)},
-        {265, 284, -1, sizeof(::hqmarket::market::v1::SectorInfo)},
-        {295, -1, -1, sizeof(::hqmarket::market::v1::SectorList)},
-        {307, 320, -1, sizeof(::hqmarket::market::v1::SectorConstituents)},
+        {10, 23, -1, sizeof(::hqmarket::market::v1::SecurityInfo)},
+        {28, -1, -1, sizeof(::hqmarket::market::v1::SecurityList)},
+        {38, -1, -1, sizeof(::hqmarket::market::v1::PriceLevel)},
+        {49, -1, -1, sizeof(::hqmarket::market::v1::AuthRequest)},
+        {58, -1, -1, sizeof(::hqmarket::market::v1::SubscribeRequest)},
+        {68, -1, -1, sizeof(::hqmarket::market::v1::UnsubscribeRequest)},
+        {78, 90, -1, sizeof(::hqmarket::market::v1::SubscriptionResult)},
+        {94, -1, -1, sizeof(::hqmarket::market::v1::SubscriptionAck)},
+        {103, 124, -1, sizeof(::hqmarket::market::v1::QuoteData)},
+        {137, 152, -1, sizeof(::hqmarket::market::v1::DepthData)},
+        {159, 174, -1, sizeof(::hqmarket::market::v1::TradeData)},
+        {181, 201, -1, sizeof(::hqmarket::market::v1::BarData)},
+        {213, -1, -1, sizeof(::hqmarket::market::v1::MarketStatusData)},
+        {224, -1, -1, sizeof(::hqmarket::market::v1::ProviderStatusData)},
+        {235, 247, -1, sizeof(::hqmarket::market::v1::QueryRequest)},
+        {251, 264, -1, sizeof(::hqmarket::market::v1::QueryResponse)},
+        {269, 288, -1, sizeof(::hqmarket::market::v1::SectorInfo)},
+        {299, -1, -1, sizeof(::hqmarket::market::v1::SectorList)},
+        {311, 324, -1, sizeof(::hqmarket::market::v1::SectorConstituents)},
 };
 static const ::_pb::Message* const file_default_instances[] = {
     &::hqmarket::market::v1::_Security_default_instance_._instance,
@@ -1026,98 +1032,100 @@ const char descriptor_table_protodef_v1_2fmarket_2eproto[] ABSL_ATTRIBUTE_SECTIO
     protodesc_cold) = {
     "\n\017v1/market.proto\022\022hqmarket.market.v1\"J\n"
     "\010Security\022\016\n\006symbol\030\001 \001(\t\022.\n\010exchange\030\002 "
-    "\001(\0162\034.hqmarket.market.v1.Exchange\"\\\n\014Sec"
-    "urityInfo\022.\n\010security\030\001 \001(\0132\034.hqmarket.m"
-    "arket.v1.Security\022\014\n\004name\030\002 \001(\t\022\016\n\006statu"
-    "s\030\003 \001(\t\"U\n\014SecurityList\0224\n\nsecurities\030\001 "
-    "\003(\0132 .hqmarket.market.v1.SecurityInfo\022\017\n"
-    "\007version\030\002 \001(\003\"@\n\nPriceLevel\022\r\n\005price\030\001 "
-    "\001(\003\022\016\n\006volume\030\002 \001(\003\022\023\n\013price_scale\030\003 \001(\005"
-    "\"\034\n\013AuthRequest\022\r\n\005token\030\001 \001(\t\"s\n\020Subscr"
-    "ibeRequest\0220\n\nsecurities\030\001 \003(\0132\034.hqmarke"
-    "t.market.v1.Security\022-\n\010channels\030\002 \003(\0162\033"
-    ".hqmarket.market.v1.Channel\"u\n\022Unsubscri"
-    "beRequest\0220\n\nsecurities\030\001 \003(\0132\034.hqmarket"
-    ".market.v1.Security\022-\n\010channels\030\002 \003(\0162\033."
-    "hqmarket.market.v1.Channel\"\224\001\n\022Subscript"
-    "ionResult\022.\n\010security\030\001 \001(\0132\034.hqmarket.m"
-    "arket.v1.Security\022,\n\007channel\030\002 \001(\0162\033.hqm"
-    "arket.market.v1.Channel\022\020\n\010accepted\030\003 \001("
-    "\010\022\016\n\006reason\030\004 \001(\t\"J\n\017SubscriptionAck\0227\n\007"
-    "results\030\001 \003(\0132&.hqmarket.market.v1.Subsc"
-    "riptionResult\"\246\002\n\tQuoteData\022.\n\010security\030"
-    "\001 \001(\0132\034.hqmarket.market.v1.Security\022\030\n\020e"
-    "xchange_time_ms\030\002 \001(\003\022\027\n\017receive_time_ms"
-    "\030\003 \001(\003\022\022\n\nlast_price\030\004 \001(\003\022\022\n\nopen_price"
-    "\030\005 \001(\003\022\022\n\nhigh_price\030\006 \001(\003\022\021\n\tlow_price\030"
-    "\007 \001(\003\022\021\n\tpre_close\030\010 \001(\003\022\016\n\006volume\030\t \001(\003"
-    "\022\020\n\010turnover\030\n \001(\003\022\023\n\013price_scale\030\013 \001(\005\022"
-    "\016\n\006source\030\014 \001(\t\022\r\n\005stale\030\r \001(\010\"\351\001\n\tDepth"
-    "Data\022.\n\010security\030\001 \001(\0132\034.hqmarket.market"
-    ".v1.Security\022\030\n\020exchange_time_ms\030\002 \001(\003\022\027"
-    "\n\017receive_time_ms\030\003 \001(\003\022,\n\004bids\030\004 \003(\0132\036."
-    "hqmarket.market.v1.PriceLevel\022,\n\004asks\030\005 "
-    "\003(\0132\036.hqmarket.market.v1.PriceLevel\022\016\n\006s"
-    "ource\030\006 \001(\t\022\r\n\005stale\030\007 \001(\010\"\253\001\n\tTradeData"
+    "\001(\0162\034.hqmarket.market.v1.Exchange\"\227\001\n\014Se"
+    "curityInfo\022.\n\010security\030\001 \001(\0132\034.hqmarket."
+    "market.v1.Security\022\014\n\004name\030\002 \001(\t\022\016\n\006stat"
+    "us\030\003 \001(\t\022\033\n\023pinyin_full_aliases\030\004 \003(\t\022\034\n"
+    "\024pinyin_short_aliases\030\005 \003(\t\"U\n\014SecurityL"
+    "ist\0224\n\nsecurities\030\001 \003(\0132 .hqmarket.marke"
+    "t.v1.SecurityInfo\022\017\n\007version\030\002 \001(\003\"@\n\nPr"
+    "iceLevel\022\r\n\005price\030\001 \001(\003\022\016\n\006volume\030\002 \001(\003\022"
+    "\023\n\013price_scale\030\003 \001(\005\"\034\n\013AuthRequest\022\r\n\005t"
+    "oken\030\001 \001(\t\"s\n\020SubscribeRequest\0220\n\nsecuri"
+    "ties\030\001 \003(\0132\034.hqmarket.market.v1.Security"
+    "\022-\n\010channels\030\002 \003(\0162\033.hqmarket.market.v1."
+    "Channel\"u\n\022UnsubscribeRequest\0220\n\nsecurit"
+    "ies\030\001 \003(\0132\034.hqmarket.market.v1.Security\022"
+    "-\n\010channels\030\002 \003(\0162\033.hqmarket.market.v1.C"
+    "hannel\"\224\001\n\022SubscriptionResult\022.\n\010securit"
+    "y\030\001 \001(\0132\034.hqmarket.market.v1.Security\022,\n"
+    "\007channel\030\002 \001(\0162\033.hqmarket.market.v1.Chan"
+    "nel\022\020\n\010accepted\030\003 \001(\010\022\016\n\006reason\030\004 \001(\t\"J\n"
+    "\017SubscriptionAck\0227\n\007results\030\001 \003(\0132&.hqma"
+    "rket.market.v1.SubscriptionResult\"\246\002\n\tQu"
+    "oteData\022.\n\010security\030\001 \001(\0132\034.hqmarket.mar"
+    "ket.v1.Security\022\030\n\020exchange_time_ms\030\002 \001("
+    "\003\022\027\n\017receive_time_ms\030\003 \001(\003\022\022\n\nlast_price"
+    "\030\004 \001(\003\022\022\n\nopen_price\030\005 \001(\003\022\022\n\nhigh_price"
+    "\030\006 \001(\003\022\021\n\tlow_price\030\007 \001(\003\022\021\n\tpre_close\030\010"
+    " \001(\003\022\016\n\006volume\030\t \001(\003\022\020\n\010turnover\030\n \001(\003\022\023"
+    "\n\013price_scale\030\013 \001(\005\022\016\n\006source\030\014 \001(\t\022\r\n\005s"
+    "tale\030\r \001(\010\"\351\001\n\tDepthData\022.\n\010security\030\001 \001"
+    "(\0132\034.hqmarket.market.v1.Security\022\030\n\020exch"
+    "ange_time_ms\030\002 \001(\003\022\027\n\017receive_time_ms\030\003 "
+    "\001(\003\022,\n\004bids\030\004 \003(\0132\036.hqmarket.market.v1.P"
+    "riceLevel\022,\n\004asks\030\005 \003(\0132\036.hqmarket.marke"
+    "t.v1.PriceLevel\022\016\n\006source\030\006 \001(\t\022\r\n\005stale"
+    "\030\007 \001(\010\"\253\001\n\tTradeData\022.\n\010security\030\001 \001(\0132\034"
+    ".hqmarket.market.v1.Security\022\030\n\020exchange"
+    "_time_ms\030\002 \001(\003\022\r\n\005price\030\003 \001(\003\022\016\n\006volume\030"
+    "\004 \001(\003\022\023\n\013price_scale\030\005 \001(\005\022\020\n\010trade_id\030\006"
+    " \001(\t\022\016\n\006source\030\007 \001(\t\"\251\002\n\007BarData\022.\n\010secu"
+    "rity\030\001 \001(\0132\034.hqmarket.market.v1.Security"
+    "\022,\n\007channel\030\002 \001(\0162\033.hqmarket.market.v1.C"
+    "hannel\022\025\n\rbegin_time_ms\030\003 \001(\003\022\022\n\nopen_pr"
+    "ice\030\004 \001(\003\022\022\n\nhigh_price\030\005 \001(\003\022\021\n\tlow_pri"
+    "ce\030\006 \001(\003\022\023\n\013close_price\030\007 \001(\003\022\016\n\006volume\030"
+    "\010 \001(\003\022\020\n\010turnover\030\t \001(\003\022\023\n\013price_scale\030\n"
+    " \001(\005\022\022\n\nadjustment\030\013 \001(\t\022\016\n\006source\030\014 \001(\t"
+    "\"l\n\020MarketStatusData\022.\n\010exchange\030\001 \001(\0162\034"
+    ".hqmarket.market.v1.Exchange\022\016\n\006status\030\002"
+    " \001(\t\022\030\n\020exchange_time_ms\030\003 \001(\003\"G\n\022Provid"
+    "erStatusData\022\020\n\010provider\030\001 \001(\t\022\017\n\007health"
+    "y\030\002 \001(\010\022\016\n\006detail\030\003 \001(\t\"\230\001\n\014QueryRequest"
     "\022.\n\010security\030\001 \001(\0132\034.hqmarket.market.v1."
-    "Security\022\030\n\020exchange_time_ms\030\002 \001(\003\022\r\n\005pr"
-    "ice\030\003 \001(\003\022\016\n\006volume\030\004 \001(\003\022\023\n\013price_scale"
-    "\030\005 \001(\005\022\020\n\010trade_id\030\006 \001(\t\022\016\n\006source\030\007 \001(\t"
-    "\"\251\002\n\007BarData\022.\n\010security\030\001 \001(\0132\034.hqmarke"
-    "t.market.v1.Security\022,\n\007channel\030\002 \001(\0162\033."
-    "hqmarket.market.v1.Channel\022\025\n\rbegin_time"
-    "_ms\030\003 \001(\003\022\022\n\nopen_price\030\004 \001(\003\022\022\n\nhigh_pr"
-    "ice\030\005 \001(\003\022\021\n\tlow_price\030\006 \001(\003\022\023\n\013close_pr"
-    "ice\030\007 \001(\003\022\016\n\006volume\030\010 \001(\003\022\020\n\010turnover\030\t "
-    "\001(\003\022\023\n\013price_scale\030\n \001(\005\022\022\n\nadjustment\030\013"
-    " \001(\t\022\016\n\006source\030\014 \001(\t\"l\n\020MarketStatusData"
-    "\022.\n\010exchange\030\001 \001(\0162\034.hqmarket.market.v1."
-    "Exchange\022\016\n\006status\030\002 \001(\t\022\030\n\020exchange_tim"
-    "e_ms\030\003 \001(\003\"G\n\022ProviderStatusData\022\020\n\010prov"
-    "ider\030\001 \001(\t\022\017\n\007healthy\030\002 \001(\010\022\016\n\006detail\030\003 "
-    "\001(\t\"\230\001\n\014QueryRequest\022.\n\010security\030\001 \001(\0132\034"
-    ".hqmarket.market.v1.Security\022,\n\007channel\030"
-    "\002 \001(\0162\033.hqmarket.market.v1.Channel\022\025\n\rbe"
-    "gin_time_ms\030\003 \001(\003\022\023\n\013end_time_ms\030\004 \001(\003\"\325"
-    "\001\n\rQueryResponse\022.\n\010security\030\001 \001(\0132\034.hqm"
-    "arket.market.v1.Security\022,\n\007channel\030\002 \001("
-    "\0162\033.hqmarket.market.v1.Channel\022,\n\005quote\030"
-    "\003 \001(\0132\035.hqmarket.market.v1.QuoteData\022)\n\004"
-    "bars\030\004 \003(\0132\033.hqmarket.market.v1.BarData\022"
-    "\r\n\005found\030\005 \001(\010\"\226\002\n\nSectorInfo\022\014\n\004code\030\001 "
-    "\001(\t\022\014\n\004name\030\002 \001(\t\022\026\n\016change_percent\030\003 \001("
-    "\003\022\025\n\rpercent_scale\030\004 \001(\005\022\024\n\014rising_count"
-    "\030\005 \001(\005\022\025\n\rfalling_count\030\006 \001(\005\022\022\n\nflat_co"
-    "unt\030\007 \001(\005\022\024\n\014member_count\030\010 \001(\005\0226\n\020leadi"
-    "ng_security\030\t \001(\0132\034.hqmarket.market.v1.S"
-    "ecurity\022\024\n\014leading_name\030\n \001(\t\022\030\n\020snapsho"
-    "t_time_ms\030\013 \001(\003\"\225\001\n\nSectorList\022,\n\004type\030\001"
-    " \001(\0162\036.hqmarket.market.v1.SectorType\022/\n\007"
-    "sectors\030\002 \003(\0132\036.hqmarket.market.v1.Secto"
-    "rInfo\022\030\n\020snapshot_time_ms\030\003 \001(\003\022\016\n\006sourc"
-    "e\030\004 \001(\t\"\322\001\n\022SectorConstituents\022,\n\004type\030\001"
-    " \001(\0162\036.hqmarket.market.v1.SectorType\022.\n\006"
-    "sector\030\002 \001(\0132\036.hqmarket.market.v1.Sector"
-    "Info\0224\n\nsecurities\030\003 \003(\0132 .hqmarket.mark"
-    "et.v1.SecurityInfo\022\030\n\020snapshot_time_ms\030\004"
-    " \001(\003\022\016\n\006source\030\005 \001(\t*\247\001\n\010Exchange\022\030\n\024EXC"
-    "HANGE_UNSPECIFIED\020\000\022\007\n\003SSE\020\001\022\010\n\004SZSE\020\002\022\007"
-    "\n\003BSE\020\003\022\010\n\004HKEX\020\004\022\t\n\005CFFEX\020\005\022\010\n\004SHFE\020\006\022\007"
-    "\n\003DCE\020\007\022\010\n\004CZCE\020\010\022\007\n\003INE\020\t\022\010\n\004GFEX\020\n\022\n\n\006"
-    "NASDAQ\020\013\022\010\n\004NYSE\020\014\022\n\n\006CRYPTO\020\r*\236\001\n\007Chann"
-    "el\022\027\n\023CHANNEL_UNSPECIFIED\020\000\022\021\n\rCHANNEL_Q"
-    "UOTE\020\001\022\021\n\rCHANNEL_DEPTH\020\002\022\021\n\rCHANNEL_TRA"
-    "DE\020\003\022\022\n\016CHANNEL_BAR_1M\020\004\022\022\n\016CHANNEL_BAR_"
-    "1D\020\005\022\031\n\025CHANNEL_MARKET_STATUS\020\006*t\n\nSecto"
-    "rType\022\033\n\027SECTOR_TYPE_UNSPECIFIED\020\000\022\030\n\024SE"
-    "CTOR_TYPE_INDUSTRY\020\001\022\027\n\023SECTOR_TYPE_CONC"
-    "EPT\020\002\022\026\n\022SECTOR_TYPE_REGION\020\003b\006proto3"
+    "Security\022,\n\007channel\030\002 \001(\0162\033.hqmarket.mar"
+    "ket.v1.Channel\022\025\n\rbegin_time_ms\030\003 \001(\003\022\023\n"
+    "\013end_time_ms\030\004 \001(\003\"\325\001\n\rQueryResponse\022.\n\010"
+    "security\030\001 \001(\0132\034.hqmarket.market.v1.Secu"
+    "rity\022,\n\007channel\030\002 \001(\0162\033.hqmarket.market."
+    "v1.Channel\022,\n\005quote\030\003 \001(\0132\035.hqmarket.mar"
+    "ket.v1.QuoteData\022)\n\004bars\030\004 \003(\0132\033.hqmarke"
+    "t.market.v1.BarData\022\r\n\005found\030\005 \001(\010\"\226\002\n\nS"
+    "ectorInfo\022\014\n\004code\030\001 \001(\t\022\014\n\004name\030\002 \001(\t\022\026\n"
+    "\016change_percent\030\003 \001(\003\022\025\n\rpercent_scale\030\004"
+    " \001(\005\022\024\n\014rising_count\030\005 \001(\005\022\025\n\rfalling_co"
+    "unt\030\006 \001(\005\022\022\n\nflat_count\030\007 \001(\005\022\024\n\014member_"
+    "count\030\010 \001(\005\0226\n\020leading_security\030\t \001(\0132\034."
+    "hqmarket.market.v1.Security\022\024\n\014leading_n"
+    "ame\030\n \001(\t\022\030\n\020snapshot_time_ms\030\013 \001(\003\"\225\001\n\n"
+    "SectorList\022,\n\004type\030\001 \001(\0162\036.hqmarket.mark"
+    "et.v1.SectorType\022/\n\007sectors\030\002 \003(\0132\036.hqma"
+    "rket.market.v1.SectorInfo\022\030\n\020snapshot_ti"
+    "me_ms\030\003 \001(\003\022\016\n\006source\030\004 \001(\t\"\322\001\n\022SectorCo"
+    "nstituents\022,\n\004type\030\001 \001(\0162\036.hqmarket.mark"
+    "et.v1.SectorType\022.\n\006sector\030\002 \001(\0132\036.hqmar"
+    "ket.market.v1.SectorInfo\0224\n\nsecurities\030\003"
+    " \003(\0132 .hqmarket.market.v1.SecurityInfo\022\030"
+    "\n\020snapshot_time_ms\030\004 \001(\003\022\016\n\006source\030\005 \001(\t"
+    "*\247\001\n\010Exchange\022\030\n\024EXCHANGE_UNSPECIFIED\020\000\022"
+    "\007\n\003SSE\020\001\022\010\n\004SZSE\020\002\022\007\n\003BSE\020\003\022\010\n\004HKEX\020\004\022\t\n"
+    "\005CFFEX\020\005\022\010\n\004SHFE\020\006\022\007\n\003DCE\020\007\022\010\n\004CZCE\020\010\022\007\n"
+    "\003INE\020\t\022\010\n\004GFEX\020\n\022\n\n\006NASDAQ\020\013\022\010\n\004NYSE\020\014\022\n"
+    "\n\006CRYPTO\020\r*\236\001\n\007Channel\022\027\n\023CHANNEL_UNSPEC"
+    "IFIED\020\000\022\021\n\rCHANNEL_QUOTE\020\001\022\021\n\rCHANNEL_DE"
+    "PTH\020\002\022\021\n\rCHANNEL_TRADE\020\003\022\022\n\016CHANNEL_BAR_"
+    "1M\020\004\022\022\n\016CHANNEL_BAR_1D\020\005\022\031\n\025CHANNEL_MARK"
+    "ET_STATUS\020\006*t\n\nSectorType\022\033\n\027SECTOR_TYPE"
+    "_UNSPECIFIED\020\000\022\030\n\024SECTOR_TYPE_INDUSTRY\020\001"
+    "\022\027\n\023SECTOR_TYPE_CONCEPT\020\002\022\026\n\022SECTOR_TYPE"
+    "_REGION\020\003b\006proto3"
 };
 static ::absl::once_flag descriptor_table_v1_2fmarket_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_v1_2fmarket_2eproto = {
     false,
     false,
-    3517,
+    3577,
     descriptor_table_protodef_v1_2fmarket_2eproto,
     "v1/market.proto",
     &descriptor_table_v1_2fmarket_2eproto_once,
@@ -1441,6 +1449,8 @@ inline PROTOBUF_NDEBUG_INLINE SecurityInfo::Impl_::Impl_(
     const Impl_& from, const ::hqmarket::market::v1::SecurityInfo& from_msg)
       : _has_bits_{from._has_bits_},
         _cached_size_{0},
+        pinyin_full_aliases_{visibility, arena, from.pinyin_full_aliases_},
+        pinyin_short_aliases_{visibility, arena, from.pinyin_short_aliases_},
         name_(arena, from.name_),
         status_(arena, from.status_) {}
 
@@ -1468,6 +1478,8 @@ inline PROTOBUF_NDEBUG_INLINE SecurityInfo::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
       : _cached_size_{0},
+        pinyin_full_aliases_{visibility, arena},
+        pinyin_short_aliases_{visibility, arena},
         name_(arena),
         status_(arena) {}
 
@@ -1494,8 +1506,24 @@ inline void* SecurityInfo::PlacementNew_(const void*, void* mem,
   return ::new (mem) SecurityInfo(arena);
 }
 constexpr auto SecurityInfo::InternalNewImpl_() {
-  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(SecurityInfo),
-                                            alignof(SecurityInfo));
+  constexpr auto arena_bits = ::google::protobuf::internal::EncodePlacementArenaOffsets({
+      PROTOBUF_FIELD_OFFSET(SecurityInfo, _impl_.pinyin_full_aliases_) +
+          decltype(SecurityInfo::_impl_.pinyin_full_aliases_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+      PROTOBUF_FIELD_OFFSET(SecurityInfo, _impl_.pinyin_short_aliases_) +
+          decltype(SecurityInfo::_impl_.pinyin_short_aliases_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+  });
+  if (arena_bits.has_value()) {
+    return ::google::protobuf::internal::MessageCreator::CopyInit(
+        sizeof(SecurityInfo), alignof(SecurityInfo), *arena_bits);
+  } else {
+    return ::google::protobuf::internal::MessageCreator(&SecurityInfo::PlacementNew_,
+                                 sizeof(SecurityInfo),
+                                 alignof(SecurityInfo));
+  }
 }
 PROTOBUF_CONSTINIT
 PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
@@ -1525,15 +1553,15 @@ const ::google::protobuf::internal::ClassData* SecurityInfo::GetClassData() cons
   return _class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 3, 1, 50, 2> SecurityInfo::_table_ = {
+const ::_pbi::TcParseTable<3, 5, 1, 89, 2> SecurityInfo::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(SecurityInfo, _impl_._has_bits_),
     0, // no _extensions_
-    3, 24,  // max_field_number, fast_idx_mask
+    5, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967288,  // skipmap
+    4294967264,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    3,  // num_field_entries
+    5,  // num_field_entries
     1,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     _class_data_.base(),
@@ -1553,6 +1581,14 @@ const ::_pbi::TcParseTable<2, 3, 1, 50, 2> SecurityInfo::_table_ = {
     // string status = 3;
     {::_pbi::TcParser::FastUS1,
      {26, 63, 0, PROTOBUF_FIELD_OFFSET(SecurityInfo, _impl_.status_)}},
+    // repeated string pinyin_full_aliases = 4;
+    {::_pbi::TcParser::FastUR1,
+     {34, 63, 0, PROTOBUF_FIELD_OFFSET(SecurityInfo, _impl_.pinyin_full_aliases_)}},
+    // repeated string pinyin_short_aliases = 5;
+    {::_pbi::TcParser::FastUR1,
+     {42, 63, 0, PROTOBUF_FIELD_OFFSET(SecurityInfo, _impl_.pinyin_short_aliases_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
   }}, {{
@@ -1565,13 +1601,21 @@ const ::_pbi::TcParseTable<2, 3, 1, 50, 2> SecurityInfo::_table_ = {
     // string status = 3;
     {PROTOBUF_FIELD_OFFSET(SecurityInfo, _impl_.status_), -1, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // repeated string pinyin_full_aliases = 4;
+    {PROTOBUF_FIELD_OFFSET(SecurityInfo, _impl_.pinyin_full_aliases_), -1, 0,
+    (0 | ::_fl::kFcRepeated | ::_fl::kUtf8String | ::_fl::kRepSString)},
+    // repeated string pinyin_short_aliases = 5;
+    {PROTOBUF_FIELD_OFFSET(SecurityInfo, _impl_.pinyin_short_aliases_), -1, 0,
+    (0 | ::_fl::kFcRepeated | ::_fl::kUtf8String | ::_fl::kRepSString)},
   }}, {{
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::Security>()},
   }}, {{
-    "\37\0\4\6\0\0\0\0"
+    "\37\0\4\6\23\24\0\0"
     "hqmarket.market.v1.SecurityInfo"
     "name"
     "status"
+    "pinyin_full_aliases"
+    "pinyin_short_aliases"
   }},
 };
 
@@ -1582,6 +1626,8 @@ PROTOBUF_NOINLINE void SecurityInfo::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  _impl_.pinyin_full_aliases_.Clear();
+  _impl_.pinyin_short_aliases_.Clear();
   _impl_.name_.ClearToEmpty();
   _impl_.status_.ClearToEmpty();
   cached_has_bits = _impl_._has_bits_[0];
@@ -1632,6 +1678,22 @@ PROTOBUF_NOINLINE void SecurityInfo::Clear() {
             target = stream->WriteStringMaybeAliased(3, _s, target);
           }
 
+          // repeated string pinyin_full_aliases = 4;
+          for (int i = 0, n = this_._internal_pinyin_full_aliases_size(); i < n; ++i) {
+            const auto& s = this_._internal_pinyin_full_aliases().Get(i);
+            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                s.data(), static_cast<int>(s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "hqmarket.market.v1.SecurityInfo.pinyin_full_aliases");
+            target = stream->WriteString(4, s, target);
+          }
+
+          // repeated string pinyin_short_aliases = 5;
+          for (int i = 0, n = this_._internal_pinyin_short_aliases_size(); i < n; ++i) {
+            const auto& s = this_._internal_pinyin_short_aliases().Get(i);
+            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                s.data(), static_cast<int>(s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "hqmarket.market.v1.SecurityInfo.pinyin_short_aliases");
+            target = stream->WriteString(5, s, target);
+          }
+
           if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
             target =
                 ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -1656,6 +1718,26 @@ PROTOBUF_NOINLINE void SecurityInfo::Clear() {
           (void)cached_has_bits;
 
           ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+           {
+            // repeated string pinyin_full_aliases = 4;
+            {
+              total_size +=
+                  1 * ::google::protobuf::internal::FromIntSize(this_._internal_pinyin_full_aliases().size());
+              for (int i = 0, n = this_._internal_pinyin_full_aliases().size(); i < n; ++i) {
+                total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+                    this_._internal_pinyin_full_aliases().Get(i));
+              }
+            }
+            // repeated string pinyin_short_aliases = 5;
+            {
+              total_size +=
+                  1 * ::google::protobuf::internal::FromIntSize(this_._internal_pinyin_short_aliases().size());
+              for (int i = 0, n = this_._internal_pinyin_short_aliases().size(); i < n; ++i) {
+                total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+                    this_._internal_pinyin_short_aliases().Get(i));
+              }
+            }
+          }
            {
             // string name = 2;
             if (!this_._internal_name().empty()) {
@@ -1689,6 +1771,8 @@ void SecurityInfo::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::go
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
+  _this->_internal_mutable_pinyin_full_aliases()->MergeFrom(from._internal_pinyin_full_aliases());
+  _this->_internal_mutable_pinyin_short_aliases()->MergeFrom(from._internal_pinyin_short_aliases());
   if (!from._internal_name().empty()) {
     _this->_internal_set_name(from._internal_name());
   }
@@ -1723,6 +1807,8 @@ void SecurityInfo::InternalSwap(SecurityInfo* PROTOBUF_RESTRICT other) {
   ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  _impl_.pinyin_full_aliases_.InternalSwap(&other->_impl_.pinyin_full_aliases_);
+  _impl_.pinyin_short_aliases_.InternalSwap(&other->_impl_.pinyin_short_aliases_);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.status_, &other->_impl_.status_, arena);
   swap(_impl_.security_, other->_impl_.security_);
