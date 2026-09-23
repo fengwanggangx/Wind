@@ -102,6 +102,16 @@ void CRequest::SetData(const _TySubscriptionAck& value)
 	m_data->mutable_subscription_ack()->CopyFrom(value);
 }
 
+void CRequest::SetData(const _TySubscribeRequest& value)
+{
+	m_data->mutable_subscribe_request()->CopyFrom(value);
+}
+
+void CRequest::SetData(const _TyUnsubscribeRequest& value)
+{
+	m_data->mutable_unsubscribe_request()->CopyFrom(value);
+}
+
 void CRequest::SetData(const _TyQuoteData& value)
 {
 	m_data->mutable_quote()->CopyFrom(value);

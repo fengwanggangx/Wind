@@ -68,6 +68,8 @@ class CRequest
 	void SetReturnData(const std::string& strKey, const std::string& strValue);
 
 	void SetData(const _TySubscriptionAck& value);
+	void SetData(const _TySubscribeRequest& value);
+	void SetData(const _TyUnsubscribeRequest& value);
 	void SetData(const _TyQuoteData& value);
 	void SetData(const _TyDepthData& value);
 	void SetData(const _TyQueryResponse& value);

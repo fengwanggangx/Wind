@@ -11,6 +11,8 @@ namespace hqmarket::market::v1
 	class SecurityList;
 	class PriceLevel;
 	class SubscriptionAck;
+	class SubscribeRequest;
+	class UnsubscribeRequest;
 	class QuoteData;
 	class DepthData;
 	class QueryResponse;
@@ -25,6 +27,8 @@ using _TySecurityInfo = hqmarket::market::v1::SecurityInfo;
 using _TySecurityList = hqmarket::market::v1::SecurityList;
 using _TyPriceLevel = hqmarket::market::v1::PriceLevel;
 using _TySubscriptionAck = hqmarket::market::v1::SubscriptionAck;
+using _TySubscribeRequest = hqmarket::market::v1::SubscribeRequest;
+using _TyUnsubscribeRequest = hqmarket::market::v1::UnsubscribeRequest;
 using _TyQuoteData = hqmarket::market::v1::QuoteData;
 using _TyDepthData = hqmarket::market::v1::DepthData;
 using _TyQueryResponse = hqmarket::market::v1::QueryResponse;

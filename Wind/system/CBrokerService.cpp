@@ -153,6 +153,28 @@ void CBrokerService::OnHQMarketResponse(const CRequest& req)
 {
 	ExpirePendingSubscriptions();
 	ExpirePendingQueries();
+	if ("subscription_ack" == req.GetCmd())
+	{
+		CPendingQueryClient client;
+		bool bBatch = false;
+		{
+			std::lock_guard<std::mutex> lock(m_mtx_state);
+			const auto mIter = m_pending_batch_subscriptions.find(req.GetId());
+			if (m_pending_batch_subscriptions.end() != mIter)
+			{
+				client = mIter->second;
+				m_pending_batch_subscriptions.erase(mIter);
+				bBatch = true;
+			}
+		}
+		if (bBatch)
+		{
+			CRequest response = req;
+			response.SetId(client.m_requestId);
+			net::SendRequest(client.m_router_id, response);
+			return;
+		}
+	}
 	if (RouteQueryRequest(req))
 	{
 		return;
@@ -568,11 +590,107 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 	}
 
 	bool bSubscribe = request::IsSubscriptionRequest(req);
-	bool bUnsubscribe = request::IsSubscriptionRequest(req);
+	bool bUnsubscribe = request::IsUnSubscriptionRequest(req);
 
 	if (!bSubscribe && !bUnsubscribe)
 	{
 		net::SendError(id, req, InvalidSubscription, "unsupported request");
+		return false;
+	}
+	const _TyReqData& message = req.GetData();
+	int nSecurityCount = bSubscribe && message.has_subscribe_request() ? message.subscribe_request().securities_size() : (!bSubscribe && message.has_unsubscribe_request() ? message.unsubscribe_request().securities_size() : 0);
+	int nChannelCount = bSubscribe && message.has_subscribe_request() ? message.subscribe_request().channels_size() : (!bSubscribe && message.has_unsubscribe_request() ? message.unsubscribe_request().channels_size() : 0);
+	if ((0 < nSecurityCount) && (0 < nChannelCount))
+	{
+		std::vector<CQuoteInfo> subscriptions;
+		subscriptions.reserve(static_cast<std::size_t>(nSecurityCount) * static_cast<std::size_t>(nChannelCount));
+		if (bSubscribe)
+		{
+			for (const auto& security : message.subscribe_request().securities())
+			{
+				for (hqmarket::market::v1::Channel channel : message.subscribe_request().channels())
+				{
+					subscriptions.emplace_back(security.symbol(), static_cast<Exchange>(static_cast<int>(security.exchange())), static_cast<Channel>(static_cast<int>(channel)));
+				}
+			}
+		}
+		else
+		{
+			for (const auto& security : message.unsubscribe_request().securities())
+			{
+				for (hqmarket::market::v1::Channel channel : message.unsubscribe_request().channels())
+				{
+					subscriptions.emplace_back(security.symbol(), static_cast<Exchange>(static_cast<int>(security.exchange())), static_cast<Channel>(static_cast<int>(channel)));
+				}
+			}
+		}
+		if (subscriptions.empty())
+		{
+			net::SendError(id, req, InvalidSubscription, "empty subscription batch");
+			return false;
+		}
+		std::vector<CQuoteInfo> changed;
+		if (bSubscribe)
+		{
+			changed = m_subscriptions.Subscribe(id, subscriptions);
+		}
+		else
+		{
+			changed = m_subscriptions.Unsubscribe(id, subscriptions);
+		}
+		if (changed.empty())
+		{
+			SendSubscriptionResponse(id, req.GetId(), true, bSubscribe ? "already subscribed" : "not subscribed");
+			return true;
+		}
+		CRequest router = req;
+		_TyRequestId routerId = m_router_id.fetch_add(1);
+		router.SetId(routerId);
+		if (bSubscribe)
+		{
+			hqmarket::market::v1::SubscribeRequest payload;
+			for (const CQuoteInfo& quote : changed)
+			{
+				hqmarket::market::v1::Security* pSecurity = payload.add_securities();
+				pSecurity->set_symbol(quote.m_security.m_strCode);
+				pSecurity->set_exchange(static_cast<hqmarket::market::v1::Exchange>(quote.m_security.m_market));
+			}
+			payload.add_channels(static_cast<hqmarket::market::v1::Channel>(changed.front().m_channel));
+			router.SetData(payload);
+		}
+		else
+		{
+			hqmarket::market::v1::UnsubscribeRequest payload;
+			for (const CQuoteInfo& quote : changed)
+			{
+				hqmarket::market::v1::Security* pSecurity = payload.add_securities();
+				pSecurity->set_symbol(quote.m_security.m_strCode);
+				pSecurity->set_exchange(static_cast<hqmarket::market::v1::Exchange>(quote.m_security.m_market));
+			}
+			payload.add_channels(static_cast<hqmarket::market::v1::Channel>(changed.front().m_channel));
+			router.SetData(payload);
+		}
+		{
+			std::lock_guard<std::mutex> lock(m_mtx_state);
+			m_pending_batch_subscriptions.emplace(routerId, CPendingQueryClient{ id, req.GetId() });
+		}
+		if ((nullptr != m_pSession) && m_pSession->SendRequest(router))
+		{
+			return true;
+		}
+		{
+			std::lock_guard<std::mutex> lock(m_mtx_state);
+			m_pending_batch_subscriptions.erase(routerId);
+		}
+		if (bSubscribe)
+		{
+			m_subscriptions.Unsubscribe(id, changed);
+		}
+		else
+		{
+			m_subscriptions.Subscribe(id, changed);
+		}
+		net::SendError(id, req, InvalidSubscription, "HQMarket is unavailable");
 		return false;
 	}
 	CQuoteInfo quote = GetQuoteInfo(req);

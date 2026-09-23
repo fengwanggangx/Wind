@@ -96,6 +96,7 @@ private:
 
 	CSubscriptionMgr m_subscriptions;
 	std::unordered_map<std::string, std::vector<PendingSubscription>> m_pending_subscriptions;
+	std::unordered_map<_TyRequestId, CPendingQueryClient> m_pending_batch_subscriptions;
 	std::unordered_map<std::string, CPendingQuery> m_pending_queries;
 	std::atomic_uint64_t m_router_id{ std::uint64_t(1) << 63 };
 
