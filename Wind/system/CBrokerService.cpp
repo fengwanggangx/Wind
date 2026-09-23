@@ -608,9 +608,9 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 		{
 			for (const auto& security : message.subscribe_request().securities())
 			{
-				for (hqmarket::market::v1::Channel channel : message.subscribe_request().channels())
+				for (int nChannel : message.subscribe_request().channels())
 				{
-					subscriptions.emplace_back(security.symbol(), static_cast<Exchange>(static_cast<int>(security.exchange())), static_cast<Channel>(static_cast<int>(channel)));
+					subscriptions.emplace_back(security.symbol(), static_cast<Exchange>(static_cast<int>(security.exchange())), static_cast<Channel>(nChannel));
 				}
 			}
 		}
@@ -618,9 +618,9 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 		{
 			for (const auto& security : message.unsubscribe_request().securities())
 			{
-				for (hqmarket::market::v1::Channel channel : message.unsubscribe_request().channels())
+				for (int nChannel : message.unsubscribe_request().channels())
 				{
-					subscriptions.emplace_back(security.symbol(), static_cast<Exchange>(static_cast<int>(security.exchange())), static_cast<Channel>(static_cast<int>(channel)));
+					subscriptions.emplace_back(security.symbol(), static_cast<Exchange>(static_cast<int>(security.exchange())), static_cast<Channel>(nChannel));
 				}
 			}
 		}
