@@ -309,6 +309,14 @@ bool CStrategyEngine::HandleStrategyRequest(const CRequest& req)
 	{
 		return DeleteStrategy(req);
 	}
+	if ("strategy_runtime_query" == strCmd)
+	{
+		return QueryRuntime(req);
+	}
+	if (("strategy_start" == strCmd) || ("strategy_pause" == strCmd) || ("strategy_stop" == strCmd))
+	{
+		return ControlStrategy(req);
+	}
 	net::SendError(req.GetConnectionId(), req, 1102, "unsupported strategy command");
 	return false;
 }
@@ -477,22 +485,96 @@ bool CStrategyEngine::DeleteStrategy(const CRequest& req)
 		net::SendError(req.GetConnectionId(), req, 1103, "invalid strategy id");
 		return false;
 	}
+	db::_TyDBPtr pDB = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
+	if (nullptr == pDB)
+	{
+		net::SendError(req.GetConnectionId(), req, 1104, "strategy database is unavailable");
+		return false;
+	}
+	const db::CQueryTable& existing = pDB->ExecQuery("SELECT strategy_id FROM table_strategy WHERE strategy_id=" + std::to_string(id));
+	if (existing.m_rows.empty())
+	{
+		net::SendError(req.GetConnectionId(), req, 1110, "strategy does not exist");
+		return false;
+	}
 	std::shared_ptr<CStrategyRuntime> runtime = FindRuntime(id);
+	CStrategyConfig oldConfig;
+	StrategyState oldState = StrategyState::Created;
 	if (nullptr != runtime)
 	{
+		oldConfig = runtime->m_config;
+		oldState = runtime->m_state.load();
 		if (!StopStrategy(id) || !RemoveStrategy(id))
 		{
 			net::SendError(req.GetConnectionId(), req, 1108, "strategy runtime cannot be removed");
 			return false;
 		}
 	}
-	db::_TyDBPtr pDB = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
-	if ((nullptr == pDB) || (0 != pDB->ExecUpdate("DELETE FROM table_strategy WHERE strategy_id=" + std::to_string(id))))
+	if (0 != pDB->ExecUpdate("DELETE FROM table_strategy WHERE strategy_id=" + std::to_string(id)))
 	{
+		if (nullptr != runtime)
+		{
+			if (CreateStrategy(oldConfig) && !oldConfig.m_bAutoStart && ((StrategyState::Running == oldState) || (StrategyState::Starting == oldState)))
+			{
+				StartStrategy(id);
+			}
+		}
 		net::SendError(req.GetConnectionId(), req, 1109, "failed to delete strategy");
 		return false;
 	}
 	return SendStrategyResponse(req, "strategy deleted");
+}
+
+bool CStrategyEngine::QueryRuntime(const CRequest& req) const
+{
+	CRequest response;
+	response.SetId(req.GetId());
+	response.SetType(CRequest::Type::STRATEGY);
+	response.SetCmd(req.GetCmd());
+	response.SetReturnData("status", "ok");
+	std::vector<CStrategySnapshot> snapshots = GetSnapshots();
+	if (10000 < snapshots.size())
+	{
+		net::SendError(req.GetConnectionId(), req, 1113, "too many strategy runtimes");
+		return false;
+	}
+	// RequestData.ret carries runtime_count and runtime_<index>_{id,state,market_available,queue_length,active_orders,last_error}.
+	response.SetReturnData("runtime_count", std::to_string(snapshots.size()));
+	for (std::size_t index = 0; index < snapshots.size(); ++index)
+	{
+		const CStrategySnapshot& snapshot = snapshots[index];
+		std::string prefix = "runtime_" + std::to_string(index) + "_";
+		response.SetReturnData(prefix + "id", std::to_string(snapshot.m_strategyId));
+		response.SetReturnData(prefix + "state", std::to_string(static_cast<int>(snapshot.m_state)));
+		response.SetReturnData(prefix + "market_available", snapshot.m_bMarketAvailable ? "1" : "0");
+		response.SetReturnData(prefix + "queue_length", std::to_string(snapshot.m_queueLength));
+		response.SetReturnData(prefix + "active_orders", std::to_string(snapshot.m_activeOrderCount));
+		response.SetReturnData(prefix + "last_error", snapshot.m_strLastError);
+	}
+	return net::SendRequest(req.GetConnectionId(), response);
+}
+
+bool CStrategyEngine::ControlStrategy(const CRequest& req)
+{
+	std::uint64_t id = 0;
+	if (!ParseUnsigned(req.GetExtraData("strategy_id"), id) || (0 == id))
+	{
+		net::SendError(req.GetConnectionId(), req, 1103, "invalid strategy id");
+		return false;
+	}
+	if (!GetSnapshot(id).has_value())
+	{
+		net::SendError(req.GetConnectionId(), req, 1110, "enabled strategy runtime does not exist");
+		return false;
+	}
+	std::string command = req.GetCmd();
+	bool success = ("strategy_start" == command) ? StartStrategy(id) : (("strategy_pause" == command) ? PauseStrategy(id) : StopStrategy(id));
+	if (!success)
+	{
+		net::SendError(req.GetConnectionId(), req, 1112, "strategy state does not allow this operation");
+		return false;
+	}
+	return SendStrategyResponse(req, "strategy state updated");
 }
 
 const std::string& CStrategyEngine::GetLastError() const

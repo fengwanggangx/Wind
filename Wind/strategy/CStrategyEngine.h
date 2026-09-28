@@ -167,6 +167,8 @@ class CStrategyEngine final
 	bool ModifyStrategy(const CRequest& req);
 	bool QueryStrategies(const CRequest& req) const;
 	bool DeleteStrategy(const CRequest& req);
+	bool QueryRuntime(const CRequest& req) const;
+	bool ControlStrategy(const CRequest& req);
 
   private:
 	CSession* m_pSession{ nullptr };

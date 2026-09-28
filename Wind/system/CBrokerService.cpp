@@ -80,7 +80,11 @@ CBrokerService::CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession, 
 		{ "strategy_add", std::bind_front(&CBrokerService::HandleStrategy, this) },
 		{ "strategy_modify", std::bind_front(&CBrokerService::HandleStrategy, this) },
 		{ "strategy_query", std::bind_front(&CBrokerService::HandleStrategy, this) },
-		{ "strategy_delete", std::bind_front(&CBrokerService::HandleStrategy, this) }
+		{ "strategy_delete", std::bind_front(&CBrokerService::HandleStrategy, this) },
+		{ "strategy_runtime_query", std::bind_front(&CBrokerService::HandleStrategy, this) },
+		{ "strategy_start", std::bind_front(&CBrokerService::HandleStrategy, this) },
+		{ "strategy_pause", std::bind_front(&CBrokerService::HandleStrategy, this) },
+		{ "strategy_stop", std::bind_front(&CBrokerService::HandleStrategy, this) }
 	};
 }
 
