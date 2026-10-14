@@ -12,6 +12,7 @@ enum RequestType {
 	STRATEGY = 4;
 	HQMARKET = 5;
 	HEARTBEAT = 6;
+	ACCOUNT = 7;
 }
 
 message StrategySubscription {
@@ -29,11 +30,45 @@ message StrategyInfo {
     uint32 event_queue_limit = 6;
     bool auto_start = 7;
     bool enabled = 8;
+    uint64 account_id = 9;
 }
 
 message StrategyList {
     repeated StrategyInfo strategies = 1;
 }
+
+
+enum TradingAccountType { ACCOUNT_SIMULATED = 0; ACCOUNT_PRODUCTION = 1; }
+enum TradingAccountState { ACCOUNT_DISCONNECTED = 0; ACCOUNT_CONNECTED = 1; ACCOUNT_ERROR = 2; }
+message TradingAccountInfo {
+ uint64 account_id = 1;
+ string name = 2;
+ TradingAccountType account_type = 3;
+ int64 initial_balance = 4; // Money is integer cents, independent of quote price scale.
+ TradingAccountState state = 5;
+ string number = 6;
+ uint32 strategy_count = 7;
+ string last_error = 8;
+ string created_at = 9;
+ string updated_at = 10;
+ bool is_default = 11;
+}
+message TradingAccountList { repeated TradingAccountInfo accounts = 1; }
+message TradingAccountSnapshot {
+ uint64 account_id = 1;
+ int64 balance = 2;
+ int64 available = 3;
+ int64 frozen = 4;
+ bool available_snapshot = 5;
+ int64 server_time_ms = 6;
+}
+message TradingAccountLog {
+ string time = 1;
+ string actor = 2;
+ string action = 3;
+ string message = 4;
+}
+message TradingAccountLogs { uint64 account_id = 1; repeated TradingAccountLog logs = 2; }
 
 message RequestData {
 	reserved 24, 26, 28;
@@ -64,5 +99,9 @@ message RequestData {
 		hqmarket.market.v1.SecurityList security_list = 25;
 		hqmarket.market.v1.SectorList sector_list = 27;
 		hqmarket.market.v1.SectorConstituents sector_constituents = 29;
+        TradingAccountInfo account = 30;
+        TradingAccountList account_list = 31;
+        TradingAccountSnapshot account_snapshot = 32;
+        TradingAccountLogs account_logs = 33;
 	}
 }

@@ -1,4 +1,4 @@
-#include "CBrokerService.h"
+﻿#include "CBrokerService.h"
 
 #include "../common/utility.h"
 #include "../database/CDBEngine.h"
@@ -6,8 +6,8 @@
 #include "../network/CNetTools.h"
 #include "../network/CTcpServer.h"
 #include "../network/common_net.h"
-#include "../request/request.h"
 #include "../request/RequestCenter.h"
+#include "../request/request.h"
 #include "../request/request.pb.h"
 #include "../request/v1/market.pb.h"
 #include "../strategy/CStrategyEngine.h"
@@ -77,6 +77,13 @@ CBrokerService::CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession, 
 		{ "query_securities", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
 		{ "query_sectors", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
 		{ "query_sector_constituents", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
+		{ "account_query", std::bind_front(&CBrokerService::HandleAccount, this) },
+		{ "account_add", std::bind_front(&CBrokerService::HandleAccount, this) },
+		{ "account_modify", std::bind_front(&CBrokerService::HandleAccount, this) },
+		{ "account_connect", std::bind_front(&CBrokerService::HandleAccount, this) },
+		{ "account_disconnect", std::bind_front(&CBrokerService::HandleAccount, this) },
+		{ "account_snapshot_query", std::bind_front(&CBrokerService::HandleAccount, this) },
+		{ "account_logs_query", std::bind_front(&CBrokerService::HandleAccount, this) },
 		{ "strategy_add", std::bind_front(&CBrokerService::HandleStrategy, this) },
 		{ "strategy_modify", std::bind_front(&CBrokerService::HandleStrategy, this) },
 		{ "strategy_query", std::bind_front(&CBrokerService::HandleStrategy, this) },
@@ -350,7 +357,9 @@ bool CBrokerService::RouteQueryRequest(const CRequest& req)
 		std::lock_guard<std::mutex> lock(m_mtx_state);
 		_TyRequestId routerId = req.GetId();
 		auto mIter = std::find_if(m_pending_queries.begin(), m_pending_queries.end(), [routerId](const auto& item)
-								  { return routerId == item.second.m_router_id; });
+		{
+			return routerId == item.second.m_router_id;
+		});
 		if (m_pending_queries.end() == mIter)
 		{
 			return false;
@@ -532,6 +541,10 @@ bool CBrokerService::Login(const CRequest& req, std::string& strToken)
 	response.SetCmd(req.GetCmd());
 	response.SetReturnData("status", "ok");
 	response.SetReturnData("user_id", db::QueryValueToString(table.m_rows.front().at(0)));
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_state);
+		m_clientUsers.insert_or_assign(req.GetConnectionId(), strAccount);
+	}
 	response.SetReturnData("account", db::QueryValueToString(table.m_rows.front().at(1)));
 	strToken = utility::MakeSaltHex();
 	response.SetReturnData("token", strToken);
@@ -773,6 +786,7 @@ int CBrokerService::HandleDisconnected(net::_TyConnectionId id)
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
 		m_auth_clients.erase(id);
+		m_clientUsers.erase(id);
 		for (const auto& quote : removed)
 		{
 			std::string strKey = quote.String();
@@ -782,8 +796,10 @@ int CBrokerService::HandleDisconnected(net::_TyConnectionId id)
 		{
 			std::vector<CPendingQueryClient>& clients = mIter->second.m_clients;
 			clients.erase(std::remove_if(clients.begin(), clients.end(), [id](const CPendingQueryClient& client)
-										 { return id == client.m_router_id; }),
-						  clients.end());
+			{
+				return id == client.m_router_id;
+			}),
+				clients.end());
 			if (clients.empty())
 			{
 				mIter = m_pending_queries.erase(mIter);
@@ -815,10 +831,12 @@ bool CBrokerService::HandleReAuth(const CRequest& req)
 		if ((m_client_tokens.end() != mIter) && !bAccepted)
 		{
 			m_client_tokens.erase(mIter);
+			m_tokenUsers.erase(strToken);
 		}
 		if (bAccepted)
 		{
 			m_auth_clients.emplace(req.GetConnectionId());
+			m_clientUsers.insert_or_assign(req.GetConnectionId(), m_tokenUsers.at(strToken));
 		}
 	}
 	if (bAccepted)
@@ -852,6 +870,7 @@ bool CBrokerService::HandleAuth(net::_TyConnectionId id, const CRequest& req)
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_state);
 			m_auth_clients.emplace(req.GetConnectionId());
+			m_tokenUsers.insert_or_assign(strToken, m_clientUsers.at(req.GetConnectionId()));
 			m_client_tokens.insert_or_assign(strToken, std::chrono::steady_clock::now() + TokenLifetime);
 		}
 		return true;
@@ -918,4 +937,23 @@ int CBrokerService::OnNetEvent(const net::CNetEvent& ev)
 		HandleDisconnected(ev.m_connection_id);
 	}
 	return 1;
+}
+
+bool CBrokerService::HandleAccount(net::_TyConnectionId id, const CRequest& req)
+{
+	if (!IsAuthenticated(id) || (nullptr == m_pStrategyEngine))
+	{
+		net::SendError(id, req, AuthenticationRequired, "authentication required");
+		return false;
+	}
+	std::string actor;
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_state);
+		const auto mIter = m_clientUsers.find(id);
+		if (m_clientUsers.end() != mIter)
+		{
+			actor = mIter->second;
+		}
+	}
+	return m_pStrategyEngine->HandleAccountRequest(req, actor);
 }

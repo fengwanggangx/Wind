@@ -1,4 +1,4 @@
-#ifndef HQMARKET_REQUEST_REQUEST_H
+﻿#ifndef HQMARKET_REQUEST_REQUEST_H
 #define HQMARKET_REQUEST_REQUEST_H
 
 #include "../network/common_net.h"
@@ -15,6 +15,10 @@ namespace request
 	class RequestData;
 	class StrategyInfo;
 	class StrategyList;
+	class TradingAccountInfo;
+	class TradingAccountList;
+	class TradingAccountSnapshot;
+	class TradingAccountLogs;
 } // namespace request
 
 namespace google::protobuf
@@ -29,7 +33,7 @@ using _TyStrategyList = request::StrategyList;
 
 class CRequest
 {
-  public:
+	public:
 	enum class Type
 	{
 		UNKNOWN = 0,
@@ -38,10 +42,11 @@ class CRequest
 		UPDATE_AUTH = 3,
 		STRATEGY = 4,
 		HQMARKET = 5,
-		HEARTBEAT = 6
+		HEARTBEAT = 6,
+		ACCOUNT = 7
 	};
 
-  public:
+	public:
 	CRequest();
 	~CRequest();
 	CRequest(const CRequest& arg);
@@ -49,7 +54,7 @@ class CRequest
 	CRequest(CRequest&& arg) noexcept;
 	CRequest& operator=(CRequest&& arg) noexcept;
 
-  public:
+	public:
 	_TyRequestId GetId() const;
 	void SetId(_TyRequestId id);
 
@@ -78,6 +83,10 @@ class CRequest
 	void SetData(const _TySectorConstituents& value);
 	void SetData(const _TyStrategyInfo& value);
 	void SetData(const _TyStrategyList& value);
+	void SetData(const request::TradingAccountInfo& value);
+	void SetData(const request::TradingAccountList& value);
+	void SetData(const request::TradingAccountSnapshot& value);
+	void SetData(const request::TradingAccountLogs& value);
 	const _TyReqData& GetData() const;
 
 	void SetConnectionId(net::_TyConnectionId id);
@@ -88,7 +97,7 @@ class CRequest
 
 	std::optional<std::pair<int, std::string>> GetErrorInfo() const;
 
-  private:
+	private:
 	std::unique_ptr<google::protobuf::Arena> m_arena;
 	_TyReqData* m_data{ nullptr };
 	net::_TyConnectionId m_connection_id{ -1 };

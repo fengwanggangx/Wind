@@ -1,10 +1,10 @@
-#include "CSimulatedTradingService.h"
+﻿#include "CSimulatedTradingService.h"
 
 #include <utility>
 
-CSimulatedTradingService::CSimulatedTradingService()
+CSimulatedTradingService::CSimulatedTradingService(std::int64_t initialBalance, std::uint64_t accountId) : m_accountId(accountId)
 {
-	m_account.m_balance = 1000000000;
+	m_account.m_balance = initialBalance;
 	m_account.m_available = m_account.m_balance;
 }
 
@@ -16,8 +16,10 @@ COrderSubmitResult CSimulatedTradingService::Submit(const COrderIntent& intent)
 	}
 	CSimulatedOrder order;
 	order.m_intent = intent;
-	order.m_clientOrderId = m_nextClientOrderId.fetch_add(1);
-	order.m_orderId = m_nextOrderId.fetch_add(1);
+	static std::atomic_uint64_t nextClientOrderId{ 1 };
+	order.m_clientOrderId = nextClientOrderId.fetch_add(1);
+	static std::atomic_uint64_t nextOrderId{ 1 };
+	order.m_orderId = nextOrderId.fetch_add(1);
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
 		m_orders.emplace(order.m_orderId, order);
@@ -30,6 +32,7 @@ COrderSubmitResult CSimulatedTradingService::Submit(const COrderIntent& intent)
 	if (nullptr != handler)
 	{
 		COrderEvent event;
+		event.m_accountId = m_accountId;
 		event.m_strategyId = intent.m_strategyId;
 		event.m_signalId = intent.m_signalId;
 		event.m_clientOrderId = order.m_clientOrderId;
@@ -58,6 +61,7 @@ bool CSimulatedTradingService::Cancel(_TyStrategyId strategyId, _TyOrderId order
 			return false;
 		}
 		iter->second.m_status = OrderStatus::Cancelled;
+		event.m_accountId = m_accountId;
 		event.m_strategyId = strategyId;
 		event.m_signalId = iter->second.m_intent.m_signalId;
 		event.m_clientOrderId = iter->second.m_clientOrderId;
@@ -109,4 +113,17 @@ void CSimulatedTradingService::Stop()
 std::string CSimulatedTradingService::MakePositionKey(const CSecurity& security)
 {
 	return security.String();
+}
+
+bool CSimulatedTradingService::HasActiveOrders() const
+{
+	std::lock_guard<std::mutex> lock(m_mtx_state);
+	for (const auto& item : m_orders)
+	{
+		if ((OrderStatus::Accepted == item.second.m_status) || (OrderStatus::PartiallyFilled == item.second.m_status))
+		{
+			return true;
+		}
+	}
+	return false;
 }

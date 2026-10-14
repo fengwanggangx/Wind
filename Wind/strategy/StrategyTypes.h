@@ -1,4 +1,4 @@
-#ifndef WIND_STRATEGY_STRATEGYTYPES_H
+﻿#ifndef WIND_STRATEGY_STRATEGYTYPES_H
 #define WIND_STRATEGY_STRATEGYTYPES_H
 
 #include "../request/MarketTypes.h"
@@ -77,6 +77,7 @@ enum class LogLevel
 
 struct CStrategyConfig
 {
+	std::uint64_t m_accountId{ 1 };
 	_TyStrategyId m_router_id{ 0 };
 	std::string m_strType;
 	std::string m_strName;
@@ -90,6 +91,7 @@ struct CStrategyConfig
 
 struct COrderIntent
 {
+	std::uint64_t m_accountId{ 1 };
 	_TyStrategyId m_strategyId{ 0 };
 	_TySignalId m_signalId{ 0 };
 	CSecurity m_security;
@@ -114,6 +116,7 @@ struct COrderSubmitResult
 
 struct COrderEvent
 {
+	std::uint64_t m_accountId{ 1 };
 	_TyStrategyId m_strategyId{ 0 };
 	_TySignalId m_signalId{ 0 };
 	_TyClientOrderId m_clientOrderId{ 0 };
@@ -128,6 +131,7 @@ struct COrderEvent
 
 struct CTradeEvent
 {
+	std::uint64_t m_accountId{ 1 };
 	_TyStrategyId m_strategyId{ 0 };
 	_TySignalId m_signalId{ 0 };
 	_TyClientOrderId m_clientOrderId{ 0 };

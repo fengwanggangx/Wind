@@ -1,4 +1,4 @@
-#include "request.h"
+﻿#include "request.h"
 
 #include "../common/utility.h"
 #include "request.pb.h"
@@ -188,4 +188,24 @@ std::optional<std::pair<int, std::string>> CRequest::GetErrorInfo() const
 	int nCode = 0;
 	utility::to_number(strErrorCode, nCode);
 	return std::pair<int, std::string>{ nCode, GetReturnData("error_message") };
+}
+
+void CRequest::SetData(const request::TradingAccountInfo& value)
+{
+	m_data->mutable_account()->CopyFrom(value);
+}
+
+void CRequest::SetData(const request::TradingAccountList& value)
+{
+	m_data->mutable_account_list()->CopyFrom(value);
+}
+
+void CRequest::SetData(const request::TradingAccountSnapshot& value)
+{
+	m_data->mutable_account_snapshot()->CopyFrom(value);
+}
+
+void CRequest::SetData(const request::TradingAccountLogs& value)
+{
+	m_data->mutable_account_logs()->CopyFrom(value);
 }

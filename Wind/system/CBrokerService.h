@@ -1,14 +1,14 @@
-#ifndef WIND_SYSTEM_CBROKERSERVICE_H
+﻿#ifndef WIND_SYSTEM_CBROKERSERVICE_H
 #define WIND_SYSTEM_CBROKERSERVICE_H
 
-#include "CSubscriptionMgr.h"
-#include "../request/MarketTypes.h"
 #include "../network/common_net.h"
+#include "../request/MarketTypes.h"
 #include "../request/request.h"
+#include "CSubscriptionMgr.h"
 
-#include <functional>
 #include <atomic>
 #include <chrono>
+#include <functional>
 #include <mutex>
 #include <string>
 #include <unordered_map>
@@ -26,7 +26,7 @@ namespace net
 
 class CBrokerService final
 {
-  private:
+	private:
 	struct PendingSubscription
 	{
 		net::_TyConnectionId m_router_id{ -1 };
@@ -50,14 +50,14 @@ class CBrokerService final
 		std::vector<CPendingQueryClient> m_clients;
 	};
 
-  public:
+	public:
 	CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession, CStrategyEngine* pStrategyEngine);
 	CBrokerService(const CBrokerService&) = delete;
 	CBrokerService& operator=(const CBrokerService&) = delete;
 
 	bool Initialize();
 
-  private:
+	private:
 	int OnNetEvent(const net::CNetEvent& ev);
 	void OnClientRequest(net::_TyConnectionId id, const CRequest& req);
 	bool HandleAuth(net::_TyConnectionId id, const CRequest& req);
@@ -66,6 +66,7 @@ class CBrokerService final
 	bool HandleMarketQuery(net::_TyConnectionId id, const CRequest& req);
 	bool HandleHeartbeat(net::_TyConnectionId id, const CRequest& req);
 	bool HandleStrategy(net::_TyConnectionId id, const CRequest& req);
+	bool HandleAccount(net::_TyConnectionId id, const CRequest& req);
 
 	int HandleDisconnected(net::_TyConnectionId id);
 	bool HandleReAuth(const CRequest& req);
@@ -77,7 +78,7 @@ class CBrokerService final
 	void FailPendingQueries(const std::string& strReason);
 	bool RouteQueryRequest(const CRequest& response);
 
-private:
+	private:
 	bool IsAuthenticated(net::_TyConnectionId id) const;
 	CQuoteInfo GetQuoteInfo(const CRequest& req) const;
 	void SendSubscriptionResponse(net::_TyConnectionId id, _TyRequestId requestId, bool bAccepted, const std::string& strReason) const;
@@ -87,20 +88,22 @@ private:
 	void SendResponse(const CRequest& req, int nErrorCode, const std::string& strMessage) const;
 	bool Login(const CRequest& req, std::string& strToken);
 
-  private:
+	private:
 	std::unordered_map<std::string, std::function<bool(net::_TyConnectionId, const CRequest&)>> m_handler;
 
 	mutable std::mutex m_mtx_state;
 	std::unordered_set<net::_TyConnectionId> m_auth_clients;
 	std::unordered_map<std::string, std::chrono::steady_clock::time_point> m_client_tokens;
 
+	std::unordered_map<net::_TyConnectionId, std::string> m_clientUsers;
+	std::unordered_map<std::string, std::string> m_tokenUsers;
 	CSubscriptionMgr m_subscriptions;
 	std::unordered_map<std::string, std::vector<PendingSubscription>> m_pending_subscriptions;
 	std::unordered_map<_TyRequestId, CPendingQueryClient> m_pending_batch_subscriptions;
 	std::unordered_map<std::string, CPendingQuery> m_pending_queries;
 	std::atomic_uint64_t m_router_id{ std::uint64_t(1) << 63 };
 
-private:
+	private:
 	net::CTcpServer* m_pTcpServer{ nullptr };
 	CSession* m_pSession{ nullptr };
 	CStrategyEngine* m_pStrategyEngine{ nullptr };
