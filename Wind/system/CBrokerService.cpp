@@ -77,6 +77,7 @@ CBrokerService::CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession, 
 		{ "query_securities", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
 		{ "query_sectors", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
 		{ "query_sector_constituents", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
+		{ "trade_account_login", std::bind_front(&CBrokerService::HandleAccount, this) },
 		{ "account_query", std::bind_front(&CBrokerService::HandleAccount, this) },
 		{ "account_add", std::bind_front(&CBrokerService::HandleAccount, this) },
 		{ "account_modify", std::bind_front(&CBrokerService::HandleAccount, this) },
@@ -881,6 +882,11 @@ bool CBrokerService::HandleAuth(net::_TyConnectionId id, const CRequest& req)
 
 void CBrokerService::OnClientRequest(net::_TyConnectionId id, const CRequest& req)
 {
+	if ((CRequest::Type::TRADE_ACCOUNT_LOGIN == req.GetType()) || (CRequest::Type::TRADE_ACCOUNT_QUERY == req.GetType()))
+	{
+		HandleAccount(id, req);
+		return;
+	}
 	ExpirePendingQueries();
 	std::string strCmd = req.GetCmd();
 	const auto mIter = m_handler.find(strCmd);

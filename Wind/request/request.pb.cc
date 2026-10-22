@@ -92,7 +92,7 @@ struct TradingAccountLogDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradingAccountLogDefaultTypeInternal _TradingAccountLog_default_instance_;
 
-inline constexpr TradingAccountInfo::Impl_::Impl_(
+inline constexpr TradeAccountRecord::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : name_(
             &::google::protobuf::internal::fixed_address_empty_string,
@@ -118,7 +118,7 @@ inline constexpr TradingAccountInfo::Impl_::Impl_(
         _cached_size_{0} {}
 
 template <typename>
-PROTOBUF_CONSTEXPR TradingAccountInfo::TradingAccountInfo(::_pbi::ConstantInitialized)
+PROTOBUF_CONSTEXPR TradeAccountRecord::TradeAccountRecord(::_pbi::ConstantInitialized)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(_class_data_.base()),
 #else   // PROTOBUF_CUSTOM_VTABLE
@@ -126,16 +126,16 @@ PROTOBUF_CONSTEXPR TradingAccountInfo::TradingAccountInfo(::_pbi::ConstantInitia
 #endif  // PROTOBUF_CUSTOM_VTABLE
       _impl_(::_pbi::ConstantInitialized()) {
 }
-struct TradingAccountInfoDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR TradingAccountInfoDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~TradingAccountInfoDefaultTypeInternal() {}
+struct TradeAccountRecordDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR TradeAccountRecordDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~TradeAccountRecordDefaultTypeInternal() {}
   union {
-    TradingAccountInfo _instance;
+    TradeAccountRecord _instance;
   };
 };
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradingAccountInfoDefaultTypeInternal _TradingAccountInfo_default_instance_;
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradeAccountRecordDefaultTypeInternal _TradeAccountRecord_default_instance_;
 
 inline constexpr StrategySubscription::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -250,13 +250,13 @@ struct TradingAccountLogsDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradingAccountLogsDefaultTypeInternal _TradingAccountLogs_default_instance_;
 
-inline constexpr TradingAccountList::Impl_::Impl_(
+inline constexpr TradeAccountList::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : accounts_{},
         _cached_size_{0} {}
 
 template <typename>
-PROTOBUF_CONSTEXPR TradingAccountList::TradingAccountList(::_pbi::ConstantInitialized)
+PROTOBUF_CONSTEXPR TradeAccountList::TradeAccountList(::_pbi::ConstantInitialized)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(_class_data_.base()),
 #else   // PROTOBUF_CUSTOM_VTABLE
@@ -264,16 +264,16 @@ PROTOBUF_CONSTEXPR TradingAccountList::TradingAccountList(::_pbi::ConstantInitia
 #endif  // PROTOBUF_CUSTOM_VTABLE
       _impl_(::_pbi::ConstantInitialized()) {
 }
-struct TradingAccountListDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR TradingAccountListDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~TradingAccountListDefaultTypeInternal() {}
+struct TradeAccountListDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR TradeAccountListDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~TradeAccountListDefaultTypeInternal() {}
   union {
-    TradingAccountList _instance;
+    TradeAccountList _instance;
   };
 };
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradingAccountListDefaultTypeInternal _TradingAccountList_default_instance_;
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradeAccountListDefaultTypeInternal _TradeAccountList_default_instance_;
 
 inline constexpr StrategyInfo::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -344,8 +344,12 @@ inline constexpr RequestData::Impl_::Impl_(
         cmd_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
-        id_{::uint64_t{0u}},
+        error_message_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
         type_{static_cast< ::request::RequestType >(0)},
+        error_code_{0},
+        id_{::uint64_t{0u}},
         payload_{},
         _cached_size_{0},
         _oneof_case_{} {}
@@ -426,33 +430,33 @@ const ::uint32_t
         ~0u,  // no sizeof(Split)
         PROTOBUF_FIELD_OFFSET(::request::StrategyList, _impl_.strategies_),
         ~0u,  // no _has_bits_
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountInfo, _internal_metadata_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountRecord, _internal_metadata_),
         ~0u,  // no _extensions_
         ~0u,  // no _oneof_case_
         ~0u,  // no _weak_field_map_
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountInfo, _impl_.account_id_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountInfo, _impl_.name_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountInfo, _impl_.account_type_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountInfo, _impl_.initial_balance_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountInfo, _impl_.state_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountInfo, _impl_.number_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountInfo, _impl_.strategy_count_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountInfo, _impl_.last_error_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountInfo, _impl_.created_at_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountInfo, _impl_.updated_at_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountInfo, _impl_.is_default_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountRecord, _impl_.account_id_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountRecord, _impl_.name_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountRecord, _impl_.account_type_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountRecord, _impl_.initial_balance_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountRecord, _impl_.state_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountRecord, _impl_.number_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountRecord, _impl_.strategy_count_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountRecord, _impl_.last_error_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountRecord, _impl_.created_at_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountRecord, _impl_.updated_at_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountRecord, _impl_.is_default_),
         ~0u,  // no _has_bits_
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountList, _internal_metadata_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountList, _internal_metadata_),
         ~0u,  // no _extensions_
         ~0u,  // no _oneof_case_
         ~0u,  // no _weak_field_map_
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountList, _impl_.accounts_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountList, _impl_.accounts_),
         ~0u,  // no _has_bits_
         PROTOBUF_FIELD_OFFSET(::request::TradingAccountSnapshot, _internal_metadata_),
         ~0u,  // no _extensions_
@@ -526,6 +530,8 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::request::RequestData, _impl_.extra_),
         PROTOBUF_FIELD_OFFSET(::request::RequestData, _impl_.ret_),
         PROTOBUF_FIELD_OFFSET(::request::RequestData, _impl_.id_),
+        PROTOBUF_FIELD_OFFSET(::request::RequestData, _impl_.error_code_),
+        PROTOBUF_FIELD_OFFSET(::request::RequestData, _impl_.error_message_),
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
@@ -556,8 +562,8 @@ static const ::_pbi::MigrationSchema
         {11, 21, -1, sizeof(::request::StrategyInfo_ParametersEntry_DoNotUse)},
         {23, -1, -1, sizeof(::request::StrategyInfo)},
         {40, -1, -1, sizeof(::request::StrategyList)},
-        {49, -1, -1, sizeof(::request::TradingAccountInfo)},
-        {68, -1, -1, sizeof(::request::TradingAccountList)},
+        {49, -1, -1, sizeof(::request::TradeAccountRecord)},
+        {68, -1, -1, sizeof(::request::TradeAccountList)},
         {77, -1, -1, sizeof(::request::TradingAccountSnapshot)},
         {91, -1, -1, sizeof(::request::TradingAccountLog)},
         {103, -1, -1, sizeof(::request::TradingAccountLogs)},
@@ -570,8 +576,8 @@ static const ::_pb::Message* const file_default_instances[] = {
     &::request::_StrategyInfo_ParametersEntry_DoNotUse_default_instance_._instance,
     &::request::_StrategyInfo_default_instance_._instance,
     &::request::_StrategyList_default_instance_._instance,
-    &::request::_TradingAccountInfo_default_instance_._instance,
-    &::request::_TradingAccountList_default_instance_._instance,
+    &::request::_TradeAccountRecord_default_instance_._instance,
+    &::request::_TradeAccountList_default_instance_._instance,
     &::request::_TradingAccountSnapshot_default_instance_._instance,
     &::request::_TradingAccountLog_default_instance_._instance,
     &::request::_TradingAccountLogs_default_instance_._instance,
@@ -593,71 +599,74 @@ const char descriptor_table_protodef_request_2eproto[] ABSL_ATTRIBUTE_SECTION_VA
     "(\010\022\017\n\007enabled\030\010 \001(\010\022\022\n\naccount_id\030\t \001(\004\032"
     "1\n\017ParametersEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value"
     "\030\002 \001(\t:\0028\001\"9\n\014StrategyList\022)\n\nstrategies"
-    "\030\001 \003(\0132\025.request.StrategyInfo\"\247\002\n\022Tradin"
-    "gAccountInfo\022\022\n\naccount_id\030\001 \001(\004\022\014\n\004name"
+    "\030\001 \003(\0132\025.request.StrategyInfo\"\247\002\n\022TradeA"
+    "ccountRecord\022\022\n\naccount_id\030\001 \001(\004\022\014\n\004name"
     "\030\002 \001(\t\0221\n\014account_type\030\003 \001(\0162\033.request.T"
     "radingAccountType\022\027\n\017initial_balance\030\004 \001"
     "(\003\022+\n\005state\030\005 \001(\0162\034.request.TradingAccou"
     "ntState\022\016\n\006number\030\006 \001(\t\022\026\n\016strategy_coun"
     "t\030\007 \001(\r\022\022\n\nlast_error\030\010 \001(\t\022\022\n\ncreated_a"
     "t\030\t \001(\t\022\022\n\nupdated_at\030\n \001(\t\022\022\n\nis_defaul"
-    "t\030\013 \001(\010\"C\n\022TradingAccountList\022-\n\010account"
-    "s\030\001 \003(\0132\033.request.TradingAccountInfo\"\224\001\n"
-    "\026TradingAccountSnapshot\022\022\n\naccount_id\030\001 "
-    "\001(\004\022\017\n\007balance\030\002 \001(\003\022\021\n\tavailable\030\003 \001(\003\022"
-    "\016\n\006frozen\030\004 \001(\003\022\032\n\022available_snapshot\030\005 "
-    "\001(\010\022\026\n\016server_time_ms\030\006 \001(\003\"Q\n\021TradingAc"
-    "countLog\022\014\n\004time\030\001 \001(\t\022\r\n\005actor\030\002 \001(\t\022\016\n"
-    "\006action\030\003 \001(\t\022\017\n\007message\030\004 \001(\t\"R\n\022Tradin"
-    "gAccountLogs\022\022\n\naccount_id\030\001 \001(\004\022(\n\004logs"
-    "\030\002 \003(\0132\032.request.TradingAccountLog\"\243\014\n\013R"
-    "equestData\022\"\n\004type\030\001 \001(\0162\024.request.Reque"
-    "stType\022\013\n\003cmd\030\002 \001(\t\022.\n\005extra\030\003 \003(\0132\037.req"
-    "uest.RequestData.ExtraEntry\022*\n\003ret\030\004 \003(\013"
-    "2\035.request.RequestData.RetEntry\022\n\n\002id\030\005 "
-    "\001(\004\0227\n\014auth_request\030\n \001(\0132\037.hqmarket.mar"
-    "ket.v1.AuthRequestH\000\022A\n\021subscribe_reques"
-    "t\030\013 \001(\0132$.hqmarket.market.v1.SubscribeRe"
-    "questH\000\022E\n\023unsubscribe_request\030\014 \001(\0132&.h"
-    "qmarket.market.v1.UnsubscribeRequestH\000\022\?"
-    "\n\020subscription_ack\030\r \001(\0132#.hqmarket.mark"
-    "et.v1.SubscriptionAckH\000\022.\n\005quote\030\016 \001(\0132\035"
-    ".hqmarket.market.v1.QuoteDataH\000\022.\n\005depth"
-    "\030\017 \001(\0132\035.hqmarket.market.v1.DepthDataH\000\022"
-    ".\n\005trade\030\020 \001(\0132\035.hqmarket.market.v1.Trad"
-    "eDataH\000\022*\n\003bar\030\021 \001(\0132\033.hqmarket.market.v"
-    "1.BarDataH\000\022=\n\rmarket_status\030\022 \001(\0132$.hqm"
-    "arket.market.v1.MarketStatusDataH\000\022A\n\017pr"
-    "ovider_status\030\023 \001(\0132&.hqmarket.market.v1"
-    ".ProviderStatusDataH\000\0229\n\rquery_request\030\024"
-    " \001(\0132 .hqmarket.market.v1.QueryRequestH\000"
-    "\022;\n\016query_response\030\025 \001(\0132!.hqmarket.mark"
-    "et.v1.QueryResponseH\000\022)\n\010strategy\030\026 \001(\0132"
-    "\025.request.StrategyInfoH\000\022.\n\rstrategy_lis"
-    "t\030\027 \001(\0132\025.request.StrategyListH\000\0229\n\rsecu"
-    "rity_list\030\031 \001(\0132 .hqmarket.market.v1.Sec"
-    "urityListH\000\0225\n\013sector_list\030\033 \001(\0132\036.hqmar"
-    "ket.market.v1.SectorListH\000\022E\n\023sector_con"
-    "stituents\030\035 \001(\0132&.hqmarket.market.v1.Sec"
-    "torConstituentsH\000\022.\n\007account\030\036 \001(\0132\033.req"
-    "uest.TradingAccountInfoH\000\0223\n\014account_lis"
-    "t\030\037 \001(\0132\033.request.TradingAccountListH\000\022;"
-    "\n\020account_snapshot\030  \001(\0132\037.request.Tradi"
-    "ngAccountSnapshotH\000\0223\n\014account_logs\030! \001("
-    "\0132\033.request.TradingAccountLogsH\000\032,\n\nExtr"
-    "aEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\032*"
-    "\n\010RetEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\002"
-    "8\001B\t\n\007payloadJ\004\010\030\020\031J\004\010\032\020\033J\004\010\034\020\035R\025securit"
-    "y_list_requestR\026security_list_responseR\023"
-    "sector_list_requestR\033sector_constituents"
-    "_request*\207\001\n\013RequestType\022\013\n\007UNKNOWN\020\000\022\016\n"
-    "\nQUERY_AUTH\020\001\022\022\n\016QUERY_USERINFO\020\002\022\017\n\013UPD"
-    "ATE_AUTH\020\003\022\014\n\010STRATEGY\020\004\022\014\n\010HQMARKET\020\005\022\r"
-    "\n\tHEARTBEAT\020\006\022\013\n\007ACCOUNT\020\007*C\n\022TradingAcc"
-    "ountType\022\025\n\021ACCOUNT_SIMULATED\020\000\022\026\n\022ACCOU"
-    "NT_PRODUCTION\020\001*Y\n\023TradingAccountState\022\030"
-    "\n\024ACCOUNT_DISCONNECTED\020\000\022\025\n\021ACCOUNT_CONN"
-    "ECTED\020\001\022\021\n\rACCOUNT_ERROR\020\002b\006proto3"
+    "t\030\013 \001(\010\"A\n\020TradeAccountList\022-\n\010accounts\030"
+    "\001 \003(\0132\033.request.TradeAccountRecord\"\224\001\n\026T"
+    "radingAccountSnapshot\022\022\n\naccount_id\030\001 \001("
+    "\004\022\017\n\007balance\030\002 \001(\003\022\021\n\tavailable\030\003 \001(\003\022\016\n"
+    "\006frozen\030\004 \001(\003\022\032\n\022available_snapshot\030\005 \001("
+    "\010\022\026\n\016server_time_ms\030\006 \001(\003\"Q\n\021TradingAcco"
+    "untLog\022\014\n\004time\030\001 \001(\t\022\r\n\005actor\030\002 \001(\t\022\016\n\006a"
+    "ction\030\003 \001(\t\022\017\n\007message\030\004 \001(\t\"R\n\022TradingA"
+    "ccountLogs\022\022\n\naccount_id\030\001 \001(\004\022(\n\004logs\030\002"
+    " \003(\0132\032.request.TradingAccountLog\"\314\014\n\013Req"
+    "uestData\022\"\n\004type\030\001 \001(\0162\024.request.Request"
+    "Type\022\013\n\003cmd\030\002 \001(\t\022.\n\005extra\030\003 \003(\0132\037.reque"
+    "st.RequestData.ExtraEntry\022*\n\003ret\030\004 \003(\0132\035"
+    ".request.RequestData.RetEntry\022\n\n\002id\030\005 \001("
+    "\004\022\022\n\nerror_code\030\006 \001(\005\022\025\n\rerror_message\030\007"
+    " \001(\t\0227\n\014auth_request\030\n \001(\0132\037.hqmarket.ma"
+    "rket.v1.AuthRequestH\000\022A\n\021subscribe_reque"
+    "st\030\013 \001(\0132$.hqmarket.market.v1.SubscribeR"
+    "equestH\000\022E\n\023unsubscribe_request\030\014 \001(\0132&."
+    "hqmarket.market.v1.UnsubscribeRequestH\000\022"
+    "\?\n\020subscription_ack\030\r \001(\0132#.hqmarket.mar"
+    "ket.v1.SubscriptionAckH\000\022.\n\005quote\030\016 \001(\0132"
+    "\035.hqmarket.market.v1.QuoteDataH\000\022.\n\005dept"
+    "h\030\017 \001(\0132\035.hqmarket.market.v1.DepthDataH\000"
+    "\022.\n\005trade\030\020 \001(\0132\035.hqmarket.market.v1.Tra"
+    "deDataH\000\022*\n\003bar\030\021 \001(\0132\033.hqmarket.market."
+    "v1.BarDataH\000\022=\n\rmarket_status\030\022 \001(\0132$.hq"
+    "market.market.v1.MarketStatusDataH\000\022A\n\017p"
+    "rovider_status\030\023 \001(\0132&.hqmarket.market.v"
+    "1.ProviderStatusDataH\000\0229\n\rquery_request\030"
+    "\024 \001(\0132 .hqmarket.market.v1.QueryRequestH"
+    "\000\022;\n\016query_response\030\025 \001(\0132!.hqmarket.mar"
+    "ket.v1.QueryResponseH\000\022)\n\010strategy\030\026 \001(\013"
+    "2\025.request.StrategyInfoH\000\022.\n\rstrategy_li"
+    "st\030\027 \001(\0132\025.request.StrategyListH\000\0229\n\rsec"
+    "urity_list\030\031 \001(\0132 .hqmarket.market.v1.Se"
+    "curityListH\000\0225\n\013sector_list\030\033 \001(\0132\036.hqma"
+    "rket.market.v1.SectorListH\000\022E\n\023sector_co"
+    "nstituents\030\035 \001(\0132&.hqmarket.market.v1.Se"
+    "ctorConstituentsH\000\022.\n\007account\030\036 \001(\0132\033.re"
+    "quest.TradeAccountRecordH\000\0221\n\014account_li"
+    "st\030\037 \001(\0132\031.request.TradeAccountListH\000\022;\n"
+    "\020account_snapshot\030  \001(\0132\037.request.Tradin"
+    "gAccountSnapshotH\000\0223\n\014account_logs\030! \001(\013"
+    "2\033.request.TradingAccountLogsH\000\032,\n\nExtra"
+    "Entry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\032*\n"
+    "\010RetEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028"
+    "\001B\t\n\007payloadJ\004\010\030\020\031J\004\010\032\020\033J\004\010\034\020\035R\025security"
+    "_list_requestR\026security_list_responseR\023s"
+    "ector_list_requestR\033sector_constituents_"
+    "request*\271\001\n\013RequestType\022\013\n\007UNKNOWN\020\000\022\016\n\n"
+    "QUERY_AUTH\020\001\022\022\n\016QUERY_USERINFO\020\002\022\017\n\013UPDA"
+    "TE_AUTH\020\003\022\014\n\010STRATEGY\020\004\022\014\n\010HQMARKET\020\005\022\r\n"
+    "\tHEARTBEAT\020\006\022\013\n\007ACCOUNT\020\007\022\027\n\023TRADE_ACCOU"
+    "NT_LOGIN\020\010\022\027\n\023TRADE_ACCOUNT_QUERY\020\t*C\n\022T"
+    "radingAccountType\022\025\n\021ACCOUNT_SIMULATED\020\000"
+    "\022\026\n\022ACCOUNT_PRODUCTION\020\001*Y\n\023TradingAccou"
+    "ntState\022\030\n\024ACCOUNT_DISCONNECTED\020\000\022\025\n\021ACC"
+    "OUNT_CONNECTED\020\001\022\021\n\rACCOUNT_ERROR\020\002b\006pro"
+    "to3"
 };
 static const ::_pbi::DescriptorTable* const descriptor_table_request_2eproto_deps[1] =
     {
@@ -667,7 +676,7 @@ static ::absl::once_flag descriptor_table_request_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_request_2eproto = {
     false,
     false,
-    3074,
+    3163,
     descriptor_table_protodef_request_2eproto,
     "request.proto",
     &descriptor_table_request_2eproto_once,
@@ -686,9 +695,9 @@ const ::google::protobuf::EnumDescriptor* RequestType_descriptor() {
   return file_level_enum_descriptors_request_2eproto[0];
 }
 PROTOBUF_CONSTINIT const uint32_t RequestType_internal_data_[] = {
-    524288u, 0u, };
+    655360u, 0u, };
 bool RequestType_IsValid(int value) {
-  return 0 <= value && value <= 7;
+  return 0 <= value && value <= 9;
 }
 const ::google::protobuf::EnumDescriptor* TradingAccountType_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_request_2eproto);
@@ -1833,22 +1842,22 @@ void StrategyList::InternalSwap(StrategyList* PROTOBUF_RESTRICT other) {
 }
 // ===================================================================
 
-class TradingAccountInfo::_Internal {
+class TradeAccountRecord::_Internal {
  public:
 };
 
-TradingAccountInfo::TradingAccountInfo(::google::protobuf::Arena* arena)
+TradeAccountRecord::TradeAccountRecord(::google::protobuf::Arena* arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, _class_data_.base()) {
 #else   // PROTOBUF_CUSTOM_VTABLE
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:request.TradingAccountInfo)
+  // @@protoc_insertion_point(arena_constructor:request.TradeAccountRecord)
 }
-inline PROTOBUF_NDEBUG_INLINE TradingAccountInfo::Impl_::Impl_(
+inline PROTOBUF_NDEBUG_INLINE TradeAccountRecord::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
-    const Impl_& from, const ::request::TradingAccountInfo& from_msg)
+    const Impl_& from, const ::request::TradeAccountRecord& from_msg)
       : name_(arena, from.name_),
         number_(arena, from.number_),
         last_error_(arena, from.last_error_),
@@ -1856,15 +1865,15 @@ inline PROTOBUF_NDEBUG_INLINE TradingAccountInfo::Impl_::Impl_(
         updated_at_(arena, from.updated_at_),
         _cached_size_{0} {}
 
-TradingAccountInfo::TradingAccountInfo(
+TradeAccountRecord::TradeAccountRecord(
     ::google::protobuf::Arena* arena,
-    const TradingAccountInfo& from)
+    const TradeAccountRecord& from)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, _class_data_.base()) {
 #else   // PROTOBUF_CUSTOM_VTABLE
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  TradingAccountInfo* const _this = this;
+  TradeAccountRecord* const _this = this;
   (void)_this;
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
@@ -1877,9 +1886,9 @@ TradingAccountInfo::TradingAccountInfo(
                offsetof(Impl_, account_id_) +
                sizeof(Impl_::is_default_));
 
-  // @@protoc_insertion_point(copy_constructor:request.TradingAccountInfo)
+  // @@protoc_insertion_point(copy_constructor:request.TradeAccountRecord)
 }
-inline PROTOBUF_NDEBUG_INLINE TradingAccountInfo::Impl_::Impl_(
+inline PROTOBUF_NDEBUG_INLINE TradeAccountRecord::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
       : name_(arena),
@@ -1889,7 +1898,7 @@ inline PROTOBUF_NDEBUG_INLINE TradingAccountInfo::Impl_::Impl_(
         updated_at_(arena),
         _cached_size_{0} {}
 
-inline void TradingAccountInfo::SharedCtor(::_pb::Arena* arena) {
+inline void TradeAccountRecord::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
   ::memset(reinterpret_cast<char *>(&_impl_) +
                offsetof(Impl_, account_id_),
@@ -1898,12 +1907,12 @@ inline void TradingAccountInfo::SharedCtor(::_pb::Arena* arena) {
                offsetof(Impl_, account_id_) +
                sizeof(Impl_::is_default_));
 }
-TradingAccountInfo::~TradingAccountInfo() {
-  // @@protoc_insertion_point(destructor:request.TradingAccountInfo)
+TradeAccountRecord::~TradeAccountRecord() {
+  // @@protoc_insertion_point(destructor:request.TradeAccountRecord)
   SharedDtor(*this);
 }
-inline void TradingAccountInfo::SharedDtor(MessageLite& self) {
-  TradingAccountInfo& this_ = static_cast<TradingAccountInfo&>(self);
+inline void TradeAccountRecord::SharedDtor(MessageLite& self) {
+  TradeAccountRecord& this_ = static_cast<TradeAccountRecord&>(self);
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
   this_._impl_.name_.Destroy();
@@ -1914,43 +1923,43 @@ inline void TradingAccountInfo::SharedDtor(MessageLite& self) {
   this_._impl_.~Impl_();
 }
 
-inline void* TradingAccountInfo::PlacementNew_(const void*, void* mem,
+inline void* TradeAccountRecord::PlacementNew_(const void*, void* mem,
                                         ::google::protobuf::Arena* arena) {
-  return ::new (mem) TradingAccountInfo(arena);
+  return ::new (mem) TradeAccountRecord(arena);
 }
-constexpr auto TradingAccountInfo::InternalNewImpl_() {
-  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(TradingAccountInfo),
-                                            alignof(TradingAccountInfo));
+constexpr auto TradeAccountRecord::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(TradeAccountRecord),
+                                            alignof(TradeAccountRecord));
 }
 PROTOBUF_CONSTINIT
 PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::google::protobuf::internal::ClassDataFull TradingAccountInfo::_class_data_ = {
+const ::google::protobuf::internal::ClassDataFull TradeAccountRecord::_class_data_ = {
     ::google::protobuf::internal::ClassData{
-        &_TradingAccountInfo_default_instance_._instance,
+        &_TradeAccountRecord_default_instance_._instance,
         &_table_.header,
         nullptr,  // OnDemandRegisterArenaDtor
         nullptr,  // IsInitialized
-        &TradingAccountInfo::MergeImpl,
-        ::google::protobuf::Message::GetNewImpl<TradingAccountInfo>(),
+        &TradeAccountRecord::MergeImpl,
+        ::google::protobuf::Message::GetNewImpl<TradeAccountRecord>(),
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-        &TradingAccountInfo::SharedDtor,
-        ::google::protobuf::Message::GetClearImpl<TradingAccountInfo>(), &TradingAccountInfo::ByteSizeLong,
-            &TradingAccountInfo::_InternalSerialize,
+        &TradeAccountRecord::SharedDtor,
+        ::google::protobuf::Message::GetClearImpl<TradeAccountRecord>(), &TradeAccountRecord::ByteSizeLong,
+            &TradeAccountRecord::_InternalSerialize,
 #endif  // PROTOBUF_CUSTOM_VTABLE
-        PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_._cached_size_),
+        PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_._cached_size_),
         false,
     },
-    &TradingAccountInfo::kDescriptorMethods,
+    &TradeAccountRecord::kDescriptorMethods,
     &descriptor_table_request_2eproto,
     nullptr,  // tracker
 };
-const ::google::protobuf::internal::ClassData* TradingAccountInfo::GetClassData() const {
+const ::google::protobuf::internal::ClassData* TradeAccountRecord::GetClassData() const {
   ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
   ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
   return _class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<4, 11, 0, 83, 2> TradingAccountInfo::_table_ = {
+const ::_pbi::TcParseTable<4, 11, 0, 83, 2> TradeAccountRecord::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
@@ -1965,43 +1974,43 @@ const ::_pbi::TcParseTable<4, 11, 0, 83, 2> TradingAccountInfo::_table_ = {
     nullptr,  // post_loop_handler
     ::_pbi::TcParser::GenericFallback,  // fallback
     #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-    ::_pbi::TcParser::GetTable<::request::TradingAccountInfo>(),  // to_prefetch
+    ::_pbi::TcParser::GetTable<::request::TradeAccountRecord>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     {::_pbi::TcParser::MiniParse, {}},
     // uint64 account_id = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(TradingAccountInfo, _impl_.account_id_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.account_id_)}},
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(TradeAccountRecord, _impl_.account_id_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.account_id_)}},
     // string name = 2;
     {::_pbi::TcParser::FastUS1,
-     {18, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.name_)}},
+     {18, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.name_)}},
     // .request.TradingAccountType account_type = 3;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(TradingAccountInfo, _impl_.account_type_), 63>(),
-     {24, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.account_type_)}},
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(TradeAccountRecord, _impl_.account_type_), 63>(),
+     {24, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.account_type_)}},
     // int64 initial_balance = 4;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(TradingAccountInfo, _impl_.initial_balance_), 63>(),
-     {32, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.initial_balance_)}},
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(TradeAccountRecord, _impl_.initial_balance_), 63>(),
+     {32, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.initial_balance_)}},
     // .request.TradingAccountState state = 5;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(TradingAccountInfo, _impl_.state_), 63>(),
-     {40, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.state_)}},
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(TradeAccountRecord, _impl_.state_), 63>(),
+     {40, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.state_)}},
     // string number = 6;
     {::_pbi::TcParser::FastUS1,
-     {50, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.number_)}},
+     {50, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.number_)}},
     // uint32 strategy_count = 7;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(TradingAccountInfo, _impl_.strategy_count_), 63>(),
-     {56, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.strategy_count_)}},
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(TradeAccountRecord, _impl_.strategy_count_), 63>(),
+     {56, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.strategy_count_)}},
     // string last_error = 8;
     {::_pbi::TcParser::FastUS1,
-     {66, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.last_error_)}},
+     {66, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.last_error_)}},
     // string created_at = 9;
     {::_pbi::TcParser::FastUS1,
-     {74, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.created_at_)}},
+     {74, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.created_at_)}},
     // string updated_at = 10;
     {::_pbi::TcParser::FastUS1,
-     {82, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.updated_at_)}},
+     {82, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.updated_at_)}},
     // bool is_default = 11;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(TradingAccountInfo, _impl_.is_default_), 63>(),
-     {88, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.is_default_)}},
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(TradeAccountRecord, _impl_.is_default_), 63>(),
+     {88, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.is_default_)}},
     {::_pbi::TcParser::MiniParse, {}},
     {::_pbi::TcParser::MiniParse, {}},
     {::_pbi::TcParser::MiniParse, {}},
@@ -2010,43 +2019,43 @@ const ::_pbi::TcParseTable<4, 11, 0, 83, 2> TradingAccountInfo::_table_ = {
     65535, 65535
   }}, {{
     // uint64 account_id = 1;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.account_id_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.account_id_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUInt64)},
     // string name = 2;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.name_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.name_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // .request.TradingAccountType account_type = 3;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.account_type_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.account_type_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
     // int64 initial_balance = 4;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.initial_balance_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.initial_balance_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
     // .request.TradingAccountState state = 5;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.state_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.state_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
     // string number = 6;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.number_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.number_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // uint32 strategy_count = 7;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.strategy_count_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.strategy_count_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
     // string last_error = 8;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.last_error_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.last_error_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // string created_at = 9;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.created_at_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.created_at_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // string updated_at = 10;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.updated_at_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.updated_at_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // bool is_default = 11;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.is_default_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.is_default_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kBool)},
   }},
   // no aux_entries
   {{
     "\32\0\4\0\0\0\6\0\12\12\12\0\0\0\0\0"
-    "request.TradingAccountInfo"
+    "request.TradeAccountRecord"
     "name"
     "number"
     "last_error"
@@ -2055,8 +2064,8 @@ const ::_pbi::TcParseTable<4, 11, 0, 83, 2> TradingAccountInfo::_table_ = {
   }},
 };
 
-PROTOBUF_NOINLINE void TradingAccountInfo::Clear() {
-// @@protoc_insertion_point(message_clear_start:request.TradingAccountInfo)
+PROTOBUF_NOINLINE void TradeAccountRecord::Clear() {
+// @@protoc_insertion_point(message_clear_start:request.TradeAccountRecord)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -2074,17 +2083,17 @@ PROTOBUF_NOINLINE void TradingAccountInfo::Clear() {
 }
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-        ::uint8_t* TradingAccountInfo::_InternalSerialize(
+        ::uint8_t* TradeAccountRecord::_InternalSerialize(
             const MessageLite& base, ::uint8_t* target,
             ::google::protobuf::io::EpsCopyOutputStream* stream) {
-          const TradingAccountInfo& this_ = static_cast<const TradingAccountInfo&>(base);
+          const TradeAccountRecord& this_ = static_cast<const TradeAccountRecord&>(base);
 #else   // PROTOBUF_CUSTOM_VTABLE
-        ::uint8_t* TradingAccountInfo::_InternalSerialize(
+        ::uint8_t* TradeAccountRecord::_InternalSerialize(
             ::uint8_t* target,
             ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-          const TradingAccountInfo& this_ = *this;
+          const TradeAccountRecord& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-          // @@protoc_insertion_point(serialize_to_array_start:request.TradingAccountInfo)
+          // @@protoc_insertion_point(serialize_to_array_start:request.TradeAccountRecord)
           ::uint32_t cached_has_bits = 0;
           (void)cached_has_bits;
 
@@ -2099,7 +2108,7 @@ PROTOBUF_NOINLINE void TradingAccountInfo::Clear() {
           if (!this_._internal_name().empty()) {
             const std::string& _s = this_._internal_name();
             ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradingAccountInfo.name");
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradeAccountRecord.name");
             target = stream->WriteStringMaybeAliased(2, _s, target);
           }
 
@@ -2128,7 +2137,7 @@ PROTOBUF_NOINLINE void TradingAccountInfo::Clear() {
           if (!this_._internal_number().empty()) {
             const std::string& _s = this_._internal_number();
             ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradingAccountInfo.number");
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradeAccountRecord.number");
             target = stream->WriteStringMaybeAliased(6, _s, target);
           }
 
@@ -2143,7 +2152,7 @@ PROTOBUF_NOINLINE void TradingAccountInfo::Clear() {
           if (!this_._internal_last_error().empty()) {
             const std::string& _s = this_._internal_last_error();
             ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradingAccountInfo.last_error");
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradeAccountRecord.last_error");
             target = stream->WriteStringMaybeAliased(8, _s, target);
           }
 
@@ -2151,7 +2160,7 @@ PROTOBUF_NOINLINE void TradingAccountInfo::Clear() {
           if (!this_._internal_created_at().empty()) {
             const std::string& _s = this_._internal_created_at();
             ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradingAccountInfo.created_at");
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradeAccountRecord.created_at");
             target = stream->WriteStringMaybeAliased(9, _s, target);
           }
 
@@ -2159,7 +2168,7 @@ PROTOBUF_NOINLINE void TradingAccountInfo::Clear() {
           if (!this_._internal_updated_at().empty()) {
             const std::string& _s = this_._internal_updated_at();
             ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradingAccountInfo.updated_at");
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradeAccountRecord.updated_at");
             target = stream->WriteStringMaybeAliased(10, _s, target);
           }
 
@@ -2175,18 +2184,18 @@ PROTOBUF_NOINLINE void TradingAccountInfo::Clear() {
                 ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
                     this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
           }
-          // @@protoc_insertion_point(serialize_to_array_end:request.TradingAccountInfo)
+          // @@protoc_insertion_point(serialize_to_array_end:request.TradeAccountRecord)
           return target;
         }
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-        ::size_t TradingAccountInfo::ByteSizeLong(const MessageLite& base) {
-          const TradingAccountInfo& this_ = static_cast<const TradingAccountInfo&>(base);
+        ::size_t TradeAccountRecord::ByteSizeLong(const MessageLite& base) {
+          const TradeAccountRecord& this_ = static_cast<const TradeAccountRecord&>(base);
 #else   // PROTOBUF_CUSTOM_VTABLE
-        ::size_t TradingAccountInfo::ByteSizeLong() const {
-          const TradingAccountInfo& this_ = *this;
+        ::size_t TradeAccountRecord::ByteSizeLong() const {
+          const TradeAccountRecord& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-          // @@protoc_insertion_point(message_byte_size_start:request.TradingAccountInfo)
+          // @@protoc_insertion_point(message_byte_size_start:request.TradeAccountRecord)
           ::size_t total_size = 0;
 
           ::uint32_t cached_has_bits = 0;
@@ -2254,10 +2263,10 @@ PROTOBUF_NOINLINE void TradingAccountInfo::Clear() {
                                                      &this_._impl_._cached_size_);
         }
 
-void TradingAccountInfo::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
-  auto* const _this = static_cast<TradingAccountInfo*>(&to_msg);
-  auto& from = static_cast<const TradingAccountInfo&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:request.TradingAccountInfo)
+void TradeAccountRecord::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<TradeAccountRecord*>(&to_msg);
+  auto& from = static_cast<const TradeAccountRecord&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:request.TradeAccountRecord)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
@@ -2298,15 +2307,15 @@ void TradingAccountInfo::MergeImpl(::google::protobuf::MessageLite& to_msg, cons
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
-void TradingAccountInfo::CopyFrom(const TradingAccountInfo& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:request.TradingAccountInfo)
+void TradeAccountRecord::CopyFrom(const TradeAccountRecord& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:request.TradeAccountRecord)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 
-void TradingAccountInfo::InternalSwap(TradingAccountInfo* PROTOBUF_RESTRICT other) {
+void TradeAccountRecord::InternalSwap(TradeAccountRecord* PROTOBUF_RESTRICT other) {
   using std::swap;
   auto* arena = GetArena();
   ABSL_DCHECK_EQ(arena, other->GetArena());
@@ -2317,122 +2326,122 @@ void TradingAccountInfo::InternalSwap(TradingAccountInfo* PROTOBUF_RESTRICT othe
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.created_at_, &other->_impl_.created_at_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.updated_at_, &other->_impl_.updated_at_, arena);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.is_default_)
-      + sizeof(TradingAccountInfo::_impl_.is_default_)
-      - PROTOBUF_FIELD_OFFSET(TradingAccountInfo, _impl_.account_id_)>(
+      PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.is_default_)
+      + sizeof(TradeAccountRecord::_impl_.is_default_)
+      - PROTOBUF_FIELD_OFFSET(TradeAccountRecord, _impl_.account_id_)>(
           reinterpret_cast<char*>(&_impl_.account_id_),
           reinterpret_cast<char*>(&other->_impl_.account_id_));
 }
 
-::google::protobuf::Metadata TradingAccountInfo::GetMetadata() const {
+::google::protobuf::Metadata TradeAccountRecord::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================
 
-class TradingAccountList::_Internal {
+class TradeAccountList::_Internal {
  public:
 };
 
-TradingAccountList::TradingAccountList(::google::protobuf::Arena* arena)
+TradeAccountList::TradeAccountList(::google::protobuf::Arena* arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, _class_data_.base()) {
 #else   // PROTOBUF_CUSTOM_VTABLE
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:request.TradingAccountList)
+  // @@protoc_insertion_point(arena_constructor:request.TradeAccountList)
 }
-inline PROTOBUF_NDEBUG_INLINE TradingAccountList::Impl_::Impl_(
+inline PROTOBUF_NDEBUG_INLINE TradeAccountList::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
-    const Impl_& from, const ::request::TradingAccountList& from_msg)
+    const Impl_& from, const ::request::TradeAccountList& from_msg)
       : accounts_{visibility, arena, from.accounts_},
         _cached_size_{0} {}
 
-TradingAccountList::TradingAccountList(
+TradeAccountList::TradeAccountList(
     ::google::protobuf::Arena* arena,
-    const TradingAccountList& from)
+    const TradeAccountList& from)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, _class_data_.base()) {
 #else   // PROTOBUF_CUSTOM_VTABLE
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  TradingAccountList* const _this = this;
+  TradeAccountList* const _this = this;
   (void)_this;
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
 
-  // @@protoc_insertion_point(copy_constructor:request.TradingAccountList)
+  // @@protoc_insertion_point(copy_constructor:request.TradeAccountList)
 }
-inline PROTOBUF_NDEBUG_INLINE TradingAccountList::Impl_::Impl_(
+inline PROTOBUF_NDEBUG_INLINE TradeAccountList::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
       : accounts_{visibility, arena},
         _cached_size_{0} {}
 
-inline void TradingAccountList::SharedCtor(::_pb::Arena* arena) {
+inline void TradeAccountList::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
 }
-TradingAccountList::~TradingAccountList() {
-  // @@protoc_insertion_point(destructor:request.TradingAccountList)
+TradeAccountList::~TradeAccountList() {
+  // @@protoc_insertion_point(destructor:request.TradeAccountList)
   SharedDtor(*this);
 }
-inline void TradingAccountList::SharedDtor(MessageLite& self) {
-  TradingAccountList& this_ = static_cast<TradingAccountList&>(self);
+inline void TradeAccountList::SharedDtor(MessageLite& self) {
+  TradeAccountList& this_ = static_cast<TradeAccountList&>(self);
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
   this_._impl_.~Impl_();
 }
 
-inline void* TradingAccountList::PlacementNew_(const void*, void* mem,
+inline void* TradeAccountList::PlacementNew_(const void*, void* mem,
                                         ::google::protobuf::Arena* arena) {
-  return ::new (mem) TradingAccountList(arena);
+  return ::new (mem) TradeAccountList(arena);
 }
-constexpr auto TradingAccountList::InternalNewImpl_() {
+constexpr auto TradeAccountList::InternalNewImpl_() {
   constexpr auto arena_bits = ::google::protobuf::internal::EncodePlacementArenaOffsets({
-      PROTOBUF_FIELD_OFFSET(TradingAccountList, _impl_.accounts_) +
-          decltype(TradingAccountList::_impl_.accounts_)::
+      PROTOBUF_FIELD_OFFSET(TradeAccountList, _impl_.accounts_) +
+          decltype(TradeAccountList::_impl_.accounts_)::
               InternalGetArenaOffset(
                   ::google::protobuf::Message::internal_visibility()),
   });
   if (arena_bits.has_value()) {
     return ::google::protobuf::internal::MessageCreator::ZeroInit(
-        sizeof(TradingAccountList), alignof(TradingAccountList), *arena_bits);
+        sizeof(TradeAccountList), alignof(TradeAccountList), *arena_bits);
   } else {
-    return ::google::protobuf::internal::MessageCreator(&TradingAccountList::PlacementNew_,
-                                 sizeof(TradingAccountList),
-                                 alignof(TradingAccountList));
+    return ::google::protobuf::internal::MessageCreator(&TradeAccountList::PlacementNew_,
+                                 sizeof(TradeAccountList),
+                                 alignof(TradeAccountList));
   }
 }
 PROTOBUF_CONSTINIT
 PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::google::protobuf::internal::ClassDataFull TradingAccountList::_class_data_ = {
+const ::google::protobuf::internal::ClassDataFull TradeAccountList::_class_data_ = {
     ::google::protobuf::internal::ClassData{
-        &_TradingAccountList_default_instance_._instance,
+        &_TradeAccountList_default_instance_._instance,
         &_table_.header,
         nullptr,  // OnDemandRegisterArenaDtor
         nullptr,  // IsInitialized
-        &TradingAccountList::MergeImpl,
-        ::google::protobuf::Message::GetNewImpl<TradingAccountList>(),
+        &TradeAccountList::MergeImpl,
+        ::google::protobuf::Message::GetNewImpl<TradeAccountList>(),
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-        &TradingAccountList::SharedDtor,
-        ::google::protobuf::Message::GetClearImpl<TradingAccountList>(), &TradingAccountList::ByteSizeLong,
-            &TradingAccountList::_InternalSerialize,
+        &TradeAccountList::SharedDtor,
+        ::google::protobuf::Message::GetClearImpl<TradeAccountList>(), &TradeAccountList::ByteSizeLong,
+            &TradeAccountList::_InternalSerialize,
 #endif  // PROTOBUF_CUSTOM_VTABLE
-        PROTOBUF_FIELD_OFFSET(TradingAccountList, _impl_._cached_size_),
+        PROTOBUF_FIELD_OFFSET(TradeAccountList, _impl_._cached_size_),
         false,
     },
-    &TradingAccountList::kDescriptorMethods,
+    &TradeAccountList::kDescriptorMethods,
     &descriptor_table_request_2eproto,
     nullptr,  // tracker
 };
-const ::google::protobuf::internal::ClassData* TradingAccountList::GetClassData() const {
+const ::google::protobuf::internal::ClassData* TradeAccountList::GetClassData() const {
   ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
   ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
   return _class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 1, 0, 2> TradingAccountList::_table_ = {
+const ::_pbi::TcParseTable<0, 1, 1, 0, 2> TradeAccountList::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
@@ -2447,26 +2456,26 @@ const ::_pbi::TcParseTable<0, 1, 1, 0, 2> TradingAccountList::_table_ = {
     nullptr,  // post_loop_handler
     ::_pbi::TcParser::GenericFallback,  // fallback
     #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-    ::_pbi::TcParser::GetTable<::request::TradingAccountList>(),  // to_prefetch
+    ::_pbi::TcParser::GetTable<::request::TradeAccountList>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // repeated .request.TradingAccountInfo accounts = 1;
+    // repeated .request.TradeAccountRecord accounts = 1;
     {::_pbi::TcParser::FastMtR1,
-     {10, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountList, _impl_.accounts_)}},
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountList, _impl_.accounts_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // repeated .request.TradingAccountInfo accounts = 1;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountList, _impl_.accounts_), 0, 0,
+    // repeated .request.TradeAccountRecord accounts = 1;
+    {PROTOBUF_FIELD_OFFSET(TradeAccountList, _impl_.accounts_), 0, 0,
     (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
   }}, {{
-    {::_pbi::TcParser::GetTable<::request::TradingAccountInfo>()},
+    {::_pbi::TcParser::GetTable<::request::TradeAccountRecord>()},
   }}, {{
   }},
 };
 
-PROTOBUF_NOINLINE void TradingAccountList::Clear() {
-// @@protoc_insertion_point(message_clear_start:request.TradingAccountList)
+PROTOBUF_NOINLINE void TradeAccountList::Clear() {
+// @@protoc_insertion_point(message_clear_start:request.TradeAccountList)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -2477,21 +2486,21 @@ PROTOBUF_NOINLINE void TradingAccountList::Clear() {
 }
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-        ::uint8_t* TradingAccountList::_InternalSerialize(
+        ::uint8_t* TradeAccountList::_InternalSerialize(
             const MessageLite& base, ::uint8_t* target,
             ::google::protobuf::io::EpsCopyOutputStream* stream) {
-          const TradingAccountList& this_ = static_cast<const TradingAccountList&>(base);
+          const TradeAccountList& this_ = static_cast<const TradeAccountList&>(base);
 #else   // PROTOBUF_CUSTOM_VTABLE
-        ::uint8_t* TradingAccountList::_InternalSerialize(
+        ::uint8_t* TradeAccountList::_InternalSerialize(
             ::uint8_t* target,
             ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-          const TradingAccountList& this_ = *this;
+          const TradeAccountList& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-          // @@protoc_insertion_point(serialize_to_array_start:request.TradingAccountList)
+          // @@protoc_insertion_point(serialize_to_array_start:request.TradeAccountList)
           ::uint32_t cached_has_bits = 0;
           (void)cached_has_bits;
 
-          // repeated .request.TradingAccountInfo accounts = 1;
+          // repeated .request.TradeAccountRecord accounts = 1;
           for (unsigned i = 0, n = static_cast<unsigned>(
                                    this_._internal_accounts_size());
                i < n; i++) {
@@ -2507,18 +2516,18 @@ PROTOBUF_NOINLINE void TradingAccountList::Clear() {
                 ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
                     this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
           }
-          // @@protoc_insertion_point(serialize_to_array_end:request.TradingAccountList)
+          // @@protoc_insertion_point(serialize_to_array_end:request.TradeAccountList)
           return target;
         }
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-        ::size_t TradingAccountList::ByteSizeLong(const MessageLite& base) {
-          const TradingAccountList& this_ = static_cast<const TradingAccountList&>(base);
+        ::size_t TradeAccountList::ByteSizeLong(const MessageLite& base) {
+          const TradeAccountList& this_ = static_cast<const TradeAccountList&>(base);
 #else   // PROTOBUF_CUSTOM_VTABLE
-        ::size_t TradingAccountList::ByteSizeLong() const {
-          const TradingAccountList& this_ = *this;
+        ::size_t TradeAccountList::ByteSizeLong() const {
+          const TradeAccountList& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-          // @@protoc_insertion_point(message_byte_size_start:request.TradingAccountList)
+          // @@protoc_insertion_point(message_byte_size_start:request.TradeAccountList)
           ::size_t total_size = 0;
 
           ::uint32_t cached_has_bits = 0;
@@ -2527,7 +2536,7 @@ PROTOBUF_NOINLINE void TradingAccountList::Clear() {
 
           ::_pbi::Prefetch5LinesFrom7Lines(&this_);
            {
-            // repeated .request.TradingAccountInfo accounts = 1;
+            // repeated .request.TradeAccountRecord accounts = 1;
             {
               total_size += 1UL * this_._internal_accounts_size();
               for (const auto& msg : this_._internal_accounts()) {
@@ -2539,10 +2548,10 @@ PROTOBUF_NOINLINE void TradingAccountList::Clear() {
                                                      &this_._impl_._cached_size_);
         }
 
-void TradingAccountList::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
-  auto* const _this = static_cast<TradingAccountList*>(&to_msg);
-  auto& from = static_cast<const TradingAccountList&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:request.TradingAccountList)
+void TradeAccountList::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<TradeAccountList*>(&to_msg);
+  auto& from = static_cast<const TradeAccountList&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:request.TradeAccountList)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
@@ -2552,21 +2561,21 @@ void TradingAccountList::MergeImpl(::google::protobuf::MessageLite& to_msg, cons
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
-void TradingAccountList::CopyFrom(const TradingAccountList& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:request.TradingAccountList)
+void TradeAccountList::CopyFrom(const TradeAccountList& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:request.TradeAccountList)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 
-void TradingAccountList::InternalSwap(TradingAccountList* PROTOBUF_RESTRICT other) {
+void TradeAccountList::InternalSwap(TradeAccountList* PROTOBUF_RESTRICT other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   _impl_.accounts_.InternalSwap(&other->_impl_.accounts_);
 }
 
-::google::protobuf::Metadata TradingAccountList::GetMetadata() const {
+::google::protobuf::Metadata TradeAccountList::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================
@@ -4056,7 +4065,7 @@ void RequestData::clear_sector_constituents() {
     clear_has_payload();
   }
 }
-void RequestData::set_allocated_account(::request::TradingAccountInfo* account) {
+void RequestData::set_allocated_account(::request::TradeAccountRecord* account) {
   ::google::protobuf::Arena* message_arena = GetArena();
   clear_payload();
   if (account) {
@@ -4069,7 +4078,7 @@ void RequestData::set_allocated_account(::request::TradingAccountInfo* account) 
   }
   // @@protoc_insertion_point(field_set_allocated:request.RequestData.account)
 }
-void RequestData::set_allocated_account_list(::request::TradingAccountList* account_list) {
+void RequestData::set_allocated_account_list(::request::TradeAccountList* account_list) {
   ::google::protobuf::Arena* message_arena = GetArena();
   clear_payload();
   if (account_list) {
@@ -4123,6 +4132,7 @@ inline PROTOBUF_NDEBUG_INLINE RequestData::Impl_::Impl_(
       : extra_{visibility, arena, from.extra_},
         ret_{visibility, arena, from.ret_},
         cmd_(arena, from.cmd_),
+        error_message_(arena, from.error_message_),
         payload_{},
         _cached_size_{0},
         _oneof_case_{from._oneof_case_[0]} {}
@@ -4141,12 +4151,12 @@ RequestData::RequestData(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
   ::memcpy(reinterpret_cast<char *>(&_impl_) +
-               offsetof(Impl_, id_),
+               offsetof(Impl_, type_),
            reinterpret_cast<const char *>(&from._impl_) +
-               offsetof(Impl_, id_),
-           offsetof(Impl_, type_) -
-               offsetof(Impl_, id_) +
-               sizeof(Impl_::type_));
+               offsetof(Impl_, type_),
+           offsetof(Impl_, id_) -
+               offsetof(Impl_, type_) +
+               sizeof(Impl_::id_));
   switch (payload_case()) {
     case PAYLOAD_NOT_SET:
       break;
@@ -4202,10 +4212,10 @@ RequestData::RequestData(
         _impl_.payload_.sector_constituents_ = ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::SectorConstituents>(arena, *from._impl_.payload_.sector_constituents_);
         break;
       case kAccount:
-        _impl_.payload_.account_ = ::google::protobuf::Message::CopyConstruct<::request::TradingAccountInfo>(arena, *from._impl_.payload_.account_);
+        _impl_.payload_.account_ = ::google::protobuf::Message::CopyConstruct<::request::TradeAccountRecord>(arena, *from._impl_.payload_.account_);
         break;
       case kAccountList:
-        _impl_.payload_.account_list_ = ::google::protobuf::Message::CopyConstruct<::request::TradingAccountList>(arena, *from._impl_.payload_.account_list_);
+        _impl_.payload_.account_list_ = ::google::protobuf::Message::CopyConstruct<::request::TradeAccountList>(arena, *from._impl_.payload_.account_list_);
         break;
       case kAccountSnapshot:
         _impl_.payload_.account_snapshot_ = ::google::protobuf::Message::CopyConstruct<::request::TradingAccountSnapshot>(arena, *from._impl_.payload_.account_snapshot_);
@@ -4223,6 +4233,7 @@ inline PROTOBUF_NDEBUG_INLINE RequestData::Impl_::Impl_(
       : extra_{visibility, arena},
         ret_{visibility, arena},
         cmd_(arena),
+        error_message_(arena),
         payload_{},
         _cached_size_{0},
         _oneof_case_{} {}
@@ -4230,11 +4241,11 @@ inline PROTOBUF_NDEBUG_INLINE RequestData::Impl_::Impl_(
 inline void RequestData::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
   ::memset(reinterpret_cast<char *>(&_impl_) +
-               offsetof(Impl_, id_),
+               offsetof(Impl_, type_),
            0,
-           offsetof(Impl_, type_) -
-               offsetof(Impl_, id_) +
-               sizeof(Impl_::type_));
+           offsetof(Impl_, id_) -
+               offsetof(Impl_, type_) +
+               sizeof(Impl_::id_));
 }
 RequestData::~RequestData() {
   // @@protoc_insertion_point(destructor:request.RequestData)
@@ -4245,6 +4256,7 @@ inline void RequestData::SharedDtor(MessageLite& self) {
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
   this_._impl_.cmd_.Destroy();
+  this_._impl_.error_message_.Destroy();
   if (this_.has_payload()) {
     this_.clear_payload();
   }
@@ -4491,15 +4503,15 @@ const ::google::protobuf::internal::ClassData* RequestData::GetClassData() const
   return _class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 26, 23, 63, 7> RequestData::_table_ = {
+const ::_pbi::TcParseTable<3, 28, 23, 76, 7> RequestData::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
     33, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    176161248,  // skipmap
+    176161152,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    26,  // num_field_entries
+    28,  // num_field_entries
     23,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     _class_data_.base(),
@@ -4521,11 +4533,15 @@ const ::_pbi::TcParseTable<3, 26, 23, 63, 7> RequestData::_table_ = {
     // uint64 id = 5;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(RequestData, _impl_.id_), 63>(),
      {40, 63, 0, PROTOBUF_FIELD_OFFSET(RequestData, _impl_.id_)}},
-    {::_pbi::TcParser::MiniParse, {}},
-    {::_pbi::TcParser::MiniParse, {}},
+    // int32 error_code = 6;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(RequestData, _impl_.error_code_), 63>(),
+     {48, 63, 0, PROTOBUF_FIELD_OFFSET(RequestData, _impl_.error_code_)}},
+    // string error_message = 7;
+    {::_pbi::TcParser::FastUS1,
+     {58, 63, 0, PROTOBUF_FIELD_OFFSET(RequestData, _impl_.error_message_)}},
   }}, {{
     33, 0, 1,
-    65534, 25,
+    65534, 27,
     65535, 65535
   }}, {{
     // .request.RequestType type = 1;
@@ -4543,6 +4559,12 @@ const ::_pbi::TcParseTable<3, 26, 23, 63, 7> RequestData::_table_ = {
     // uint64 id = 5;
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.id_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUInt64)},
+    // int32 error_code = 6;
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.error_code_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // string error_message = 7;
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.error_message_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // .hqmarket.market.v1.AuthRequest auth_request = 10;
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.auth_request_), _Internal::kOneofCaseOffset + 0, 0,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
@@ -4594,10 +4616,10 @@ const ::_pbi::TcParseTable<3, 26, 23, 63, 7> RequestData::_table_ = {
     // .hqmarket.market.v1.SectorConstituents sector_constituents = 29;
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.sector_constituents_), _Internal::kOneofCaseOffset + 0, 16,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .request.TradingAccountInfo account = 30;
+    // .request.TradeAccountRecord account = 30;
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.account_), _Internal::kOneofCaseOffset + 0, 17,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .request.TradingAccountList account_list = 31;
+    // .request.TradeAccountList account_list = 31;
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.account_list_), _Internal::kOneofCaseOffset + 0, 18,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .request.TradingAccountSnapshot account_snapshot = 32;
@@ -4624,8 +4646,8 @@ const ::_pbi::TcParseTable<3, 26, 23, 63, 7> RequestData::_table_ = {
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SecurityList>()},
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SectorList>()},
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SectorConstituents>()},
-    {::_pbi::TcParser::GetTable<::request::TradingAccountInfo>()},
-    {::_pbi::TcParser::GetTable<::request::TradingAccountList>()},
+    {::_pbi::TcParser::GetTable<::request::TradeAccountRecord>()},
+    {::_pbi::TcParser::GetTable<::request::TradeAccountList>()},
     {::_pbi::TcParser::GetTable<::request::TradingAccountSnapshot>()},
     {::_pbi::TcParser::GetTable<::request::TradingAccountLogs>()},
     {::_pbi::TcParser::GetMapAuxInfo<
@@ -4637,11 +4659,12 @@ const ::_pbi::TcParseTable<3, 26, 23, 63, 7> RequestData::_table_ = {
         1, 0, 0, 9,
         9)},
   }}, {{
-    "\23\0\3\5\3\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+    "\23\0\3\5\3\0\0\15\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
     "request.RequestData"
     "cmd"
     "extra"
     "ret"
+    "error_message"
   }},
 };
 
@@ -4655,9 +4678,10 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
   _impl_.extra_.Clear();
   _impl_.ret_.Clear();
   _impl_.cmd_.ClearToEmpty();
-  ::memset(&_impl_.id_, 0, static_cast<::size_t>(
-      reinterpret_cast<char*>(&_impl_.type_) -
-      reinterpret_cast<char*>(&_impl_.id_)) + sizeof(_impl_.type_));
+  _impl_.error_message_.ClearToEmpty();
+  ::memset(&_impl_.type_, 0, static_cast<::size_t>(
+      reinterpret_cast<char*>(&_impl_.id_) -
+      reinterpret_cast<char*>(&_impl_.type_)) + sizeof(_impl_.id_));
   clear_payload();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -4763,6 +4787,21 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
             target = stream->EnsureSpace(target);
             target = ::_pbi::WireFormatLite::WriteUInt64ToArray(
                 5, this_._internal_id(), target);
+          }
+
+          // int32 error_code = 6;
+          if (this_._internal_error_code() != 0) {
+            target = ::google::protobuf::internal::WireFormatLite::
+                WriteInt32ToArrayWithField<6>(
+                    stream, this_._internal_error_code(), target);
+          }
+
+          // string error_message = 7;
+          if (!this_._internal_error_message().empty()) {
+            const std::string& _s = this_._internal_error_message();
+            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.RequestData.error_message");
+            target = stream->WriteStringMaybeAliased(7, _s, target);
           }
 
           switch (this_.payload_case()) {
@@ -4947,15 +4986,25 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
               total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                               this_._internal_cmd());
             }
-            // uint64 id = 5;
-            if (this_._internal_id() != 0) {
-              total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(
-                  this_._internal_id());
+            // string error_message = 7;
+            if (!this_._internal_error_message().empty()) {
+              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                              this_._internal_error_message());
             }
             // .request.RequestType type = 1;
             if (this_._internal_type() != 0) {
               total_size += 1 +
                             ::_pbi::WireFormatLite::EnumSize(this_._internal_type());
+            }
+            // int32 error_code = 6;
+            if (this_._internal_error_code() != 0) {
+              total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+                  this_._internal_error_code());
+            }
+            // uint64 id = 5;
+            if (this_._internal_id() != 0) {
+              total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(
+                  this_._internal_id());
             }
           }
           switch (this_.payload_case()) {
@@ -5061,13 +5110,13 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
                             ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.sector_constituents_);
               break;
             }
-            // .request.TradingAccountInfo account = 30;
+            // .request.TradeAccountRecord account = 30;
             case kAccount: {
               total_size += 2 +
                             ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.account_);
               break;
             }
-            // .request.TradingAccountList account_list = 31;
+            // .request.TradeAccountList account_list = 31;
             case kAccountList: {
               total_size += 2 +
                             ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.account_list_);
@@ -5107,11 +5156,17 @@ void RequestData::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goo
   if (!from._internal_cmd().empty()) {
     _this->_internal_set_cmd(from._internal_cmd());
   }
-  if (from._internal_id() != 0) {
-    _this->_impl_.id_ = from._impl_.id_;
+  if (!from._internal_error_message().empty()) {
+    _this->_internal_set_error_message(from._internal_error_message());
   }
   if (from._internal_type() != 0) {
     _this->_impl_.type_ = from._impl_.type_;
+  }
+  if (from._internal_error_code() != 0) {
+    _this->_impl_.error_code_ = from._impl_.error_code_;
+  }
+  if (from._internal_id() != 0) {
+    _this->_impl_.id_ = from._impl_.id_;
   }
   if (const uint32_t oneof_from_case = from._impl_._oneof_case_[0]) {
     const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
@@ -5280,7 +5335,7 @@ void RequestData::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goo
       case kAccount: {
         if (oneof_needs_init) {
           _this->_impl_.payload_.account_ =
-              ::google::protobuf::Message::CopyConstruct<::request::TradingAccountInfo>(arena, *from._impl_.payload_.account_);
+              ::google::protobuf::Message::CopyConstruct<::request::TradeAccountRecord>(arena, *from._impl_.payload_.account_);
         } else {
           _this->_impl_.payload_.account_->MergeFrom(from._internal_account());
         }
@@ -5289,7 +5344,7 @@ void RequestData::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goo
       case kAccountList: {
         if (oneof_needs_init) {
           _this->_impl_.payload_.account_list_ =
-              ::google::protobuf::Message::CopyConstruct<::request::TradingAccountList>(arena, *from._impl_.payload_.account_list_);
+              ::google::protobuf::Message::CopyConstruct<::request::TradeAccountList>(arena, *from._impl_.payload_.account_list_);
         } else {
           _this->_impl_.payload_.account_list_->MergeFrom(from._internal_account_list());
         }
@@ -5336,12 +5391,13 @@ void RequestData::InternalSwap(RequestData* PROTOBUF_RESTRICT other) {
   _impl_.extra_.InternalSwap(&other->_impl_.extra_);
   _impl_.ret_.InternalSwap(&other->_impl_.ret_);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.cmd_, &other->_impl_.cmd_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.error_message_, &other->_impl_.error_message_, arena);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(RequestData, _impl_.type_)
-      + sizeof(RequestData::_impl_.type_)
-      - PROTOBUF_FIELD_OFFSET(RequestData, _impl_.id_)>(
-          reinterpret_cast<char*>(&_impl_.id_),
-          reinterpret_cast<char*>(&other->_impl_.id_));
+      PROTOBUF_FIELD_OFFSET(RequestData, _impl_.id_)
+      + sizeof(RequestData::_impl_.id_)
+      - PROTOBUF_FIELD_OFFSET(RequestData, _impl_.type_)>(
+          reinterpret_cast<char*>(&_impl_.type_),
+          reinterpret_cast<char*>(&other->_impl_.type_));
   swap(_impl_.payload_, other->_impl_.payload_);
   swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
 }

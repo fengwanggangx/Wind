@@ -95,6 +95,11 @@ namespace net
 
 	void SetError(CRequest& request, int code, const std::string& message)
 	{
+		if ((CRequest::Type::TRADE_ACCOUNT_QUERY == request.GetType()) || (CRequest::Type::TRADE_ACCOUNT_LOGIN == request.GetType()))
+		{
+			request.SetErrorInfo(code, message);
+			return;
+		}
 		request.SetReturnData("error_code", std::to_string(code));
 		request.SetReturnData("error_message", message);
 	}
@@ -108,6 +113,10 @@ namespace net
 	void SendError(net::_TyConnectionId id, const CRequest& request, int code, const std::string& message)
 	{
 		CRequest response = request;
+		if (CRequest::Type::TRADE_ACCOUNT_LOGIN == request.GetType())
+		{
+			response.SetExtraData("password", "");
+		}
 		SetError(response, code, message);
 		SendRequest(id, response);
 	}

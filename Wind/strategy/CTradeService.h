@@ -1,4 +1,4 @@
-﻿#ifndef WIND_STRATEGY_CTRADESERVICE_H
+#ifndef WIND_STRATEGY_CTRADESERVICE_H
 #define WIND_STRATEGY_CTRADESERVICE_H
 #include "../request/request.pb.h"
 #include "ITradeService.h"
@@ -40,7 +40,7 @@ class CTradeService final : public IStrategyOrderSink, public ITradingSnapshotPr
 	private:
 	struct CAccountRuntime
 	{
-		request::TradingAccountInfo m_info;
+		request::TradeAccountRecord m_info;
 		std::shared_ptr<CSimulatedTradingService> m_service;
 		std::unordered_set<_TyStrategyId> m_runningStrategies;
 	};

@@ -1,4 +1,4 @@
-﻿#ifndef HQMARKET_REQUEST_REQUEST_H
+#ifndef HQMARKET_REQUEST_REQUEST_H
 #define HQMARKET_REQUEST_REQUEST_H
 
 #include "../network/common_net.h"
@@ -15,8 +15,8 @@ namespace request
 	class RequestData;
 	class StrategyInfo;
 	class StrategyList;
-	class TradingAccountInfo;
-	class TradingAccountList;
+	class TradeAccountRecord;
+	class TradeAccountList;
 	class TradingAccountSnapshot;
 	class TradingAccountLogs;
 } // namespace request
@@ -43,7 +43,9 @@ class CRequest
 		STRATEGY = 4,
 		HQMARKET = 5,
 		HEARTBEAT = 6,
-		ACCOUNT = 7
+		ACCOUNT = 7,
+		TRADE_ACCOUNT_LOGIN = 8,
+		TRADE_ACCOUNT_QUERY = 9
 	};
 
 	public:
@@ -83,8 +85,8 @@ class CRequest
 	void SetData(const _TySectorConstituents& value);
 	void SetData(const _TyStrategyInfo& value);
 	void SetData(const _TyStrategyList& value);
-	void SetData(const request::TradingAccountInfo& value);
-	void SetData(const request::TradingAccountList& value);
+	void SetData(const request::TradeAccountRecord& value);
+	void SetData(const request::TradeAccountList& value);
 	void SetData(const request::TradingAccountSnapshot& value);
 	void SetData(const request::TradingAccountLogs& value);
 	const _TyReqData& GetData() const;
@@ -96,6 +98,7 @@ class CRequest
 	bool Deserialize(const std::string& strData);
 
 	std::optional<std::pair<int, std::string>> GetErrorInfo() const;
+	void SetErrorInfo(int nCode, const std::string& strMessage);
 
 	private:
 	std::unique_ptr<google::protobuf::Arena> m_arena;
