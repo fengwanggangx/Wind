@@ -92,10 +92,12 @@ int main()
 	{
 		std::cerr << boot.GetLastError() << '\n';
 		strategyEngine.StopAll();
+		strategyEngine.StopTrading();
 		session.Stop();
 		return boot.GetErrorCode();
 	}
 	strategyEngine.StopAll();
+	strategyEngine.StopTrading();
 	session.Stop();
 	boot.Finalize();
 	return 0;

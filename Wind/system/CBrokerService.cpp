@@ -67,6 +67,14 @@ bool IsPasswordValid(const std::string& strPassword)
 CBrokerService::CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession, CStrategyEngine* pStrategyEngine) : m_pTcpServer(pTcpServer), m_pSession(pSession), m_pStrategyEngine(pStrategyEngine)
 {
 	m_handler = {
+		{ _TyRequest::TRADE_SYNC_QUERY, std::bind_front(&CBrokerService::HandleTrading, this) },
+		{ _TyRequest::TRADE_CAPABILITIES_QUERY, std::bind_front(&CBrokerService::HandleTrading, this) },
+		{ _TyRequest::TRADE_ORDER_SUBMIT, std::bind_front(&CBrokerService::HandleTrading, this) },
+		{ _TyRequest::TRADE_ORDER_CANCEL, std::bind_front(&CBrokerService::HandleTrading, this) },
+		{ _TyRequest::TRADE_POSITION_QUERY, std::bind_front(&CBrokerService::HandleTrading, this) },
+		{ _TyRequest::TRADE_ORDER_QUERY, std::bind_front(&CBrokerService::HandleTrading, this) },
+		{ _TyRequest::TRADE_TRADE_QUERY, std::bind_front(&CBrokerService::HandleTrading, this) },
+
 		{ _TyRequest::AUTH_REGISTER, std::bind_front(&CBrokerService::HandleRegisterAuth, this) },
 		{ _TyRequest::AUTH_LOGIN, std::bind_front(&CBrokerService::HandleAuth, this) },
 		{ _TyRequest::HEARTBEAT, std::bind_front(&CBrokerService::HandleHeartbeat, this) },
@@ -102,6 +110,18 @@ bool CBrokerService::Initialize()
 	{
 		return false;
 	}
+	m_pStrategyEngine->SetTradingPushHandler([this](const CRequest& push)
+	{
+		std::vector<net::_TyConnectionId> clients;
+		{
+			std::lock_guard<std::mutex> lock(m_mtx_state);
+			clients.assign(m_auth_clients.begin(), m_auth_clients.end());
+		}
+		for (net::_TyConnectionId id : clients)
+		{
+			net::SendRequest(id, push);
+		}
+	});
 	m_pTcpServer->RegisterHandler(std::bind_front(&CBrokerService::OnNetEvent, this));
 	m_pSession->RegisterHandler(std::bind_front(&CBrokerService::OnHQMarketResponse, this));
 	m_pSession->RegisterStateHandler(std::bind_front(&CBrokerService::OnHQMarketState, this));
@@ -1013,4 +1033,22 @@ bool CBrokerService::HandleAccount(net::_TyConnectionId id, const CRequest& req)
 		}
 	}
 	return m_pStrategyEngine->HandleAccountRequest(req, actor);
+}
+
+bool CBrokerService::HandleTrading(net::_TyConnectionId id, const CRequest& req)
+{
+	if (!IsAuthenticated(id) || nullptr == m_pStrategyEngine)
+	{
+		net::SendError(id, req, AuthenticationRequired, "authentication required");
+		return false;
+	}
+	return m_pStrategyEngine->HandleTradingRequest(req);
+}
+
+CBrokerService::~CBrokerService()
+{
+	if (nullptr != m_pStrategyEngine)
+	{
+		m_pStrategyEngine->StopTrading();
+	}
 }

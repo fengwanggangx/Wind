@@ -60,6 +60,7 @@ class CBrokerService final
 
 	public:
 	CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession, CStrategyEngine* pStrategyEngine);
+	~CBrokerService();
 	CBrokerService(const CBrokerService&) = delete;
 	CBrokerService& operator=(const CBrokerService&) = delete;
 
@@ -74,6 +75,7 @@ class CBrokerService final
 	bool HandleMarketQuery(net::_TyConnectionId id, const CRequest& req);
 	bool HandleHeartbeat(net::_TyConnectionId id, const CRequest& req);
 	bool HandleStrategy(net::_TyConnectionId id, const CRequest& req);
+	bool HandleTrading(net::_TyConnectionId id, const CRequest& req);
 	bool HandleAccount(net::_TyConnectionId id, const CRequest& req);
 
 	int HandleDisconnected(net::_TyConnectionId id);

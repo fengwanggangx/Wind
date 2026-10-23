@@ -269,6 +269,7 @@ CStrategyEngine::CStrategyEngine(CSession* pSession) : m_pSession(pSession), m_t
 CStrategyEngine::~CStrategyEngine()
 {
 	StopAll();
+	m_trader->Stop();
 }
 
 bool CStrategyEngine::Initialize()
@@ -279,12 +280,31 @@ bool CStrategyEngine::Initialize()
 		m_strLastError = "Strategy session is unavailable";
 		return false;
 	}
-	if (!m_trader->Initialize())
+	if (!m_trader->Initialize(*m_pSession))
 	{
 		m_strLastError = m_trader->GetLastError();
 		return false;
 	}
 	m_trader->SetOrderEventHandler(std::bind_front(&CStrategyEngine::OnOrderEvent, this));
+	m_trader->SetTradeEventHandler(std::bind_front(&CStrategyEngine::OnTradeEvent, this));
+	m_trader->SetAccountReadyHandler([this](std::uint64_t accountId)
+	{
+		std::vector<_TyStrategyId> deferred;
+		{
+			std::shared_lock<std::shared_mutex> lock(m_mtx_strategies);
+			for (const auto& item : m_runtimes)
+			{
+				if (accountId == item.second->m_config.m_accountId && item.second->m_config.m_bAutoStart && StrategyState::Initialized == item.second->m_state.load())
+				{
+					deferred.emplace_back(item.first);
+				}
+			}
+		}
+		for (_TyStrategyId id : deferred)
+		{
+			StartStrategy(id);
+		}
+	});
 	m_pSession->RegisterHandler(std::bind_front(&CStrategyEngine::OnHQMarketResponse, this));
 	m_pSession->RegisterStateHandler(std::bind_front(&CStrategyEngine::OnHQMarketState, this));
 	return LoadStrategies();
@@ -725,6 +745,29 @@ bool CStrategyEngine::CreateStrategy(const CStrategyConfig& cfg)
 		}
 	}
 
+	for (const auto& order : m_trader->GetOrders(cfg.m_accountId))
+	{
+		if (order.m_strategyId != cfg.m_router_id)
+		{
+			continue;
+		}
+		{
+			std::lock_guard<std::mutex> lock(m_mtx_signals);
+			m_signals[{ cfg.m_router_id, order.m_signalId }] = SignalState::Accepted;
+		}
+		if (trading::IsActive(order.m_status))
+		{
+			{
+				std::lock_guard<std::mutex> lock(runtime->m_mtx_orders);
+				runtime->m_activeOrderIds.emplace(order.m_orderId);
+			}
+			{
+				std::unique_lock<std::shared_mutex> lock(m_mtx_orders);
+				m_orderRoutes[order.m_orderId] = cfg.m_router_id;
+				m_clientOrderRoutes[order.m_clientId] = cfg.m_router_id;
+			}
+		}
+	}
 	NotifySnapshot(runtime);
 	if (cfg.m_bAutoStart && m_trader->IsConnected(cfg.m_accountId) && !StartStrategy(cfg.m_router_id))
 	{
@@ -768,6 +811,17 @@ bool CStrategyEngine::RemoveStrategy(_TyStrategyId id)
 		std::erase_if(m_signals, [id](const auto& item)
 		{
 			return id == item.first.m_strategyId;
+		});
+	}
+	{
+		std::unique_lock<std::shared_mutex> lock(m_mtx_orders);
+		std::erase_if(m_orderRoutes, [id](const auto& item)
+		{
+			return id == item.second;
+		});
+		std::erase_if(m_clientOrderRoutes, [id](const auto& item)
+		{
+			return id == item.second;
 		});
 	}
 	return true;
@@ -1001,6 +1055,11 @@ void CStrategyEngine::OnOrderEvent(const COrderEvent& ev)
 	{
 		return;
 	}
+	if (0 != ev.m_signalId)
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_signals);
+		m_signals[{ id, ev.m_signalId }] = OrderStatus::Rejected == ev.m_status ? SignalState::Rejected : SignalState::Accepted;
+	}
 	{
 		std::lock_guard<std::mutex> lock(runtime->m_mtx_orders);
 		if (IsFinishedOrderStatus(ev.m_status))
@@ -1012,12 +1071,14 @@ void CStrategyEngine::OnOrderEvent(const COrderEvent& ev)
 			runtime->m_activeOrderIds.emplace(ev.m_orderId);
 		}
 	}
-	if (IsFinishedOrderStatus(ev.m_status))
+	if (!IsFinishedOrderStatus(ev.m_status) && 0 != ev.m_orderId)
 	{
 		std::unique_lock<std::shared_mutex> lock(m_mtx_orders);
-		m_orderRoutes.erase(ev.m_orderId);
-		m_clientOrderRoutes.erase(ev.m_clientOrderId);
+		m_orderRoutes[ev.m_orderId] = id;
+		m_clientOrderRoutes[ev.m_clientOrderId] = id;
 	}
+	// Keep correlation through terminal order reports: a broker may deliver its fill afterward.
+
 	CStrategyEvent strategyEvent;
 	strategyEvent.m_type = StrategyEventType::Order;
 	strategyEvent.m_data = ev;
@@ -1467,28 +1528,13 @@ COrderSubmitResult CStrategyEngine::SubmitOrder(_TyStrategyId id, const COrderIn
 		}
 		else
 		{
-			m_signals[key] = result.m_bAccepted ? SignalState::Accepted : SignalState::Rejected;
-		}
-	}
-	if (result.m_bAccepted)
-	{
-		{
-			std::unique_lock<std::shared_mutex> lock(m_mtx_orders);
-			if (0 != result.m_orderId)
+			if (!result.m_bAccepted)
 			{
-				m_orderRoutes[result.m_orderId] = id;
-			}
-			if (0 != result.m_clientOrderId)
-			{
-				m_clientOrderRoutes[result.m_clientOrderId] = id;
+				m_signals[key] = SignalState::Rejected;
 			}
 		}
-		if (0 != result.m_orderId)
-		{
-			std::lock_guard<std::mutex> lock(runtime->m_mtx_orders);
-			runtime->m_activeOrderIds.emplace(result.m_orderId);
-		}
 	}
+
 	return result;
 }
 
@@ -1593,34 +1639,24 @@ std::string CStrategyEngine::GetMarketKey(const CRequest& req)
 
 bool CStrategyEngine::IsFinishedOrderStatus(OrderStatus status)
 {
-	return (OrderStatus::Rejected == status) || (OrderStatus::Filled == status) || (OrderStatus::Cancelled == status);
+	return (OrderStatus::Rejected == status) || (OrderStatus::Filled == status) || (OrderStatus::Cancelled == status) || (OrderStatus::Expired == status);
 }
 
 bool CStrategyEngine::HandleAccountRequest(const CRequest& req, const std::string& actor)
 {
-	std::lock_guard<std::mutex> operationLock(m_mtx_operations);
-	bool success = m_trader->HandleAccountRequest(req, actor);
-	if (success && (_TyRequest::TRADE_ACCOUNT_CONNECT == req.GetType()))
-	{
-		std::uint64_t accountId = 0;
-		if (ParseUnsigned(req.GetExtraData("account_id"), accountId))
-		{
-			std::vector<std::shared_ptr<CStrategyRuntime>> deferred;
-			{
-				std::shared_lock<std::shared_mutex> lock(m_mtx_strategies);
-				for (const auto& item : m_runtimes)
-				{
-					if ((accountId == item.second->m_config.m_accountId) && item.second->m_config.m_bAutoStart && (StrategyState::Initialized == item.second->m_state.load()))
-					{
-						deferred.emplace_back(item.second);
-					}
-				}
-			}
-			for (const auto& runtime : deferred)
-			{
-				StartStrategy(runtime->m_config.m_router_id);
-			}
-		}
-	}
-	return success;
+	std::lock_guard<std::mutex> lock(m_mtx_operations);
+	return m_trader->HandleAccountRequest(req, actor);
+}
+bool CStrategyEngine::HandleTradingRequest(const CRequest& req)
+{
+	return m_trader->HandleTradingRequest(req);
+}
+void CStrategyEngine::SetTradingPushHandler(std::function<void(const CRequest&)> handler)
+{
+	m_trader->SetPushHandler(std::move(handler));
+}
+
+void CStrategyEngine::StopTrading()
+{
+	m_trader->Stop();
 }

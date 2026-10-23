@@ -6,7 +6,9 @@
 #include "../ini/CINIHandler.h"
 #include "../network/CNetTools.h"
 #include "../request/request.h"
-#include "CSimulatedTradingService.h"
+#include "../system/CSession.h"
+#include "../request/RequestCenter.h"
+#include <atomic>
 #include <charconv>
 #include <chrono>
 #include <limits>
@@ -39,14 +41,8 @@ CTradeService::~CTradeService()
 {
 	Stop();
 }
-bool CTradeService::Initialize()
+bool CTradeService::Initialize(CSession& session)
 {
-	std::string mode = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "Trade", "mode", std::string("simulated"));
-	if ("simulated" != mode)
-	{
-		m_strLastError = "Only simulated trading is supported; production is not implemented";
-		return false;
-	}
 	db::_TyDBPtr database = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
 	if (nullptr == database)
 	{
@@ -76,15 +72,29 @@ bool CTradeService::Initialize()
 		m_strLastError = "Strategy account migration failed";
 		return false;
 	}
-	const db::CQueryTable& table = database->ExecQuery("SELECT account_id,name,account_type,initial_balance,created_at,updated_at,is_default FROM table_trading_account ORDER BY account_id");
-	if (table.m_rows.empty() || (7 != table.m_columns.size()))
+	for (const auto& column : std::vector<std::pair<std::string, std::string>>{ { "adapter_key", "VARCHAR(64) NOT NULL DEFAULT ''" }, { "broker", "VARCHAR(128) NOT NULL DEFAULT 'wind_simulated'" }, { "site", "VARCHAR(128) NOT NULL DEFAULT 'default'" }, { "external_account", "VARCHAR(128) NOT NULL DEFAULT ''" } })
+	{
+		const db::CQueryTable& existing = database->ExecQuery("SHOW COLUMNS FROM table_trading_account LIKE '" + column.first + "'");
+		if (existing.m_rows.empty() && 0 != database->ExecUpdate("ALTER TABLE table_trading_account ADD COLUMN " + column.first + " " + column.second))
+		{
+			m_strLastError = "Account routing migration failed";
+			return false;
+		}
+	}
+	if (0 != database->ExecUpdate("UPDATE table_trading_account SET adapter_key=IF(account_type=0,'simulated','unconfigured') WHERE adapter_key=''"))
+	{
+		m_strLastError = "Account routing initialization failed";
+		return false;
+	}
+	const db::CQueryTable& table = database->ExecQuery("SELECT account_id,name,account_type,initial_balance,created_at,updated_at,is_default,adapter_key,broker,site,external_account FROM table_trading_account ORDER BY account_id");
+	if (table.m_rows.empty() || (11 != table.m_columns.size()))
 	{
 		m_strLastError = "Default account is missing";
 		return false;
 	}
 	for (const db::_TyQueryRow& row : table.m_rows)
 	{
-		if (7 != row.size())
+		if (11 != row.size())
 		{
 			return false;
 		}
@@ -104,9 +114,17 @@ bool CTradeService::Initialize()
 		runtime.m_info.set_updated_at(db::QueryValueToString(row[5]));
 		runtime.m_info.set_is_default("1" == db::QueryValueToString(row[6]));
 		runtime.m_info.set_number("SIM-" + std::to_string(id));
+		runtime.m_strAdapter = db::QueryValueToString(row[7]);
+		runtime.m_strBroker = db::QueryValueToString(row[8]);
+		runtime.m_strSite = db::QueryValueToString(row[9]);
+		runtime.m_strExternalAccount = db::QueryValueToString(row[10]);
+		if (runtime.m_strExternalAccount.empty())
+		{
+			runtime.m_strExternalAccount = runtime.m_info.number();
+		}
 		if (runtime.m_info.is_default() && (request::ACCOUNT_SIMULATED == runtime.m_info.account_type()))
 		{
-			runtime.m_service = std::make_shared<CSimulatedTradingService>(runtime.m_info.initial_balance(), id);
+
 			runtime.m_info.set_state(request::ACCOUNT_CONNECTED);
 			if (0 != database->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) VALUES(" + std::to_string(id) + ",'system','account_connect','Wind 启动时连接')"))
 			{
@@ -116,17 +134,55 @@ bool CTradeService::Initialize()
 		}
 		m_accounts.emplace(id, std::move(runtime));
 	}
+	std::vector<trading::CAccountRoute> routes;
+	for (const auto& item : m_accounts)
+	{
+		routes.push_back({ item.first, item.second.m_info.initial_balance(), item.second.m_strAdapter });
+	}
+	std::string strRulesPath = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "Trade", "rules_path", std::string());
+	database.reset();
+	trading::CResult result = trading::CreateWindCounterHost(routes, strRulesPath, session, m_host);
+	if (!result.Ok())
+	{
+		m_strLastError = result.m_strMessage;
+		return false;
+	}
+	m_host.m_gateway->SetEventHandler([this](const trading::CEvent& event)
+	{
+		OnEvent(event);
+	});
+	std::lock_guard<std::mutex> initializeLock(m_mtx_accounts);
+	for (auto& item : m_accounts)
+	{
+		auto route = m_host.m_routes.find(item.first);
+		if (m_host.m_routes.end() == route)
+		{
+			continue;
+		}
+		item.second.m_service = route->second;
+		if (item.second.m_info.is_default())
+		{
+			trading::CRequest request;
+			request.m_operation = trading::Operation::Connect;
+			request.m_accountId = item.first;
+			m_host.m_gateway->Request(request, {});
+		}
+	}
+	for (const auto& order : m_host.m_gateway->Snapshot().m_orders)
+	{
+		m_orderAccounts[order.m_orderId] = order.m_accountId;
+	}
 	return true;
 }
 void CTradeService::Stop()
 {
+	if (nullptr != m_host.m_gateway)
+	{
+		m_host.m_gateway->Stop();
+	}
 	std::lock_guard<std::mutex> lock(m_mtx_accounts);
 	for (auto& item : m_accounts)
 	{
-		if (nullptr != item.second.m_service)
-		{
-			item.second.m_service->Stop();
-		}
 		item.second.m_info.set_state(request::ACCOUNT_DISCONNECTED);
 	}
 }
@@ -134,15 +190,13 @@ void CTradeService::SetOrderEventHandler(_TyOrderEventHandler&& handler)
 {
 	std::lock_guard<std::mutex> lock(m_mtx_accounts);
 	m_orderHandler = std::move(handler);
-	for (auto& item : m_accounts)
-	{
-		if (nullptr != item.second.m_service)
-		{
-			item.second.m_service->SetOrderEventHandler(_TyOrderEventHandler(m_orderHandler));
-		}
-	}
 }
-std::shared_ptr<CSimulatedTradingService> CTradeService::FindService(std::uint64_t accountId) const
+void CTradeService::SetTradeEventHandler(_TyTradeEventHandler handler)
+{
+	std::lock_guard<std::mutex> lock(m_mtx_accounts);
+	m_tradeHandler = std::move(handler);
+}
+std::shared_ptr<trading::ITradingGateway> CTradeService::FindService(std::uint64_t accountId) const
 {
 	std::lock_guard<std::mutex> lock(m_mtx_accounts);
 	const auto mIter = m_accounts.find(accountId);
@@ -155,10 +209,14 @@ bool CTradeService::HasAccount(std::uint64_t accountId) const
 }
 bool CTradeService::IsConnected(std::uint64_t accountId) const
 {
-	return nullptr != FindService(accountId);
+	return GetAccount(accountId).m_bReady;
 }
 bool CTradeService::BeginStrategy(std::uint64_t accountId, _TyStrategyId strategyId)
 {
+	if (!GetAccount(accountId).m_bReady)
+	{
+		return false;
+	}
 	std::lock_guard<std::mutex> lock(m_mtx_accounts);
 	const auto mIter = m_accounts.find(accountId);
 	if ((m_accounts.end() == mIter) || (request::ACCOUNT_CONNECTED != mIter->second.m_info.state()))
@@ -179,38 +237,92 @@ void CTradeService::EndStrategy(std::uint64_t accountId, _TyStrategyId strategyI
 }
 bool CTradeService::HasActiveOrders(std::uint64_t accountId) const
 {
-	std::shared_ptr<CSimulatedTradingService> service = FindService(accountId);
-	return (nullptr != service) && service->HasActiveOrders();
+	std::shared_ptr<trading::ITradingGateway> service = FindService(accountId);
+	if (nullptr == service)
+	{
+		return false;
+	}
+	for (const auto& order : service->Snapshot(accountId).m_orders)
+	{
+		if (trading::IsActive(order.m_status))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 COrderSubmitResult CTradeService::Submit(const COrderIntent& intent)
 {
-	std::shared_ptr<CSimulatedTradingService> service = FindService(intent.m_accountId);
-	if (nullptr == service)
+	std::shared_ptr<trading::ITradingGateway> service = FindService(intent.m_accountId);
+	if ((nullptr == service) || !GetAccount(intent.m_accountId).m_bReady)
 	{
-		return { false, true, 0, 0, "Trading account is disconnected" };
+		return { false, true, 0, 0, "Account not synchronized" };
 	}
-	COrderSubmitResult result = service->Submit(intent);
-	if (result.m_bAccepted)
+	if (OrderType::Limit != intent.m_orderType)
 	{
-		std::lock_guard<std::mutex> lock(m_mtx_accounts);
-		m_orderAccounts.emplace(result.m_orderId, intent.m_accountId);
+		return { false, false, 0, 0, "UNSUPPORTED: only limit orders" };
 	}
-	return result;
+	static std::atomic_uint64_t nextId{ static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count()) };
+	trading::CRequest request;
+	request.m_operation = trading::Operation::Submit;
+	request.m_accountId = intent.m_accountId;
+	request.m_order.m_clientId = 0 == intent.m_clientOrderId ? nextId.fetch_add(1) : intent.m_clientOrderId;
+	request.m_requestId = request.m_order.m_clientId;
+	request.m_order.m_strategyId = intent.m_strategyId;
+	request.m_order.m_signalId = intent.m_signalId;
+	request.m_order.m_strSecurity = intent.m_security.String();
+	request.m_order.m_side = OrderSide::Buy == intent.m_side ? trading::Side::Buy : trading::Side::Sell;
+	request.m_order.m_nPrice = intent.m_price;
+	request.m_order.m_nQuantity = intent.m_quantity;
+	request.m_order.m_nPriceScale = intent.m_nPriceScale;
+	trading::Id nClientId = request.m_order.m_clientId;
+	trading::COrder order = request.m_order;
+	order.m_accountId = request.m_accountId;
+	trading::CResult result = service->Request(request, [this, order](const trading::CReply& reply)
+	{
+		if ((trading::Error::Rejected == reply.m_result.m_error) || (trading::Error::Unsupported == reply.m_result.m_error) || (trading::Error::Conflict == reply.m_result.m_error) || (trading::Error::NotFound == reply.m_result.m_error))
+		{
+			trading::CEvent event;
+			event.m_kind = trading::EventKind::Order;
+			event.m_accountId = order.m_accountId;
+			event.m_order = order;
+			event.m_order.m_status = trading::Status::Rejected;
+			OnEvent(event);
+		}
+	});
+	return { result.Ok(), !result.Ok(), nClientId, 0, result.Ok() ? "Request queued; await order event" : result.m_strMessage };
 }
 bool CTradeService::Cancel(_TyStrategyId strategyId, _TyOrderId orderId)
 {
 	std::uint64_t accountId = 0;
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_accounts);
-		const auto mIter = m_orderAccounts.find(orderId);
-		if (m_orderAccounts.end() == mIter)
+		auto iter = m_orderAccounts.find(orderId);
+		if (m_orderAccounts.end() == iter)
 		{
 			return false;
 		}
-		accountId = mIter->second;
+		accountId = iter->second;
 	}
-	std::shared_ptr<CSimulatedTradingService> service = FindService(accountId);
-	return (nullptr != service) && service->Cancel(strategyId, orderId);
+	std::shared_ptr<trading::ITradingGateway> service = FindService(accountId);
+	if (nullptr == service)
+	{
+		return false;
+	}
+	trading::CSnapshot snapshot = service->Snapshot(accountId);
+	auto order = std::find_if(snapshot.m_orders.begin(), snapshot.m_orders.end(), [orderId, strategyId](const trading::COrder& row)
+	{
+		return orderId == row.m_orderId && strategyId == row.m_strategyId;
+	});
+	if (snapshot.m_orders.end() == order)
+	{
+		return false;
+	}
+	trading::CRequest request;
+	request.m_operation = trading::Operation::Cancel;
+	request.m_accountId = accountId;
+	request.m_orderId = orderId;
+	return service->Request(request, {}).Ok();
 }
 CAccountSnapshot CTradeService::GetAccount() const
 {
@@ -218,8 +330,25 @@ CAccountSnapshot CTradeService::GetAccount() const
 }
 CAccountSnapshot CTradeService::GetAccount(std::uint64_t accountId) const
 {
-	std::shared_ptr<CSimulatedTradingService> service = FindService(accountId);
-	return nullptr == service ? CAccountSnapshot{} : service->GetAccount();
+	std::shared_ptr<trading::ITradingGateway> service = FindService(accountId);
+	CAccountSnapshot result;
+	if (nullptr == service)
+	{
+		return result;
+	}
+	trading::CSnapshot snapshot = service->Snapshot(accountId, false);
+	result.m_bReady = snapshot.m_bReady && (5000 >= std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - snapshot.m_nTime);
+	result.m_version = snapshot.m_version;
+	result.m_nTime = snapshot.m_nTime;
+	if (snapshot.m_accounts.empty() || !snapshot.m_accounts[0].m_bConnected)
+	{
+		result.m_bReady = false;
+		return result;
+	}
+	result.m_balance = snapshot.m_accounts[0].m_nBalance;
+	result.m_frozen = snapshot.m_accounts[0].m_nFrozen;
+	result.m_available = result.m_balance - result.m_frozen;
+	return result;
 }
 CPositionSnapshot CTradeService::GetPosition(const CSecurity& security) const
 {
@@ -227,18 +356,30 @@ CPositionSnapshot CTradeService::GetPosition(const CSecurity& security) const
 }
 CPositionSnapshot CTradeService::GetPosition(std::uint64_t accountId, const CSecurity& security) const
 {
-	std::shared_ptr<CSimulatedTradingService> service = FindService(accountId);
+	std::shared_ptr<trading::ITradingGateway> service = FindService(accountId);
 	if (nullptr != service)
 	{
-		return service->GetPosition(security);
+		trading::CSnapshot state = service->Snapshot(accountId, false);
+		CPositionSnapshot snapshot;
+		snapshot.m_security = security;
+		snapshot.m_bReady = GetAccount(accountId).m_bReady;
+		snapshot.m_version = state.m_version;
+		snapshot.m_nTime = state.m_nTime;
+		for (const auto& position : state.m_positions)
+		{
+			if (security.String() == position.m_strSecurity)
+			{
+				snapshot.m_totalQuantity = position.m_nTotal;
+				snapshot.m_availableQuantity = position.m_nAvailable;
+				snapshot.m_frozenQuantity = position.m_nFrozen;
+				snapshot.m_averageCost = 0 == position.m_nTotal ? 0 : position.m_nCost / position.m_nTotal;
+			}
+		}
+		return snapshot;
 	}
 	CPositionSnapshot snapshot;
 	snapshot.m_security = security;
 	return snapshot;
-}
-TradeServiceMode CTradeService::GetMode() const
-{
-	return TradeServiceMode::Simulated;
 }
 const std::string& CTradeService::GetLastError() const
 {
@@ -255,6 +396,173 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 	response.SetType(req.GetType());
 
 	response.SetErrorInfo(0, "");
+	if (_TyRequest::TRADE_ACCOUNT_INFO_QUERY == req.GetType())
+	{
+		std::vector<std::uint64_t> ids;
+		if (!req.GetExtraData("account_ids", ids))
+		{
+			net::SendError(req.GetConnectionId(), req, 1202, "account_ids must be a JSON array of positive IDs");
+			return false;
+		}
+		struct CBatch
+		{
+			std::mutex m_mtx_reply;
+			request::TradeAccountInfoList m_rows;
+			std::size_t m_nRemaining{ 0 };
+		};
+		std::shared_ptr<CBatch> batch = std::make_shared<CBatch>();
+		std::map<std::shared_ptr<trading::ITradingGateway>, std::vector<std::uint64_t>, std::owner_less<std::shared_ptr<trading::ITradingGateway>>> groups;
+		{
+			std::lock_guard<std::mutex> lock(m_mtx_accounts);
+			if (ids.empty())
+			{
+				for (const auto& item : m_accounts)
+				{
+					ids.emplace_back(item.first);
+				}
+			}
+			std::sort(ids.begin(), ids.end());
+			ids.erase(std::unique(ids.begin(), ids.end()), ids.end());
+			for (std::uint64_t id : ids)
+			{
+				auto account = m_accounts.find(id);
+				if (m_accounts.end() != account && nullptr != account->second.m_service)
+				{
+					groups[account->second.m_service].emplace_back(id);
+				}
+				else
+				{
+					request::TradeAccountInfo* row = batch->m_rows.add_accounts();
+					row->set_account_id(id);
+					row->set_error_code(1202);
+					row->set_error_message("account route unavailable");
+				}
+			}
+		}
+		batch->m_nRemaining = groups.size();
+		net::_TyConnectionId connection = req.GetConnectionId();
+		std::uint64_t nRequest = req.GetId();
+		auto send = [batch, connection, nRequest]()
+		{
+			CRequest response;
+			response.SetId(nRequest);
+			response.SetType(_TyRequest::TRADE_ACCOUNT_INFO_QUERY);
+			response.SetData(batch->m_rows);
+			net::SendRequest(connection, response);
+		};
+		if (groups.empty())
+		{
+			send();
+			return true;
+		}
+		for (const auto& group : groups)
+		{
+			std::function<void(const trading::CReply&)> completion = [batch, ids = group.second, send](const trading::CReply& reply)
+			{
+				bool bDone = false;
+				{
+					std::lock_guard<std::mutex> lock(batch->m_mtx_reply);
+					for (std::uint64_t id : ids)
+					{
+						request::TradeAccountInfo* row = batch->m_rows.add_accounts();
+						row->set_account_id(id);
+						row->set_server_time_ms(reply.m_snapshot.m_nTime);
+						auto account = std::find_if(reply.m_snapshot.m_accounts.begin(), reply.m_snapshot.m_accounts.end(), [id](const trading::CAccount& value)
+						{
+							return id == value.m_accountId;
+						});
+						if (!reply.m_result.Ok())
+						{
+							row->set_error_code(static_cast<int>(reply.m_result.m_error));
+							row->set_error_message(reply.m_result.m_strMessage);
+						}
+						else if (reply.m_snapshot.m_accounts.end() == account || !reply.m_snapshot.m_bReady || !account->m_bConnected)
+						{
+							row->set_error_code(1203);
+							row->set_error_message("account not synchronized");
+						}
+						else
+						{
+							row->set_available_snapshot(true);
+							row->set_balance(account->m_nBalance);
+							row->set_frozen(account->m_nFrozen);
+							row->set_available(account->m_nBalance - account->m_nFrozen);
+						}
+					}
+					bDone = 0 == --batch->m_nRemaining;
+				}
+				if (bDone)
+				{
+					send();
+				}
+			};
+			trading::CRequest query;
+			query.m_operation = trading::Operation::Funds;
+			query.m_requestId = req.GetId();
+			trading::CResult queued = group.first->Request(query, completion);
+			if (!queued.Ok())
+			{
+				trading::CReply reply;
+				reply.m_result = queued;
+				completion(reply);
+			}
+		}
+		return true;
+	}
+	if (_TyRequest::TRADE_ACCOUNT_LOGIN == req.GetType())
+	{
+		if (req.GetExtraData("broker").empty() || req.GetExtraData("site").empty() || req.GetExtraData("account").empty() || req.GetExtraData("password").empty())
+		{
+			net::SendError(req.GetConnectionId(), req, 1202, "broker/site/account/password required");
+			return false;
+		}
+		std::shared_ptr<trading::ITradingGateway> service;
+		{
+			std::lock_guard<std::mutex> lock(m_mtx_accounts);
+			for (const auto& item : m_accounts)
+			{
+				if (item.second.m_strBroker == req.GetExtraData("broker") && item.second.m_strSite == req.GetExtraData("site") && item.second.m_strExternalAccount == req.GetExtraData("account"))
+				{
+					accountId = item.first;
+					service = item.second.m_service;
+					break;
+				}
+			}
+		}
+		if (nullptr == service)
+		{
+			net::SendError(req.GetConnectionId(), req, static_cast<int>(trading::Error::Unsupported), "account route or adapter unavailable");
+			return false;
+		}
+		trading::CRequest login;
+		login.m_operation = trading::Operation::Login;
+		login.m_accountId = accountId;
+		login.m_requestId = req.GetId();
+		login.m_strBroker = req.GetExtraData("broker");
+		login.m_strSite = req.GetExtraData("site");
+		login.m_strUser = req.GetExtraData("account");
+		login.m_strPassword = req.GetExtraData("password");
+		net::_TyConnectionId connection = req.GetConnectionId();
+		std::uint64_t nRequestId = req.GetId();
+		trading::CResult queued = service->Request(std::move(login), [this, connection, nRequestId, accountId](const trading::CReply& reply)
+		{
+			CRequest response;
+			response.SetType(_TyRequest::TRADE_ACCOUNT_LOGIN);
+			response.SetId(nRequestId);
+			response.SetErrorInfo(static_cast<int>(reply.m_result.m_error), reply.m_result.m_strMessage);
+			if (reply.m_result.Ok())
+			{
+				std::lock_guard<std::mutex> lock(m_mtx_accounts);
+				response.SetData(m_accounts.at(accountId).m_info);
+			}
+			net::SendRequest(connection, response);
+		});
+		if (!queued.Ok())
+		{
+			net::SendError(connection, req, 1203, queued.m_strMessage);
+		}
+		return queued.Ok();
+	}
 	db::_TyDBPtr database = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
 	if (nullptr == database)
 	{
@@ -272,18 +580,6 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 	{
 		database->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) VALUES(" + std::to_string(accountId) + "," + utility::Utf8Literal(actor) + "," + utility::Utf8Literal(strAction) + ",'成功')");
 	};
-	if (_TyRequest::TRADE_ACCOUNT_LOGIN == req.GetType())
-	{
-		if (req.GetExtraData("broker").empty() || req.GetExtraData("site").empty() || req.GetExtraData("account").empty() || req.GetExtraData("password").empty())
-		{
-			return fail("券商、站点、账户和密码不能为空");
-		}
-		if ((128 < req.GetExtraData("broker").size()) || (256 < req.GetExtraData("site").size()) || (128 < req.GetExtraData("account").size()) || (256 < req.GetExtraData("password").size()))
-		{
-			return fail("账户登录参数过长");
-		}
-		return fail("券商登录通道尚未接入，无法验证交易账户");
-	}
 	if ((!req.IsTradeAccount()) && (_TyRequest::TRADE_ACCOUNT_QUERY != req.GetType()))
 	{
 		return fail("账户请求类型无效");
@@ -353,6 +649,24 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 			runtime.m_info.set_created_at(db::QueryValueToString(times.m_rows.front()[0]));
 			runtime.m_info.set_updated_at(db::QueryValueToString(times.m_rows.front()[1]));
 		}
+		database.reset();
+		trading::CResult provision = m_host.m_addAccount(accountId, info.initial_balance());
+		if (!provision.Ok())
+		{
+			net::SendError(req.GetConnectionId(), req, 1203, provision.m_strMessage);
+			return false;
+		}
+		database = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
+		if (nullptr == database)
+		{
+			net::SendError(req.GetConnectionId(), req, 1201, "account database unavailable");
+			return false;
+		}
+		runtime.m_service = m_host.m_gateway;
+		runtime.m_strAdapter = "simulated";
+		runtime.m_strBroker = "wind_simulated";
+		runtime.m_strSite = "default";
+		runtime.m_strExternalAccount = runtime.m_info.number();
 		response.SetData(runtime.m_info);
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_accounts);
@@ -360,51 +674,7 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 		}
 		audit();
 	}
-	else if (_TyRequest::TRADE_ACCOUNT_INFO_QUERY == type)
-	{
-		std::vector<std::uint64_t> accountIds;
-		if (!req.GetExtraData("account_ids", accountIds))
-		{
-			return fail("account_ids 必须是正整数 JSON 数组，最多 4096 项");
-		}
-		if (accountIds.empty())
-		{
-			std::lock_guard<std::mutex> lock(m_mtx_accounts);
-			for (const auto& item : m_accounts)
-			{
-				accountIds.emplace_back(item.first);
-			}
-		}
-		std::sort(accountIds.begin(), accountIds.end());
-		accountIds.erase(std::unique(accountIds.begin(), accountIds.end()), accountIds.end());
-		request::TradeAccountInfoList list;
-		for (std::uint64_t nId : accountIds)
-		{
-			request::TradeAccountInfo* pInfo = list.add_accounts();
-			pInfo->set_account_id(nId);
-			pInfo->set_server_time_ms(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
-			std::shared_ptr<CSimulatedTradingService> service = FindService(nId);
-			pInfo->set_available_snapshot(nullptr != service);
-			if (!HasAccount(nId))
-			{
-				pInfo->set_error_code(1202);
-				pInfo->set_error_message("账户不存在");
-			}
-			else if (nullptr == service)
-			{
-				pInfo->set_error_code(1203);
-				pInfo->set_error_message("账户资金快照暂不可用");
-			}
-			else
-			{
-				CAccountSnapshot funds = service->GetAccount();
-				pInfo->set_balance(funds.m_balance);
-				pInfo->set_available(funds.m_available);
-				pInfo->set_frozen(funds.m_frozen);
-			}
-		}
-		response.SetData(list);
-	}
+
 	else
 	{
 		if (!ReadId(req.GetExtraData("account_id"), accountId) || !HasAccount(accountId))
@@ -435,42 +705,47 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 		}
 		else if ((_TyRequest::TRADE_ACCOUNT_CONNECT == type) || (_TyRequest::TRADE_ACCOUNT_DISCONNECT == type))
 		{
-			std::string error;
+			std::shared_ptr<trading::ITradingGateway> service;
 			{
 				std::lock_guard<std::mutex> lock(m_mtx_accounts);
 				CAccountRuntime& runtime = m_accounts.at(accountId);
-				if (_TyRequest::TRADE_ACCOUNT_CONNECT == type)
+				service = runtime.m_service;
+				if ((_TyRequest::TRADE_ACCOUNT_DISCONNECT == type) && !runtime.m_runningStrategies.empty())
 				{
-					if (request::ACCOUNT_SIMULATED != runtime.m_info.account_type())
-					{
-						error = "实盘通道尚未接入";
-						runtime.m_info.set_state(request::ACCOUNT_ERROR);
-					}
-					else
-					{
-						if (nullptr == runtime.m_service)
-						{
-							runtime.m_service = std::make_shared<CSimulatedTradingService>(runtime.m_info.initial_balance(), accountId);
-							runtime.m_service->SetOrderEventHandler(_TyOrderEventHandler(m_orderHandler));
-						}
-						runtime.m_info.set_state(request::ACCOUNT_CONNECTED);
-					}
+					return fail("账户有运行策略，请先停止");
 				}
-				else if (!runtime.m_runningStrategies.empty() || ((nullptr != runtime.m_service) && runtime.m_service->HasActiveOrders()))
-				{
-					error = "账户存在已启动策略或活跃委托，请先停止策略并处理委托";
-				}
-				else
-				{
-					runtime.m_info.set_state(request::ACCOUNT_DISCONNECTED);
-				}
-				runtime.m_info.set_last_error(error);
 			}
-			if (!error.empty())
+			if (nullptr == service)
 			{
-				return fail(error);
+				return fail("UNSUPPORTED: trading adapter is not configured");
 			}
-			audit();
+			trading::CRequest operation;
+			operation.m_operation = _TyRequest::TRADE_ACCOUNT_CONNECT == type ? trading::Operation::Connect : trading::Operation::Disconnect;
+			operation.m_requestId = req.GetId();
+			operation.m_accountId = accountId;
+			database.reset();
+			CRequest original = req;
+			trading::CResult queued = service->Request(operation, [this, original, accountId](const trading::CReply& reply)
+			{
+				if (!reply.m_result.Ok())
+				{
+					net::SendError(original.GetConnectionId(), original, 1203, reply.m_result.m_strMessage);
+					return;
+				}
+				CRequest response;
+				response.SetId(original.GetId());
+				response.SetType(original.GetType());
+				{
+					std::lock_guard<std::mutex> lock(m_mtx_accounts);
+					response.SetData(m_accounts.at(accountId).m_info);
+				}
+				net::SendRequest(original.GetConnectionId(), response);
+			});
+			if (!queued.Ok())
+			{
+				net::SendError(req.GetConnectionId(), req, 1203, queued.m_strMessage);
+			}
+			return queued.Ok();
 		}
 		else if (_TyRequest::TRADE_ACCOUNT_LOGS_QUERY == type)
 		{
@@ -505,4 +780,445 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 		response.SetData(m_accounts.at(accountId).m_info);
 	}
 	return net::SendRequest(req.GetConnectionId(), response);
+}
+namespace
+{
+	void WriteOrder(const trading::COrder& row, request::TradeOrderRecord& wire)
+	{
+		wire.set_account_id(row.m_accountId);
+		wire.set_client_order_id(row.m_clientId);
+		wire.set_order_id(row.m_orderId);
+		wire.set_request_id(row.m_requestId);
+		wire.set_strategy_id(row.m_strategyId);
+		wire.set_signal_id(row.m_signalId);
+		wire.set_security(row.m_strSecurity);
+		wire.set_side(static_cast<int>(row.m_side));
+		wire.set_state(static_cast<int>(row.m_status));
+		wire.set_price(row.m_nPrice);
+		wire.set_price_scale(row.m_nPriceScale);
+		wire.set_quantity(row.m_nQuantity);
+		wire.set_filled_quantity(row.m_nFilled);
+		wire.set_frozen(row.m_nFrozen);
+		wire.set_turnover(row.m_nTurnover);
+		wire.set_fee(row.m_nFee);
+		wire.set_time_ms(row.m_nTime);
+		wire.set_rule_version(row.m_strRuleVersion);
+	}
+	void WriteTrade(const trading::CTrade& row, request::TradeRecord& wire)
+	{
+		wire.set_account_id(row.m_accountId);
+		wire.set_trade_id(row.m_tradeId);
+		wire.set_order_id(row.m_orderId);
+		wire.set_security(row.m_strSecurity);
+		wire.set_side(static_cast<int>(row.m_side));
+		wire.set_price(row.m_nPrice);
+		wire.set_price_scale(row.m_nPriceScale);
+		wire.set_quantity(row.m_nQuantity);
+		wire.set_fee(row.m_nFee);
+		wire.set_time_ms(row.m_nTime);
+	}
+	void WritePosition(const trading::CPosition& row, request::TradePositionRecord& wire)
+	{
+		wire.set_account_id(row.m_accountId);
+		wire.set_security(row.m_strSecurity);
+		wire.set_total_quantity(row.m_nTotal);
+		wire.set_available_quantity(row.m_nAvailable);
+		wire.set_frozen_quantity(row.m_nFrozen);
+		wire.set_today_quantity(row.m_nToday);
+		wire.set_book_cost_cents(row.m_nCost);
+	}
+	CSecurity Security(const std::string& strValue)
+	{
+		std::size_t nDot = strValue.rfind('.');
+		return std::string::npos == nDot ? CSecurity{} : CSecurity(strValue.substr(0, nDot), ParseMarket(strValue.substr(nDot + 1)));
+	}
+} // namespace
+void CTradeService::SetPushHandler(std::function<void(const CRequest&)> handler)
+{
+	std::lock_guard<std::mutex> lock(m_mtx_accounts);
+	m_pushHandler = std::move(handler);
+}
+void CTradeService::SetAccountReadyHandler(std::function<void(std::uint64_t)> handler)
+{
+	std::lock_guard<std::mutex> lock(m_mtx_accounts);
+	m_accountReadyHandler = std::move(handler);
+}
+void CTradeService::OnEvent(const trading::CEvent& event)
+{
+	_TyOrderEventHandler orderHandler;
+	_TyTradeEventHandler tradeHandler;
+	std::function<void(const CRequest&)> pushHandler;
+	std::function<void(std::uint64_t)> readyHandler;
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_accounts);
+		if (0 != event.m_sequence)
+		{
+			std::uint64_t& nLast = m_lastEventSequence[event.m_accountId];
+			if (event.m_sequence <= nLast)
+			{
+				return;
+			}
+			nLast = event.m_sequence;
+		}
+		orderHandler = m_orderHandler;
+		tradeHandler = m_tradeHandler;
+		pushHandler = m_pushHandler;
+		readyHandler = m_accountReadyHandler;
+		auto account = m_accounts.find(event.m_accountId);
+		if (m_accounts.end() == account)
+		{
+			return;
+		}
+		if (trading::EventKind::Session == event.m_kind)
+		{
+			account->second.m_info.set_state(event.m_account.m_bConnected ? request::ACCOUNT_CONNECTED : request::ACCOUNT_DISCONNECTED);
+		}
+		if (trading::EventKind::Order == event.m_kind)
+		{
+			if (0 != event.m_sequence && event.m_sequence <= m_lastOrderSequence[event.m_order.m_orderId])
+			{
+				return;
+			}
+			m_lastOrderSequence[event.m_order.m_orderId] = event.m_sequence;
+			if (0 != event.m_order.m_orderId)
+			{
+				m_orderAccounts[event.m_order.m_orderId] = event.m_accountId;
+			}
+		}
+	}
+	if (trading::EventKind::Order == event.m_kind && nullptr != orderHandler)
+	{
+		const trading::COrder& row = event.m_order;
+		COrderEvent order;
+		order.m_sequence = event.m_sequence;
+		order.m_accountId = event.m_accountId;
+		order.m_strategyId = row.m_strategyId;
+		order.m_signalId = row.m_signalId;
+		order.m_clientOrderId = row.m_clientId;
+		order.m_orderId = row.m_orderId;
+		order.m_security = Security(row.m_strSecurity);
+		order.m_quantity = row.m_nQuantity;
+		order.m_filledQuantity = row.m_nFilled;
+		order.m_eventTimeMs = row.m_nTime;
+		switch (row.m_status)
+		{
+		case trading::Status::Accepted:
+			order.m_status = OrderStatus::Accepted;
+			break;
+		case trading::Status::PartiallyFilled:
+			order.m_status = OrderStatus::PartiallyFilled;
+			break;
+		case trading::Status::Filled:
+			order.m_status = OrderStatus::Filled;
+			break;
+		case trading::Status::Cancelled:
+			order.m_status = OrderStatus::Cancelled;
+			break;
+		case trading::Status::Expired:
+			order.m_status = OrderStatus::Expired;
+			break;
+		default:
+			order.m_status = OrderStatus::Rejected;
+		}
+		orderHandler(order);
+	}
+	if (trading::EventKind::Trade == event.m_kind && nullptr != tradeHandler)
+	{
+		CTradeEvent trade;
+		trade.m_sequence = event.m_sequence;
+		trade.m_accountId = event.m_accountId;
+		trade.m_strategyId = event.m_order.m_strategyId;
+		trade.m_signalId = event.m_order.m_signalId;
+		trade.m_clientOrderId = event.m_order.m_clientId;
+		trade.m_orderId = event.m_order.m_orderId;
+		trade.m_strTradeId = std::to_string(event.m_trade.m_tradeId);
+		trade.m_security = Security(event.m_trade.m_strSecurity);
+		trade.m_side = trading::Side::Buy == event.m_trade.m_side ? OrderSide::Buy : OrderSide::Sell;
+		trade.m_price = event.m_trade.m_nPrice;
+		trade.m_nPriceScale = event.m_trade.m_nPriceScale;
+		trade.m_quantity = event.m_trade.m_nQuantity;
+		trade.m_tradeTimeMs = event.m_trade.m_nTime;
+		tradeHandler(trade);
+	}
+	if (nullptr != pushHandler)
+	{
+		CRequest push;
+		push.SetId(0);
+		push.SetExtraData("sequence", std::to_string(event.m_sequence));
+		push.SetExtraData("request_id", std::to_string(event.m_requestId));
+		push.SetExtraData("account_id", std::to_string(event.m_accountId));
+		switch (event.m_kind)
+		{
+		case trading::EventKind::Session:
+			push.SetType(_TyRequest::TRADE_ACCOUNT_STATE_PUSH);
+			{
+				std::lock_guard<std::mutex> lock(m_mtx_accounts);
+				push.SetData(m_accounts.at(event.m_accountId).m_info);
+			}
+			break;
+		case trading::EventKind::Order:
+		{
+			push.SetType(_TyRequest::TRADE_ORDER_PUSH);
+			request::TradeOrderList rows;
+			WriteOrder(event.m_order, *rows.add_orders());
+			push.SetData(rows);
+		}
+		break;
+		case trading::EventKind::Trade:
+		{
+			push.SetType(_TyRequest::TRADE_TRADE_PUSH);
+			request::TradeList rows;
+			WriteTrade(event.m_trade, *rows.add_trades());
+			push.SetData(rows);
+		}
+		break;
+		case trading::EventKind::Funds:
+		{
+			push.SetType(_TyRequest::TRADE_ACCOUNT_INFO_PUSH);
+			request::TradeAccountInfoList rows;
+			request::TradeAccountInfo* row = rows.add_accounts();
+			row->set_account_id(event.m_accountId);
+			row->set_balance(event.m_account.m_nBalance);
+			row->set_frozen(event.m_account.m_nFrozen);
+			row->set_available(event.m_account.m_nBalance - event.m_account.m_nFrozen);
+			row->set_available_snapshot(event.m_account.m_bConnected);
+			push.SetData(rows);
+		}
+		break;
+		case trading::EventKind::Position:
+		{
+			push.SetType(_TyRequest::TRADE_POSITION_PUSH);
+			request::TradePositionList rows;
+			WritePosition(event.m_position, *rows.add_positions());
+			push.SetData(rows);
+		}
+		break;
+		}
+		pushHandler(push);
+	}
+	if (trading::EventKind::Session == event.m_kind && event.m_account.m_bConnected && nullptr != readyHandler)
+	{
+		readyHandler(event.m_accountId);
+	}
+}
+bool CTradeService::HandleTradingRequest(const CRequest& req)
+{
+	trading::CRequest operation;
+	operation.m_requestId = req.GetId();
+	if (!ReadId(req.GetExtraData("account_id"), operation.m_accountId))
+	{
+		net::SendError(req.GetConnectionId(), req, 1202, "account_id required");
+		return false;
+	}
+	std::shared_ptr<trading::ITradingGateway> service;
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_accounts);
+		auto account = m_accounts.find(operation.m_accountId);
+		if (m_accounts.end() != account)
+		{
+			service = account->second.m_service;
+		}
+	}
+	if (nullptr == service)
+	{
+		net::SendError(req.GetConnectionId(), req, static_cast<int>(trading::Error::Unsupported), "account adapter unavailable");
+		return false;
+	}
+	_TyRequest type = req.GetType();
+	if (_TyRequest::TRADE_CAPABILITIES_QUERY == type)
+	{
+		CRequest response;
+		response.SetId(req.GetId());
+		response.SetType(type);
+		std::vector<std::uint64_t> operations;
+		for (trading::Operation capability : service->Capabilities())
+		{
+			operations.emplace_back(static_cast<std::uint64_t>(capability) + 1);
+		}
+		response.SetExtraData("operations", operations);
+		response.SetExtraData("limit_orders", "1");
+		net::SendRequest(req.GetConnectionId(), response);
+		return true;
+	}
+	if (_TyRequest::TRADE_SYNC_QUERY == type)
+	{
+		operation.m_operation = trading::Operation::Synchronize;
+		std::string strAfter = req.GetExtraData("after_sequence");
+		if (!strAfter.empty() && !utility::to_number(strAfter, operation.m_afterSequence))
+		{
+			net::SendError(req.GetConnectionId(), req, 1202, "invalid after_sequence");
+			return false;
+		}
+	}
+	else if (_TyRequest::TRADE_ORDER_SUBMIT == type)
+	{
+		operation.m_operation = trading::Operation::Submit;
+		operation.m_order.m_requestId = req.GetId();
+		operation.m_order.m_accountId = operation.m_accountId;
+		std::string strSide = req.GetExtraData("side");
+		std::int64_t nScale = 0;
+		if (("buy" != strSide && "sell" != strSide) || "limit" != req.GetExtraData("order_type") || !ReadId(req.GetExtraData("client_order_id"), operation.m_order.m_clientId) || !utility::to_number(req.GetExtraData("price"), operation.m_order.m_nPrice) || !utility::to_number(req.GetExtraData("quantity"), operation.m_order.m_nQuantity) || !utility::to_number(req.GetExtraData("price_scale"), nScale) || (0 > nScale) || (6 < nScale))
+		{
+			net::SendError(req.GetConnectionId(), req, 1202, "invalid limit order parameters");
+			return false;
+		}
+		operation.m_order.m_side = "buy" == strSide ? trading::Side::Buy : trading::Side::Sell;
+		operation.m_order.m_nPriceScale = static_cast<int>(nScale);
+		operation.m_order.m_strSecurity = req.GetExtraData("security");
+	}
+	else if (_TyRequest::TRADE_ORDER_CANCEL == type)
+	{
+		operation.m_operation = trading::Operation::Cancel;
+		if (!ReadId(req.GetExtraData("order_id"), operation.m_orderId))
+		{
+			net::SendError(req.GetConnectionId(), req, 1202, "order_id required");
+			return false;
+		}
+	}
+	else if (_TyRequest::TRADE_POSITION_QUERY == type)
+	{
+		operation.m_operation = trading::Operation::Positions;
+	}
+	else if (_TyRequest::TRADE_ORDER_QUERY == type)
+	{
+		operation.m_operation = trading::Operation::Orders;
+	}
+	else if (_TyRequest::TRADE_TRADE_QUERY == type)
+	{
+		operation.m_operation = trading::Operation::Trades;
+	}
+	else
+	{
+		return false;
+	}
+	std::string strSecurity = req.GetExtraData("security");
+	net::_TyConnectionId connection = req.GetConnectionId();
+	std::uint64_t nRequestId = req.GetId();
+	trading::CResult queued = service->Request(operation, [type, connection, nRequestId, strSecurity](const trading::CReply& reply)
+	{
+		CRequest response;
+		response.SetId(nRequestId);
+		response.SetType(type);
+		response.SetErrorInfo(static_cast<int>(reply.m_result.m_error), reply.m_result.m_strMessage);
+		response.SetExtraData("version", std::to_string(reply.m_snapshot.m_version));
+		response.SetExtraData("server_time_ms", std::to_string(reply.m_snapshot.m_nTime));
+		if (reply.m_result.Ok())
+		{
+			if (_TyRequest::TRADE_SYNC_QUERY == type)
+			{
+				request::TradeSyncResult sync;
+				sync.set_watermark(reply.m_snapshot.m_version);
+				sync.set_ready(reply.m_snapshot.m_bReady);
+				sync.set_server_time_ms(reply.m_snapshot.m_nTime);
+				for (const auto& account : reply.m_snapshot.m_accounts)
+				{
+					request::TradeAccountInfo* row = sync.add_accounts();
+					row->set_account_id(account.m_accountId);
+					row->set_balance(account.m_nBalance);
+					row->set_available(account.m_nBalance - account.m_nFrozen);
+					row->set_frozen(account.m_nFrozen);
+					row->set_available_snapshot(account.m_bConnected && reply.m_snapshot.m_bReady);
+				}
+				for (const auto& row : reply.m_snapshot.m_orders)
+				{
+					WriteOrder(row, *sync.add_orders());
+				}
+				for (const auto& row : reply.m_snapshot.m_trades)
+				{
+					WriteTrade(row, *sync.add_trades());
+				}
+				for (const auto& row : reply.m_snapshot.m_positions)
+				{
+					WritePosition(row, *sync.add_positions());
+				}
+				for (const auto& event : reply.m_events)
+				{
+					request::TradeEventRecord* row = sync.add_events();
+					row->set_sequence(event.m_sequence);
+					row->set_request_id(event.m_requestId);
+					row->set_account_id(event.m_accountId);
+					row->set_kind(static_cast<int>(event.m_kind));
+					row->set_connected(event.m_account.m_bConnected);
+					if (trading::EventKind::Order == event.m_kind)
+					{
+						WriteOrder(event.m_order, *row->mutable_order());
+					}
+					if (trading::EventKind::Trade == event.m_kind)
+					{
+						WriteTrade(event.m_trade, *row->mutable_trade());
+					}
+					if (trading::EventKind::Position == event.m_kind)
+					{
+						WritePosition(event.m_position, *row->mutable_position());
+					}
+					if (trading::EventKind::Funds == event.m_kind)
+					{
+						request::TradeAccountInfo* funds = row->mutable_funds();
+						funds->set_account_id(event.m_accountId);
+						funds->set_balance(event.m_account.m_nBalance);
+						funds->set_frozen(event.m_account.m_nFrozen);
+						funds->set_available(event.m_account.m_nBalance - event.m_account.m_nFrozen);
+						funds->set_available_snapshot(true);
+					}
+				}
+				response.SetData(sync);
+			}
+			else if ((_TyRequest::TRADE_ORDER_QUERY == type) || (_TyRequest::TRADE_ORDER_SUBMIT == type) || (_TyRequest::TRADE_ORDER_CANCEL == type))
+			{
+				request::TradeOrderList rows;
+				for (const auto& row : reply.m_snapshot.m_orders)
+				{
+					if ((strSecurity.empty() || strSecurity == row.m_strSecurity) && ((_TyRequest::TRADE_ORDER_QUERY == type) || reply.m_orderId == row.m_orderId))
+					{
+						WriteOrder(row, *rows.add_orders());
+					}
+				}
+				response.SetData(rows);
+			}
+			else if (_TyRequest::TRADE_TRADE_QUERY == type)
+			{
+				request::TradeList rows;
+				for (const auto& row : reply.m_snapshot.m_trades)
+				{
+					if (strSecurity.empty() || strSecurity == row.m_strSecurity)
+					{
+						WriteTrade(row, *rows.add_trades());
+					}
+				}
+				response.SetData(rows);
+			}
+			else
+			{
+				request::TradePositionList rows;
+				for (const auto& row : reply.m_snapshot.m_positions)
+				{
+					if (strSecurity.empty() || strSecurity == row.m_strSecurity)
+					{
+						WritePosition(row, *rows.add_positions());
+					}
+				}
+				response.SetData(rows);
+			}
+		}
+		net::SendRequest(connection, response);
+	});
+	if (!queued.Ok())
+	{
+		net::SendError(connection, req, static_cast<int>(queued.m_error), queued.m_strMessage);
+	}
+	return queued.Ok();
+}
+
+std::vector<trading::COrder> CTradeService::GetOrders(std::uint64_t accountId) const
+{
+	std::shared_ptr<trading::ITradingGateway> service;
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_accounts);
+		auto account = m_accounts.find(accountId);
+		if (m_accounts.end() != account)
+		{
+			service = account->second.m_service;
+		}
+	}
+	return nullptr == service ? std::vector<trading::COrder>{} : service->Snapshot(accountId).m_orders;
 }

@@ -110,9 +110,6 @@
 	<ClCompile Include="strategy\CTradeService.cpp">
 	  <Filter>strategy</Filter>
 	</ClCompile>
-    <ClCompile Include="strategy\CSimulatedTradingService.cpp">
-      <Filter>strategy</Filter>
-    </ClCompile>
     <ClCompile Include="strategy\StrategyTypes.cpp">
       <Filter>strategy</Filter>
     </ClCompile>
@@ -279,9 +276,6 @@
 	<ClInclude Include="strategy\CTradeService.h">
 	  <Filter>strategy</Filter>
 	</ClInclude>
-    <ClInclude Include="strategy\CSimulatedTradingService.h">
-      <Filter>strategy</Filter>
-    </ClInclude>
     <ClInclude Include="strategy\IStrategy.h">
       <Filter>strategy</Filter>
     </ClInclude>
@@ -312,4 +306,19 @@
 	  <Filter>sql</Filter>
 	</None>
   </ItemGroup>
+<ItemGroup>
+<ClCompile Include="counter\CInProcessGateway.cpp" />
+<ClCompile Include="counter\CMySqlCounterStore.cpp" />
+<ClCompile Include="counter\CSimulatedCounter.cpp" />
+<ClCompile Include="counter\TradeTypes.cpp" />
+<ClCompile Include="counter\TradingTypes.cpp" />
+<ClCompile Include="counter\WindCounterHost.cpp" />
+<ClInclude Include="counter\CInProcessGateway.h" />
+<ClInclude Include="counter\CMySqlCounterStore.h" />
+<ClInclude Include="counter\CSimulatedCounter.h" />
+<ClInclude Include="counter\ITradingGateway.h" />
+<ClInclude Include="counter\TradeTypes.h" />
+<ClInclude Include="counter\TradingTypes.h" />
+<ClInclude Include="counter\WindCounterHost.h" />
+</ItemGroup>
 </Project>

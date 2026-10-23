@@ -1,7 +1,7 @@
-﻿#ifndef WIND_STRATEGY_STRATEGYTYPES_H
+#ifndef WIND_STRATEGY_STRATEGYTYPES_H
 #define WIND_STRATEGY_STRATEGYTYPES_H
 
-#include "../request/MarketTypes.h"
+#include "../counter/TradingTypes.h"
 #include "../request/v1/market.pb.h"
 
 #include <chrono>
@@ -34,39 +34,6 @@ enum class StrategyState
 	Faulted
 };
 
-enum class OrderSide
-{
-	Unknown,
-	Buy,
-	Sell
-};
-
-enum class OrderType
-{
-	Market,
-	Limit
-};
-
-enum class PositionEffect
-{
-	Unknown,
-	Open,
-	Close,
-	CloseToday
-};
-
-enum class OrderStatus
-{
-	Unknown,
-	Pending,
-	Accepted,
-	Rejected,
-	PartiallyFilled,
-	Filled,
-	Cancelling,
-	Cancelled
-};
-
 enum class LogLevel
 {
 	Debug,
@@ -89,82 +56,10 @@ struct CStrategyConfig
 	bool IsValid() const;
 };
 
-struct COrderIntent
-{
-	std::uint64_t m_accountId{ 1 };
-	_TyStrategyId m_strategyId{ 0 };
-	_TySignalId m_signalId{ 0 };
-	CSecurity m_security;
-	OrderSide m_side{ OrderSide::Unknown };
-	OrderType m_orderType{ OrderType::Limit };
-	PositionEffect m_positionEffect{ PositionEffect::Unknown };
-	std::int64_t m_price{ 0 };
-	std::int64_t m_quantity{ 0 };
-	std::string m_strReason;
-
-	bool IsValid() const;
-};
-
-struct COrderSubmitResult
-{
-	bool m_bAccepted{ false };
-	bool m_bRetryable{ false };
-	_TyClientOrderId m_clientOrderId{ 0 };
-	_TyOrderId m_orderId{ 0 };
-	std::string m_strReason;
-};
-
-struct COrderEvent
-{
-	std::uint64_t m_accountId{ 1 };
-	_TyStrategyId m_strategyId{ 0 };
-	_TySignalId m_signalId{ 0 };
-	_TyClientOrderId m_clientOrderId{ 0 };
-	_TyOrderId m_orderId{ 0 };
-	CSecurity m_security;
-	OrderStatus m_status{ OrderStatus::Unknown };
-	std::int64_t m_quantity{ 0 };
-	std::int64_t m_filledQuantity{ 0 };
-	std::int64_t m_eventTimeMs{ 0 };
-	std::string m_strReason;
-};
-
-struct CTradeEvent
-{
-	std::uint64_t m_accountId{ 1 };
-	_TyStrategyId m_strategyId{ 0 };
-	_TySignalId m_signalId{ 0 };
-	_TyClientOrderId m_clientOrderId{ 0 };
-	_TyOrderId m_orderId{ 0 };
-	std::string m_strTradeId;
-	CSecurity m_security;
-	OrderSide m_side{ OrderSide::Unknown };
-	std::int64_t m_price{ 0 };
-	std::int64_t m_quantity{ 0 };
-	std::int64_t m_tradeTimeMs{ 0 };
-};
-
 struct CTimerEvent
 {
 	_TyTimerId m_timerId{ 0 };
 	std::chrono::steady_clock::time_point m_fireTime;
-};
-
-struct CPositionSnapshot
-{
-	CSecurity m_security;
-	std::int64_t m_totalQuantity{ 0 };
-	std::int64_t m_availableQuantity{ 0 };
-	std::int64_t m_frozenQuantity{ 0 };
-	std::int64_t m_averageCost{ 0 };
-};
-
-struct CAccountSnapshot
-{
-	std::int64_t m_balance{ 0 };
-	std::int64_t m_available{ 0 };
-	std::int64_t m_frozen{ 0 };
-	std::int64_t m_marketValue{ 0 };
 };
 
 struct CStrategySnapshot

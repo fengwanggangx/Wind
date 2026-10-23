@@ -285,3 +285,23 @@ void CRequest::SetData(const request::StrategyRuntimeList& value)
 {
 	m_data->mutable_strategy_runtime_list()->CopyFrom(value);
 }
+
+void CRequest::SetData(const request::TradeOrderList& value)
+{
+	m_data->mutable_trade_orders()->CopyFrom(value);
+}
+
+void CRequest::SetData(const request::TradeList& value)
+{
+	m_data->mutable_trades()->CopyFrom(value);
+}
+
+void CRequest::SetData(const request::TradePositionList& value)
+{
+	m_data->mutable_trade_positions()->CopyFrom(value);
+}
+
+void CRequest::SetData(const request::TradeSyncResult& value)
+{
+	m_data->mutable_trade_sync()->CopyFrom(value);
+}

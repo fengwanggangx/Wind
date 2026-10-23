@@ -104,6 +104,7 @@ void CMovingAverageStrategy::TryGenerateSignal(const _TyQuoteData& data)
 	intent.m_orderType = OrderType::Limit;
 	intent.m_positionEffect = 0 < relation ? PositionEffect::Open : PositionEffect::Close;
 	intent.m_price = data.last_price();
+	intent.m_nPriceScale = data.price_scale();
 	intent.m_quantity = 100;
 	intent.m_strReason = 0 < relation ? "Short moving average crossed above long moving average" : "Short moving average crossed below long moving average";
 	COrderSubmitResult result = m_pContext->SubmitOrder(intent);

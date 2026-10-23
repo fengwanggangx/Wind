@@ -36,6 +36,19 @@ enum RequestType {
     MARKET_SECTOR_CONSTITUENTS_QUERY = 46;
     MARKET_QUOTE_PUSH = 47;
     MARKET_DEPTH_PUSH = 48;
+    TRADE_ORDER_SUBMIT = 49;
+    TRADE_ORDER_CANCEL = 50;
+    TRADE_POSITION_QUERY = 51;
+    TRADE_ORDER_QUERY = 52;
+    TRADE_TRADE_QUERY = 53;
+    TRADE_ACCOUNT_STATE_PUSH = 54;
+    TRADE_ORDER_PUSH = 55;
+    TRADE_TRADE_PUSH = 56;
+    TRADE_ACCOUNT_INFO_PUSH = 57;
+    TRADE_POSITION_PUSH = 58;
+    TRADE_SYNC_QUERY = 59;
+    TRADE_CAPABILITIES_QUERY = 60;
+
 }
 
 message StrategySubscription {
@@ -107,6 +120,37 @@ message StrategyRuntimeRecord {
 }
 message StrategyRuntimeList { repeated StrategyRuntimeRecord runtimes = 1; }
 
+
+message TradeOrderRecord {
+ uint64 account_id = 1; uint64 client_order_id = 2; uint64 order_id = 3; uint64 request_id = 4;
+ uint64 strategy_id = 5; uint64 signal_id = 6; string security = 7; int32 side = 8; int32 state = 9;
+ int64 price = 10; int32 price_scale = 11; int64 quantity = 12; int64 filled_quantity = 13;
+ int64 frozen = 14; int64 turnover = 15; int64 fee = 16; int64 time_ms = 17; string rule_version = 18;
+}
+message TradeOrderList { repeated TradeOrderRecord orders = 1; }
+message TradeRecord {
+ uint64 account_id = 1; uint64 trade_id = 2; uint64 order_id = 3; string security = 4;
+ int32 side = 5; int64 price = 6; int32 price_scale = 7; int64 quantity = 8; int64 fee = 9; int64 time_ms = 10;
+}
+message TradeList { repeated TradeRecord trades = 1; }
+message TradePositionRecord {
+ uint64 account_id = 1; string security = 2; int64 total_quantity = 3; int64 available_quantity = 4;
+ int64 frozen_quantity = 5; int64 today_quantity = 6; int64 book_cost_cents = 7;
+}
+message TradePositionList { repeated TradePositionRecord positions = 1; }
+
+
+message TradeEventRecord {
+ uint64 sequence = 1; uint64 request_id = 2; uint64 account_id = 3; int32 kind = 4;
+ TradeOrderRecord order = 5; TradeRecord trade = 6; TradeAccountInfo funds = 7;
+ TradePositionRecord position = 8; bool connected = 9;
+}
+message TradeSyncResult {
+ uint64 watermark = 1; bool ready = 2; int64 server_time_ms = 3;
+ repeated TradeAccountInfo accounts = 4; repeated TradePositionRecord positions = 5;
+ repeated TradeOrderRecord orders = 6; repeated TradeRecord trades = 7; repeated TradeEventRecord events = 8;
+}
+
 message RequestData {
 	reserved 24, 26, 28;
 	reserved "security_list_request";
@@ -140,5 +184,9 @@ message RequestData {
         TradeAccountLogList account_logs = 33;
         TradeAccountInfoList account_info_list = 34;
         StrategyRuntimeList strategy_runtime_list = 35;
+        TradeOrderList trade_orders = 36;
+        TradeList trades = 37;
+        TradePositionList trade_positions = 38;
+        TradeSyncResult trade_sync = 39;
 	}
 }

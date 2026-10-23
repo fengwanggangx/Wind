@@ -44,9 +44,26 @@ namespace request
 		MARKET_SECTOR_CONSTITUENTS_QUERY = 46,
 		MARKET_QUOTE_PUSH = 47,
 		MARKET_DEPTH_PUSH = 48,
+		TRADE_ORDER_SUBMIT = 49,
+		TRADE_ORDER_CANCEL = 50,
+		TRADE_POSITION_QUERY = 51,
+		TRADE_ORDER_QUERY = 52,
+		TRADE_TRADE_QUERY = 53,
+		TRADE_ACCOUNT_STATE_PUSH = 54,
+		TRADE_ORDER_PUSH = 55,
+		TRADE_TRADE_PUSH = 56,
+		TRADE_ACCOUNT_INFO_PUSH = 57,
+		TRADE_POSITION_PUSH = 58,
+		TRADE_SYNC_QUERY = 59,
+		TRADE_CAPABILITIES_QUERY = 60,
+
 	};
 
 	class RequestData;
+	class TradeOrderList;
+	class TradeList;
+	class TradePositionList;
+	class TradeSyncResult;
 	class StrategyInfo;
 	class StrategyList;
 	class TradeAccountRecord;
@@ -111,6 +128,10 @@ class CRequest
 	void SetData(const request::TradeAccountInfoList& value);
 	void SetData(const request::StrategyRuntimeList& value);
 	void SetData(const request::TradeAccountLogList& value);
+	void SetData(const request::TradeOrderList& value);
+	void SetData(const request::TradeList& value);
+	void SetData(const request::TradePositionList& value);
+	void SetData(const request::TradeSyncResult& value);
 	const _TyReqData& GetData() const;
 
 	void SetConnectionId(net::_TyConnectionId id);

@@ -1,4 +1,4 @@
-﻿#ifndef WIND_STRATEGY_CSTRATEGYENGINE_H
+#ifndef WIND_STRATEGY_CSTRATEGYENGINE_H
 #define WIND_STRATEGY_CSTRATEGYENGINE_H
 
 #include "IStrategy.h"
@@ -118,6 +118,9 @@ class CStrategyEngine final
 	public:
 	bool Initialize();
 	bool HandleStrategyRequest(const CRequest& req);
+	bool HandleTradingRequest(const CRequest& req);
+	void StopTrading();
+	void SetTradingPushHandler(std::function<void(const CRequest&)> handler);
 	bool HandleAccountRequest(const CRequest& req, const std::string& actor);
 	std::unique_ptr<IStrategy> CreateStrategy(const std::string& strType) const;
 	bool CreateStrategy(const CStrategyConfig& config);

@@ -126,7 +126,14 @@
 	<ClCompile Include="strategy\CStrategyContext.cpp" />
 	<ClCompile Include="strategy\CStrategyEngine.cpp" />
 	<ClCompile Include="strategy\CTradeService.cpp" />
-	<ClCompile Include="strategy\CSimulatedTradingService.cpp" />
+    <ClCompile Include="counter\CInProcessGateway.cpp" />
+    <ClCompile Include="counter\CMySqlCounterStore.cpp" />
+    <ClCompile Include="counter\CSimulatedCounter.cpp" />
+    <ClCompile Include="counter\TradeTypes.cpp" />
+    <ClCompile Include="counter\TradingTypes.cpp" />
+    <ClCompile Include="counter\WindCounterHost.cpp" />
+
+
 	<ClCompile Include="strategy\StrategyTypes.cpp" />
 	<ClCompile Include="strategy\strategies\CMovingAverageStrategy.cpp" />
     <ClCompile Include="system\CHostMgr.cpp" />
@@ -173,7 +180,15 @@
 	<ClInclude Include="strategy\CStrategyContext.h" />
 	<ClInclude Include="strategy\CStrategyEngine.h" />
 	<ClInclude Include="strategy\CTradeService.h" />
-	<ClInclude Include="strategy\CSimulatedTradingService.h" />
+    <ClInclude Include="counter\CInProcessGateway.h" />
+    <ClInclude Include="counter\CMySqlCounterStore.h" />
+    <ClInclude Include="counter\CSimulatedCounter.h" />
+    <ClInclude Include="counter\ITradingGateway.h" />
+    <ClInclude Include="counter\TradeTypes.h" />
+    <ClInclude Include="counter\TradingTypes.h" />
+    <ClInclude Include="counter\WindCounterHost.h" />
+
+
 	<ClInclude Include="strategy\ITradeService.h" />
 	<ClInclude Include="strategy\IStrategy.h" />
 	<ClInclude Include="strategy\IStrategyContext.h" />
