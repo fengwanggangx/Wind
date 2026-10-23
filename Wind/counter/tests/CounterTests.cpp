@@ -34,7 +34,7 @@ namespace
 			{
 				return { Error::Unavailable, "injected failure" };
 			}
-			m_memory->m_state = state;
+			ApplyChanges(m_memory->m_state, state);
 			return {};
 		}
 		CResult Renew() override
@@ -232,6 +232,38 @@ namespace
 			broker.Pump();
 		});
 	}
+	void IncrementalState()
+	{
+		CState state;
+		state.m_accounts.emplace(1, CAccount{ 1, 100000, 0, true, true });
+		state.m_accounts.emplace(2, CAccount{ 2, 200000, 0, true, true });
+		std::string strBefore = EncodeState(state);
+		{
+			CStateEdit edit(state);
+			edit.Save(&CState::m_accounts, Id{ 1 });
+			state.m_accounts.at(1).m_nBalance -= 1000;
+			edit.Save(&CState::m_accounts, Id{ 1 });
+			state.m_accounts.at(1).m_nBalance -= 1000;
+			edit.Save(&CState::m_orders, Id{ 1 });
+			state.m_orders.emplace(1, COrder{});
+			state.m_nextOrder++;
+			state.m_events.push_back(CEvent{});
+			CState changes = edit.Changes();
+			Check(1 == changes.m_accounts.size() && 1 == changes.m_orders.size() && changes.m_trades.empty() && 1 == changes.m_events.size(), "sparse delta excludes untouched history");
+		}
+		Check(strBefore == EncodeState(state), "journal restores existing and inserted rows and metadata");
+		CSnapshot cache;
+		CEvent event;
+		event.m_accountId = 1;
+		event.m_account = state.m_accounts.at(1);
+		event.m_kind = EventKind::Order;
+		event.m_order.m_orderId = 1;
+		event.m_order.m_accountId = 1;
+		UpdateSnapshot(cache, event);
+		event.m_order.m_status = Status::Cancelled;
+		UpdateSnapshot(cache, event);
+		Check(1 == cache.m_orders.size() && Status::Cancelled == cache.m_orders[0].m_status && 1 == cache.m_accounts.size(), "incremental cache replaces rows without duplicating history");
+	}
 	void Run()
 	{
 		std::shared_ptr<CMemory> memory = std::make_shared<CMemory>();
@@ -289,7 +321,10 @@ namespace
 		CRequest failed = Request(Operation::Cancel);
 		failed.m_orderId = restarted.Snapshot(1, 5200).m_orders.back().m_orderId;
 		Id nTail = memory->m_state.m_sequence;
+		std::string strBeforeFailure = EncodeState(memory->m_state);
 		Check(!restarted.Execute(failed, 5200).m_result.Ok() && !restarted.Ready() && nTail == memory->m_state.m_sequence, "transaction failure fail closed");
+		Check(strBeforeFailure == EncodeState(memory->m_state), "failed command preserves durable state");
+		Check(restarted.Snapshot(1, 5200).m_accounts[0].m_nFrozen == memory->m_state.m_accounts.at(1).m_nFrozen, "failed cancellation restores in-memory freeze");
 		restarted.Stop();
 		memory->m_bFail = false;
 		CSimulatedCounter replay(std::make_unique<CStore>(memory));
@@ -303,6 +338,7 @@ int main()
 {
 	try
 	{
+		IncrementalState();
 		Run();
 		Boundaries();
 		std::cout << "counter tests passed\n";

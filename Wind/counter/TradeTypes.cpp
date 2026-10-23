@@ -420,4 +420,90 @@ namespace trading
 		state = std::move(next);
 		return true;
 	}
+	namespace
+	{
+		template <class Row, class Match>
+		void UpdateRow(std::vector<Row>& rows, const Row& row, Match match)
+		{
+			for (auto& existing : rows)
+			{
+				if (match(existing))
+				{
+					existing = row;
+					return;
+				}
+			}
+			rows.push_back(row);
+		}
+	} // namespace
+	void UpdateSnapshot(CSnapshot& snapshot, const CEvent& event)
+	{
+		UpdateRow(snapshot.m_accounts, event.m_account, [&event](const CAccount& row)
+		{
+			return event.m_accountId == row.m_accountId;
+		});
+		switch (event.m_kind)
+		{
+		case EventKind::Order:
+			if (0 != event.m_order.m_orderId)
+			{
+				UpdateRow(snapshot.m_orders, event.m_order, [&event](const COrder& row)
+				{
+					return event.m_order.m_orderId == row.m_orderId;
+				});
+			}
+			break;
+		case EventKind::Trade:
+			UpdateRow(snapshot.m_trades, event.m_trade, [&event](const CTrade& row)
+			{
+				return event.m_trade.m_tradeId == row.m_tradeId;
+			});
+			break;
+		case EventKind::Position:
+			UpdateRow(snapshot.m_positions, event.m_position, [&event](const CPosition& row)
+			{
+				return event.m_accountId == row.m_accountId && event.m_position.m_strSecurity == row.m_strSecurity;
+			});
+			break;
+		default:
+			break;
+		}
+	}
+	void ApplyChanges(CState& state, const CState& changes)
+	{
+		state.m_nextOrder = changes.m_nextOrder;
+		state.m_nextTrade = changes.m_nextTrade;
+		state.m_sequence = changes.m_sequence;
+		state.m_nSettledDay = changes.m_nSettledDay;
+		state.m_nClosedDay = changes.m_nClosedDay;
+		for (const auto& item : changes.m_accounts)
+		{
+			state.m_accounts.insert_or_assign(item.first, item.second);
+		}
+		for (const auto& item : changes.m_positions)
+		{
+			state.m_positions.insert_or_assign(item.first, item.second);
+		}
+		for (const auto& item : changes.m_orders)
+		{
+			state.m_orders.insert_or_assign(item.first, item.second);
+		}
+		for (const auto& item : changes.m_trades)
+		{
+			state.m_trades.insert_or_assign(item.first, item.second);
+		}
+		for (const auto& item : changes.m_rules)
+		{
+			state.m_rules.insert_or_assign(item.first, item.second);
+		}
+		for (const auto& item : changes.m_calendar)
+		{
+			state.m_calendar.insert_or_assign(item.first, item.second);
+		}
+		for (const auto& item : changes.m_consumedBooks)
+		{
+			state.m_consumedBooks.insert_or_assign(item.first, item.second);
+		}
+		state.m_events.insert(state.m_events.end(), changes.m_events.begin(), changes.m_events.end());
+	}
 } // namespace trading

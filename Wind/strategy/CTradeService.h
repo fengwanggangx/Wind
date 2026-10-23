@@ -2,7 +2,7 @@
 #define WIND_STRATEGY_CTRADESERVICE_H
 #include "../request/request.pb.h"
 #include "ITradeService.h"
-#include "../counter/WindCounterHost.h"
+#include "../counter/CounterSetup.h"
 #include <memory>
 #include <mutex>
 #include <unordered_map>
@@ -49,7 +49,7 @@ class CTradeService final : public IStrategyOrderSink, public ITradingSnapshotPr
 	std::unordered_map<_TyOrderId, std::uint64_t> m_orderAccounts;
 	_TyOrderEventHandler m_orderHandler;
 	std::string m_strLastError;
-	trading::CHost m_host;
+	std::shared_ptr<trading::CInProcessGateway> m_counter;
 	using _TyTradeEventHandler = std::function<void(const CTradeEvent&)>;
 	_TyTradeEventHandler m_tradeHandler;
 	void OnEvent(const trading::CEvent& event);
@@ -63,7 +63,6 @@ class CTradeService final : public IStrategyOrderSink, public ITradingSnapshotPr
 	private:
 	std::function<void(const CRequest&)> m_pushHandler;
 	std::function<void(std::uint64_t)> m_accountReadyHandler;
-	std::unordered_map<std::uint64_t, std::uint64_t> m_lastOrderSequence;
 	std::unordered_map<std::uint64_t, std::uint64_t> m_lastEventSequence;
 };
 #endif

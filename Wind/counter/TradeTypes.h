@@ -163,6 +163,8 @@ namespace trading
 		std::map<int, CCalendar> m_calendar;
 		std::map<std::string, std::pair<std::int64_t, Id>> m_consumedBooks;
 	};
+	void UpdateSnapshot(CSnapshot& snapshot, const CEvent& event);
+	void ApplyChanges(CState& state, const CState& changes);
 	bool IsActive(Status status);
 	std::string EncodeState(const CState& state);
 	bool DecodeState(const std::string& strData, CState& state);

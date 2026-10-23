@@ -78,12 +78,17 @@ namespace trading
 				return;
 			}
 		}
-		CSnapshot snapshot = m_counter->Snapshot(0, m_clock());
 		std::vector<CEvent> events = m_counter->EventsAfter(m_delivered);
 		EventHandler handler;
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_state);
-			m_snapshot = std::move(snapshot);
+			m_snapshot.m_bReady = m_counter->Ready();
+			m_snapshot.m_version = m_counter->Version();
+			m_snapshot.m_nTime = m_clock();
+			for (const auto& event : events)
+			{
+				UpdateSnapshot(m_snapshot, event);
+			}
 			handler = m_handler;
 		}
 		for (const auto& event : events)
@@ -169,31 +174,36 @@ namespace trading
 		snapshot.m_bReady = m_snapshot.m_bReady;
 		snapshot.m_version = m_snapshot.m_version;
 		snapshot.m_nTime = m_snapshot.m_nTime;
-		snapshot.m_accounts = m_snapshot.m_accounts;
-		snapshot.m_positions = m_snapshot.m_positions;
+		for (const auto& row : m_snapshot.m_accounts)
+		{
+			if (0 == nAccountId || nAccountId == row.m_accountId)
+			{
+				snapshot.m_accounts.push_back(row);
+			}
+		}
+		for (const auto& row : m_snapshot.m_positions)
+		{
+			if (0 == nAccountId || nAccountId == row.m_accountId)
+			{
+				snapshot.m_positions.push_back(row);
+			}
+		}
 		if (bHistory)
 		{
-			snapshot.m_orders = m_snapshot.m_orders;
-			snapshot.m_trades = m_snapshot.m_trades;
-		}
-		if (0 != nAccountId)
-		{
-			std::erase_if(snapshot.m_accounts, [nAccountId](const CAccount& value)
+			for (const auto& row : m_snapshot.m_orders)
 			{
-				return nAccountId != value.m_accountId;
-			});
-			std::erase_if(snapshot.m_positions, [nAccountId](const CPosition& value)
+				if (0 == nAccountId || nAccountId == row.m_accountId)
+				{
+					snapshot.m_orders.push_back(row);
+				}
+			}
+			for (const auto& row : m_snapshot.m_trades)
 			{
-				return nAccountId != value.m_accountId;
-			});
-			std::erase_if(snapshot.m_orders, [nAccountId](const COrder& value)
-			{
-				return nAccountId != value.m_accountId;
-			});
-			std::erase_if(snapshot.m_trades, [nAccountId](const CTrade& value)
-			{
-				return nAccountId != value.m_accountId;
-			});
+				if (0 == nAccountId || nAccountId == row.m_accountId)
+				{
+					snapshot.m_trades.push_back(row);
+				}
+			}
 		}
 		return snapshot;
 	}

@@ -22,7 +22,7 @@ namespace trading
 		public:
 		virtual ~ICounterStore() = default;
 		virtual CResult Acquire(CState& state) = 0;
-		// Commit verifies the lease/fencing token and previous version in one transaction.
+		// Commit persists a sparse change set plus final metadata, fenced by the previous event sequence.
 		virtual CResult Commit(const CState& state, Id nExpectedSequence) = 0;
 		virtual CResult Renew() = 0;
 		virtual void Release() = 0;

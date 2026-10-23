@@ -1,9 +1,7 @@
-#include "WindCounterHost.h"
+#include "CounterSetup.h"
 #include "CInProcessGateway.h"
-#include "CMySqlCounterStore.h"
+#include "CStorager.h"
 #include "../system/CSession.h"
-#include "../database/CDBEngine.h"
-#include "../database/IDataBase.h"
 #include "../common/utility.h"
 #include "../request/request.pb.h"
 #include "../request/RequestCenter.h"
@@ -20,50 +18,6 @@ namespace trading
 		{
 			return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 		}
-		class CWindSqlSession final : public ISqlSession
-		{
-			public:
-			explicit CWindSqlSession(db::_TyDBPtr database) : m_database(std::move(database)) {}
-			bool Execute(const std::string& strSql) override
-			{
-				return 0 == m_database->ExecUpdate(strSql);
-			}
-			bool Query(const std::string& strSql, std::vector<std::vector<std::string>>& rows) override
-			{
-				const db::CQueryTable& table = m_database->ExecQuery(strSql);
-				if (table.m_columns.empty())
-				{
-					return false;
-				}
-				rows.clear();
-				for (const auto& row : table.m_rows)
-				{
-					std::vector<std::string> values;
-					values.reserve(row.size());
-					for (const auto& value : row)
-					{
-						values.emplace_back(db::QueryValueToString(value));
-					}
-					rows.emplace_back(std::move(values));
-				}
-				return true;
-			}
-			bool Begin() override
-			{
-				return m_database->BeginTransaction();
-			}
-			bool Commit() override
-			{
-				return m_database->EndTransaction();
-			}
-			void Rollback() override
-			{
-				m_database->RollBackTransaction();
-			}
-
-			private:
-			db::_TyDBPtr m_database;
-		};
 		bool Integer(const rapidjson::Value& value, const char* pName, std::int64_t& nValue)
 		{
 			if (!value.HasMember(pName) || !value[pName].IsInt64())
@@ -127,7 +81,7 @@ namespace trading
 			return {};
 		}
 	} // namespace
-	CResult CreateWindCounterHost(const std::vector<CAccountRoute>& routes, const std::string& strRulesPath, CSession& session, CHost& host)
+	CResult InitializeCounter(const std::vector<CAccountRoute>& routes, const std::string& strRulesPath, CSession& session, std::shared_ptr<CInProcessGateway>& counter)
 	{
 		std::vector<CRule> rules;
 		std::vector<CCalendar> calendar;
@@ -136,16 +90,7 @@ namespace trading
 		{
 			return result;
 		}
-		CMySqlCounterStore::Factory factory = []() -> std::unique_ptr<ISqlSession>
-		{
-			db::_TyDBPtr database = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
-			if (nullptr == database)
-			{
-				return nullptr;
-			}
-			return std::make_unique<CWindSqlSession>(std::move(database));
-		};
-		std::unique_ptr<ICounterStore> store = std::make_unique<CMySqlCounterStore>(std::move(factory), utility::MakeSaltHex());
+		std::unique_ptr<ICounterStore> store = std::make_unique<CStorager>(utility::MakeSaltHex());
 		std::shared_ptr<CInProcessGateway> gateway = std::make_shared<CInProcessGateway>(std::make_unique<CSimulatedCounter>(std::move(store)), Now);
 		std::vector<CAccount> accounts;
 		for (const auto& route : routes)
@@ -231,19 +176,7 @@ namespace trading
 		session.RegisterStateHandler(subscribe);
 		subscribe(session.IsAuthenticated() ? SessionState::Ready : SessionState::Disconnected, "");
 		gateway->OnMarketState(session.IsAuthenticated());
-		host.m_gateway = gateway;
-		for (const auto& route : routes)
-		{
-			if ("simulated" == route.m_strAdapter)
-			{
-				host.m_routes[route.m_accountId] = gateway;
-			}
-		}
-		host.m_addAccount = [weak](Id nId, std::int64_t nBalance)
-		{
-			std::shared_ptr<CInProcessGateway> target = weak.lock();
-			return nullptr == target ? CResult{ Error::Unavailable, "counter host gone" } : target->AddAccount(nId, nBalance);
-		};
+		counter = std::move(gateway);
 		return {};
 	}
 } // namespace trading

@@ -1,5 +1,6 @@
 #pragma once
 #include "ITradingGateway.h"
+#include "CStateEdit.h"
 #include <memory>
 
 namespace trading
@@ -18,19 +19,19 @@ namespace trading
 		CResult OnDepth(CDepth depth, std::int64_t nNow);
 		void OnMarketState(bool bAvailable);
 		CResult Advance(std::int64_t nNow);
-		CSnapshot Snapshot(Id nAccountId, std::int64_t nNow) const;
+		CSnapshot Snapshot(Id nAccountId, std::int64_t nNow, Operation operation = Operation::Synchronize, Id nOrderId = 0) const;
 		std::vector<CEvent> EventsAfter(Id nSequence) const;
 		bool Ready() const;
 		Id Version() const;
 
 		private:
-		CResult Commit(CState&& state);
+		CResult Commit(CStateEdit& edit);
 		CResult Validate(const CState& state) const;
-		CResult Submit(CState& state, COrder order, std::int64_t nNow, Id& nOrderId);
-		void Cancel(CState& state, COrder& order, Status status, Id nRequestId);
-		CResult Match(CState& state, CDepth& depth, std::int64_t nNow);
-		CResult Fill(CState& state, COrder& order, const CRule& rule, std::int64_t nPrice, std::int64_t nQuantity, std::int64_t nNow);
-		void Emit(CState& state, EventKind kind, const COrder& order, const CTrade& trade = {});
+		CResult Submit(CStateEdit& edit, COrder order, std::int64_t nNow, Id& nOrderId);
+		void Cancel(CStateEdit& edit, COrder& order, Status status, Id nRequestId);
+		CResult Match(CStateEdit& edit, CDepth& depth, std::int64_t nNow);
+		CResult Fill(CStateEdit& edit, COrder& order, const CRule& rule, std::int64_t nPrice, std::int64_t nQuantity, std::int64_t nNow);
+		void Emit(CState& state, EventKind kind, const COrder& order, const CTrade& trade = {}, Id nRequestId = 0);
 		const CCalendar* Calendar(std::int64_t nNow) const;
 		std::unique_ptr<ICounterStore> m_store;
 		CState m_state;
