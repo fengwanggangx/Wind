@@ -1,4 +1,4 @@
-﻿#include "CBrokerService.h"
+#include "CBrokerService.h"
 
 #include "../common/utility.h"
 #include "../database/CDBEngine.h"
@@ -67,32 +67,32 @@ bool IsPasswordValid(const std::string& strPassword)
 CBrokerService::CBrokerService(net::CTcpServer* pTcpServer, CSession* pSession, CStrategyEngine* pStrategyEngine) : m_pTcpServer(pTcpServer), m_pSession(pSession), m_pStrategyEngine(pStrategyEngine)
 {
 	m_handler = {
-		{ "register", std::bind_front(&CBrokerService::HandleRegisterAuth, this) },
-		{ "auth", std::bind_front(&CBrokerService::HandleAuth, this) },
-		{ "heartbeat", std::bind_front(&CBrokerService::HandleHeartbeat, this) },
-		{ "subscribe", std::bind_front(&CBrokerService::HandleSubscription, this) },
-		{ "unsubscribe", std::bind_front(&CBrokerService::HandleSubscription, this) },
-		{ "query_quote", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
-		{ "query_bars", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
-		{ "query_securities", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
-		{ "query_sectors", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
-		{ "query_sector_constituents", std::bind_front(&CBrokerService::HandleMarketQuery, this) },
-		{ "trade_account_login", std::bind_front(&CBrokerService::HandleAccount, this) },
-		{ "account_query", std::bind_front(&CBrokerService::HandleAccount, this) },
-		{ "account_add", std::bind_front(&CBrokerService::HandleAccount, this) },
-		{ "account_modify", std::bind_front(&CBrokerService::HandleAccount, this) },
-		{ "account_connect", std::bind_front(&CBrokerService::HandleAccount, this) },
-		{ "account_disconnect", std::bind_front(&CBrokerService::HandleAccount, this) },
-		{ "account_snapshot_query", std::bind_front(&CBrokerService::HandleAccount, this) },
-		{ "account_logs_query", std::bind_front(&CBrokerService::HandleAccount, this) },
-		{ "strategy_add", std::bind_front(&CBrokerService::HandleStrategy, this) },
-		{ "strategy_modify", std::bind_front(&CBrokerService::HandleStrategy, this) },
-		{ "strategy_query", std::bind_front(&CBrokerService::HandleStrategy, this) },
-		{ "strategy_delete", std::bind_front(&CBrokerService::HandleStrategy, this) },
-		{ "strategy_runtime_query", std::bind_front(&CBrokerService::HandleStrategy, this) },
-		{ "strategy_start", std::bind_front(&CBrokerService::HandleStrategy, this) },
-		{ "strategy_pause", std::bind_front(&CBrokerService::HandleStrategy, this) },
-		{ "strategy_stop", std::bind_front(&CBrokerService::HandleStrategy, this) }
+		{ _TyRequest::AUTH_REGISTER, std::bind_front(&CBrokerService::HandleRegisterAuth, this) },
+		{ _TyRequest::AUTH_LOGIN, std::bind_front(&CBrokerService::HandleAuth, this) },
+		{ _TyRequest::HEARTBEAT, std::bind_front(&CBrokerService::HandleHeartbeat, this) },
+		{ _TyRequest::MARKET_SUBSCRIBE, std::bind_front(&CBrokerService::HandleSubscription, this) },
+		{ _TyRequest::MARKET_UNSUBSCRIBE, std::bind_front(&CBrokerService::HandleSubscription, this) },
+		{ _TyRequest::MARKET_QUOTE_QUERY, std::bind_front(&CBrokerService::HandleMarketQuery, this) },
+		{ _TyRequest::MARKET_BARS_QUERY, std::bind_front(&CBrokerService::HandleMarketQuery, this) },
+		{ _TyRequest::MARKET_SECURITIES_QUERY, std::bind_front(&CBrokerService::HandleMarketQuery, this) },
+		{ _TyRequest::MARKET_SECTORS_QUERY, std::bind_front(&CBrokerService::HandleMarketQuery, this) },
+		{ _TyRequest::MARKET_SECTOR_CONSTITUENTS_QUERY, std::bind_front(&CBrokerService::HandleMarketQuery, this) },
+		{ _TyRequest::TRADE_ACCOUNT_LOGIN, std::bind_front(&CBrokerService::HandleAccount, this) },
+		{ _TyRequest::TRADE_ACCOUNT_QUERY, std::bind_front(&CBrokerService::HandleAccount, this) },
+		{ _TyRequest::TRADE_ACCOUNT_ADD, std::bind_front(&CBrokerService::HandleAccount, this) },
+		{ _TyRequest::TRADE_ACCOUNT_MODIFY, std::bind_front(&CBrokerService::HandleAccount, this) },
+		{ _TyRequest::TRADE_ACCOUNT_CONNECT, std::bind_front(&CBrokerService::HandleAccount, this) },
+		{ _TyRequest::TRADE_ACCOUNT_DISCONNECT, std::bind_front(&CBrokerService::HandleAccount, this) },
+		{ _TyRequest::TRADE_ACCOUNT_INFO_QUERY, std::bind_front(&CBrokerService::HandleAccount, this) },
+		{ _TyRequest::TRADE_ACCOUNT_LOGS_QUERY, std::bind_front(&CBrokerService::HandleAccount, this) },
+		{ _TyRequest::STRATEGY_ADD, std::bind_front(&CBrokerService::HandleStrategy, this) },
+		{ _TyRequest::STRATEGY_MODIFY, std::bind_front(&CBrokerService::HandleStrategy, this) },
+		{ _TyRequest::STRATEGY_QUERY, std::bind_front(&CBrokerService::HandleStrategy, this) },
+		{ _TyRequest::STRATEGY_DELETE, std::bind_front(&CBrokerService::HandleStrategy, this) },
+		{ _TyRequest::STRATEGY_RUNTIME_QUERY, std::bind_front(&CBrokerService::HandleStrategy, this) },
+		{ _TyRequest::STRATEGY_START, std::bind_front(&CBrokerService::HandleStrategy, this) },
+		{ _TyRequest::STRATEGY_PAUSE, std::bind_front(&CBrokerService::HandleStrategy, this) },
+		{ _TyRequest::STRATEGY_STOP, std::bind_front(&CBrokerService::HandleStrategy, this) }
 	};
 }
 
@@ -119,14 +119,23 @@ CQuoteInfo CBrokerService::GetQuoteInfo(const CRequest& req) const
 	return CQuoteInfo(strSecurity.substr(0, nDot), ParseMarket(strSecurity.substr(nDot + 1)), ParseChannel(req.GetExtraData("channel")));
 }
 
-void CBrokerService::SendSubscriptionResponse(net::_TyConnectionId id, _TyRequestId requestId, bool bAccepted, const std::string& strReason) const
+void CBrokerService::SendSubscriptionResponse(net::_TyConnectionId id, _TyRequestId requestId, bool bAccepted, const std::string& strReason, _TyRequest type, const std::vector<CQuoteInfo>& subscriptions) const
 {
 	CRequest response;
 	response.SetId(requestId);
-	response.SetType(CRequest::Type::HQMARKET);
-	response.SetCmd("subscription_ack");
-	response.SetReturnData("accepted", bAccepted ? "1" : "0");
-	response.SetReturnData("reason", strReason);
+	response.SetType(type);
+	response.SetErrorInfo(bAccepted ? 0 : InvalidSubscription, bAccepted ? "" : strReason);
+	hqmarket::market::v1::SubscriptionAck ack;
+	for (const auto& quote : subscriptions)
+	{
+		hqmarket::market::v1::SubscriptionResult* pResult = ack.add_results();
+		pResult->mutable_security()->set_symbol(quote.m_security.m_strCode);
+		pResult->mutable_security()->set_exchange(static_cast<hqmarket::market::v1::Exchange>(quote.m_security.m_market));
+		pResult->set_channel(static_cast<hqmarket::market::v1::Channel>(quote.m_channel));
+		pResult->set_accepted(bAccepted);
+		pResult->set_reason(bAccepted ? "" : strReason);
+	}
+	response.SetData(ack);
 	net::SendRequest(id, response);
 }
 
@@ -158,6 +167,11 @@ std::string CBrokerService::GetMarketResponseKey(const CRequest& req) const
 		Channel channel = static_cast<Channel>(static_cast<int>(result.channel()));
 		return CQuoteInfo(result.security().symbol(), exchange, channel).String();
 	}
+	if ((_TyRequest::MARKET_SUBSCRIBE == req.GetType()) || (_TyRequest::MARKET_UNSUBSCRIBE == req.GetType()))
+	{
+		CQuoteInfo quote = GetQuoteInfo(req);
+		return quote.IsValid() ? quote.String() : std::string();
+	}
 	return {};
 }
 
@@ -165,25 +179,35 @@ void CBrokerService::OnHQMarketResponse(const CRequest& req)
 {
 	ExpirePendingSubscriptions();
 	ExpirePendingQueries();
-	if ("subscription_ack" == req.GetCmd())
+	if ((_TyRequest::MARKET_SUBSCRIBE == req.GetType()) || (_TyRequest::MARKET_UNSUBSCRIBE == req.GetType()))
 	{
-		CPendingQueryClient client;
+		CPendingSubscriptionBatch pending;
 		bool bBatch = false;
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_state);
-			const auto mIter = m_pending_batch_subscriptions.find(req.GetId());
-			if (m_pending_batch_subscriptions.end() != mIter)
+			auto mIter = m_pending_batch_subscriptions.find(req.GetId());
+			if ((m_pending_batch_subscriptions.end() != mIter) && (req.GetType() == mIter->second.m_type))
 			{
-				client = mIter->second;
+				pending = std::move(mIter->second);
 				m_pending_batch_subscriptions.erase(mIter);
 				bBatch = true;
 			}
 		}
 		if (bBatch)
 		{
-			CRequest response = req;
-			response.SetId(client.m_requestId);
-			net::SendRequest(client.m_router_id, response);
+			std::optional<std::pair<int, std::string>> error = req.GetErrorInfo();
+			if (error.has_value())
+			{
+				if (_TyRequest::MARKET_SUBSCRIBE == pending.m_type)
+				{
+					m_subscriptions.Unsubscribe(pending.m_client.m_router_id, pending.m_changed);
+				}
+				else
+				{
+					m_subscriptions.Subscribe(pending.m_client.m_router_id, pending.m_changed);
+				}
+			}
+			SendSubscriptionResponse(pending.m_client.m_router_id, pending.m_client.m_requestId, !error.has_value(), error.has_value() ? error->second : "", pending.m_type, pending.m_requested);
 			return;
 		}
 	}
@@ -197,12 +221,13 @@ void CBrokerService::OnHQMarketResponse(const CRequest& req)
 		return;
 	}
 
-	std::string strCmd = req.GetCmd();
-	if ("subscription_ack" == strCmd)
+	_TyRequest type = req.GetType();
+	if ((_TyRequest::MARKET_SUBSCRIBE == type) || (_TyRequest::MARKET_UNSUBSCRIBE == type))
 	{
 		std::vector<PendingSubscription> pending;
-		bool bAccepted = "1" == req.GetReturnData("accepted");
-		std::string strReason = req.GetReturnData("reason");
+		std::optional<std::pair<int, std::string>> error = req.GetErrorInfo();
+		bool bAccepted = !error.has_value();
+		std::string strReason = error.has_value() ? error->second : std::string();
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_state);
 			auto mIter = m_pending_subscriptions.find(strKey);
@@ -219,7 +244,7 @@ void CBrokerService::OnHQMarketResponse(const CRequest& req)
 		}
 		for (const auto& v : pending)
 		{
-			SendSubscriptionResponse(v.m_router_id, v.m_requestId, bAccepted, strReason);
+			SendSubscriptionResponse(v.m_router_id, v.m_requestId, bAccepted, strReason, _TyRequest::MARKET_SUBSCRIBE, { v.m_quote });
 		}
 		return;
 	}
@@ -260,29 +285,29 @@ void CBrokerService::OnHQMarketState(SessionState state, const std::string& strM
 
 std::string CBrokerService::GetQueryKey(const CRequest& req) const
 {
-	std::string strCmd = req.GetCmd();
-	if ("query_quote" == strCmd)
+	_TyRequest type = req.GetType();
+	if (_TyRequest::MARKET_QUOTE_QUERY == type)
 	{
-		return strCmd + ":" + req.GetExtraData("security");
+		return req.GetTypeName() + ":" + req.GetExtraData("security");
 	}
-	if ("query_securities" == strCmd)
+	if (_TyRequest::MARKET_SECURITIES_QUERY == type)
 	{
-		return strCmd;
+		return req.GetTypeName();
 	}
-	if ("query_sectors" == strCmd)
+	if (_TyRequest::MARKET_SECTORS_QUERY == type)
 	{
 		std::string strSectorType = req.GetExtraData("sector_type");
-		return strSectorType.empty() ? std::string() : strCmd + ":" + strSectorType;
+		return strSectorType.empty() ? std::string() : req.GetTypeName() + ":" + strSectorType;
 	}
-	if ("query_sector_constituents" == strCmd)
+	if (_TyRequest::MARKET_SECTOR_CONSTITUENTS_QUERY == type)
 	{
 		std::string strSectorType = req.GetExtraData("sector_type");
 		std::string strSectorCode = req.GetExtraData("sector_code");
-		return strSectorType.empty() || strSectorCode.empty() ? std::string() : strCmd + ":" + strSectorType + ":" + strSectorCode;
+		return strSectorType.empty() || strSectorCode.empty() ? std::string() : req.GetTypeName() + ":" + strSectorType + ":" + strSectorCode;
 	}
-	if ("query_bars" == strCmd)
+	if (_TyRequest::MARKET_BARS_QUERY == type)
 	{
-		return strCmd + ":" + req.GetExtraData("security") + ":" + req.GetExtraData("channel") + ":" + req.GetExtraData("begin_time_ms") + ":" + req.GetExtraData("end_time_ms");
+		return req.GetTypeName() + ":" + req.GetExtraData("security") + ":" + req.GetExtraData("channel") + ":" + req.GetExtraData("begin_time_ms") + ":" + req.GetExtraData("end_time_ms");
 	}
 	return {};
 }
@@ -316,7 +341,7 @@ bool CBrokerService::HandleMarketQuery(net::_TyConnectionId id, const CRequest& 
 			CPendingQuery pending;
 			pending.m_router_id = routerId;
 			pending.m_strKey = strKey;
-			pending.m_strCmd = req.GetCmd();
+			pending.m_type = req.GetType();
 			pending.m_deadline = std::chrono::steady_clock::now() + UpstreamRequestTimeout;
 			pending.m_clients.emplace_back(CPendingQueryClient{ id, req.GetId() });
 			m_pending_queries.emplace(strKey, std::move(pending));
@@ -346,7 +371,7 @@ bool CBrokerService::HandleMarketQuery(net::_TyConnectionId id, const CRequest& 
 	}
 	for (const auto& client : failed.m_clients)
 	{
-		SendQueryError(client, failed.m_strCmd, UpstreamUnavailable, "HQMarket is unavailable");
+		SendQueryError(client, failed.m_type, UpstreamUnavailable, "HQMarket is unavailable");
 	}
 	return false;
 }
@@ -361,7 +386,7 @@ bool CBrokerService::RouteQueryRequest(const CRequest& req)
 		{
 			return routerId == item.second.m_router_id;
 		});
-		if (m_pending_queries.end() == mIter)
+		if ((m_pending_queries.end() == mIter) || (req.GetType() != mIter->second.m_type))
 		{
 			return false;
 		}
@@ -377,12 +402,11 @@ bool CBrokerService::RouteQueryRequest(const CRequest& req)
 	return true;
 }
 
-void CBrokerService::SendQueryError(const CPendingQueryClient& client, const std::string& strCmd, int nErrorCode, const std::string& strMessage) const
+void CBrokerService::SendQueryError(const CPendingQueryClient& client, _TyRequest type, int nErrorCode, const std::string& strMessage) const
 {
 	CRequest response;
 	response.SetId(client.m_requestId);
-	response.SetType(CRequest::Type::HQMARKET);
-	response.SetCmd(strCmd);
+	response.SetType(type);
 	net::SetError(response, nErrorCode, strMessage);
 	net::SendRequest(client.m_router_id, response);
 }
@@ -410,7 +434,7 @@ void CBrokerService::ExpirePendingQueries()
 	{
 		for (const auto& client : pending.m_clients)
 		{
-			SendQueryError(client, pending.m_strCmd, UpstreamTimeout, "HQMarket request timeout");
+			SendQueryError(client, pending.m_type, UpstreamTimeout, "HQMarket request timeout");
 		}
 	}
 }
@@ -431,13 +455,41 @@ void CBrokerService::FailPendingQueries(const std::string& strReason)
 	{
 		for (const auto& client : pending.m_clients)
 		{
-			SendQueryError(client, pending.m_strCmd, UpstreamUnavailable, strReason);
+			SendQueryError(client, pending.m_type, UpstreamUnavailable, strReason);
 		}
 	}
 }
 
 void CBrokerService::ExpirePendingSubscriptions()
 {
+	std::vector<CPendingSubscriptionBatch> expiredBatches;
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_state);
+		for (auto mIter = m_pending_batch_subscriptions.begin(); m_pending_batch_subscriptions.end() != mIter;)
+		{
+			if (mIter->second.m_deadline <= std::chrono::steady_clock::now())
+			{
+				expiredBatches.emplace_back(std::move(mIter->second));
+				mIter = m_pending_batch_subscriptions.erase(mIter);
+			}
+			else
+			{
+				++mIter;
+			}
+		}
+	}
+	for (const auto& pending : expiredBatches)
+	{
+		if (_TyRequest::MARKET_SUBSCRIBE == pending.m_type)
+		{
+			m_subscriptions.Unsubscribe(pending.m_client.m_router_id, pending.m_changed);
+		}
+		else
+		{
+			m_subscriptions.Subscribe(pending.m_client.m_router_id, pending.m_changed);
+		}
+		SendSubscriptionResponse(pending.m_client.m_router_id, pending.m_client.m_requestId, false, "HQMarket subscription timeout", pending.m_type, pending.m_requested);
+	}
 	std::vector<PendingSubscription> expired;
 	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
 	{
@@ -473,6 +525,14 @@ void CBrokerService::ExpirePendingSubscriptions()
 
 void CBrokerService::FailPendingSubscriptions(const std::string& strReason)
 {
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_state);
+		for (auto& item : m_pending_batch_subscriptions)
+		{
+			item.second.m_deadline = std::chrono::steady_clock::time_point::min();
+		}
+	}
+	ExpirePendingSubscriptions();
 	std::vector<PendingSubscription> failed;
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
@@ -498,15 +558,14 @@ void CBrokerService::SendResponse(const CRequest& req, int nErrorCode, const std
 	CRequest response;
 	response.SetId(req.GetId());
 	response.SetType(req.GetType());
-	response.SetCmd(req.GetCmd());
 	if (0 != nErrorCode)
 	{
 		net::SetError(response, nErrorCode, strMessage);
 	}
 	else
 	{
-		response.SetReturnData("status", "ok");
-		response.SetReturnData("message", strMessage);
+
+		response.SetErrorInfo(0, "");
 	}
 	net::SendRequest(req.GetConnectionId(), response);
 }
@@ -539,16 +598,15 @@ bool CBrokerService::Login(const CRequest& req, std::string& strToken)
 	CRequest response;
 	response.SetId(req.GetId());
 	response.SetType(req.GetType());
-	response.SetCmd(req.GetCmd());
-	response.SetReturnData("status", "ok");
-	response.SetReturnData("user_id", db::QueryValueToString(table.m_rows.front().at(0)));
+
+	response.SetExtraData("user_id", db::QueryValueToString(table.m_rows.front().at(0)));
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_state);
 		m_clientUsers.insert_or_assign(req.GetConnectionId(), strAccount);
 	}
-	response.SetReturnData("account", db::QueryValueToString(table.m_rows.front().at(1)));
+	response.SetExtraData("account", db::QueryValueToString(table.m_rows.front().at(1)));
 	strToken = utility::MakeSaltHex();
-	response.SetReturnData("token", strToken);
+	response.SetExtraData("token", strToken);
 	net::SendRequest(req.GetConnectionId(), response);
 	return true;
 }
@@ -615,37 +673,49 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 		net::SendError(id, req, InvalidSubscription, "unsupported request");
 		return false;
 	}
-	const _TyReqData& message = req.GetData();
-	int nSecurityCount = bSubscribe && message.has_subscribe_request() ? message.subscribe_request().securities_size() : (!bSubscribe && message.has_unsubscribe_request() ? message.unsubscribe_request().securities_size() : 0);
-	int nChannelCount = bSubscribe && message.has_subscribe_request() ? message.subscribe_request().channels_size() : (!bSubscribe && message.has_unsubscribe_request() ? message.unsubscribe_request().channels_size() : 0);
-	if ((0 < nSecurityCount) && (0 < nChannelCount))
+	if (!req.GetExtraData("subscriptions").empty())
 	{
-		std::vector<CQuoteInfo> subscriptions;
-		subscriptions.reserve(static_cast<std::size_t>(nSecurityCount) * static_cast<std::size_t>(nChannelCount));
-		if (bSubscribe)
+		CRequest::_TyExtraRows rows;
+		if (!req.GetExtraData("subscriptions", rows) || rows.empty())
 		{
-			for (const auto& security : message.subscribe_request().securities())
-			{
-				for (int nChannel : message.subscribe_request().channels())
-				{
-					subscriptions.emplace_back(security.symbol(), static_cast<Exchange>(static_cast<int>(security.exchange())), static_cast<Channel>(nChannel));
-				}
-			}
+			net::SendError(id, req, InvalidSubscription, "subscriptions must be a nonempty JSON array");
+			return false;
 		}
-		else
+		std::vector<CQuoteInfo> subscriptions;
+		subscriptions.reserve(rows.size());
+		for (const auto& row : rows)
 		{
-			for (const auto& security : message.unsubscribe_request().securities())
+			auto security = row.find("security");
+			auto channel = row.find("channel");
+			if ((row.end() == security) || (row.end() == channel))
 			{
-				for (int nChannel : message.unsubscribe_request().channels())
-				{
-					subscriptions.emplace_back(security.symbol(), static_cast<Exchange>(static_cast<int>(security.exchange())), static_cast<Channel>(nChannel));
-				}
+				net::SendError(id, req, InvalidSubscription, "subscription row requires security and channel");
+				return false;
 			}
+			CRequest item;
+			item.SetExtraData("security", security->second);
+			item.SetExtraData("channel", channel->second);
+			CQuoteInfo quote = GetQuoteInfo(item);
+			if (!quote.IsValid())
+			{
+				net::SendError(id, req, InvalidSubscription, "invalid subscription row");
+				return false;
+			}
+			subscriptions.emplace_back(std::move(quote));
 		}
 		if (subscriptions.empty())
 		{
 			net::SendError(id, req, InvalidSubscription, "empty subscription batch");
 			return false;
+		}
+		std::vector<CQuoteInfo> applied;
+		applied.reserve(subscriptions.size());
+		for (const auto& quote : subscriptions)
+		{
+			if (bSubscribe != m_subscriptions.IsSubscribed(id, quote))
+			{
+				applied.emplace_back(quote);
+			}
 		}
 		std::vector<CQuoteInfo> changed;
 		if (bSubscribe)
@@ -658,39 +728,22 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 		}
 		if (changed.empty())
 		{
-			SendSubscriptionResponse(id, req.GetId(), true, bSubscribe ? "already subscribed" : "not subscribed");
+			SendSubscriptionResponse(id, req.GetId(), true, bSubscribe ? "already subscribed" : "not subscribed", req.GetType(), subscriptions);
 			return true;
 		}
 		CRequest router = req;
 		_TyRequestId routerId = m_router_id.fetch_add(1);
 		router.SetId(routerId);
-		if (bSubscribe)
+		CRequest::_TyExtraRows changedRows;
+		changedRows.reserve(changed.size());
+		for (const auto& quote : changed)
 		{
-			hqmarket::market::v1::SubscribeRequest payload;
-			for (const CQuoteInfo& quote : changed)
-			{
-				hqmarket::market::v1::Security* pSecurity = payload.add_securities();
-				pSecurity->set_symbol(quote.m_security.m_strCode);
-				pSecurity->set_exchange(static_cast<hqmarket::market::v1::Exchange>(quote.m_security.m_market));
-			}
-			payload.add_channels(static_cast<hqmarket::market::v1::Channel>(changed.front().m_channel));
-			router.SetData(payload);
+			changedRows.emplace_back(std::unordered_map<std::string, std::string>{ { "security", quote.m_security.String() }, { "channel", GetChannelString(quote.m_channel) } });
 		}
-		else
-		{
-			hqmarket::market::v1::UnsubscribeRequest payload;
-			for (const CQuoteInfo& quote : changed)
-			{
-				hqmarket::market::v1::Security* pSecurity = payload.add_securities();
-				pSecurity->set_symbol(quote.m_security.m_strCode);
-				pSecurity->set_exchange(static_cast<hqmarket::market::v1::Exchange>(quote.m_security.m_market));
-			}
-			payload.add_channels(static_cast<hqmarket::market::v1::Channel>(changed.front().m_channel));
-			router.SetData(payload);
-		}
+		router.SetExtraData("subscriptions", changedRows);
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_state);
-			m_pending_batch_subscriptions.emplace(routerId, CPendingQueryClient{ id, req.GetId() });
+			m_pending_batch_subscriptions.emplace(routerId, CPendingSubscriptionBatch{ { id, req.GetId() }, req.GetType(), std::chrono::steady_clock::now() + UpstreamRequestTimeout, subscriptions, applied });
 		}
 		if ((nullptr != m_pSession) && m_pSession->SendRequest(router))
 		{
@@ -702,13 +755,13 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 		}
 		if (bSubscribe)
 		{
-			m_subscriptions.Unsubscribe(id, changed);
+			m_subscriptions.Unsubscribe(id, applied);
 		}
 		else
 		{
-			m_subscriptions.Subscribe(id, changed);
+			m_subscriptions.Subscribe(id, applied);
 		}
-		net::SendError(id, req, InvalidSubscription, "HQMarket is unavailable");
+		SendSubscriptionResponse(id, req.GetId(), false, "HQMarket is unavailable", req.GetType(), subscriptions);
 		return false;
 	}
 	CQuoteInfo quote = GetQuoteInfo(req);
@@ -723,7 +776,7 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 	{
 		if (m_subscriptions.IsSubscribed(id, quote))
 		{
-			SendSubscriptionResponse(id, req.GetId(), true, "already subscribed");
+			SendSubscriptionResponse(id, req.GetId(), true, "already subscribed", req.GetType(), { quote });
 			return true;
 		}
 		std::vector<CQuoteInfo> subscriptions{ quote };
@@ -746,21 +799,21 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 					std::lock_guard<std::mutex> lock(m_mtx_state);
 					m_pending_subscriptions.erase(strKey);
 				}
-				SendSubscriptionResponse(id, req.GetId(), false, "HQMarket is unavailable");
+				SendSubscriptionResponse(id, req.GetId(), false, "HQMarket is unavailable", req.GetType(), { quote });
 				return false;
 			}
 			return true;
 		}
 		if (!bPending)
 		{
-			SendSubscriptionResponse(id, req.GetId(), true, "ok");
+			SendSubscriptionResponse(id, req.GetId(), true, "ok", req.GetType(), { quote });
 		}
 		return true;
 	}
 
 	if (!m_subscriptions.IsSubscribed(id, quote))
 	{
-		SendSubscriptionResponse(id, req.GetId(), true, "not subscribed");
+		SendSubscriptionResponse(id, req.GetId(), true, "not subscribed", req.GetType(), { quote });
 		return true;
 	}
 	std::vector<CQuoteInfo> subscriptions{ quote };
@@ -774,10 +827,10 @@ bool CBrokerService::HandleSubscription(net::_TyConnectionId, const CRequest& re
 	}
 	if (bSendUpstream && ((nullptr == m_pSession) || !m_pSession->SendRequest(request::UnSubscription(quote))))
 	{
-		SendSubscriptionResponse(id, req.GetId(), false, "HQMarket is unavailable");
+		SendSubscriptionResponse(id, req.GetId(), false, "HQMarket is unavailable", req.GetType(), { quote });
 		return false;
 	}
-	SendSubscriptionResponse(id, req.GetId(), true, "ok");
+	SendSubscriptionResponse(id, req.GetId(), true, "ok", req.GetType(), { quote });
 	return true;
 }
 
@@ -788,6 +841,10 @@ int CBrokerService::HandleDisconnected(net::_TyConnectionId id)
 		std::lock_guard<std::mutex> lock(m_mtx_state);
 		m_auth_clients.erase(id);
 		m_clientUsers.erase(id);
+		std::erase_if(m_pending_batch_subscriptions, [id](const auto& item)
+		{
+			return id == item.second.m_client.m_router_id;
+		});
 		for (const auto& quote : removed)
 		{
 			std::string strKey = quote.String();
@@ -882,17 +939,12 @@ bool CBrokerService::HandleAuth(net::_TyConnectionId id, const CRequest& req)
 
 void CBrokerService::OnClientRequest(net::_TyConnectionId id, const CRequest& req)
 {
-	if ((CRequest::Type::TRADE_ACCOUNT_LOGIN == req.GetType()) || (CRequest::Type::TRADE_ACCOUNT_QUERY == req.GetType()))
-	{
-		HandleAccount(id, req);
-		return;
-	}
 	ExpirePendingQueries();
-	std::string strCmd = req.GetCmd();
-	const auto mIter = m_handler.find(strCmd);
+	_TyRequest type = req.GetType();
+	const auto mIter = m_handler.find(type);
 	if (m_handler.end() == mIter)
 	{
-		net::SendError(id, req, 1006, "unknown command");
+		net::SendError(id, req, 1006, "unknown request type");
 		return;
 	}
 
@@ -915,16 +967,15 @@ bool CBrokerService::HandleHeartbeat(net::_TyConnectionId id, const CRequest& re
 {
 	CRequest response;
 	response.SetId(req.GetId());
-	response.SetType(CRequest::Type::HEARTBEAT);
-	response.SetCmd("heartbeat");
-	response.SetReturnData("client_time_ms", req.GetExtraData("client_time_ms"));
-	response.SetReturnData("status", "ok");
+	response.SetType(_TyRequest::HEARTBEAT);
+	response.SetExtraData("client_time_ms", req.GetExtraData("client_time_ms"));
+
 	return net::SendRequest(id, response);
 }
 
 bool CBrokerService::HandleStrategy(net::_TyConnectionId id, const CRequest& req)
 {
-	if ((CRequest::Type::STRATEGY != req.GetType()) || (nullptr == m_pStrategyEngine))
+	if ((!req.IsStrategy()) || (nullptr == m_pStrategyEngine))
 	{
 		net::SendError(id, req, InvalidRequest, "invalid strategy request");
 		return false;

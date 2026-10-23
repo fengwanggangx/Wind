@@ -26,72 +26,6 @@ namespace _pbi = ::google::protobuf::internal;
 namespace _fl = ::google::protobuf::internal::field_layout;
 namespace request {
 
-inline constexpr TradingAccountSnapshot::Impl_::Impl_(
-    ::_pbi::ConstantInitialized) noexcept
-      : account_id_{::uint64_t{0u}},
-        balance_{::int64_t{0}},
-        available_{::int64_t{0}},
-        frozen_{::int64_t{0}},
-        server_time_ms_{::int64_t{0}},
-        available_snapshot_{false},
-        _cached_size_{0} {}
-
-template <typename>
-PROTOBUF_CONSTEXPR TradingAccountSnapshot::TradingAccountSnapshot(::_pbi::ConstantInitialized)
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(_class_data_.base()),
-#else   // PROTOBUF_CUSTOM_VTABLE
-    : ::google::protobuf::Message(),
-#endif  // PROTOBUF_CUSTOM_VTABLE
-      _impl_(::_pbi::ConstantInitialized()) {
-}
-struct TradingAccountSnapshotDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR TradingAccountSnapshotDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~TradingAccountSnapshotDefaultTypeInternal() {}
-  union {
-    TradingAccountSnapshot _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradingAccountSnapshotDefaultTypeInternal _TradingAccountSnapshot_default_instance_;
-
-inline constexpr TradingAccountLog::Impl_::Impl_(
-    ::_pbi::ConstantInitialized) noexcept
-      : time_(
-            &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()),
-        actor_(
-            &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()),
-        action_(
-            &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()),
-        message_(
-            &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()),
-        _cached_size_{0} {}
-
-template <typename>
-PROTOBUF_CONSTEXPR TradingAccountLog::TradingAccountLog(::_pbi::ConstantInitialized)
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(_class_data_.base()),
-#else   // PROTOBUF_CUSTOM_VTABLE
-    : ::google::protobuf::Message(),
-#endif  // PROTOBUF_CUSTOM_VTABLE
-      _impl_(::_pbi::ConstantInitialized()) {
-}
-struct TradingAccountLogDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR TradingAccountLogDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~TradingAccountLogDefaultTypeInternal() {}
-  union {
-    TradingAccountLog _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradingAccountLogDefaultTypeInternal _TradingAccountLog_default_instance_;
-
 inline constexpr TradeAccountRecord::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : name_(
@@ -137,6 +71,76 @@ struct TradeAccountRecordDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradeAccountRecordDefaultTypeInternal _TradeAccountRecord_default_instance_;
 
+inline constexpr TradeAccountLog::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : time_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        actor_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        action_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        message_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        _cached_size_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR TradeAccountLog::TradeAccountLog(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct TradeAccountLogDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR TradeAccountLogDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~TradeAccountLogDefaultTypeInternal() {}
+  union {
+    TradeAccountLog _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradeAccountLogDefaultTypeInternal _TradeAccountLog_default_instance_;
+
+inline constexpr TradeAccountInfo::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : error_message_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        account_id_{::uint64_t{0u}},
+        balance_{::int64_t{0}},
+        available_{::int64_t{0}},
+        frozen_{::int64_t{0}},
+        server_time_ms_{::int64_t{0}},
+        available_snapshot_{false},
+        error_code_{0},
+        _cached_size_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR TradeAccountInfo::TradeAccountInfo(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct TradeAccountInfoDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR TradeAccountInfoDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~TradeAccountInfoDefaultTypeInternal() {}
+  union {
+    TradeAccountInfo _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradeAccountInfoDefaultTypeInternal _TradeAccountInfo_default_instance_;
+
 inline constexpr StrategySubscription::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : security_(
@@ -169,6 +173,38 @@ struct StrategySubscriptionDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StrategySubscriptionDefaultTypeInternal _StrategySubscription_default_instance_;
+
+inline constexpr StrategyRuntimeRecord::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : last_error_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        strategy_id_{::uint64_t{0u}},
+        state_{0},
+        market_available_{false},
+        queue_length_{::uint64_t{0u}},
+        active_orders_{::uint64_t{0u}},
+        _cached_size_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR StrategyRuntimeRecord::StrategyRuntimeRecord(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct StrategyRuntimeRecordDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR StrategyRuntimeRecordDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~StrategyRuntimeRecordDefaultTypeInternal() {}
+  union {
+    StrategyRuntimeRecord _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StrategyRuntimeRecordDefaultTypeInternal _StrategyRuntimeRecord_default_instance_;
               template <typename>
 PROTOBUF_CONSTEXPR StrategyInfo_ParametersEntry_DoNotUse::StrategyInfo_ParametersEntry_DoNotUse(::_pbi::ConstantInitialized)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
@@ -188,24 +224,6 @@ struct StrategyInfo_ParametersEntry_DoNotUseDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StrategyInfo_ParametersEntry_DoNotUseDefaultTypeInternal _StrategyInfo_ParametersEntry_DoNotUse_default_instance_;
               template <typename>
-PROTOBUF_CONSTEXPR RequestData_RetEntry_DoNotUse::RequestData_RetEntry_DoNotUse(::_pbi::ConstantInitialized)
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-    : RequestData_RetEntry_DoNotUse::MapEntry(_class_data_.base()){}
-#else   // PROTOBUF_CUSTOM_VTABLE
-    : RequestData_RetEntry_DoNotUse::MapEntry() {
-}
-#endif  // PROTOBUF_CUSTOM_VTABLE
-struct RequestData_RetEntry_DoNotUseDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR RequestData_RetEntry_DoNotUseDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~RequestData_RetEntry_DoNotUseDefaultTypeInternal() {}
-  union {
-    RequestData_RetEntry_DoNotUse _instance;
-  };
-};
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RequestData_RetEntry_DoNotUseDefaultTypeInternal _RequestData_RetEntry_DoNotUse_default_instance_;
-              template <typename>
 PROTOBUF_CONSTEXPR RequestData_ExtraEntry_DoNotUse::RequestData_ExtraEntry_DoNotUse(::_pbi::ConstantInitialized)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : RequestData_ExtraEntry_DoNotUse::MapEntry(_class_data_.base()){}
@@ -224,14 +242,14 @@ struct RequestData_ExtraEntry_DoNotUseDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RequestData_ExtraEntry_DoNotUseDefaultTypeInternal _RequestData_ExtraEntry_DoNotUse_default_instance_;
 
-inline constexpr TradingAccountLogs::Impl_::Impl_(
+inline constexpr TradeAccountLogList::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : logs_{},
         account_id_{::uint64_t{0u}},
         _cached_size_{0} {}
 
 template <typename>
-PROTOBUF_CONSTEXPR TradingAccountLogs::TradingAccountLogs(::_pbi::ConstantInitialized)
+PROTOBUF_CONSTEXPR TradeAccountLogList::TradeAccountLogList(::_pbi::ConstantInitialized)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(_class_data_.base()),
 #else   // PROTOBUF_CUSTOM_VTABLE
@@ -239,16 +257,16 @@ PROTOBUF_CONSTEXPR TradingAccountLogs::TradingAccountLogs(::_pbi::ConstantInitia
 #endif  // PROTOBUF_CUSTOM_VTABLE
       _impl_(::_pbi::ConstantInitialized()) {
 }
-struct TradingAccountLogsDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR TradingAccountLogsDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
-  ~TradingAccountLogsDefaultTypeInternal() {}
+struct TradeAccountLogListDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR TradeAccountLogListDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~TradeAccountLogListDefaultTypeInternal() {}
   union {
-    TradingAccountLogs _instance;
+    TradeAccountLogList _instance;
   };
 };
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradingAccountLogsDefaultTypeInternal _TradingAccountLogs_default_instance_;
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradeAccountLogListDefaultTypeInternal _TradeAccountLogList_default_instance_;
 
 inline constexpr TradeAccountList::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -274,6 +292,56 @@ struct TradeAccountListDefaultTypeInternal {
 
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
     PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradeAccountListDefaultTypeInternal _TradeAccountList_default_instance_;
+
+inline constexpr TradeAccountInfoList::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : accounts_{},
+        _cached_size_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR TradeAccountInfoList::TradeAccountInfoList(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct TradeAccountInfoListDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR TradeAccountInfoListDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~TradeAccountInfoListDefaultTypeInternal() {}
+  union {
+    TradeAccountInfoList _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TradeAccountInfoListDefaultTypeInternal _TradeAccountInfoList_default_instance_;
+
+inline constexpr StrategyRuntimeList::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : runtimes_{},
+        _cached_size_{0} {}
+
+template <typename>
+PROTOBUF_CONSTEXPR StrategyRuntimeList::StrategyRuntimeList(::_pbi::ConstantInitialized)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(_class_data_.base()),
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(),
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      _impl_(::_pbi::ConstantInitialized()) {
+}
+struct StrategyRuntimeListDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR StrategyRuntimeListDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
+  ~StrategyRuntimeListDefaultTypeInternal() {}
+  union {
+    StrategyRuntimeList _instance;
+  };
+};
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StrategyRuntimeListDefaultTypeInternal _StrategyRuntimeList_default_instance_;
 
 inline constexpr StrategyInfo::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
@@ -340,10 +408,6 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
 inline constexpr RequestData::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : extra_{},
-        ret_{},
-        cmd_(
-            &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()),
         error_message_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
@@ -458,41 +522,75 @@ const ::uint32_t
         ~0u,  // no sizeof(Split)
         PROTOBUF_FIELD_OFFSET(::request::TradeAccountList, _impl_.accounts_),
         ~0u,  // no _has_bits_
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountSnapshot, _internal_metadata_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountInfo, _internal_metadata_),
         ~0u,  // no _extensions_
         ~0u,  // no _oneof_case_
         ~0u,  // no _weak_field_map_
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountSnapshot, _impl_.account_id_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountSnapshot, _impl_.balance_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountSnapshot, _impl_.available_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountSnapshot, _impl_.frozen_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountSnapshot, _impl_.available_snapshot_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountSnapshot, _impl_.server_time_ms_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountInfo, _impl_.account_id_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountInfo, _impl_.balance_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountInfo, _impl_.available_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountInfo, _impl_.frozen_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountInfo, _impl_.available_snapshot_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountInfo, _impl_.server_time_ms_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountInfo, _impl_.error_code_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountInfo, _impl_.error_message_),
         ~0u,  // no _has_bits_
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountLog, _internal_metadata_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountInfoList, _internal_metadata_),
         ~0u,  // no _extensions_
         ~0u,  // no _oneof_case_
         ~0u,  // no _weak_field_map_
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountLog, _impl_.time_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountLog, _impl_.actor_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountLog, _impl_.action_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountLog, _impl_.message_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountInfoList, _impl_.accounts_),
         ~0u,  // no _has_bits_
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountLogs, _internal_metadata_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountLog, _internal_metadata_),
         ~0u,  // no _extensions_
         ~0u,  // no _oneof_case_
         ~0u,  // no _weak_field_map_
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountLogs, _impl_.account_id_),
-        PROTOBUF_FIELD_OFFSET(::request::TradingAccountLogs, _impl_.logs_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountLog, _impl_.time_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountLog, _impl_.actor_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountLog, _impl_.action_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountLog, _impl_.message_),
+        ~0u,  // no _has_bits_
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountLogList, _internal_metadata_),
+        ~0u,  // no _extensions_
+        ~0u,  // no _oneof_case_
+        ~0u,  // no _weak_field_map_
+        ~0u,  // no _inlined_string_donated_
+        ~0u,  // no _split_
+        ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountLogList, _impl_.account_id_),
+        PROTOBUF_FIELD_OFFSET(::request::TradeAccountLogList, _impl_.logs_),
+        ~0u,  // no _has_bits_
+        PROTOBUF_FIELD_OFFSET(::request::StrategyRuntimeRecord, _internal_metadata_),
+        ~0u,  // no _extensions_
+        ~0u,  // no _oneof_case_
+        ~0u,  // no _weak_field_map_
+        ~0u,  // no _inlined_string_donated_
+        ~0u,  // no _split_
+        ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::request::StrategyRuntimeRecord, _impl_.strategy_id_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategyRuntimeRecord, _impl_.state_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategyRuntimeRecord, _impl_.market_available_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategyRuntimeRecord, _impl_.queue_length_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategyRuntimeRecord, _impl_.active_orders_),
+        PROTOBUF_FIELD_OFFSET(::request::StrategyRuntimeRecord, _impl_.last_error_),
+        ~0u,  // no _has_bits_
+        PROTOBUF_FIELD_OFFSET(::request::StrategyRuntimeList, _internal_metadata_),
+        ~0u,  // no _extensions_
+        ~0u,  // no _oneof_case_
+        ~0u,  // no _weak_field_map_
+        ~0u,  // no _inlined_string_donated_
+        ~0u,  // no _split_
+        ~0u,  // no sizeof(Split)
+        PROTOBUF_FIELD_OFFSET(::request::StrategyRuntimeList, _impl_.runtimes_),
         PROTOBUF_FIELD_OFFSET(::request::RequestData_ExtraEntry_DoNotUse, _impl_._has_bits_),
         PROTOBUF_FIELD_OFFSET(::request::RequestData_ExtraEntry_DoNotUse, _internal_metadata_),
         ~0u,  // no _extensions_
@@ -505,18 +603,6 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::request::RequestData_ExtraEntry_DoNotUse, _impl_.value_),
         0,
         1,
-        PROTOBUF_FIELD_OFFSET(::request::RequestData_RetEntry_DoNotUse, _impl_._has_bits_),
-        PROTOBUF_FIELD_OFFSET(::request::RequestData_RetEntry_DoNotUse, _internal_metadata_),
-        ~0u,  // no _extensions_
-        ~0u,  // no _oneof_case_
-        ~0u,  // no _weak_field_map_
-        ~0u,  // no _inlined_string_donated_
-        ~0u,  // no _split_
-        ~0u,  // no sizeof(Split)
-        PROTOBUF_FIELD_OFFSET(::request::RequestData_RetEntry_DoNotUse, _impl_.key_),
-        PROTOBUF_FIELD_OFFSET(::request::RequestData_RetEntry_DoNotUse, _impl_.value_),
-        0,
-        1,
         ~0u,  // no _has_bits_
         PROTOBUF_FIELD_OFFSET(::request::RequestData, _internal_metadata_),
         ~0u,  // no _extensions_
@@ -526,15 +612,10 @@ const ::uint32_t
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
         PROTOBUF_FIELD_OFFSET(::request::RequestData, _impl_.type_),
-        PROTOBUF_FIELD_OFFSET(::request::RequestData, _impl_.cmd_),
         PROTOBUF_FIELD_OFFSET(::request::RequestData, _impl_.extra_),
-        PROTOBUF_FIELD_OFFSET(::request::RequestData, _impl_.ret_),
         PROTOBUF_FIELD_OFFSET(::request::RequestData, _impl_.id_),
         PROTOBUF_FIELD_OFFSET(::request::RequestData, _impl_.error_code_),
         PROTOBUF_FIELD_OFFSET(::request::RequestData, _impl_.error_message_),
-        ::_pbi::kInvalidFieldOffsetTag,
-        ::_pbi::kInvalidFieldOffsetTag,
-        ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
@@ -564,12 +645,14 @@ static const ::_pbi::MigrationSchema
         {40, -1, -1, sizeof(::request::StrategyList)},
         {49, -1, -1, sizeof(::request::TradeAccountRecord)},
         {68, -1, -1, sizeof(::request::TradeAccountList)},
-        {77, -1, -1, sizeof(::request::TradingAccountSnapshot)},
-        {91, -1, -1, sizeof(::request::TradingAccountLog)},
-        {103, -1, -1, sizeof(::request::TradingAccountLogs)},
-        {113, 123, -1, sizeof(::request::RequestData_ExtraEntry_DoNotUse)},
-        {125, 135, -1, sizeof(::request::RequestData_RetEntry_DoNotUse)},
-        {137, -1, -1, sizeof(::request::RequestData)},
+        {77, -1, -1, sizeof(::request::TradeAccountInfo)},
+        {93, -1, -1, sizeof(::request::TradeAccountInfoList)},
+        {102, -1, -1, sizeof(::request::TradeAccountLog)},
+        {114, -1, -1, sizeof(::request::TradeAccountLogList)},
+        {124, -1, -1, sizeof(::request::StrategyRuntimeRecord)},
+        {138, -1, -1, sizeof(::request::StrategyRuntimeList)},
+        {147, 157, -1, sizeof(::request::RequestData_ExtraEntry_DoNotUse)},
+        {159, -1, -1, sizeof(::request::RequestData)},
 };
 static const ::_pb::Message* const file_default_instances[] = {
     &::request::_StrategySubscription_default_instance_._instance,
@@ -578,11 +661,13 @@ static const ::_pb::Message* const file_default_instances[] = {
     &::request::_StrategyList_default_instance_._instance,
     &::request::_TradeAccountRecord_default_instance_._instance,
     &::request::_TradeAccountList_default_instance_._instance,
-    &::request::_TradingAccountSnapshot_default_instance_._instance,
-    &::request::_TradingAccountLog_default_instance_._instance,
-    &::request::_TradingAccountLogs_default_instance_._instance,
+    &::request::_TradeAccountInfo_default_instance_._instance,
+    &::request::_TradeAccountInfoList_default_instance_._instance,
+    &::request::_TradeAccountLog_default_instance_._instance,
+    &::request::_TradeAccountLogList_default_instance_._instance,
+    &::request::_StrategyRuntimeRecord_default_instance_._instance,
+    &::request::_StrategyRuntimeList_default_instance_._instance,
     &::request::_RequestData_ExtraEntry_DoNotUse_default_instance_._instance,
-    &::request::_RequestData_RetEntry_DoNotUse_default_instance_._instance,
     &::request::_RequestData_default_instance_._instance,
 };
 const char descriptor_table_protodef_request_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
@@ -608,65 +693,84 @@ const char descriptor_table_protodef_request_2eproto[] ABSL_ATTRIBUTE_SECTION_VA
     "t\030\007 \001(\r\022\022\n\nlast_error\030\010 \001(\t\022\022\n\ncreated_a"
     "t\030\t \001(\t\022\022\n\nupdated_at\030\n \001(\t\022\022\n\nis_defaul"
     "t\030\013 \001(\010\"A\n\020TradeAccountList\022-\n\010accounts\030"
-    "\001 \003(\0132\033.request.TradeAccountRecord\"\224\001\n\026T"
-    "radingAccountSnapshot\022\022\n\naccount_id\030\001 \001("
-    "\004\022\017\n\007balance\030\002 \001(\003\022\021\n\tavailable\030\003 \001(\003\022\016\n"
-    "\006frozen\030\004 \001(\003\022\032\n\022available_snapshot\030\005 \001("
-    "\010\022\026\n\016server_time_ms\030\006 \001(\003\"Q\n\021TradingAcco"
-    "untLog\022\014\n\004time\030\001 \001(\t\022\r\n\005actor\030\002 \001(\t\022\016\n\006a"
-    "ction\030\003 \001(\t\022\017\n\007message\030\004 \001(\t\"R\n\022TradingA"
-    "ccountLogs\022\022\n\naccount_id\030\001 \001(\004\022(\n\004logs\030\002"
-    " \003(\0132\032.request.TradingAccountLog\"\314\014\n\013Req"
-    "uestData\022\"\n\004type\030\001 \001(\0162\024.request.Request"
-    "Type\022\013\n\003cmd\030\002 \001(\t\022.\n\005extra\030\003 \003(\0132\037.reque"
-    "st.RequestData.ExtraEntry\022*\n\003ret\030\004 \003(\0132\035"
-    ".request.RequestData.RetEntry\022\n\n\002id\030\005 \001("
-    "\004\022\022\n\nerror_code\030\006 \001(\005\022\025\n\rerror_message\030\007"
-    " \001(\t\0227\n\014auth_request\030\n \001(\0132\037.hqmarket.ma"
-    "rket.v1.AuthRequestH\000\022A\n\021subscribe_reque"
-    "st\030\013 \001(\0132$.hqmarket.market.v1.SubscribeR"
-    "equestH\000\022E\n\023unsubscribe_request\030\014 \001(\0132&."
-    "hqmarket.market.v1.UnsubscribeRequestH\000\022"
-    "\?\n\020subscription_ack\030\r \001(\0132#.hqmarket.mar"
-    "ket.v1.SubscriptionAckH\000\022.\n\005quote\030\016 \001(\0132"
-    "\035.hqmarket.market.v1.QuoteDataH\000\022.\n\005dept"
-    "h\030\017 \001(\0132\035.hqmarket.market.v1.DepthDataH\000"
-    "\022.\n\005trade\030\020 \001(\0132\035.hqmarket.market.v1.Tra"
-    "deDataH\000\022*\n\003bar\030\021 \001(\0132\033.hqmarket.market."
-    "v1.BarDataH\000\022=\n\rmarket_status\030\022 \001(\0132$.hq"
-    "market.market.v1.MarketStatusDataH\000\022A\n\017p"
-    "rovider_status\030\023 \001(\0132&.hqmarket.market.v"
-    "1.ProviderStatusDataH\000\0229\n\rquery_request\030"
-    "\024 \001(\0132 .hqmarket.market.v1.QueryRequestH"
-    "\000\022;\n\016query_response\030\025 \001(\0132!.hqmarket.mar"
-    "ket.v1.QueryResponseH\000\022)\n\010strategy\030\026 \001(\013"
-    "2\025.request.StrategyInfoH\000\022.\n\rstrategy_li"
-    "st\030\027 \001(\0132\025.request.StrategyListH\000\0229\n\rsec"
-    "urity_list\030\031 \001(\0132 .hqmarket.market.v1.Se"
-    "curityListH\000\0225\n\013sector_list\030\033 \001(\0132\036.hqma"
-    "rket.market.v1.SectorListH\000\022E\n\023sector_co"
-    "nstituents\030\035 \001(\0132&.hqmarket.market.v1.Se"
-    "ctorConstituentsH\000\022.\n\007account\030\036 \001(\0132\033.re"
-    "quest.TradeAccountRecordH\000\0221\n\014account_li"
-    "st\030\037 \001(\0132\031.request.TradeAccountListH\000\022;\n"
-    "\020account_snapshot\030  \001(\0132\037.request.Tradin"
-    "gAccountSnapshotH\000\0223\n\014account_logs\030! \001(\013"
-    "2\033.request.TradingAccountLogsH\000\032,\n\nExtra"
-    "Entry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\032*\n"
-    "\010RetEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028"
-    "\001B\t\n\007payloadJ\004\010\030\020\031J\004\010\032\020\033J\004\010\034\020\035R\025security"
-    "_list_requestR\026security_list_responseR\023s"
-    "ector_list_requestR\033sector_constituents_"
-    "request*\271\001\n\013RequestType\022\013\n\007UNKNOWN\020\000\022\016\n\n"
-    "QUERY_AUTH\020\001\022\022\n\016QUERY_USERINFO\020\002\022\017\n\013UPDA"
-    "TE_AUTH\020\003\022\014\n\010STRATEGY\020\004\022\014\n\010HQMARKET\020\005\022\r\n"
-    "\tHEARTBEAT\020\006\022\013\n\007ACCOUNT\020\007\022\027\n\023TRADE_ACCOU"
-    "NT_LOGIN\020\010\022\027\n\023TRADE_ACCOUNT_QUERY\020\t*C\n\022T"
-    "radingAccountType\022\025\n\021ACCOUNT_SIMULATED\020\000"
-    "\022\026\n\022ACCOUNT_PRODUCTION\020\001*Y\n\023TradingAccou"
-    "ntState\022\030\n\024ACCOUNT_DISCONNECTED\020\000\022\025\n\021ACC"
-    "OUNT_CONNECTED\020\001\022\021\n\rACCOUNT_ERROR\020\002b\006pro"
-    "to3"
+    "\001 \003(\0132\033.request.TradeAccountRecord\"\271\001\n\020T"
+    "radeAccountInfo\022\022\n\naccount_id\030\001 \001(\004\022\017\n\007b"
+    "alance\030\002 \001(\003\022\021\n\tavailable\030\003 \001(\003\022\016\n\006froze"
+    "n\030\004 \001(\003\022\032\n\022available_snapshot\030\005 \001(\010\022\026\n\016s"
+    "erver_time_ms\030\006 \001(\003\022\022\n\nerror_code\030\007 \001(\005\022"
+    "\025\n\rerror_message\030\010 \001(\t\"C\n\024TradeAccountIn"
+    "foList\022+\n\010accounts\030\001 \003(\0132\031.request.Trade"
+    "AccountInfo\"O\n\017TradeAccountLog\022\014\n\004time\030\001"
+    " \001(\t\022\r\n\005actor\030\002 \001(\t\022\016\n\006action\030\003 \001(\t\022\017\n\007m"
+    "essage\030\004 \001(\t\"Q\n\023TradeAccountLogList\022\022\n\na"
+    "ccount_id\030\001 \001(\004\022&\n\004logs\030\002 \003(\0132\030.request."
+    "TradeAccountLog\"\226\001\n\025StrategyRuntimeRecor"
+    "d\022\023\n\013strategy_id\030\001 \001(\004\022\r\n\005state\030\002 \001(\005\022\030\n"
+    "\020market_available\030\003 \001(\010\022\024\n\014queue_length\030"
+    "\004 \001(\004\022\025\n\ractive_orders\030\005 \001(\004\022\022\n\nlast_err"
+    "or\030\006 \001(\t\"G\n\023StrategyRuntimeList\0220\n\010runti"
+    "mes\030\001 \003(\0132\036.request.StrategyRuntimeRecor"
+    "d\"\263\013\n\013RequestData\022\"\n\004type\030\001 \001(\0162\024.reques"
+    "t.RequestType\022.\n\005extra\030\003 \003(\0132\037.request.R"
+    "equestData.ExtraEntry\022\n\n\002id\030\005 \001(\004\022\022\n\nerr"
+    "or_code\030\006 \001(\005\022\025\n\rerror_message\030\007 \001(\t\022\?\n\020"
+    "subscription_ack\030\r \001(\0132#.hqmarket.market"
+    ".v1.SubscriptionAckH\000\022.\n\005quote\030\016 \001(\0132\035.h"
+    "qmarket.market.v1.QuoteDataH\000\022.\n\005depth\030\017"
+    " \001(\0132\035.hqmarket.market.v1.DepthDataH\000\022.\n"
+    "\005trade\030\020 \001(\0132\035.hqmarket.market.v1.TradeD"
+    "ataH\000\022*\n\003bar\030\021 \001(\0132\033.hqmarket.market.v1."
+    "BarDataH\000\022=\n\rmarket_status\030\022 \001(\0132$.hqmar"
+    "ket.market.v1.MarketStatusDataH\000\022A\n\017prov"
+    "ider_status\030\023 \001(\0132&.hqmarket.market.v1.P"
+    "roviderStatusDataH\000\022;\n\016query_response\030\025 "
+    "\001(\0132!.hqmarket.market.v1.QueryResponseH\000"
+    "\022)\n\010strategy\030\026 \001(\0132\025.request.StrategyInf"
+    "oH\000\022.\n\rstrategy_list\030\027 \001(\0132\025.request.Str"
+    "ategyListH\000\0229\n\rsecurity_list\030\031 \001(\0132 .hqm"
+    "arket.market.v1.SecurityListH\000\0225\n\013sector"
+    "_list\030\033 \001(\0132\036.hqmarket.market.v1.SectorL"
+    "istH\000\022E\n\023sector_constituents\030\035 \001(\0132&.hqm"
+    "arket.market.v1.SectorConstituentsH\000\022.\n\007"
+    "account\030\036 \001(\0132\033.request.TradeAccountReco"
+    "rdH\000\0221\n\014account_list\030\037 \001(\0132\031.request.Tra"
+    "deAccountListH\000\0224\n\014account_logs\030! \001(\0132\034."
+    "request.TradeAccountLogListH\000\022:\n\021account"
+    "_info_list\030\" \001(\0132\035.request.TradeAccountI"
+    "nfoListH\000\022=\n\025strategy_runtime_list\030# \001(\013"
+    "2\034.request.StrategyRuntimeListH\000\032,\n\nExtr"
+    "aEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001B\t"
+    "\n\007payloadJ\004\010\030\020\031J\004\010\032\020\033J\004\010\034\020\035J\004\010\002\020\003J\004\010\004\020\005J"
+    "\004\010\n\020\013J\004\010\013\020\014J\004\010\014\020\rJ\004\010\024\020\025J\004\010 \020!R\025security_"
+    "list_requestR\026security_list_responseR\023se"
+    "ctor_list_requestR\033sector_constituents_r"
+    "equestR\003cmdR\003retR\014auth_requestR\021subscrib"
+    "e_requestR\023unsubscribe_requestR\rquery_re"
+    "questR\020account_snapshot*\221\006\n\013RequestType\022"
+    "\013\n\007UNKNOWN\020\000\022\016\n\nAUTH_LOGIN\020\001\022\021\n\rAUTH_REG"
+    "ISTER\020\003\022\r\n\tHEARTBEAT\020\006\022\027\n\023TRADE_ACCOUNT_"
+    "LOGIN\020\010\022\027\n\023TRADE_ACCOUNT_QUERY\020\t\022\025\n\021TRAD"
+    "E_ACCOUNT_ADD\020\n\022\030\n\024TRADE_ACCOUNT_MODIFY\020"
+    "\013\022\031\n\025TRADE_ACCOUNT_CONNECT\020\014\022\034\n\030TRADE_AC"
+    "COUNT_DISCONNECT\020\r\022\034\n\030TRADE_ACCOUNT_INFO"
+    "_QUERY\020\016\022\034\n\030TRADE_ACCOUNT_LOGS_QUERY\020\017\022\020"
+    "\n\014STRATEGY_ADD\020\024\022\023\n\017STRATEGY_MODIFY\020\025\022\022\n"
+    "\016STRATEGY_QUERY\020\026\022\023\n\017STRATEGY_DELETE\020\027\022\032"
+    "\n\026STRATEGY_RUNTIME_QUERY\020\030\022\022\n\016STRATEGY_S"
+    "TART\020\031\022\022\n\016STRATEGY_PAUSE\020\032\022\021\n\rSTRATEGY_S"
+    "TOP\020\033\022\024\n\020MARKET_SUBSCRIBE\020(\022\026\n\022MARKET_UN"
+    "SUBSCRIBE\020)\022\026\n\022MARKET_QUOTE_QUERY\020*\022\025\n\021M"
+    "ARKET_BARS_QUERY\020+\022\033\n\027MARKET_SECURITIES_"
+    "QUERY\020,\022\030\n\024MARKET_SECTORS_QUERY\020-\022$\n MAR"
+    "KET_SECTOR_CONSTITUENTS_QUERY\020.\022\025\n\021MARKE"
+    "T_QUOTE_PUSH\020/\022\025\n\021MARKET_DEPTH_PUSH\0200\"\004\010"
+    "\002\020\002\"\004\010\004\020\004\"\004\010\005\020\005\"\004\010\007\020\007*\nQUERY_AUTH*\013UPDAT"
+    "E_AUTH*\016QUERY_USERINFO*\010STRATEGY*\010HQMARK"
+    "ET*\007ACCOUNT*C\n\022TradingAccountType\022\025\n\021ACC"
+    "OUNT_SIMULATED\020\000\022\026\n\022ACCOUNT_PRODUCTION\020\001"
+    "*Y\n\023TradingAccountState\022\030\n\024ACCOUNT_DISCO"
+    "NNECTED\020\000\022\025\n\021ACCOUNT_CONNECTED\020\001\022\021\n\rACCO"
+    "UNT_ERROR\020\002b\006proto3"
 };
 static const ::_pbi::DescriptorTable* const descriptor_table_request_2eproto_deps[1] =
     {
@@ -676,13 +780,13 @@ static ::absl::once_flag descriptor_table_request_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_request_2eproto = {
     false,
     false,
-    3163,
+    3939,
     descriptor_table_protodef_request_2eproto,
     "request.proto",
     &descriptor_table_request_2eproto_once,
     descriptor_table_request_2eproto_deps,
     1,
-    12,
+    14,
     schemas,
     file_default_instances,
     TableStruct_request_2eproto::offsets,
@@ -695,9 +799,9 @@ const ::google::protobuf::EnumDescriptor* RequestType_descriptor() {
   return file_level_enum_descriptors_request_2eproto[0];
 }
 PROTOBUF_CONSTINIT const uint32_t RequestType_internal_data_[] = {
-    655360u, 0u, };
+    131072u, 64u, 66863058u, 32704u, };
 bool RequestType_IsValid(int value) {
-  return 0 <= value && value <= 9;
+  return 0 <= value && value <= 48 && ((561850709245771u >> value) & 1) != 0;
 }
 const ::google::protobuf::EnumDescriptor* TradingAccountType_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_request_2eproto);
@@ -2580,175 +2684,215 @@ void TradeAccountList::InternalSwap(TradeAccountList* PROTOBUF_RESTRICT other) {
 }
 // ===================================================================
 
-class TradingAccountSnapshot::_Internal {
+class TradeAccountInfo::_Internal {
  public:
 };
 
-TradingAccountSnapshot::TradingAccountSnapshot(::google::protobuf::Arena* arena)
+TradeAccountInfo::TradeAccountInfo(::google::protobuf::Arena* arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, _class_data_.base()) {
 #else   // PROTOBUF_CUSTOM_VTABLE
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:request.TradingAccountSnapshot)
+  // @@protoc_insertion_point(arena_constructor:request.TradeAccountInfo)
 }
-TradingAccountSnapshot::TradingAccountSnapshot(
-    ::google::protobuf::Arena* arena, const TradingAccountSnapshot& from)
-    : TradingAccountSnapshot(arena) {
-  MergeFrom(from);
+inline PROTOBUF_NDEBUG_INLINE TradeAccountInfo::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::request::TradeAccountInfo& from_msg)
+      : error_message_(arena, from.error_message_),
+        _cached_size_{0} {}
+
+TradeAccountInfo::TradeAccountInfo(
+    ::google::protobuf::Arena* arena,
+    const TradeAccountInfo& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  TradeAccountInfo* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::memcpy(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, account_id_),
+           reinterpret_cast<const char *>(&from._impl_) +
+               offsetof(Impl_, account_id_),
+           offsetof(Impl_, error_code_) -
+               offsetof(Impl_, account_id_) +
+               sizeof(Impl_::error_code_));
+
+  // @@protoc_insertion_point(copy_constructor:request.TradeAccountInfo)
 }
-inline PROTOBUF_NDEBUG_INLINE TradingAccountSnapshot::Impl_::Impl_(
+inline PROTOBUF_NDEBUG_INLINE TradeAccountInfo::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
-      : _cached_size_{0} {}
+      : error_message_(arena),
+        _cached_size_{0} {}
 
-inline void TradingAccountSnapshot::SharedCtor(::_pb::Arena* arena) {
+inline void TradeAccountInfo::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
   ::memset(reinterpret_cast<char *>(&_impl_) +
                offsetof(Impl_, account_id_),
            0,
-           offsetof(Impl_, available_snapshot_) -
+           offsetof(Impl_, error_code_) -
                offsetof(Impl_, account_id_) +
-               sizeof(Impl_::available_snapshot_));
+               sizeof(Impl_::error_code_));
 }
-TradingAccountSnapshot::~TradingAccountSnapshot() {
-  // @@protoc_insertion_point(destructor:request.TradingAccountSnapshot)
+TradeAccountInfo::~TradeAccountInfo() {
+  // @@protoc_insertion_point(destructor:request.TradeAccountInfo)
   SharedDtor(*this);
 }
-inline void TradingAccountSnapshot::SharedDtor(MessageLite& self) {
-  TradingAccountSnapshot& this_ = static_cast<TradingAccountSnapshot&>(self);
+inline void TradeAccountInfo::SharedDtor(MessageLite& self) {
+  TradeAccountInfo& this_ = static_cast<TradeAccountInfo&>(self);
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.error_message_.Destroy();
   this_._impl_.~Impl_();
 }
 
-inline void* TradingAccountSnapshot::PlacementNew_(const void*, void* mem,
+inline void* TradeAccountInfo::PlacementNew_(const void*, void* mem,
                                         ::google::protobuf::Arena* arena) {
-  return ::new (mem) TradingAccountSnapshot(arena);
+  return ::new (mem) TradeAccountInfo(arena);
 }
-constexpr auto TradingAccountSnapshot::InternalNewImpl_() {
-  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(TradingAccountSnapshot),
-                                            alignof(TradingAccountSnapshot));
+constexpr auto TradeAccountInfo::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(TradeAccountInfo),
+                                            alignof(TradeAccountInfo));
 }
 PROTOBUF_CONSTINIT
 PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::google::protobuf::internal::ClassDataFull TradingAccountSnapshot::_class_data_ = {
+const ::google::protobuf::internal::ClassDataFull TradeAccountInfo::_class_data_ = {
     ::google::protobuf::internal::ClassData{
-        &_TradingAccountSnapshot_default_instance_._instance,
+        &_TradeAccountInfo_default_instance_._instance,
         &_table_.header,
         nullptr,  // OnDemandRegisterArenaDtor
         nullptr,  // IsInitialized
-        &TradingAccountSnapshot::MergeImpl,
-        ::google::protobuf::Message::GetNewImpl<TradingAccountSnapshot>(),
+        &TradeAccountInfo::MergeImpl,
+        ::google::protobuf::Message::GetNewImpl<TradeAccountInfo>(),
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-        &TradingAccountSnapshot::SharedDtor,
-        ::google::protobuf::Message::GetClearImpl<TradingAccountSnapshot>(), &TradingAccountSnapshot::ByteSizeLong,
-            &TradingAccountSnapshot::_InternalSerialize,
+        &TradeAccountInfo::SharedDtor,
+        ::google::protobuf::Message::GetClearImpl<TradeAccountInfo>(), &TradeAccountInfo::ByteSizeLong,
+            &TradeAccountInfo::_InternalSerialize,
 #endif  // PROTOBUF_CUSTOM_VTABLE
-        PROTOBUF_FIELD_OFFSET(TradingAccountSnapshot, _impl_._cached_size_),
+        PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_._cached_size_),
         false,
     },
-    &TradingAccountSnapshot::kDescriptorMethods,
+    &TradeAccountInfo::kDescriptorMethods,
     &descriptor_table_request_2eproto,
     nullptr,  // tracker
 };
-const ::google::protobuf::internal::ClassData* TradingAccountSnapshot::GetClassData() const {
+const ::google::protobuf::internal::ClassData* TradeAccountInfo::GetClassData() const {
   ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
   ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
   return _class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 6, 0, 0, 2> TradingAccountSnapshot::_table_ = {
+const ::_pbi::TcParseTable<3, 8, 0, 54, 2> TradeAccountInfo::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    6, 56,  // max_field_number, fast_idx_mask
+    8, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967232,  // skipmap
+    4294967040,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    6,  // num_field_entries
+    8,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     _class_data_.base(),
     nullptr,  // post_loop_handler
     ::_pbi::TcParser::GenericFallback,  // fallback
     #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-    ::_pbi::TcParser::GetTable<::request::TradingAccountSnapshot>(),  // to_prefetch
+    ::_pbi::TcParser::GetTable<::request::TradeAccountInfo>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    {::_pbi::TcParser::MiniParse, {}},
+    // string error_message = 8;
+    {::_pbi::TcParser::FastUS1,
+     {66, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.error_message_)}},
     // uint64 account_id = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(TradingAccountSnapshot, _impl_.account_id_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountSnapshot, _impl_.account_id_)}},
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(TradeAccountInfo, _impl_.account_id_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.account_id_)}},
     // int64 balance = 2;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(TradingAccountSnapshot, _impl_.balance_), 63>(),
-     {16, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountSnapshot, _impl_.balance_)}},
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(TradeAccountInfo, _impl_.balance_), 63>(),
+     {16, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.balance_)}},
     // int64 available = 3;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(TradingAccountSnapshot, _impl_.available_), 63>(),
-     {24, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountSnapshot, _impl_.available_)}},
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(TradeAccountInfo, _impl_.available_), 63>(),
+     {24, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.available_)}},
     // int64 frozen = 4;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(TradingAccountSnapshot, _impl_.frozen_), 63>(),
-     {32, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountSnapshot, _impl_.frozen_)}},
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(TradeAccountInfo, _impl_.frozen_), 63>(),
+     {32, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.frozen_)}},
     // bool available_snapshot = 5;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(TradingAccountSnapshot, _impl_.available_snapshot_), 63>(),
-     {40, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountSnapshot, _impl_.available_snapshot_)}},
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(TradeAccountInfo, _impl_.available_snapshot_), 63>(),
+     {40, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.available_snapshot_)}},
     // int64 server_time_ms = 6;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(TradingAccountSnapshot, _impl_.server_time_ms_), 63>(),
-     {48, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountSnapshot, _impl_.server_time_ms_)}},
-    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(TradeAccountInfo, _impl_.server_time_ms_), 63>(),
+     {48, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.server_time_ms_)}},
+    // int32 error_code = 7;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(TradeAccountInfo, _impl_.error_code_), 63>(),
+     {56, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.error_code_)}},
   }}, {{
     65535, 65535
   }}, {{
     // uint64 account_id = 1;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountSnapshot, _impl_.account_id_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.account_id_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUInt64)},
     // int64 balance = 2;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountSnapshot, _impl_.balance_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.balance_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
     // int64 available = 3;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountSnapshot, _impl_.available_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.available_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
     // int64 frozen = 4;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountSnapshot, _impl_.frozen_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.frozen_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
     // bool available_snapshot = 5;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountSnapshot, _impl_.available_snapshot_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.available_snapshot_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kBool)},
     // int64 server_time_ms = 6;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountSnapshot, _impl_.server_time_ms_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.server_time_ms_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
+    // int32 error_code = 7;
+    {PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.error_code_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // string error_message = 8;
+    {PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.error_message_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
+    "\30\0\0\0\0\0\0\0\15\0\0\0\0\0\0\0"
+    "request.TradeAccountInfo"
+    "error_message"
   }},
 };
 
-PROTOBUF_NOINLINE void TradingAccountSnapshot::Clear() {
-// @@protoc_insertion_point(message_clear_start:request.TradingAccountSnapshot)
+PROTOBUF_NOINLINE void TradeAccountInfo::Clear() {
+// @@protoc_insertion_point(message_clear_start:request.TradeAccountInfo)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  _impl_.error_message_.ClearToEmpty();
   ::memset(&_impl_.account_id_, 0, static_cast<::size_t>(
-      reinterpret_cast<char*>(&_impl_.available_snapshot_) -
-      reinterpret_cast<char*>(&_impl_.account_id_)) + sizeof(_impl_.available_snapshot_));
+      reinterpret_cast<char*>(&_impl_.error_code_) -
+      reinterpret_cast<char*>(&_impl_.account_id_)) + sizeof(_impl_.error_code_));
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-        ::uint8_t* TradingAccountSnapshot::_InternalSerialize(
+        ::uint8_t* TradeAccountInfo::_InternalSerialize(
             const MessageLite& base, ::uint8_t* target,
             ::google::protobuf::io::EpsCopyOutputStream* stream) {
-          const TradingAccountSnapshot& this_ = static_cast<const TradingAccountSnapshot&>(base);
+          const TradeAccountInfo& this_ = static_cast<const TradeAccountInfo&>(base);
 #else   // PROTOBUF_CUSTOM_VTABLE
-        ::uint8_t* TradingAccountSnapshot::_InternalSerialize(
+        ::uint8_t* TradeAccountInfo::_InternalSerialize(
             ::uint8_t* target,
             ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-          const TradingAccountSnapshot& this_ = *this;
+          const TradeAccountInfo& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-          // @@protoc_insertion_point(serialize_to_array_start:request.TradingAccountSnapshot)
+          // @@protoc_insertion_point(serialize_to_array_start:request.TradeAccountInfo)
           ::uint32_t cached_has_bits = 0;
           (void)cached_has_bits;
 
@@ -2794,23 +2938,38 @@ PROTOBUF_NOINLINE void TradingAccountSnapshot::Clear() {
                     stream, this_._internal_server_time_ms(), target);
           }
 
+          // int32 error_code = 7;
+          if (this_._internal_error_code() != 0) {
+            target = ::google::protobuf::internal::WireFormatLite::
+                WriteInt32ToArrayWithField<7>(
+                    stream, this_._internal_error_code(), target);
+          }
+
+          // string error_message = 8;
+          if (!this_._internal_error_message().empty()) {
+            const std::string& _s = this_._internal_error_message();
+            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradeAccountInfo.error_message");
+            target = stream->WriteStringMaybeAliased(8, _s, target);
+          }
+
           if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
             target =
                 ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
                     this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
           }
-          // @@protoc_insertion_point(serialize_to_array_end:request.TradingAccountSnapshot)
+          // @@protoc_insertion_point(serialize_to_array_end:request.TradeAccountInfo)
           return target;
         }
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-        ::size_t TradingAccountSnapshot::ByteSizeLong(const MessageLite& base) {
-          const TradingAccountSnapshot& this_ = static_cast<const TradingAccountSnapshot&>(base);
+        ::size_t TradeAccountInfo::ByteSizeLong(const MessageLite& base) {
+          const TradeAccountInfo& this_ = static_cast<const TradeAccountInfo&>(base);
 #else   // PROTOBUF_CUSTOM_VTABLE
-        ::size_t TradingAccountSnapshot::ByteSizeLong() const {
-          const TradingAccountSnapshot& this_ = *this;
+        ::size_t TradeAccountInfo::ByteSizeLong() const {
+          const TradeAccountInfo& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-          // @@protoc_insertion_point(message_byte_size_start:request.TradingAccountSnapshot)
+          // @@protoc_insertion_point(message_byte_size_start:request.TradeAccountInfo)
           ::size_t total_size = 0;
 
           ::uint32_t cached_has_bits = 0;
@@ -2819,6 +2978,11 @@ PROTOBUF_NOINLINE void TradingAccountSnapshot::Clear() {
 
           ::_pbi::Prefetch5LinesFrom7Lines(&this_);
            {
+            // string error_message = 8;
+            if (!this_._internal_error_message().empty()) {
+              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                              this_._internal_error_message());
+            }
             // uint64 account_id = 1;
             if (this_._internal_account_id() != 0) {
               total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(
@@ -2848,19 +3012,27 @@ PROTOBUF_NOINLINE void TradingAccountSnapshot::Clear() {
             if (this_._internal_available_snapshot() != 0) {
               total_size += 2;
             }
+            // int32 error_code = 7;
+            if (this_._internal_error_code() != 0) {
+              total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+                  this_._internal_error_code());
+            }
           }
           return this_.MaybeComputeUnknownFieldsSize(total_size,
                                                      &this_._impl_._cached_size_);
         }
 
-void TradingAccountSnapshot::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
-  auto* const _this = static_cast<TradingAccountSnapshot*>(&to_msg);
-  auto& from = static_cast<const TradingAccountSnapshot&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:request.TradingAccountSnapshot)
+void TradeAccountInfo::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<TradeAccountInfo*>(&to_msg);
+  auto& from = static_cast<const TradeAccountInfo&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:request.TradeAccountInfo)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
+  if (!from._internal_error_message().empty()) {
+    _this->_internal_set_error_message(from._internal_error_message());
+  }
   if (from._internal_account_id() != 0) {
     _this->_impl_.account_id_ = from._impl_.account_id_;
   }
@@ -2879,72 +3051,320 @@ void TradingAccountSnapshot::MergeImpl(::google::protobuf::MessageLite& to_msg, 
   if (from._internal_available_snapshot() != 0) {
     _this->_impl_.available_snapshot_ = from._impl_.available_snapshot_;
   }
+  if (from._internal_error_code() != 0) {
+    _this->_impl_.error_code_ = from._impl_.error_code_;
+  }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
-void TradingAccountSnapshot::CopyFrom(const TradingAccountSnapshot& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:request.TradingAccountSnapshot)
+void TradeAccountInfo::CopyFrom(const TradeAccountInfo& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:request.TradeAccountInfo)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 
-void TradingAccountSnapshot::InternalSwap(TradingAccountSnapshot* PROTOBUF_RESTRICT other) {
+void TradeAccountInfo::InternalSwap(TradeAccountInfo* PROTOBUF_RESTRICT other) {
   using std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.error_message_, &other->_impl_.error_message_, arena);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(TradingAccountSnapshot, _impl_.available_snapshot_)
-      + sizeof(TradingAccountSnapshot::_impl_.available_snapshot_)
-      - PROTOBUF_FIELD_OFFSET(TradingAccountSnapshot, _impl_.account_id_)>(
+      PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.error_code_)
+      + sizeof(TradeAccountInfo::_impl_.error_code_)
+      - PROTOBUF_FIELD_OFFSET(TradeAccountInfo, _impl_.account_id_)>(
           reinterpret_cast<char*>(&_impl_.account_id_),
           reinterpret_cast<char*>(&other->_impl_.account_id_));
 }
 
-::google::protobuf::Metadata TradingAccountSnapshot::GetMetadata() const {
+::google::protobuf::Metadata TradeAccountInfo::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================
 
-class TradingAccountLog::_Internal {
+class TradeAccountInfoList::_Internal {
  public:
 };
 
-TradingAccountLog::TradingAccountLog(::google::protobuf::Arena* arena)
+TradeAccountInfoList::TradeAccountInfoList(::google::protobuf::Arena* arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, _class_data_.base()) {
 #else   // PROTOBUF_CUSTOM_VTABLE
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:request.TradingAccountLog)
+  // @@protoc_insertion_point(arena_constructor:request.TradeAccountInfoList)
 }
-inline PROTOBUF_NDEBUG_INLINE TradingAccountLog::Impl_::Impl_(
+inline PROTOBUF_NDEBUG_INLINE TradeAccountInfoList::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
-    const Impl_& from, const ::request::TradingAccountLog& from_msg)
+    const Impl_& from, const ::request::TradeAccountInfoList& from_msg)
+      : accounts_{visibility, arena, from.accounts_},
+        _cached_size_{0} {}
+
+TradeAccountInfoList::TradeAccountInfoList(
+    ::google::protobuf::Arena* arena,
+    const TradeAccountInfoList& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  TradeAccountInfoList* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+
+  // @@protoc_insertion_point(copy_constructor:request.TradeAccountInfoList)
+}
+inline PROTOBUF_NDEBUG_INLINE TradeAccountInfoList::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : accounts_{visibility, arena},
+        _cached_size_{0} {}
+
+inline void TradeAccountInfoList::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+}
+TradeAccountInfoList::~TradeAccountInfoList() {
+  // @@protoc_insertion_point(destructor:request.TradeAccountInfoList)
+  SharedDtor(*this);
+}
+inline void TradeAccountInfoList::SharedDtor(MessageLite& self) {
+  TradeAccountInfoList& this_ = static_cast<TradeAccountInfoList&>(self);
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.~Impl_();
+}
+
+inline void* TradeAccountInfoList::PlacementNew_(const void*, void* mem,
+                                        ::google::protobuf::Arena* arena) {
+  return ::new (mem) TradeAccountInfoList(arena);
+}
+constexpr auto TradeAccountInfoList::InternalNewImpl_() {
+  constexpr auto arena_bits = ::google::protobuf::internal::EncodePlacementArenaOffsets({
+      PROTOBUF_FIELD_OFFSET(TradeAccountInfoList, _impl_.accounts_) +
+          decltype(TradeAccountInfoList::_impl_.accounts_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+  });
+  if (arena_bits.has_value()) {
+    return ::google::protobuf::internal::MessageCreator::ZeroInit(
+        sizeof(TradeAccountInfoList), alignof(TradeAccountInfoList), *arena_bits);
+  } else {
+    return ::google::protobuf::internal::MessageCreator(&TradeAccountInfoList::PlacementNew_,
+                                 sizeof(TradeAccountInfoList),
+                                 alignof(TradeAccountInfoList));
+  }
+}
+PROTOBUF_CONSTINIT
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::google::protobuf::internal::ClassDataFull TradeAccountInfoList::_class_data_ = {
+    ::google::protobuf::internal::ClassData{
+        &_TradeAccountInfoList_default_instance_._instance,
+        &_table_.header,
+        nullptr,  // OnDemandRegisterArenaDtor
+        nullptr,  // IsInitialized
+        &TradeAccountInfoList::MergeImpl,
+        ::google::protobuf::Message::GetNewImpl<TradeAccountInfoList>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        &TradeAccountInfoList::SharedDtor,
+        ::google::protobuf::Message::GetClearImpl<TradeAccountInfoList>(), &TradeAccountInfoList::ByteSizeLong,
+            &TradeAccountInfoList::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+        PROTOBUF_FIELD_OFFSET(TradeAccountInfoList, _impl_._cached_size_),
+        false,
+    },
+    &TradeAccountInfoList::kDescriptorMethods,
+    &descriptor_table_request_2eproto,
+    nullptr,  // tracker
+};
+const ::google::protobuf::internal::ClassData* TradeAccountInfoList::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
+  return _class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 1, 1, 0, 2> TradeAccountInfoList::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    1, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967294,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    1,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    _class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::request::TradeAccountInfoList>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // repeated .request.TradeAccountInfo accounts = 1;
+    {::_pbi::TcParser::FastMtR1,
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountInfoList, _impl_.accounts_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // repeated .request.TradeAccountInfo accounts = 1;
+    {PROTOBUF_FIELD_OFFSET(TradeAccountInfoList, _impl_.accounts_), 0, 0,
+    (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
+  }}, {{
+    {::_pbi::TcParser::GetTable<::request::TradeAccountInfo>()},
+  }}, {{
+  }},
+};
+
+PROTOBUF_NOINLINE void TradeAccountInfoList::Clear() {
+// @@protoc_insertion_point(message_clear_start:request.TradeAccountInfoList)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.accounts_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::uint8_t* TradeAccountInfoList::_InternalSerialize(
+            const MessageLite& base, ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) {
+          const TradeAccountInfoList& this_ = static_cast<const TradeAccountInfoList&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::uint8_t* TradeAccountInfoList::_InternalSerialize(
+            ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+          const TradeAccountInfoList& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(serialize_to_array_start:request.TradeAccountInfoList)
+          ::uint32_t cached_has_bits = 0;
+          (void)cached_has_bits;
+
+          // repeated .request.TradeAccountInfo accounts = 1;
+          for (unsigned i = 0, n = static_cast<unsigned>(
+                                   this_._internal_accounts_size());
+               i < n; i++) {
+            const auto& repfield = this_._internal_accounts().Get(i);
+            target =
+                ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                    1, repfield, repfield.GetCachedSize(),
+                    target, stream);
+          }
+
+          if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+            target =
+                ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                    this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+          }
+          // @@protoc_insertion_point(serialize_to_array_end:request.TradeAccountInfoList)
+          return target;
+        }
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::size_t TradeAccountInfoList::ByteSizeLong(const MessageLite& base) {
+          const TradeAccountInfoList& this_ = static_cast<const TradeAccountInfoList&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::size_t TradeAccountInfoList::ByteSizeLong() const {
+          const TradeAccountInfoList& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(message_byte_size_start:request.TradeAccountInfoList)
+          ::size_t total_size = 0;
+
+          ::uint32_t cached_has_bits = 0;
+          // Prevent compiler warnings about cached_has_bits being unused
+          (void)cached_has_bits;
+
+          ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+           {
+            // repeated .request.TradeAccountInfo accounts = 1;
+            {
+              total_size += 1UL * this_._internal_accounts_size();
+              for (const auto& msg : this_._internal_accounts()) {
+                total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
+              }
+            }
+          }
+          return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                                     &this_._impl_._cached_size_);
+        }
+
+void TradeAccountInfoList::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<TradeAccountInfoList*>(&to_msg);
+  auto& from = static_cast<const TradeAccountInfoList&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:request.TradeAccountInfoList)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  _this->_internal_mutable_accounts()->MergeFrom(
+      from._internal_accounts());
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void TradeAccountInfoList::CopyFrom(const TradeAccountInfoList& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:request.TradeAccountInfoList)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void TradeAccountInfoList::InternalSwap(TradeAccountInfoList* PROTOBUF_RESTRICT other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  _impl_.accounts_.InternalSwap(&other->_impl_.accounts_);
+}
+
+::google::protobuf::Metadata TradeAccountInfoList::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class TradeAccountLog::_Internal {
+ public:
+};
+
+TradeAccountLog::TradeAccountLog(::google::protobuf::Arena* arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:request.TradeAccountLog)
+}
+inline PROTOBUF_NDEBUG_INLINE TradeAccountLog::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::request::TradeAccountLog& from_msg)
       : time_(arena, from.time_),
         actor_(arena, from.actor_),
         action_(arena, from.action_),
         message_(arena, from.message_),
         _cached_size_{0} {}
 
-TradingAccountLog::TradingAccountLog(
+TradeAccountLog::TradeAccountLog(
     ::google::protobuf::Arena* arena,
-    const TradingAccountLog& from)
+    const TradeAccountLog& from)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, _class_data_.base()) {
 #else   // PROTOBUF_CUSTOM_VTABLE
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  TradingAccountLog* const _this = this;
+  TradeAccountLog* const _this = this;
   (void)_this;
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
 
-  // @@protoc_insertion_point(copy_constructor:request.TradingAccountLog)
+  // @@protoc_insertion_point(copy_constructor:request.TradeAccountLog)
 }
-inline PROTOBUF_NDEBUG_INLINE TradingAccountLog::Impl_::Impl_(
+inline PROTOBUF_NDEBUG_INLINE TradeAccountLog::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
       : time_(arena),
@@ -2953,15 +3373,15 @@ inline PROTOBUF_NDEBUG_INLINE TradingAccountLog::Impl_::Impl_(
         message_(arena),
         _cached_size_{0} {}
 
-inline void TradingAccountLog::SharedCtor(::_pb::Arena* arena) {
+inline void TradeAccountLog::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
 }
-TradingAccountLog::~TradingAccountLog() {
-  // @@protoc_insertion_point(destructor:request.TradingAccountLog)
+TradeAccountLog::~TradeAccountLog() {
+  // @@protoc_insertion_point(destructor:request.TradeAccountLog)
   SharedDtor(*this);
 }
-inline void TradingAccountLog::SharedDtor(MessageLite& self) {
-  TradingAccountLog& this_ = static_cast<TradingAccountLog&>(self);
+inline void TradeAccountLog::SharedDtor(MessageLite& self) {
+  TradeAccountLog& this_ = static_cast<TradeAccountLog&>(self);
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
   this_._impl_.time_.Destroy();
@@ -2971,43 +3391,43 @@ inline void TradingAccountLog::SharedDtor(MessageLite& self) {
   this_._impl_.~Impl_();
 }
 
-inline void* TradingAccountLog::PlacementNew_(const void*, void* mem,
+inline void* TradeAccountLog::PlacementNew_(const void*, void* mem,
                                         ::google::protobuf::Arena* arena) {
-  return ::new (mem) TradingAccountLog(arena);
+  return ::new (mem) TradeAccountLog(arena);
 }
-constexpr auto TradingAccountLog::InternalNewImpl_() {
-  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(TradingAccountLog),
-                                            alignof(TradingAccountLog));
+constexpr auto TradeAccountLog::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(TradeAccountLog),
+                                            alignof(TradeAccountLog));
 }
 PROTOBUF_CONSTINIT
 PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::google::protobuf::internal::ClassDataFull TradingAccountLog::_class_data_ = {
+const ::google::protobuf::internal::ClassDataFull TradeAccountLog::_class_data_ = {
     ::google::protobuf::internal::ClassData{
-        &_TradingAccountLog_default_instance_._instance,
+        &_TradeAccountLog_default_instance_._instance,
         &_table_.header,
         nullptr,  // OnDemandRegisterArenaDtor
         nullptr,  // IsInitialized
-        &TradingAccountLog::MergeImpl,
-        ::google::protobuf::Message::GetNewImpl<TradingAccountLog>(),
+        &TradeAccountLog::MergeImpl,
+        ::google::protobuf::Message::GetNewImpl<TradeAccountLog>(),
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-        &TradingAccountLog::SharedDtor,
-        ::google::protobuf::Message::GetClearImpl<TradingAccountLog>(), &TradingAccountLog::ByteSizeLong,
-            &TradingAccountLog::_InternalSerialize,
+        &TradeAccountLog::SharedDtor,
+        ::google::protobuf::Message::GetClearImpl<TradeAccountLog>(), &TradeAccountLog::ByteSizeLong,
+            &TradeAccountLog::_InternalSerialize,
 #endif  // PROTOBUF_CUSTOM_VTABLE
-        PROTOBUF_FIELD_OFFSET(TradingAccountLog, _impl_._cached_size_),
+        PROTOBUF_FIELD_OFFSET(TradeAccountLog, _impl_._cached_size_),
         false,
     },
-    &TradingAccountLog::kDescriptorMethods,
+    &TradeAccountLog::kDescriptorMethods,
     &descriptor_table_request_2eproto,
     nullptr,  // tracker
 };
-const ::google::protobuf::internal::ClassData* TradingAccountLog::GetClassData() const {
+const ::google::protobuf::internal::ClassData* TradeAccountLog::GetClassData() const {
   ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
   ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
   return _class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 4, 0, 56, 2> TradingAccountLog::_table_ = {
+const ::_pbi::TcParseTable<2, 4, 0, 54, 2> TradeAccountLog::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
@@ -3022,41 +3442,41 @@ const ::_pbi::TcParseTable<2, 4, 0, 56, 2> TradingAccountLog::_table_ = {
     nullptr,  // post_loop_handler
     ::_pbi::TcParser::GenericFallback,  // fallback
     #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-    ::_pbi::TcParser::GetTable<::request::TradingAccountLog>(),  // to_prefetch
+    ::_pbi::TcParser::GetTable<::request::TradeAccountLog>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
     // string message = 4;
     {::_pbi::TcParser::FastUS1,
-     {34, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountLog, _impl_.message_)}},
+     {34, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountLog, _impl_.message_)}},
     // string time = 1;
     {::_pbi::TcParser::FastUS1,
-     {10, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountLog, _impl_.time_)}},
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountLog, _impl_.time_)}},
     // string actor = 2;
     {::_pbi::TcParser::FastUS1,
-     {18, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountLog, _impl_.actor_)}},
+     {18, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountLog, _impl_.actor_)}},
     // string action = 3;
     {::_pbi::TcParser::FastUS1,
-     {26, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountLog, _impl_.action_)}},
+     {26, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountLog, _impl_.action_)}},
   }}, {{
     65535, 65535
   }}, {{
     // string time = 1;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountLog, _impl_.time_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountLog, _impl_.time_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // string actor = 2;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountLog, _impl_.actor_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountLog, _impl_.actor_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // string action = 3;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountLog, _impl_.action_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountLog, _impl_.action_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // string message = 4;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountLog, _impl_.message_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountLog, _impl_.message_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
-    "\31\4\5\6\7\0\0\0"
-    "request.TradingAccountLog"
+    "\27\4\5\6\7\0\0\0"
+    "request.TradeAccountLog"
     "time"
     "actor"
     "action"
@@ -3064,8 +3484,8 @@ const ::_pbi::TcParseTable<2, 4, 0, 56, 2> TradingAccountLog::_table_ = {
   }},
 };
 
-PROTOBUF_NOINLINE void TradingAccountLog::Clear() {
-// @@protoc_insertion_point(message_clear_start:request.TradingAccountLog)
+PROTOBUF_NOINLINE void TradeAccountLog::Clear() {
+// @@protoc_insertion_point(message_clear_start:request.TradeAccountLog)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -3079,17 +3499,17 @@ PROTOBUF_NOINLINE void TradingAccountLog::Clear() {
 }
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-        ::uint8_t* TradingAccountLog::_InternalSerialize(
+        ::uint8_t* TradeAccountLog::_InternalSerialize(
             const MessageLite& base, ::uint8_t* target,
             ::google::protobuf::io::EpsCopyOutputStream* stream) {
-          const TradingAccountLog& this_ = static_cast<const TradingAccountLog&>(base);
+          const TradeAccountLog& this_ = static_cast<const TradeAccountLog&>(base);
 #else   // PROTOBUF_CUSTOM_VTABLE
-        ::uint8_t* TradingAccountLog::_InternalSerialize(
+        ::uint8_t* TradeAccountLog::_InternalSerialize(
             ::uint8_t* target,
             ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-          const TradingAccountLog& this_ = *this;
+          const TradeAccountLog& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-          // @@protoc_insertion_point(serialize_to_array_start:request.TradingAccountLog)
+          // @@protoc_insertion_point(serialize_to_array_start:request.TradeAccountLog)
           ::uint32_t cached_has_bits = 0;
           (void)cached_has_bits;
 
@@ -3097,7 +3517,7 @@ PROTOBUF_NOINLINE void TradingAccountLog::Clear() {
           if (!this_._internal_time().empty()) {
             const std::string& _s = this_._internal_time();
             ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradingAccountLog.time");
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradeAccountLog.time");
             target = stream->WriteStringMaybeAliased(1, _s, target);
           }
 
@@ -3105,7 +3525,7 @@ PROTOBUF_NOINLINE void TradingAccountLog::Clear() {
           if (!this_._internal_actor().empty()) {
             const std::string& _s = this_._internal_actor();
             ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradingAccountLog.actor");
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradeAccountLog.actor");
             target = stream->WriteStringMaybeAliased(2, _s, target);
           }
 
@@ -3113,7 +3533,7 @@ PROTOBUF_NOINLINE void TradingAccountLog::Clear() {
           if (!this_._internal_action().empty()) {
             const std::string& _s = this_._internal_action();
             ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradingAccountLog.action");
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradeAccountLog.action");
             target = stream->WriteStringMaybeAliased(3, _s, target);
           }
 
@@ -3121,7 +3541,7 @@ PROTOBUF_NOINLINE void TradingAccountLog::Clear() {
           if (!this_._internal_message().empty()) {
             const std::string& _s = this_._internal_message();
             ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradingAccountLog.message");
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.TradeAccountLog.message");
             target = stream->WriteStringMaybeAliased(4, _s, target);
           }
 
@@ -3130,18 +3550,18 @@ PROTOBUF_NOINLINE void TradingAccountLog::Clear() {
                 ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
                     this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
           }
-          // @@protoc_insertion_point(serialize_to_array_end:request.TradingAccountLog)
+          // @@protoc_insertion_point(serialize_to_array_end:request.TradeAccountLog)
           return target;
         }
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-        ::size_t TradingAccountLog::ByteSizeLong(const MessageLite& base) {
-          const TradingAccountLog& this_ = static_cast<const TradingAccountLog&>(base);
+        ::size_t TradeAccountLog::ByteSizeLong(const MessageLite& base) {
+          const TradeAccountLog& this_ = static_cast<const TradeAccountLog&>(base);
 #else   // PROTOBUF_CUSTOM_VTABLE
-        ::size_t TradingAccountLog::ByteSizeLong() const {
-          const TradingAccountLog& this_ = *this;
+        ::size_t TradeAccountLog::ByteSizeLong() const {
+          const TradeAccountLog& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-          // @@protoc_insertion_point(message_byte_size_start:request.TradingAccountLog)
+          // @@protoc_insertion_point(message_byte_size_start:request.TradeAccountLog)
           ::size_t total_size = 0;
 
           ::uint32_t cached_has_bits = 0;
@@ -3175,10 +3595,10 @@ PROTOBUF_NOINLINE void TradingAccountLog::Clear() {
                                                      &this_._impl_._cached_size_);
         }
 
-void TradingAccountLog::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
-  auto* const _this = static_cast<TradingAccountLog*>(&to_msg);
-  auto& from = static_cast<const TradingAccountLog&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:request.TradingAccountLog)
+void TradeAccountLog::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<TradeAccountLog*>(&to_msg);
+  auto& from = static_cast<const TradeAccountLog&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:request.TradeAccountLog)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
@@ -3198,15 +3618,15 @@ void TradingAccountLog::MergeImpl(::google::protobuf::MessageLite& to_msg, const
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
-void TradingAccountLog::CopyFrom(const TradingAccountLog& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:request.TradingAccountLog)
+void TradeAccountLog::CopyFrom(const TradeAccountLog& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:request.TradeAccountLog)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 
-void TradingAccountLog::InternalSwap(TradingAccountLog* PROTOBUF_RESTRICT other) {
+void TradeAccountLog::InternalSwap(TradeAccountLog* PROTOBUF_RESTRICT other) {
   using std::swap;
   auto* arena = GetArena();
   ABSL_DCHECK_EQ(arena, other->GetArena());
@@ -3217,117 +3637,117 @@ void TradingAccountLog::InternalSwap(TradingAccountLog* PROTOBUF_RESTRICT other)
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.message_, &other->_impl_.message_, arena);
 }
 
-::google::protobuf::Metadata TradingAccountLog::GetMetadata() const {
+::google::protobuf::Metadata TradeAccountLog::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================
 
-class TradingAccountLogs::_Internal {
+class TradeAccountLogList::_Internal {
  public:
 };
 
-TradingAccountLogs::TradingAccountLogs(::google::protobuf::Arena* arena)
+TradeAccountLogList::TradeAccountLogList(::google::protobuf::Arena* arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, _class_data_.base()) {
 #else   // PROTOBUF_CUSTOM_VTABLE
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:request.TradingAccountLogs)
+  // @@protoc_insertion_point(arena_constructor:request.TradeAccountLogList)
 }
-inline PROTOBUF_NDEBUG_INLINE TradingAccountLogs::Impl_::Impl_(
+inline PROTOBUF_NDEBUG_INLINE TradeAccountLogList::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
-    const Impl_& from, const ::request::TradingAccountLogs& from_msg)
+    const Impl_& from, const ::request::TradeAccountLogList& from_msg)
       : logs_{visibility, arena, from.logs_},
         _cached_size_{0} {}
 
-TradingAccountLogs::TradingAccountLogs(
+TradeAccountLogList::TradeAccountLogList(
     ::google::protobuf::Arena* arena,
-    const TradingAccountLogs& from)
+    const TradeAccountLogList& from)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, _class_data_.base()) {
 #else   // PROTOBUF_CUSTOM_VTABLE
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  TradingAccountLogs* const _this = this;
+  TradeAccountLogList* const _this = this;
   (void)_this;
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
   _impl_.account_id_ = from._impl_.account_id_;
 
-  // @@protoc_insertion_point(copy_constructor:request.TradingAccountLogs)
+  // @@protoc_insertion_point(copy_constructor:request.TradeAccountLogList)
 }
-inline PROTOBUF_NDEBUG_INLINE TradingAccountLogs::Impl_::Impl_(
+inline PROTOBUF_NDEBUG_INLINE TradeAccountLogList::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
       : logs_{visibility, arena},
         _cached_size_{0} {}
 
-inline void TradingAccountLogs::SharedCtor(::_pb::Arena* arena) {
+inline void TradeAccountLogList::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
   _impl_.account_id_ = {};
 }
-TradingAccountLogs::~TradingAccountLogs() {
-  // @@protoc_insertion_point(destructor:request.TradingAccountLogs)
+TradeAccountLogList::~TradeAccountLogList() {
+  // @@protoc_insertion_point(destructor:request.TradeAccountLogList)
   SharedDtor(*this);
 }
-inline void TradingAccountLogs::SharedDtor(MessageLite& self) {
-  TradingAccountLogs& this_ = static_cast<TradingAccountLogs&>(self);
+inline void TradeAccountLogList::SharedDtor(MessageLite& self) {
+  TradeAccountLogList& this_ = static_cast<TradeAccountLogList&>(self);
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
   this_._impl_.~Impl_();
 }
 
-inline void* TradingAccountLogs::PlacementNew_(const void*, void* mem,
+inline void* TradeAccountLogList::PlacementNew_(const void*, void* mem,
                                         ::google::protobuf::Arena* arena) {
-  return ::new (mem) TradingAccountLogs(arena);
+  return ::new (mem) TradeAccountLogList(arena);
 }
-constexpr auto TradingAccountLogs::InternalNewImpl_() {
+constexpr auto TradeAccountLogList::InternalNewImpl_() {
   constexpr auto arena_bits = ::google::protobuf::internal::EncodePlacementArenaOffsets({
-      PROTOBUF_FIELD_OFFSET(TradingAccountLogs, _impl_.logs_) +
-          decltype(TradingAccountLogs::_impl_.logs_)::
+      PROTOBUF_FIELD_OFFSET(TradeAccountLogList, _impl_.logs_) +
+          decltype(TradeAccountLogList::_impl_.logs_)::
               InternalGetArenaOffset(
                   ::google::protobuf::Message::internal_visibility()),
   });
   if (arena_bits.has_value()) {
     return ::google::protobuf::internal::MessageCreator::ZeroInit(
-        sizeof(TradingAccountLogs), alignof(TradingAccountLogs), *arena_bits);
+        sizeof(TradeAccountLogList), alignof(TradeAccountLogList), *arena_bits);
   } else {
-    return ::google::protobuf::internal::MessageCreator(&TradingAccountLogs::PlacementNew_,
-                                 sizeof(TradingAccountLogs),
-                                 alignof(TradingAccountLogs));
+    return ::google::protobuf::internal::MessageCreator(&TradeAccountLogList::PlacementNew_,
+                                 sizeof(TradeAccountLogList),
+                                 alignof(TradeAccountLogList));
   }
 }
 PROTOBUF_CONSTINIT
 PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::google::protobuf::internal::ClassDataFull TradingAccountLogs::_class_data_ = {
+const ::google::protobuf::internal::ClassDataFull TradeAccountLogList::_class_data_ = {
     ::google::protobuf::internal::ClassData{
-        &_TradingAccountLogs_default_instance_._instance,
+        &_TradeAccountLogList_default_instance_._instance,
         &_table_.header,
         nullptr,  // OnDemandRegisterArenaDtor
         nullptr,  // IsInitialized
-        &TradingAccountLogs::MergeImpl,
-        ::google::protobuf::Message::GetNewImpl<TradingAccountLogs>(),
+        &TradeAccountLogList::MergeImpl,
+        ::google::protobuf::Message::GetNewImpl<TradeAccountLogList>(),
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-        &TradingAccountLogs::SharedDtor,
-        ::google::protobuf::Message::GetClearImpl<TradingAccountLogs>(), &TradingAccountLogs::ByteSizeLong,
-            &TradingAccountLogs::_InternalSerialize,
+        &TradeAccountLogList::SharedDtor,
+        ::google::protobuf::Message::GetClearImpl<TradeAccountLogList>(), &TradeAccountLogList::ByteSizeLong,
+            &TradeAccountLogList::_InternalSerialize,
 #endif  // PROTOBUF_CUSTOM_VTABLE
-        PROTOBUF_FIELD_OFFSET(TradingAccountLogs, _impl_._cached_size_),
+        PROTOBUF_FIELD_OFFSET(TradeAccountLogList, _impl_._cached_size_),
         false,
     },
-    &TradingAccountLogs::kDescriptorMethods,
+    &TradeAccountLogList::kDescriptorMethods,
     &descriptor_table_request_2eproto,
     nullptr,  // tracker
 };
-const ::google::protobuf::internal::ClassData* TradingAccountLogs::GetClassData() const {
+const ::google::protobuf::internal::ClassData* TradeAccountLogList::GetClassData() const {
   ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
   ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
   return _class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<1, 2, 1, 0, 2> TradingAccountLogs::_table_ = {
+const ::_pbi::TcParseTable<1, 2, 1, 0, 2> TradeAccountLogList::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
@@ -3342,32 +3762,32 @@ const ::_pbi::TcParseTable<1, 2, 1, 0, 2> TradingAccountLogs::_table_ = {
     nullptr,  // post_loop_handler
     ::_pbi::TcParser::GenericFallback,  // fallback
     #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-    ::_pbi::TcParser::GetTable<::request::TradingAccountLogs>(),  // to_prefetch
+    ::_pbi::TcParser::GetTable<::request::TradeAccountLogList>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // repeated .request.TradingAccountLog logs = 2;
+    // repeated .request.TradeAccountLog logs = 2;
     {::_pbi::TcParser::FastMtR1,
-     {18, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountLogs, _impl_.logs_)}},
+     {18, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountLogList, _impl_.logs_)}},
     // uint64 account_id = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(TradingAccountLogs, _impl_.account_id_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(TradingAccountLogs, _impl_.account_id_)}},
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(TradeAccountLogList, _impl_.account_id_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(TradeAccountLogList, _impl_.account_id_)}},
   }}, {{
     65535, 65535
   }}, {{
     // uint64 account_id = 1;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountLogs, _impl_.account_id_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(TradeAccountLogList, _impl_.account_id_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUInt64)},
-    // repeated .request.TradingAccountLog logs = 2;
-    {PROTOBUF_FIELD_OFFSET(TradingAccountLogs, _impl_.logs_), 0, 0,
+    // repeated .request.TradeAccountLog logs = 2;
+    {PROTOBUF_FIELD_OFFSET(TradeAccountLogList, _impl_.logs_), 0, 0,
     (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
   }}, {{
-    {::_pbi::TcParser::GetTable<::request::TradingAccountLog>()},
+    {::_pbi::TcParser::GetTable<::request::TradeAccountLog>()},
   }}, {{
   }},
 };
 
-PROTOBUF_NOINLINE void TradingAccountLogs::Clear() {
-// @@protoc_insertion_point(message_clear_start:request.TradingAccountLogs)
+PROTOBUF_NOINLINE void TradeAccountLogList::Clear() {
+// @@protoc_insertion_point(message_clear_start:request.TradeAccountLogList)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -3379,17 +3799,17 @@ PROTOBUF_NOINLINE void TradingAccountLogs::Clear() {
 }
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-        ::uint8_t* TradingAccountLogs::_InternalSerialize(
+        ::uint8_t* TradeAccountLogList::_InternalSerialize(
             const MessageLite& base, ::uint8_t* target,
             ::google::protobuf::io::EpsCopyOutputStream* stream) {
-          const TradingAccountLogs& this_ = static_cast<const TradingAccountLogs&>(base);
+          const TradeAccountLogList& this_ = static_cast<const TradeAccountLogList&>(base);
 #else   // PROTOBUF_CUSTOM_VTABLE
-        ::uint8_t* TradingAccountLogs::_InternalSerialize(
+        ::uint8_t* TradeAccountLogList::_InternalSerialize(
             ::uint8_t* target,
             ::google::protobuf::io::EpsCopyOutputStream* stream) const {
-          const TradingAccountLogs& this_ = *this;
+          const TradeAccountLogList& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-          // @@protoc_insertion_point(serialize_to_array_start:request.TradingAccountLogs)
+          // @@protoc_insertion_point(serialize_to_array_start:request.TradeAccountLogList)
           ::uint32_t cached_has_bits = 0;
           (void)cached_has_bits;
 
@@ -3400,7 +3820,7 @@ PROTOBUF_NOINLINE void TradingAccountLogs::Clear() {
                 1, this_._internal_account_id(), target);
           }
 
-          // repeated .request.TradingAccountLog logs = 2;
+          // repeated .request.TradeAccountLog logs = 2;
           for (unsigned i = 0, n = static_cast<unsigned>(
                                    this_._internal_logs_size());
                i < n; i++) {
@@ -3416,18 +3836,18 @@ PROTOBUF_NOINLINE void TradingAccountLogs::Clear() {
                 ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
                     this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
           }
-          // @@protoc_insertion_point(serialize_to_array_end:request.TradingAccountLogs)
+          // @@protoc_insertion_point(serialize_to_array_end:request.TradeAccountLogList)
           return target;
         }
 
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-        ::size_t TradingAccountLogs::ByteSizeLong(const MessageLite& base) {
-          const TradingAccountLogs& this_ = static_cast<const TradingAccountLogs&>(base);
+        ::size_t TradeAccountLogList::ByteSizeLong(const MessageLite& base) {
+          const TradeAccountLogList& this_ = static_cast<const TradeAccountLogList&>(base);
 #else   // PROTOBUF_CUSTOM_VTABLE
-        ::size_t TradingAccountLogs::ByteSizeLong() const {
-          const TradingAccountLogs& this_ = *this;
+        ::size_t TradeAccountLogList::ByteSizeLong() const {
+          const TradeAccountLogList& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-          // @@protoc_insertion_point(message_byte_size_start:request.TradingAccountLogs)
+          // @@protoc_insertion_point(message_byte_size_start:request.TradeAccountLogList)
           ::size_t total_size = 0;
 
           ::uint32_t cached_has_bits = 0;
@@ -3436,7 +3856,7 @@ PROTOBUF_NOINLINE void TradingAccountLogs::Clear() {
 
           ::_pbi::Prefetch5LinesFrom7Lines(&this_);
            {
-            // repeated .request.TradingAccountLog logs = 2;
+            // repeated .request.TradeAccountLog logs = 2;
             {
               total_size += 1UL * this_._internal_logs_size();
               for (const auto& msg : this_._internal_logs()) {
@@ -3455,10 +3875,10 @@ PROTOBUF_NOINLINE void TradingAccountLogs::Clear() {
                                                      &this_._impl_._cached_size_);
         }
 
-void TradingAccountLogs::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
-  auto* const _this = static_cast<TradingAccountLogs*>(&to_msg);
-  auto& from = static_cast<const TradingAccountLogs&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:request.TradingAccountLogs)
+void TradeAccountLogList::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<TradeAccountLogList*>(&to_msg);
+  auto& from = static_cast<const TradeAccountLogList&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:request.TradeAccountLogList)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
@@ -3471,22 +3891,624 @@ void TradingAccountLogs::MergeImpl(::google::protobuf::MessageLite& to_msg, cons
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
-void TradingAccountLogs::CopyFrom(const TradingAccountLogs& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:request.TradingAccountLogs)
+void TradeAccountLogList::CopyFrom(const TradeAccountLogList& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:request.TradeAccountLogList)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 
-void TradingAccountLogs::InternalSwap(TradingAccountLogs* PROTOBUF_RESTRICT other) {
+void TradeAccountLogList::InternalSwap(TradeAccountLogList* PROTOBUF_RESTRICT other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   _impl_.logs_.InternalSwap(&other->_impl_.logs_);
         swap(_impl_.account_id_, other->_impl_.account_id_);
 }
 
-::google::protobuf::Metadata TradingAccountLogs::GetMetadata() const {
+::google::protobuf::Metadata TradeAccountLogList::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class StrategyRuntimeRecord::_Internal {
+ public:
+};
+
+StrategyRuntimeRecord::StrategyRuntimeRecord(::google::protobuf::Arena* arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:request.StrategyRuntimeRecord)
+}
+inline PROTOBUF_NDEBUG_INLINE StrategyRuntimeRecord::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::request::StrategyRuntimeRecord& from_msg)
+      : last_error_(arena, from.last_error_),
+        _cached_size_{0} {}
+
+StrategyRuntimeRecord::StrategyRuntimeRecord(
+    ::google::protobuf::Arena* arena,
+    const StrategyRuntimeRecord& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  StrategyRuntimeRecord* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::memcpy(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, strategy_id_),
+           reinterpret_cast<const char *>(&from._impl_) +
+               offsetof(Impl_, strategy_id_),
+           offsetof(Impl_, active_orders_) -
+               offsetof(Impl_, strategy_id_) +
+               sizeof(Impl_::active_orders_));
+
+  // @@protoc_insertion_point(copy_constructor:request.StrategyRuntimeRecord)
+}
+inline PROTOBUF_NDEBUG_INLINE StrategyRuntimeRecord::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : last_error_(arena),
+        _cached_size_{0} {}
+
+inline void StrategyRuntimeRecord::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, strategy_id_),
+           0,
+           offsetof(Impl_, active_orders_) -
+               offsetof(Impl_, strategy_id_) +
+               sizeof(Impl_::active_orders_));
+}
+StrategyRuntimeRecord::~StrategyRuntimeRecord() {
+  // @@protoc_insertion_point(destructor:request.StrategyRuntimeRecord)
+  SharedDtor(*this);
+}
+inline void StrategyRuntimeRecord::SharedDtor(MessageLite& self) {
+  StrategyRuntimeRecord& this_ = static_cast<StrategyRuntimeRecord&>(self);
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.last_error_.Destroy();
+  this_._impl_.~Impl_();
+}
+
+inline void* StrategyRuntimeRecord::PlacementNew_(const void*, void* mem,
+                                        ::google::protobuf::Arena* arena) {
+  return ::new (mem) StrategyRuntimeRecord(arena);
+}
+constexpr auto StrategyRuntimeRecord::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(StrategyRuntimeRecord),
+                                            alignof(StrategyRuntimeRecord));
+}
+PROTOBUF_CONSTINIT
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::google::protobuf::internal::ClassDataFull StrategyRuntimeRecord::_class_data_ = {
+    ::google::protobuf::internal::ClassData{
+        &_StrategyRuntimeRecord_default_instance_._instance,
+        &_table_.header,
+        nullptr,  // OnDemandRegisterArenaDtor
+        nullptr,  // IsInitialized
+        &StrategyRuntimeRecord::MergeImpl,
+        ::google::protobuf::Message::GetNewImpl<StrategyRuntimeRecord>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        &StrategyRuntimeRecord::SharedDtor,
+        ::google::protobuf::Message::GetClearImpl<StrategyRuntimeRecord>(), &StrategyRuntimeRecord::ByteSizeLong,
+            &StrategyRuntimeRecord::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+        PROTOBUF_FIELD_OFFSET(StrategyRuntimeRecord, _impl_._cached_size_),
+        false,
+    },
+    &StrategyRuntimeRecord::kDescriptorMethods,
+    &descriptor_table_request_2eproto,
+    nullptr,  // tracker
+};
+const ::google::protobuf::internal::ClassData* StrategyRuntimeRecord::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
+  return _class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<3, 6, 0, 48, 2> StrategyRuntimeRecord::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    6, 56,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967232,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    6,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    _class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::request::StrategyRuntimeRecord>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    {::_pbi::TcParser::MiniParse, {}},
+    // uint64 strategy_id = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(StrategyRuntimeRecord, _impl_.strategy_id_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyRuntimeRecord, _impl_.strategy_id_)}},
+    // int32 state = 2;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(StrategyRuntimeRecord, _impl_.state_), 63>(),
+     {16, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyRuntimeRecord, _impl_.state_)}},
+    // bool market_available = 3;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(StrategyRuntimeRecord, _impl_.market_available_), 63>(),
+     {24, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyRuntimeRecord, _impl_.market_available_)}},
+    // uint64 queue_length = 4;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(StrategyRuntimeRecord, _impl_.queue_length_), 63>(),
+     {32, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyRuntimeRecord, _impl_.queue_length_)}},
+    // uint64 active_orders = 5;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(StrategyRuntimeRecord, _impl_.active_orders_), 63>(),
+     {40, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyRuntimeRecord, _impl_.active_orders_)}},
+    // string last_error = 6;
+    {::_pbi::TcParser::FastUS1,
+     {50, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyRuntimeRecord, _impl_.last_error_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // uint64 strategy_id = 1;
+    {PROTOBUF_FIELD_OFFSET(StrategyRuntimeRecord, _impl_.strategy_id_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUInt64)},
+    // int32 state = 2;
+    {PROTOBUF_FIELD_OFFSET(StrategyRuntimeRecord, _impl_.state_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // bool market_available = 3;
+    {PROTOBUF_FIELD_OFFSET(StrategyRuntimeRecord, _impl_.market_available_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
+    // uint64 queue_length = 4;
+    {PROTOBUF_FIELD_OFFSET(StrategyRuntimeRecord, _impl_.queue_length_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUInt64)},
+    // uint64 active_orders = 5;
+    {PROTOBUF_FIELD_OFFSET(StrategyRuntimeRecord, _impl_.active_orders_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUInt64)},
+    // string last_error = 6;
+    {PROTOBUF_FIELD_OFFSET(StrategyRuntimeRecord, _impl_.last_error_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  // no aux_entries
+  {{
+    "\35\0\0\0\0\0\12\0"
+    "request.StrategyRuntimeRecord"
+    "last_error"
+  }},
+};
+
+PROTOBUF_NOINLINE void StrategyRuntimeRecord::Clear() {
+// @@protoc_insertion_point(message_clear_start:request.StrategyRuntimeRecord)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.last_error_.ClearToEmpty();
+  ::memset(&_impl_.strategy_id_, 0, static_cast<::size_t>(
+      reinterpret_cast<char*>(&_impl_.active_orders_) -
+      reinterpret_cast<char*>(&_impl_.strategy_id_)) + sizeof(_impl_.active_orders_));
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::uint8_t* StrategyRuntimeRecord::_InternalSerialize(
+            const MessageLite& base, ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) {
+          const StrategyRuntimeRecord& this_ = static_cast<const StrategyRuntimeRecord&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::uint8_t* StrategyRuntimeRecord::_InternalSerialize(
+            ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+          const StrategyRuntimeRecord& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(serialize_to_array_start:request.StrategyRuntimeRecord)
+          ::uint32_t cached_has_bits = 0;
+          (void)cached_has_bits;
+
+          // uint64 strategy_id = 1;
+          if (this_._internal_strategy_id() != 0) {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteUInt64ToArray(
+                1, this_._internal_strategy_id(), target);
+          }
+
+          // int32 state = 2;
+          if (this_._internal_state() != 0) {
+            target = ::google::protobuf::internal::WireFormatLite::
+                WriteInt32ToArrayWithField<2>(
+                    stream, this_._internal_state(), target);
+          }
+
+          // bool market_available = 3;
+          if (this_._internal_market_available() != 0) {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteBoolToArray(
+                3, this_._internal_market_available(), target);
+          }
+
+          // uint64 queue_length = 4;
+          if (this_._internal_queue_length() != 0) {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteUInt64ToArray(
+                4, this_._internal_queue_length(), target);
+          }
+
+          // uint64 active_orders = 5;
+          if (this_._internal_active_orders() != 0) {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteUInt64ToArray(
+                5, this_._internal_active_orders(), target);
+          }
+
+          // string last_error = 6;
+          if (!this_._internal_last_error().empty()) {
+            const std::string& _s = this_._internal_last_error();
+            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.StrategyRuntimeRecord.last_error");
+            target = stream->WriteStringMaybeAliased(6, _s, target);
+          }
+
+          if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+            target =
+                ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                    this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+          }
+          // @@protoc_insertion_point(serialize_to_array_end:request.StrategyRuntimeRecord)
+          return target;
+        }
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::size_t StrategyRuntimeRecord::ByteSizeLong(const MessageLite& base) {
+          const StrategyRuntimeRecord& this_ = static_cast<const StrategyRuntimeRecord&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::size_t StrategyRuntimeRecord::ByteSizeLong() const {
+          const StrategyRuntimeRecord& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(message_byte_size_start:request.StrategyRuntimeRecord)
+          ::size_t total_size = 0;
+
+          ::uint32_t cached_has_bits = 0;
+          // Prevent compiler warnings about cached_has_bits being unused
+          (void)cached_has_bits;
+
+          ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+           {
+            // string last_error = 6;
+            if (!this_._internal_last_error().empty()) {
+              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                              this_._internal_last_error());
+            }
+            // uint64 strategy_id = 1;
+            if (this_._internal_strategy_id() != 0) {
+              total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(
+                  this_._internal_strategy_id());
+            }
+            // int32 state = 2;
+            if (this_._internal_state() != 0) {
+              total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+                  this_._internal_state());
+            }
+            // bool market_available = 3;
+            if (this_._internal_market_available() != 0) {
+              total_size += 2;
+            }
+            // uint64 queue_length = 4;
+            if (this_._internal_queue_length() != 0) {
+              total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(
+                  this_._internal_queue_length());
+            }
+            // uint64 active_orders = 5;
+            if (this_._internal_active_orders() != 0) {
+              total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(
+                  this_._internal_active_orders());
+            }
+          }
+          return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                                     &this_._impl_._cached_size_);
+        }
+
+void StrategyRuntimeRecord::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<StrategyRuntimeRecord*>(&to_msg);
+  auto& from = static_cast<const StrategyRuntimeRecord&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:request.StrategyRuntimeRecord)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!from._internal_last_error().empty()) {
+    _this->_internal_set_last_error(from._internal_last_error());
+  }
+  if (from._internal_strategy_id() != 0) {
+    _this->_impl_.strategy_id_ = from._impl_.strategy_id_;
+  }
+  if (from._internal_state() != 0) {
+    _this->_impl_.state_ = from._impl_.state_;
+  }
+  if (from._internal_market_available() != 0) {
+    _this->_impl_.market_available_ = from._impl_.market_available_;
+  }
+  if (from._internal_queue_length() != 0) {
+    _this->_impl_.queue_length_ = from._impl_.queue_length_;
+  }
+  if (from._internal_active_orders() != 0) {
+    _this->_impl_.active_orders_ = from._impl_.active_orders_;
+  }
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void StrategyRuntimeRecord::CopyFrom(const StrategyRuntimeRecord& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:request.StrategyRuntimeRecord)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void StrategyRuntimeRecord::InternalSwap(StrategyRuntimeRecord* PROTOBUF_RESTRICT other) {
+  using std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.last_error_, &other->_impl_.last_error_, arena);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(StrategyRuntimeRecord, _impl_.active_orders_)
+      + sizeof(StrategyRuntimeRecord::_impl_.active_orders_)
+      - PROTOBUF_FIELD_OFFSET(StrategyRuntimeRecord, _impl_.strategy_id_)>(
+          reinterpret_cast<char*>(&_impl_.strategy_id_),
+          reinterpret_cast<char*>(&other->_impl_.strategy_id_));
+}
+
+::google::protobuf::Metadata StrategyRuntimeRecord::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+class StrategyRuntimeList::_Internal {
+ public:
+};
+
+StrategyRuntimeList::StrategyRuntimeList(::google::protobuf::Arena* arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:request.StrategyRuntimeList)
+}
+inline PROTOBUF_NDEBUG_INLINE StrategyRuntimeList::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::request::StrategyRuntimeList& from_msg)
+      : runtimes_{visibility, arena, from.runtimes_},
+        _cached_size_{0} {}
+
+StrategyRuntimeList::StrategyRuntimeList(
+    ::google::protobuf::Arena* arena,
+    const StrategyRuntimeList& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, _class_data_.base()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  StrategyRuntimeList* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+
+  // @@protoc_insertion_point(copy_constructor:request.StrategyRuntimeList)
+}
+inline PROTOBUF_NDEBUG_INLINE StrategyRuntimeList::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : runtimes_{visibility, arena},
+        _cached_size_{0} {}
+
+inline void StrategyRuntimeList::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+}
+StrategyRuntimeList::~StrategyRuntimeList() {
+  // @@protoc_insertion_point(destructor:request.StrategyRuntimeList)
+  SharedDtor(*this);
+}
+inline void StrategyRuntimeList::SharedDtor(MessageLite& self) {
+  StrategyRuntimeList& this_ = static_cast<StrategyRuntimeList&>(self);
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.~Impl_();
+}
+
+inline void* StrategyRuntimeList::PlacementNew_(const void*, void* mem,
+                                        ::google::protobuf::Arena* arena) {
+  return ::new (mem) StrategyRuntimeList(arena);
+}
+constexpr auto StrategyRuntimeList::InternalNewImpl_() {
+  constexpr auto arena_bits = ::google::protobuf::internal::EncodePlacementArenaOffsets({
+      PROTOBUF_FIELD_OFFSET(StrategyRuntimeList, _impl_.runtimes_) +
+          decltype(StrategyRuntimeList::_impl_.runtimes_)::
+              InternalGetArenaOffset(
+                  ::google::protobuf::Message::internal_visibility()),
+  });
+  if (arena_bits.has_value()) {
+    return ::google::protobuf::internal::MessageCreator::ZeroInit(
+        sizeof(StrategyRuntimeList), alignof(StrategyRuntimeList), *arena_bits);
+  } else {
+    return ::google::protobuf::internal::MessageCreator(&StrategyRuntimeList::PlacementNew_,
+                                 sizeof(StrategyRuntimeList),
+                                 alignof(StrategyRuntimeList));
+  }
+}
+PROTOBUF_CONSTINIT
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::google::protobuf::internal::ClassDataFull StrategyRuntimeList::_class_data_ = {
+    ::google::protobuf::internal::ClassData{
+        &_StrategyRuntimeList_default_instance_._instance,
+        &_table_.header,
+        nullptr,  // OnDemandRegisterArenaDtor
+        nullptr,  // IsInitialized
+        &StrategyRuntimeList::MergeImpl,
+        ::google::protobuf::Message::GetNewImpl<StrategyRuntimeList>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        &StrategyRuntimeList::SharedDtor,
+        ::google::protobuf::Message::GetClearImpl<StrategyRuntimeList>(), &StrategyRuntimeList::ByteSizeLong,
+            &StrategyRuntimeList::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+        PROTOBUF_FIELD_OFFSET(StrategyRuntimeList, _impl_._cached_size_),
+        false,
+    },
+    &StrategyRuntimeList::kDescriptorMethods,
+    &descriptor_table_request_2eproto,
+    nullptr,  // tracker
+};
+const ::google::protobuf::internal::ClassData* StrategyRuntimeList::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
+  return _class_data_.base();
+}
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 1, 1, 0, 2> StrategyRuntimeList::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    1, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967294,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    1,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    _class_data_.base(),
+    nullptr,  // post_loop_handler
+    ::_pbi::TcParser::GenericFallback,  // fallback
+    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+    ::_pbi::TcParser::GetTable<::request::StrategyRuntimeList>(),  // to_prefetch
+    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+  }, {{
+    // repeated .request.StrategyRuntimeRecord runtimes = 1;
+    {::_pbi::TcParser::FastMtR1,
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(StrategyRuntimeList, _impl_.runtimes_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // repeated .request.StrategyRuntimeRecord runtimes = 1;
+    {PROTOBUF_FIELD_OFFSET(StrategyRuntimeList, _impl_.runtimes_), 0, 0,
+    (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
+  }}, {{
+    {::_pbi::TcParser::GetTable<::request::StrategyRuntimeRecord>()},
+  }}, {{
+  }},
+};
+
+PROTOBUF_NOINLINE void StrategyRuntimeList::Clear() {
+// @@protoc_insertion_point(message_clear_start:request.StrategyRuntimeList)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.runtimes_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::uint8_t* StrategyRuntimeList::_InternalSerialize(
+            const MessageLite& base, ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) {
+          const StrategyRuntimeList& this_ = static_cast<const StrategyRuntimeList&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::uint8_t* StrategyRuntimeList::_InternalSerialize(
+            ::uint8_t* target,
+            ::google::protobuf::io::EpsCopyOutputStream* stream) const {
+          const StrategyRuntimeList& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(serialize_to_array_start:request.StrategyRuntimeList)
+          ::uint32_t cached_has_bits = 0;
+          (void)cached_has_bits;
+
+          // repeated .request.StrategyRuntimeRecord runtimes = 1;
+          for (unsigned i = 0, n = static_cast<unsigned>(
+                                   this_._internal_runtimes_size());
+               i < n; i++) {
+            const auto& repfield = this_._internal_runtimes().Get(i);
+            target =
+                ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                    1, repfield, repfield.GetCachedSize(),
+                    target, stream);
+          }
+
+          if (PROTOBUF_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+            target =
+                ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                    this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+          }
+          // @@protoc_insertion_point(serialize_to_array_end:request.StrategyRuntimeList)
+          return target;
+        }
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+        ::size_t StrategyRuntimeList::ByteSizeLong(const MessageLite& base) {
+          const StrategyRuntimeList& this_ = static_cast<const StrategyRuntimeList&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+        ::size_t StrategyRuntimeList::ByteSizeLong() const {
+          const StrategyRuntimeList& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          // @@protoc_insertion_point(message_byte_size_start:request.StrategyRuntimeList)
+          ::size_t total_size = 0;
+
+          ::uint32_t cached_has_bits = 0;
+          // Prevent compiler warnings about cached_has_bits being unused
+          (void)cached_has_bits;
+
+          ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+           {
+            // repeated .request.StrategyRuntimeRecord runtimes = 1;
+            {
+              total_size += 1UL * this_._internal_runtimes_size();
+              for (const auto& msg : this_._internal_runtimes()) {
+                total_size += ::google::protobuf::internal::WireFormatLite::MessageSize(msg);
+              }
+            }
+          }
+          return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                                     &this_._impl_._cached_size_);
+        }
+
+void StrategyRuntimeList::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
+  auto* const _this = static_cast<StrategyRuntimeList*>(&to_msg);
+  auto& from = static_cast<const StrategyRuntimeList&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:request.StrategyRuntimeList)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  _this->_internal_mutable_runtimes()->MergeFrom(
+      from._internal_runtimes());
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void StrategyRuntimeList::CopyFrom(const StrategyRuntimeList& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:request.StrategyRuntimeList)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void StrategyRuntimeList::InternalSwap(StrategyRuntimeList* PROTOBUF_RESTRICT other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  _impl_.runtimes_.InternalSwap(&other->_impl_.runtimes_);
+}
+
+::google::protobuf::Metadata StrategyRuntimeList::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================
@@ -3582,175 +4604,12 @@ const ::_pbi::TcParseTable<1, 2, 0, 47, 2> RequestData_ExtraEntry_DoNotUse::_tab
 
 // ===================================================================
 
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-              RequestData_RetEntry_DoNotUse::RequestData_RetEntry_DoNotUse() : SuperType(_class_data_.base()) {}
-              RequestData_RetEntry_DoNotUse::RequestData_RetEntry_DoNotUse(::google::protobuf::Arena* arena)
-                  : SuperType(arena, _class_data_.base()) {}
-#else   // PROTOBUF_CUSTOM_VTABLE
-              RequestData_RetEntry_DoNotUse::RequestData_RetEntry_DoNotUse() : SuperType() {}
-              RequestData_RetEntry_DoNotUse::RequestData_RetEntry_DoNotUse(::google::protobuf::Arena* arena) : SuperType(arena) {}
-#endif  // PROTOBUF_CUSTOM_VTABLE
-              inline void* RequestData_RetEntry_DoNotUse::PlacementNew_(const void*, void* mem,
-                                                      ::google::protobuf::Arena* arena) {
-                return ::new (mem) RequestData_RetEntry_DoNotUse(arena);
-              }
-              constexpr auto RequestData_RetEntry_DoNotUse::InternalNewImpl_() {
-                return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(RequestData_RetEntry_DoNotUse),
-                                                          alignof(RequestData_RetEntry_DoNotUse));
-              }
-              PROTOBUF_CONSTINIT
-              PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-              const ::google::protobuf::internal::ClassDataFull RequestData_RetEntry_DoNotUse::_class_data_ = {
-                  ::google::protobuf::internal::ClassData{
-                      &_RequestData_RetEntry_DoNotUse_default_instance_._instance,
-                      &_table_.header,
-                      nullptr,  // OnDemandRegisterArenaDtor
-                      nullptr,  // IsInitialized
-                      &RequestData_RetEntry_DoNotUse::MergeImpl,
-                      ::google::protobuf::Message::GetNewImpl<RequestData_RetEntry_DoNotUse>(),
-              #if defined(PROTOBUF_CUSTOM_VTABLE)
-                      &RequestData_RetEntry_DoNotUse::SharedDtor,
-                      static_cast<void (::google::protobuf::MessageLite::*)()>(
-                          &RequestData_RetEntry_DoNotUse::ClearImpl),
-                          ::google::protobuf::Message::ByteSizeLongImpl, ::google::protobuf::Message::_InternalSerializeImpl
-                          ,
-              #endif  // PROTOBUF_CUSTOM_VTABLE
-                      PROTOBUF_FIELD_OFFSET(RequestData_RetEntry_DoNotUse, _impl_._cached_size_),
-                      false,
-                  },
-                  &RequestData_RetEntry_DoNotUse::kDescriptorMethods,
-                  &descriptor_table_request_2eproto,
-                  nullptr,  // tracker
-              };
-              const ::google::protobuf::internal::ClassData* RequestData_RetEntry_DoNotUse::GetClassData() const {
-                ::google::protobuf::internal::PrefetchToLocalCache(&_class_data_);
-                ::google::protobuf::internal::PrefetchToLocalCache(_class_data_.tc_table);
-                return _class_data_.base();
-              }
-PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<1, 2, 0, 45, 2> RequestData_RetEntry_DoNotUse::_table_ = {
-  {
-    PROTOBUF_FIELD_OFFSET(RequestData_RetEntry_DoNotUse, _impl_._has_bits_),
-    0, // no _extensions_
-    2, 8,  // max_field_number, fast_idx_mask
-    offsetof(decltype(_table_), field_lookup_table),
-    4294967292,  // skipmap
-    offsetof(decltype(_table_), field_entries),
-    2,  // num_field_entries
-    0,  // num_aux_entries
-    offsetof(decltype(_table_), field_names),  // no aux_entries
-    _class_data_.base(),
-    nullptr,  // post_loop_handler
-    ::_pbi::TcParser::DiscardEverythingFallback,  // fallback
-    #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-    ::_pbi::TcParser::GetTable<::request::RequestData_RetEntry_DoNotUse>(),  // to_prefetch
-    #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
-  }, {{
-    // string value = 2;
-    {::_pbi::TcParser::FastUS1,
-     {18, 63, 0, PROTOBUF_FIELD_OFFSET(RequestData_RetEntry_DoNotUse, _impl_.value_)}},
-    // string key = 1;
-    {::_pbi::TcParser::FastUS1,
-     {10, 63, 0, PROTOBUF_FIELD_OFFSET(RequestData_RetEntry_DoNotUse, _impl_.key_)}},
-  }}, {{
-    65535, 65535
-  }}, {{
-    // string key = 1;
-    {PROTOBUF_FIELD_OFFSET(RequestData_RetEntry_DoNotUse, _impl_.key_), -1, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // string value = 2;
-    {PROTOBUF_FIELD_OFFSET(RequestData_RetEntry_DoNotUse, _impl_.value_), -1, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
-  }},
-  // no aux_entries
-  {{
-    "\34\3\5\0\0\0\0\0"
-    "request.RequestData.RetEntry"
-    "key"
-    "value"
-  }},
-};
-
-// ===================================================================
-
 class RequestData::_Internal {
  public:
   static constexpr ::int32_t kOneofCaseOffset =
       PROTOBUF_FIELD_OFFSET(::request::RequestData, _impl_._oneof_case_);
 };
 
-void RequestData::set_allocated_auth_request(::hqmarket::market::v1::AuthRequest* auth_request) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  clear_payload();
-  if (auth_request) {
-    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(auth_request)->GetArena();
-    if (message_arena != submessage_arena) {
-      auth_request = ::google::protobuf::internal::GetOwnedMessage(message_arena, auth_request, submessage_arena);
-    }
-    set_has_auth_request();
-    _impl_.payload_.auth_request_ = auth_request;
-  }
-  // @@protoc_insertion_point(field_set_allocated:request.RequestData.auth_request)
-}
-void RequestData::clear_auth_request() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (payload_case() == kAuthRequest) {
-    if (GetArena() == nullptr) {
-      delete _impl_.payload_.auth_request_;
-    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
-      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.auth_request_);
-    }
-    clear_has_payload();
-  }
-}
-void RequestData::set_allocated_subscribe_request(::hqmarket::market::v1::SubscribeRequest* subscribe_request) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  clear_payload();
-  if (subscribe_request) {
-    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(subscribe_request)->GetArena();
-    if (message_arena != submessage_arena) {
-      subscribe_request = ::google::protobuf::internal::GetOwnedMessage(message_arena, subscribe_request, submessage_arena);
-    }
-    set_has_subscribe_request();
-    _impl_.payload_.subscribe_request_ = subscribe_request;
-  }
-  // @@protoc_insertion_point(field_set_allocated:request.RequestData.subscribe_request)
-}
-void RequestData::clear_subscribe_request() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (payload_case() == kSubscribeRequest) {
-    if (GetArena() == nullptr) {
-      delete _impl_.payload_.subscribe_request_;
-    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
-      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.subscribe_request_);
-    }
-    clear_has_payload();
-  }
-}
-void RequestData::set_allocated_unsubscribe_request(::hqmarket::market::v1::UnsubscribeRequest* unsubscribe_request) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  clear_payload();
-  if (unsubscribe_request) {
-    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(unsubscribe_request)->GetArena();
-    if (message_arena != submessage_arena) {
-      unsubscribe_request = ::google::protobuf::internal::GetOwnedMessage(message_arena, unsubscribe_request, submessage_arena);
-    }
-    set_has_unsubscribe_request();
-    _impl_.payload_.unsubscribe_request_ = unsubscribe_request;
-  }
-  // @@protoc_insertion_point(field_set_allocated:request.RequestData.unsubscribe_request)
-}
-void RequestData::clear_unsubscribe_request() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (payload_case() == kUnsubscribeRequest) {
-    if (GetArena() == nullptr) {
-      delete _impl_.payload_.unsubscribe_request_;
-    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
-      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.unsubscribe_request_);
-    }
-    clear_has_payload();
-  }
-}
 void RequestData::set_allocated_subscription_ack(::hqmarket::market::v1::SubscriptionAck* subscription_ack) {
   ::google::protobuf::Arena* message_arena = GetArena();
   clear_payload();
@@ -3919,30 +4778,6 @@ void RequestData::clear_provider_status() {
     clear_has_payload();
   }
 }
-void RequestData::set_allocated_query_request(::hqmarket::market::v1::QueryRequest* query_request) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  clear_payload();
-  if (query_request) {
-    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(query_request)->GetArena();
-    if (message_arena != submessage_arena) {
-      query_request = ::google::protobuf::internal::GetOwnedMessage(message_arena, query_request, submessage_arena);
-    }
-    set_has_query_request();
-    _impl_.payload_.query_request_ = query_request;
-  }
-  // @@protoc_insertion_point(field_set_allocated:request.RequestData.query_request)
-}
-void RequestData::clear_query_request() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (payload_case() == kQueryRequest) {
-    if (GetArena() == nullptr) {
-      delete _impl_.payload_.query_request_;
-    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
-      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.query_request_);
-    }
-    clear_has_payload();
-  }
-}
 void RequestData::set_allocated_query_response(::hqmarket::market::v1::QueryResponse* query_response) {
   ::google::protobuf::Arena* message_arena = GetArena();
   clear_payload();
@@ -4091,20 +4926,7 @@ void RequestData::set_allocated_account_list(::request::TradeAccountList* accoun
   }
   // @@protoc_insertion_point(field_set_allocated:request.RequestData.account_list)
 }
-void RequestData::set_allocated_account_snapshot(::request::TradingAccountSnapshot* account_snapshot) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  clear_payload();
-  if (account_snapshot) {
-    ::google::protobuf::Arena* submessage_arena = account_snapshot->GetArena();
-    if (message_arena != submessage_arena) {
-      account_snapshot = ::google::protobuf::internal::GetOwnedMessage(message_arena, account_snapshot, submessage_arena);
-    }
-    set_has_account_snapshot();
-    _impl_.payload_.account_snapshot_ = account_snapshot;
-  }
-  // @@protoc_insertion_point(field_set_allocated:request.RequestData.account_snapshot)
-}
-void RequestData::set_allocated_account_logs(::request::TradingAccountLogs* account_logs) {
+void RequestData::set_allocated_account_logs(::request::TradeAccountLogList* account_logs) {
   ::google::protobuf::Arena* message_arena = GetArena();
   clear_payload();
   if (account_logs) {
@@ -4116,6 +4938,32 @@ void RequestData::set_allocated_account_logs(::request::TradingAccountLogs* acco
     _impl_.payload_.account_logs_ = account_logs;
   }
   // @@protoc_insertion_point(field_set_allocated:request.RequestData.account_logs)
+}
+void RequestData::set_allocated_account_info_list(::request::TradeAccountInfoList* account_info_list) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (account_info_list) {
+    ::google::protobuf::Arena* submessage_arena = account_info_list->GetArena();
+    if (message_arena != submessage_arena) {
+      account_info_list = ::google::protobuf::internal::GetOwnedMessage(message_arena, account_info_list, submessage_arena);
+    }
+    set_has_account_info_list();
+    _impl_.payload_.account_info_list_ = account_info_list;
+  }
+  // @@protoc_insertion_point(field_set_allocated:request.RequestData.account_info_list)
+}
+void RequestData::set_allocated_strategy_runtime_list(::request::StrategyRuntimeList* strategy_runtime_list) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (strategy_runtime_list) {
+    ::google::protobuf::Arena* submessage_arena = strategy_runtime_list->GetArena();
+    if (message_arena != submessage_arena) {
+      strategy_runtime_list = ::google::protobuf::internal::GetOwnedMessage(message_arena, strategy_runtime_list, submessage_arena);
+    }
+    set_has_strategy_runtime_list();
+    _impl_.payload_.strategy_runtime_list_ = strategy_runtime_list;
+  }
+  // @@protoc_insertion_point(field_set_allocated:request.RequestData.strategy_runtime_list)
 }
 RequestData::RequestData(::google::protobuf::Arena* arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
@@ -4130,8 +4978,6 @@ inline PROTOBUF_NDEBUG_INLINE RequestData::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
     const Impl_& from, const ::request::RequestData& from_msg)
       : extra_{visibility, arena, from.extra_},
-        ret_{visibility, arena, from.ret_},
-        cmd_(arena, from.cmd_),
         error_message_(arena, from.error_message_),
         payload_{},
         _cached_size_{0},
@@ -4160,15 +5006,6 @@ RequestData::RequestData(
   switch (payload_case()) {
     case PAYLOAD_NOT_SET:
       break;
-      case kAuthRequest:
-        _impl_.payload_.auth_request_ = ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::AuthRequest>(arena, *from._impl_.payload_.auth_request_);
-        break;
-      case kSubscribeRequest:
-        _impl_.payload_.subscribe_request_ = ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::SubscribeRequest>(arena, *from._impl_.payload_.subscribe_request_);
-        break;
-      case kUnsubscribeRequest:
-        _impl_.payload_.unsubscribe_request_ = ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::UnsubscribeRequest>(arena, *from._impl_.payload_.unsubscribe_request_);
-        break;
       case kSubscriptionAck:
         _impl_.payload_.subscription_ack_ = ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::SubscriptionAck>(arena, *from._impl_.payload_.subscription_ack_);
         break;
@@ -4189,9 +5026,6 @@ RequestData::RequestData(
         break;
       case kProviderStatus:
         _impl_.payload_.provider_status_ = ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::ProviderStatusData>(arena, *from._impl_.payload_.provider_status_);
-        break;
-      case kQueryRequest:
-        _impl_.payload_.query_request_ = ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::QueryRequest>(arena, *from._impl_.payload_.query_request_);
         break;
       case kQueryResponse:
         _impl_.payload_.query_response_ = ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::QueryResponse>(arena, *from._impl_.payload_.query_response_);
@@ -4217,11 +5051,14 @@ RequestData::RequestData(
       case kAccountList:
         _impl_.payload_.account_list_ = ::google::protobuf::Message::CopyConstruct<::request::TradeAccountList>(arena, *from._impl_.payload_.account_list_);
         break;
-      case kAccountSnapshot:
-        _impl_.payload_.account_snapshot_ = ::google::protobuf::Message::CopyConstruct<::request::TradingAccountSnapshot>(arena, *from._impl_.payload_.account_snapshot_);
-        break;
       case kAccountLogs:
-        _impl_.payload_.account_logs_ = ::google::protobuf::Message::CopyConstruct<::request::TradingAccountLogs>(arena, *from._impl_.payload_.account_logs_);
+        _impl_.payload_.account_logs_ = ::google::protobuf::Message::CopyConstruct<::request::TradeAccountLogList>(arena, *from._impl_.payload_.account_logs_);
+        break;
+      case kAccountInfoList:
+        _impl_.payload_.account_info_list_ = ::google::protobuf::Message::CopyConstruct<::request::TradeAccountInfoList>(arena, *from._impl_.payload_.account_info_list_);
+        break;
+      case kStrategyRuntimeList:
+        _impl_.payload_.strategy_runtime_list_ = ::google::protobuf::Message::CopyConstruct<::request::StrategyRuntimeList>(arena, *from._impl_.payload_.strategy_runtime_list_);
         break;
   }
 
@@ -4231,8 +5068,6 @@ inline PROTOBUF_NDEBUG_INLINE RequestData::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
       : extra_{visibility, arena},
-        ret_{visibility, arena},
-        cmd_(arena),
         error_message_(arena),
         payload_{},
         _cached_size_{0},
@@ -4255,7 +5090,6 @@ inline void RequestData::SharedDtor(MessageLite& self) {
   RequestData& this_ = static_cast<RequestData&>(self);
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
-  this_._impl_.cmd_.Destroy();
   this_._impl_.error_message_.Destroy();
   if (this_.has_payload()) {
     this_.clear_payload();
@@ -4267,30 +5101,6 @@ void RequestData::clear_payload() {
 // @@protoc_insertion_point(one_of_clear_start:request.RequestData)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   switch (payload_case()) {
-    case kAuthRequest: {
-      if (GetArena() == nullptr) {
-        delete _impl_.payload_.auth_request_;
-      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
-        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.auth_request_);
-      }
-      break;
-    }
-    case kSubscribeRequest: {
-      if (GetArena() == nullptr) {
-        delete _impl_.payload_.subscribe_request_;
-      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
-        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.subscribe_request_);
-      }
-      break;
-    }
-    case kUnsubscribeRequest: {
-      if (GetArena() == nullptr) {
-        delete _impl_.payload_.unsubscribe_request_;
-      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
-        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.unsubscribe_request_);
-      }
-      break;
-    }
     case kSubscriptionAck: {
       if (GetArena() == nullptr) {
         delete _impl_.payload_.subscription_ack_;
@@ -4344,14 +5154,6 @@ void RequestData::clear_payload() {
         delete _impl_.payload_.provider_status_;
       } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
         ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.provider_status_);
-      }
-      break;
-    }
-    case kQueryRequest: {
-      if (GetArena() == nullptr) {
-        delete _impl_.payload_.query_request_;
-      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
-        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.query_request_);
       }
       break;
     }
@@ -4419,19 +5221,27 @@ void RequestData::clear_payload() {
       }
       break;
     }
-    case kAccountSnapshot: {
-      if (GetArena() == nullptr) {
-        delete _impl_.payload_.account_snapshot_;
-      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
-        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.account_snapshot_);
-      }
-      break;
-    }
     case kAccountLogs: {
       if (GetArena() == nullptr) {
         delete _impl_.payload_.account_logs_;
       } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
         ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.account_logs_);
+      }
+      break;
+    }
+    case kAccountInfoList: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.account_info_list_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.account_info_list_);
+      }
+      break;
+    }
+    case kStrategyRuntimeList: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.strategy_runtime_list_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.strategy_runtime_list_);
       }
       break;
     }
@@ -4455,14 +5265,6 @@ constexpr auto RequestData::InternalNewImpl_() {
                   ::google::protobuf::Message::internal_visibility()),
       PROTOBUF_FIELD_OFFSET(RequestData, _impl_.extra_) +
           decltype(RequestData::_impl_.extra_)::
-              InternalGetArenaOffsetAlt(
-                  ::google::protobuf::Message::internal_visibility()),
-      PROTOBUF_FIELD_OFFSET(RequestData, _impl_.ret_) +
-          decltype(RequestData::_impl_.ret_)::
-              InternalGetArenaOffset(
-                  ::google::protobuf::Message::internal_visibility()),
-      PROTOBUF_FIELD_OFFSET(RequestData, _impl_.ret_) +
-          decltype(RequestData::_impl_.ret_)::
               InternalGetArenaOffsetAlt(
                   ::google::protobuf::Message::internal_visibility()),
   });
@@ -4503,16 +5305,16 @@ const ::google::protobuf::internal::ClassData* RequestData::GetClassData() const
   return _class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 28, 23, 76, 7> RequestData::_table_ = {
+const ::_pbi::TcParseTable<3, 23, 19, 62, 7> RequestData::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    33, 56,  // max_field_number, fast_idx_mask
+    35, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    176161152,  // skipmap
+    2324172682,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    28,  // num_field_entries
-    23,  // num_aux_entries
+    23,  // num_field_entries
+    19,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     _class_data_.base(),
     nullptr,  // post_loop_handler
@@ -4525,9 +5327,7 @@ const ::_pbi::TcParseTable<3, 28, 23, 76, 7> RequestData::_table_ = {
     // .request.RequestType type = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(RequestData, _impl_.type_), 63>(),
      {8, 63, 0, PROTOBUF_FIELD_OFFSET(RequestData, _impl_.type_)}},
-    // string cmd = 2;
-    {::_pbi::TcParser::FastUS1,
-     {18, 63, 0, PROTOBUF_FIELD_OFFSET(RequestData, _impl_.cmd_)}},
+    {::_pbi::TcParser::MiniParse, {}},
     {::_pbi::TcParser::MiniParse, {}},
     {::_pbi::TcParser::MiniParse, {}},
     // uint64 id = 5;
@@ -4541,20 +5341,14 @@ const ::_pbi::TcParseTable<3, 28, 23, 76, 7> RequestData::_table_ = {
      {58, 63, 0, PROTOBUF_FIELD_OFFSET(RequestData, _impl_.error_message_)}},
   }}, {{
     33, 0, 1,
-    65534, 27,
+    65528, 20,
     65535, 65535
   }}, {{
     // .request.RequestType type = 1;
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.type_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
-    // string cmd = 2;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.cmd_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
     // map<string, string> extra = 3;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.extra_), 0, 21,
-    (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
-    // map<string, string> ret = 4;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.ret_), 0, 22,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.extra_), 0, 18,
     (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
     // uint64 id = 5;
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.id_), 0, 0,
@@ -4565,73 +5359,61 @@ const ::_pbi::TcParseTable<3, 28, 23, 76, 7> RequestData::_table_ = {
     // string error_message = 7;
     {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.error_message_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // .hqmarket.market.v1.AuthRequest auth_request = 10;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.auth_request_), _Internal::kOneofCaseOffset + 0, 0,
-    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .hqmarket.market.v1.SubscribeRequest subscribe_request = 11;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.subscribe_request_), _Internal::kOneofCaseOffset + 0, 1,
-    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .hqmarket.market.v1.UnsubscribeRequest unsubscribe_request = 12;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.unsubscribe_request_), _Internal::kOneofCaseOffset + 0, 2,
-    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .hqmarket.market.v1.SubscriptionAck subscription_ack = 13;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.subscription_ack_), _Internal::kOneofCaseOffset + 0, 3,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.subscription_ack_), _Internal::kOneofCaseOffset + 0, 0,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .hqmarket.market.v1.QuoteData quote = 14;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.quote_), _Internal::kOneofCaseOffset + 0, 4,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.quote_), _Internal::kOneofCaseOffset + 0, 1,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .hqmarket.market.v1.DepthData depth = 15;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.depth_), _Internal::kOneofCaseOffset + 0, 5,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.depth_), _Internal::kOneofCaseOffset + 0, 2,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .hqmarket.market.v1.TradeData trade = 16;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.trade_), _Internal::kOneofCaseOffset + 0, 6,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.trade_), _Internal::kOneofCaseOffset + 0, 3,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .hqmarket.market.v1.BarData bar = 17;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.bar_), _Internal::kOneofCaseOffset + 0, 7,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.bar_), _Internal::kOneofCaseOffset + 0, 4,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .hqmarket.market.v1.MarketStatusData market_status = 18;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.market_status_), _Internal::kOneofCaseOffset + 0, 8,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.market_status_), _Internal::kOneofCaseOffset + 0, 5,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .hqmarket.market.v1.ProviderStatusData provider_status = 19;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.provider_status_), _Internal::kOneofCaseOffset + 0, 9,
-    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .hqmarket.market.v1.QueryRequest query_request = 20;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.query_request_), _Internal::kOneofCaseOffset + 0, 10,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.provider_status_), _Internal::kOneofCaseOffset + 0, 6,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .hqmarket.market.v1.QueryResponse query_response = 21;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.query_response_), _Internal::kOneofCaseOffset + 0, 11,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.query_response_), _Internal::kOneofCaseOffset + 0, 7,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .request.StrategyInfo strategy = 22;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.strategy_), _Internal::kOneofCaseOffset + 0, 12,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.strategy_), _Internal::kOneofCaseOffset + 0, 8,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .request.StrategyList strategy_list = 23;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.strategy_list_), _Internal::kOneofCaseOffset + 0, 13,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.strategy_list_), _Internal::kOneofCaseOffset + 0, 9,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .hqmarket.market.v1.SecurityList security_list = 25;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.security_list_), _Internal::kOneofCaseOffset + 0, 14,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.security_list_), _Internal::kOneofCaseOffset + 0, 10,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .hqmarket.market.v1.SectorList sector_list = 27;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.sector_list_), _Internal::kOneofCaseOffset + 0, 15,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.sector_list_), _Internal::kOneofCaseOffset + 0, 11,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .hqmarket.market.v1.SectorConstituents sector_constituents = 29;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.sector_constituents_), _Internal::kOneofCaseOffset + 0, 16,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.sector_constituents_), _Internal::kOneofCaseOffset + 0, 12,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .request.TradeAccountRecord account = 30;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.account_), _Internal::kOneofCaseOffset + 0, 17,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.account_), _Internal::kOneofCaseOffset + 0, 13,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .request.TradeAccountList account_list = 31;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.account_list_), _Internal::kOneofCaseOffset + 0, 18,
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.account_list_), _Internal::kOneofCaseOffset + 0, 14,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .request.TradingAccountSnapshot account_snapshot = 32;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.account_snapshot_), _Internal::kOneofCaseOffset + 0, 19,
+    // .request.TradeAccountLogList account_logs = 33;
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.account_logs_), _Internal::kOneofCaseOffset + 0, 15,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .request.TradingAccountLogs account_logs = 33;
-    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.account_logs_), _Internal::kOneofCaseOffset + 0, 20,
+    // .request.TradeAccountInfoList account_info_list = 34;
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.account_info_list_), _Internal::kOneofCaseOffset + 0, 16,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .request.StrategyRuntimeList strategy_runtime_list = 35;
+    {PROTOBUF_FIELD_OFFSET(RequestData, _impl_.payload_.strategy_runtime_list_), _Internal::kOneofCaseOffset + 0, 17,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }}, {{
-    {::_pbi::TcParser::GetTable<::hqmarket::market::v1::AuthRequest>()},
-    {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SubscribeRequest>()},
-    {::_pbi::TcParser::GetTable<::hqmarket::market::v1::UnsubscribeRequest>()},
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SubscriptionAck>()},
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::QuoteData>()},
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::DepthData>()},
@@ -4639,7 +5421,6 @@ const ::_pbi::TcParseTable<3, 28, 23, 76, 7> RequestData::_table_ = {
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::BarData>()},
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::MarketStatusData>()},
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::ProviderStatusData>()},
-    {::_pbi::TcParser::GetTable<::hqmarket::market::v1::QueryRequest>()},
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::QueryResponse>()},
     {::_pbi::TcParser::GetTable<::request::StrategyInfo>()},
     {::_pbi::TcParser::GetTable<::request::StrategyList>()},
@@ -4648,22 +5429,17 @@ const ::_pbi::TcParseTable<3, 28, 23, 76, 7> RequestData::_table_ = {
     {::_pbi::TcParser::GetTable<::hqmarket::market::v1::SectorConstituents>()},
     {::_pbi::TcParser::GetTable<::request::TradeAccountRecord>()},
     {::_pbi::TcParser::GetTable<::request::TradeAccountList>()},
-    {::_pbi::TcParser::GetTable<::request::TradingAccountSnapshot>()},
-    {::_pbi::TcParser::GetTable<::request::TradingAccountLogs>()},
+    {::_pbi::TcParser::GetTable<::request::TradeAccountLogList>()},
+    {::_pbi::TcParser::GetTable<::request::TradeAccountInfoList>()},
+    {::_pbi::TcParser::GetTable<::request::StrategyRuntimeList>()},
     {::_pbi::TcParser::GetMapAuxInfo<
         decltype(RequestData()._impl_.extra_)>(
         1, 0, 0, 9,
         9)},
-    {::_pbi::TcParser::GetMapAuxInfo<
-        decltype(RequestData()._impl_.ret_)>(
-        1, 0, 0, 9,
-        9)},
   }}, {{
-    "\23\0\3\5\3\0\0\15\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+    "\23\0\5\0\0\15\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
     "request.RequestData"
-    "cmd"
     "extra"
-    "ret"
     "error_message"
   }},
 };
@@ -4676,8 +5452,6 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
   (void) cached_has_bits;
 
   _impl_.extra_.Clear();
-  _impl_.ret_.Clear();
-  _impl_.cmd_.ClearToEmpty();
   _impl_.error_message_.ClearToEmpty();
   ::memset(&_impl_.type_, 0, static_cast<::size_t>(
       reinterpret_cast<char*>(&_impl_.id_) -
@@ -4706,14 +5480,6 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
             target = stream->EnsureSpace(target);
             target = ::_pbi::WireFormatLite::WriteEnumToArray(
                 1, this_._internal_type(), target);
-          }
-
-          // string cmd = 2;
-          if (!this_._internal_cmd().empty()) {
-            const std::string& _s = this_._internal_cmd();
-            ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.RequestData.cmd");
-            target = stream->WriteStringMaybeAliased(2, _s, target);
           }
 
           // map<string, string> extra = 3;
@@ -4749,39 +5515,6 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
             }
           }
 
-          // map<string, string> ret = 4;
-          if (!this_._internal_ret().empty()) {
-            using MapType = ::google::protobuf::Map<std::string, std::string>;
-            using WireHelper = _pbi::MapEntryFuncs<std::string, std::string,
-                                           _pbi::WireFormatLite::TYPE_STRING,
-                                           _pbi::WireFormatLite::TYPE_STRING>;
-            const auto& field = this_._internal_ret();
-
-            if (stream->IsSerializationDeterministic() && field.size() > 1) {
-              for (const auto& entry : ::google::protobuf::internal::MapSorterPtr<MapType>(field)) {
-                target = WireHelper::InternalSerialize(
-                    4, entry.first, entry.second, target, stream);
-                ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                    entry.first.data(), static_cast<int>(entry.first.length()),
- ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.RequestData.ret");
-                ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                    entry.second.data(), static_cast<int>(entry.second.length()),
- ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.RequestData.ret");
-              }
-            } else {
-              for (const auto& entry : field) {
-                target = WireHelper::InternalSerialize(
-                    4, entry.first, entry.second, target, stream);
-                ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                    entry.first.data(), static_cast<int>(entry.first.length()),
- ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.RequestData.ret");
-                ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-                    entry.second.data(), static_cast<int>(entry.second.length()),
- ::google::protobuf::internal::WireFormatLite::SERIALIZE, "request.RequestData.ret");
-              }
-            }
-          }
-
           // uint64 id = 5;
           if (this_._internal_id() != 0) {
             target = stream->EnsureSpace(target);
@@ -4805,24 +5538,6 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
           }
 
           switch (this_.payload_case()) {
-            case kAuthRequest: {
-              target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-                  10, *this_._impl_.payload_.auth_request_, this_._impl_.payload_.auth_request_->GetCachedSize(), target,
-                  stream);
-              break;
-            }
-            case kSubscribeRequest: {
-              target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-                  11, *this_._impl_.payload_.subscribe_request_, this_._impl_.payload_.subscribe_request_->GetCachedSize(), target,
-                  stream);
-              break;
-            }
-            case kUnsubscribeRequest: {
-              target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-                  12, *this_._impl_.payload_.unsubscribe_request_, this_._impl_.payload_.unsubscribe_request_->GetCachedSize(), target,
-                  stream);
-              break;
-            }
             case kSubscriptionAck: {
               target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
                   13, *this_._impl_.payload_.subscription_ack_, this_._impl_.payload_.subscription_ack_->GetCachedSize(), target,
@@ -4862,12 +5577,6 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
             case kProviderStatus: {
               target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
                   19, *this_._impl_.payload_.provider_status_, this_._impl_.payload_.provider_status_->GetCachedSize(), target,
-                  stream);
-              break;
-            }
-            case kQueryRequest: {
-              target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-                  20, *this_._impl_.payload_.query_request_, this_._impl_.payload_.query_request_->GetCachedSize(), target,
                   stream);
               break;
             }
@@ -4919,15 +5628,21 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
                   stream);
               break;
             }
-            case kAccountSnapshot: {
-              target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-                  32, *this_._impl_.payload_.account_snapshot_, this_._impl_.payload_.account_snapshot_->GetCachedSize(), target,
-                  stream);
-              break;
-            }
             case kAccountLogs: {
               target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
                   33, *this_._impl_.payload_.account_logs_, this_._impl_.payload_.account_logs_->GetCachedSize(), target,
+                  stream);
+              break;
+            }
+            case kAccountInfoList: {
+              target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                  34, *this_._impl_.payload_.account_info_list_, this_._impl_.payload_.account_info_list_->GetCachedSize(), target,
+                  stream);
+              break;
+            }
+            case kStrategyRuntimeList: {
+              target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                  35, *this_._impl_.payload_.strategy_runtime_list_, this_._impl_.payload_.strategy_runtime_list_->GetCachedSize(), target,
                   stream);
               break;
             }
@@ -4969,23 +5684,8 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
                                                _pbi::WireFormatLite::TYPE_STRING>::ByteSizeLong(entry.first, entry.second);
               }
             }
-            // map<string, string> ret = 4;
-            {
-              total_size +=
-                  1 * ::google::protobuf::internal::FromIntSize(this_._internal_ret_size());
-              for (const auto& entry : this_._internal_ret()) {
-                total_size += _pbi::MapEntryFuncs<std::string, std::string,
-                                               _pbi::WireFormatLite::TYPE_STRING,
-                                               _pbi::WireFormatLite::TYPE_STRING>::ByteSizeLong(entry.first, entry.second);
-              }
-            }
           }
            {
-            // string cmd = 2;
-            if (!this_._internal_cmd().empty()) {
-              total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
-                                              this_._internal_cmd());
-            }
             // string error_message = 7;
             if (!this_._internal_error_message().empty()) {
               total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -5008,24 +5708,6 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
             }
           }
           switch (this_.payload_case()) {
-            // .hqmarket.market.v1.AuthRequest auth_request = 10;
-            case kAuthRequest: {
-              total_size += 1 +
-                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.auth_request_);
-              break;
-            }
-            // .hqmarket.market.v1.SubscribeRequest subscribe_request = 11;
-            case kSubscribeRequest: {
-              total_size += 1 +
-                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.subscribe_request_);
-              break;
-            }
-            // .hqmarket.market.v1.UnsubscribeRequest unsubscribe_request = 12;
-            case kUnsubscribeRequest: {
-              total_size += 1 +
-                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.unsubscribe_request_);
-              break;
-            }
             // .hqmarket.market.v1.SubscriptionAck subscription_ack = 13;
             case kSubscriptionAck: {
               total_size += 1 +
@@ -5066,12 +5748,6 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
             case kProviderStatus: {
               total_size += 2 +
                             ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.provider_status_);
-              break;
-            }
-            // .hqmarket.market.v1.QueryRequest query_request = 20;
-            case kQueryRequest: {
-              total_size += 2 +
-                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.query_request_);
               break;
             }
             // .hqmarket.market.v1.QueryResponse query_response = 21;
@@ -5122,16 +5798,22 @@ PROTOBUF_NOINLINE void RequestData::Clear() {
                             ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.account_list_);
               break;
             }
-            // .request.TradingAccountSnapshot account_snapshot = 32;
-            case kAccountSnapshot: {
-              total_size += 2 +
-                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.account_snapshot_);
-              break;
-            }
-            // .request.TradingAccountLogs account_logs = 33;
+            // .request.TradeAccountLogList account_logs = 33;
             case kAccountLogs: {
               total_size += 2 +
                             ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.account_logs_);
+              break;
+            }
+            // .request.TradeAccountInfoList account_info_list = 34;
+            case kAccountInfoList: {
+              total_size += 2 +
+                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.account_info_list_);
+              break;
+            }
+            // .request.StrategyRuntimeList strategy_runtime_list = 35;
+            case kStrategyRuntimeList: {
+              total_size += 2 +
+                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.payload_.strategy_runtime_list_);
               break;
             }
             case PAYLOAD_NOT_SET: {
@@ -5152,10 +5834,6 @@ void RequestData::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goo
   (void) cached_has_bits;
 
   _this->_impl_.extra_.MergeFrom(from._impl_.extra_);
-  _this->_impl_.ret_.MergeFrom(from._impl_.ret_);
-  if (!from._internal_cmd().empty()) {
-    _this->_internal_set_cmd(from._internal_cmd());
-  }
   if (!from._internal_error_message().empty()) {
     _this->_internal_set_error_message(from._internal_error_message());
   }
@@ -5179,33 +5857,6 @@ void RequestData::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goo
     }
 
     switch (oneof_from_case) {
-      case kAuthRequest: {
-        if (oneof_needs_init) {
-          _this->_impl_.payload_.auth_request_ =
-              ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::AuthRequest>(arena, *from._impl_.payload_.auth_request_);
-        } else {
-          _this->_impl_.payload_.auth_request_->MergeFrom(from._internal_auth_request());
-        }
-        break;
-      }
-      case kSubscribeRequest: {
-        if (oneof_needs_init) {
-          _this->_impl_.payload_.subscribe_request_ =
-              ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::SubscribeRequest>(arena, *from._impl_.payload_.subscribe_request_);
-        } else {
-          _this->_impl_.payload_.subscribe_request_->MergeFrom(from._internal_subscribe_request());
-        }
-        break;
-      }
-      case kUnsubscribeRequest: {
-        if (oneof_needs_init) {
-          _this->_impl_.payload_.unsubscribe_request_ =
-              ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::UnsubscribeRequest>(arena, *from._impl_.payload_.unsubscribe_request_);
-        } else {
-          _this->_impl_.payload_.unsubscribe_request_->MergeFrom(from._internal_unsubscribe_request());
-        }
-        break;
-      }
       case kSubscriptionAck: {
         if (oneof_needs_init) {
           _this->_impl_.payload_.subscription_ack_ =
@@ -5266,15 +5917,6 @@ void RequestData::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goo
               ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::ProviderStatusData>(arena, *from._impl_.payload_.provider_status_);
         } else {
           _this->_impl_.payload_.provider_status_->MergeFrom(from._internal_provider_status());
-        }
-        break;
-      }
-      case kQueryRequest: {
-        if (oneof_needs_init) {
-          _this->_impl_.payload_.query_request_ =
-              ::google::protobuf::Message::CopyConstruct<::hqmarket::market::v1::QueryRequest>(arena, *from._impl_.payload_.query_request_);
-        } else {
-          _this->_impl_.payload_.query_request_->MergeFrom(from._internal_query_request());
         }
         break;
       }
@@ -5350,21 +5992,30 @@ void RequestData::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::goo
         }
         break;
       }
-      case kAccountSnapshot: {
-        if (oneof_needs_init) {
-          _this->_impl_.payload_.account_snapshot_ =
-              ::google::protobuf::Message::CopyConstruct<::request::TradingAccountSnapshot>(arena, *from._impl_.payload_.account_snapshot_);
-        } else {
-          _this->_impl_.payload_.account_snapshot_->MergeFrom(from._internal_account_snapshot());
-        }
-        break;
-      }
       case kAccountLogs: {
         if (oneof_needs_init) {
           _this->_impl_.payload_.account_logs_ =
-              ::google::protobuf::Message::CopyConstruct<::request::TradingAccountLogs>(arena, *from._impl_.payload_.account_logs_);
+              ::google::protobuf::Message::CopyConstruct<::request::TradeAccountLogList>(arena, *from._impl_.payload_.account_logs_);
         } else {
           _this->_impl_.payload_.account_logs_->MergeFrom(from._internal_account_logs());
+        }
+        break;
+      }
+      case kAccountInfoList: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.account_info_list_ =
+              ::google::protobuf::Message::CopyConstruct<::request::TradeAccountInfoList>(arena, *from._impl_.payload_.account_info_list_);
+        } else {
+          _this->_impl_.payload_.account_info_list_->MergeFrom(from._internal_account_info_list());
+        }
+        break;
+      }
+      case kStrategyRuntimeList: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.strategy_runtime_list_ =
+              ::google::protobuf::Message::CopyConstruct<::request::StrategyRuntimeList>(arena, *from._impl_.payload_.strategy_runtime_list_);
+        } else {
+          _this->_impl_.payload_.strategy_runtime_list_->MergeFrom(from._internal_strategy_runtime_list());
         }
         break;
       }
@@ -5389,8 +6040,6 @@ void RequestData::InternalSwap(RequestData* PROTOBUF_RESTRICT other) {
   ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   _impl_.extra_.InternalSwap(&other->_impl_.extra_);
-  _impl_.ret_.InternalSwap(&other->_impl_.ret_);
-  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.cmd_, &other->_impl_.cmd_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.error_message_, &other->_impl_.error_message_, arena);
   ::google::protobuf::internal::memswap<
       PROTOBUF_FIELD_OFFSET(RequestData, _impl_.id_)

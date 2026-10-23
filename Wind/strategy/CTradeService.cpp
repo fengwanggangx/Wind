@@ -247,19 +247,13 @@ const std::string& CTradeService::GetLastError() const
 bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string& actor)
 {
 	std::lock_guard<std::mutex> operationLock(m_mtx_operations);
-	std::string command = CRequest::Type::TRADE_ACCOUNT_QUERY == req.GetType() ? "account_query" : req.GetCmd();
+	_TyRequest type = req.GetType();
+	std::string strAction = req.GetTypeName();
 	std::uint64_t accountId = 0;
 	CRequest response;
 	response.SetId(req.GetId());
 	response.SetType(req.GetType());
-	if (CRequest::Type::TRADE_ACCOUNT_QUERY != req.GetType())
-	{
-		response.SetCmd(command);
-		if (CRequest::Type::TRADE_ACCOUNT_LOGIN != req.GetType())
-		{
-			response.SetReturnData("status", "ok");
-		}
-	}
+
 	response.SetErrorInfo(0, "");
 	db::_TyDBPtr database = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
 	if (nullptr == database)
@@ -270,19 +264,19 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 	// Persist audit entries on the same borrowed DB connection to avoid exhausting a small pool.
 	auto fail = [&](const std::string& message)
 	{
-		database->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) VALUES(" + std::to_string(accountId) + "," + utility::Utf8Literal(actor) + "," + utility::Utf8Literal(command) + "," + utility::Utf8Literal(message) + ")");
+		database->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) VALUES(" + std::to_string(accountId) + "," + utility::Utf8Literal(actor) + "," + utility::Utf8Literal(strAction) + "," + utility::Utf8Literal(message) + ")");
 		net::SendError(req.GetConnectionId(), req, 1202, message);
 		return false;
 	};
 	auto audit = [&]()
 	{
-		database->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) VALUES(" + std::to_string(accountId) + "," + utility::Utf8Literal(actor) + "," + utility::Utf8Literal(command) + ",'成功')");
+		database->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) VALUES(" + std::to_string(accountId) + "," + utility::Utf8Literal(actor) + "," + utility::Utf8Literal(strAction) + ",'成功')");
 	};
-	if (CRequest::Type::TRADE_ACCOUNT_LOGIN == req.GetType())
+	if (_TyRequest::TRADE_ACCOUNT_LOGIN == req.GetType())
 	{
-		if ((!(req.GetCmd().empty()) && ("trade_account_login" != req.GetCmd())) || req.GetExtraData("broker").empty() || req.GetExtraData("site").empty() || req.GetExtraData("account").empty() || req.GetExtraData("password").empty())
+		if (req.GetExtraData("broker").empty() || req.GetExtraData("site").empty() || req.GetExtraData("account").empty() || req.GetExtraData("password").empty())
 		{
-			return fail("券商、站点、账户和密码不能为空，且登录命令必须匹配请求类型");
+			return fail("券商、站点、账户和密码不能为空");
 		}
 		if ((128 < req.GetExtraData("broker").size()) || (256 < req.GetExtraData("site").size()) || (128 < req.GetExtraData("account").size()) || (256 < req.GetExtraData("password").size()))
 		{
@@ -290,11 +284,11 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 		}
 		return fail("券商登录通道尚未接入，无法验证交易账户");
 	}
-	if ((CRequest::Type::ACCOUNT != req.GetType()) && (CRequest::Type::TRADE_ACCOUNT_QUERY != req.GetType()))
+	if ((!req.IsTradeAccount()) && (_TyRequest::TRADE_ACCOUNT_QUERY != req.GetType()))
 	{
 		return fail("账户请求类型无效");
 	}
-	if ("account_query" == command)
+	if (_TyRequest::TRADE_ACCOUNT_QUERY == type)
 	{
 		std::unordered_map<std::uint64_t, std::uint32_t> counts;
 		const db::CQueryTable& rows = database->ExecQuery("SELECT account_id,COUNT(*) FROM table_strategy GROUP BY account_id");
@@ -323,7 +317,7 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 		}
 		response.SetData(list);
 	}
-	else if ("account_add" == command)
+	else if (_TyRequest::TRADE_ACCOUNT_ADD == type)
 	{
 		request::TradeAccountRecord info;
 		info.set_name(req.GetExtraData("name"));
@@ -366,13 +360,58 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 		}
 		audit();
 	}
+	else if (_TyRequest::TRADE_ACCOUNT_INFO_QUERY == type)
+	{
+		std::vector<std::uint64_t> accountIds;
+		if (!req.GetExtraData("account_ids", accountIds))
+		{
+			return fail("account_ids 必须是正整数 JSON 数组，最多 4096 项");
+		}
+		if (accountIds.empty())
+		{
+			std::lock_guard<std::mutex> lock(m_mtx_accounts);
+			for (const auto& item : m_accounts)
+			{
+				accountIds.emplace_back(item.first);
+			}
+		}
+		std::sort(accountIds.begin(), accountIds.end());
+		accountIds.erase(std::unique(accountIds.begin(), accountIds.end()), accountIds.end());
+		request::TradeAccountInfoList list;
+		for (std::uint64_t nId : accountIds)
+		{
+			request::TradeAccountInfo* pInfo = list.add_accounts();
+			pInfo->set_account_id(nId);
+			pInfo->set_server_time_ms(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+			std::shared_ptr<CSimulatedTradingService> service = FindService(nId);
+			pInfo->set_available_snapshot(nullptr != service);
+			if (!HasAccount(nId))
+			{
+				pInfo->set_error_code(1202);
+				pInfo->set_error_message("账户不存在");
+			}
+			else if (nullptr == service)
+			{
+				pInfo->set_error_code(1203);
+				pInfo->set_error_message("账户资金快照暂不可用");
+			}
+			else
+			{
+				CAccountSnapshot funds = service->GetAccount();
+				pInfo->set_balance(funds.m_balance);
+				pInfo->set_available(funds.m_available);
+				pInfo->set_frozen(funds.m_frozen);
+			}
+		}
+		response.SetData(list);
+	}
 	else
 	{
 		if (!ReadId(req.GetExtraData("account_id"), accountId) || !HasAccount(accountId))
 		{
 			return fail("账户不存在");
 		}
-		if ("account_modify" == command)
+		if (_TyRequest::TRADE_ACCOUNT_MODIFY == type)
 		{
 			if (!ValidName(req.GetExtraData("name")))
 			{
@@ -394,13 +433,13 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 			}
 			audit();
 		}
-		else if (("account_connect" == command) || ("account_disconnect" == command))
+		else if ((_TyRequest::TRADE_ACCOUNT_CONNECT == type) || (_TyRequest::TRADE_ACCOUNT_DISCONNECT == type))
 		{
 			std::string error;
 			{
 				std::lock_guard<std::mutex> lock(m_mtx_accounts);
 				CAccountRuntime& runtime = m_accounts.at(accountId);
-				if ("account_connect" == command)
+				if (_TyRequest::TRADE_ACCOUNT_CONNECT == type)
 				{
 					if (request::ACCOUNT_SIMULATED != runtime.m_info.account_type())
 					{
@@ -433,25 +472,9 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 			}
 			audit();
 		}
-		else if ("account_snapshot_query" == command)
+		else if (_TyRequest::TRADE_ACCOUNT_LOGS_QUERY == type)
 		{
-			request::TradingAccountSnapshot snapshot;
-			snapshot.set_account_id(accountId);
-			std::shared_ptr<CSimulatedTradingService> service = FindService(accountId);
-			snapshot.set_available_snapshot(nullptr != service);
-			if (nullptr != service)
-			{
-				CAccountSnapshot funds = service->GetAccount();
-				snapshot.set_balance(funds.m_balance);
-				snapshot.set_available(funds.m_available);
-				snapshot.set_frozen(funds.m_frozen);
-			}
-			snapshot.set_server_time_ms(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
-			response.SetData(snapshot);
-		}
-		else if ("account_logs_query" == command)
-		{
-			request::TradingAccountLogs logs;
+			request::TradeAccountLogList logs;
 			logs.set_account_id(accountId);
 			const db::CQueryTable& table = database->ExecQuery("SELECT created_at,actor,action,message FROM table_account_log WHERE account_id=" + std::to_string(accountId) + " ORDER BY log_id DESC LIMIT 100");
 			if (4 != table.m_columns.size())
@@ -462,7 +485,7 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 			{
 				if (4 == row.size())
 				{
-					request::TradingAccountLog* log = logs.add_logs();
+					request::TradeAccountLog* log = logs.add_logs();
 					log->set_time(db::QueryValueToString(row[0]));
 					log->set_actor(db::QueryValueToString(row[1]));
 					log->set_action(db::QueryValueToString(row[2]));
@@ -475,6 +498,11 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 		{
 			return fail("不支持的账户操作");
 		}
+	}
+	if ((_TyRequest::TRADE_ACCOUNT_MODIFY == type) || (_TyRequest::TRADE_ACCOUNT_CONNECT == type) || (_TyRequest::TRADE_ACCOUNT_DISCONNECT == type))
+	{
+		std::lock_guard<std::mutex> lock(m_mtx_accounts);
+		response.SetData(m_accounts.at(accountId).m_info);
 	}
 	return net::SendRequest(req.GetConnectionId(), response);
 }

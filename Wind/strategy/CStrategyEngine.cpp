@@ -1,4 +1,4 @@
-﻿#include "CStrategyEngine.h"
+#include "CStrategyEngine.h"
 
 #include "../common/defines.h"
 #include "../common/utility.h"
@@ -231,10 +231,9 @@ namespace
 	{
 		CRequest response;
 		response.SetId(req.GetId());
-		response.SetType(CRequest::Type::STRATEGY);
-		response.SetCmd(req.GetCmd());
-		response.SetReturnData("status", "ok");
-		response.SetReturnData("message", strMessage);
+		response.SetType(req.GetType());
+
+		response.SetExtraData("message", strMessage);
 		return net::SendRequest(req.GetConnectionId(), response);
 	}
 } // namespace
@@ -294,37 +293,37 @@ bool CStrategyEngine::Initialize()
 bool CStrategyEngine::HandleStrategyRequest(const CRequest& req)
 {
 	std::lock_guard<std::mutex> operationLock(m_mtx_operations);
-	if (CRequest::Type::STRATEGY != req.GetType())
+	if (!req.IsStrategy())
 	{
 		net::SendError(req.GetConnectionId(), req, 1101, "invalid strategy request type");
 		return false;
 	}
-	std::string strCmd = req.GetCmd();
-	if ("strategy_add" == strCmd)
+	_TyRequest type = req.GetType();
+	if (_TyRequest::STRATEGY_ADD == type)
 	{
 		return AddStrategy(req);
 	}
-	if ("strategy_query" == strCmd)
+	if (_TyRequest::STRATEGY_QUERY == type)
 	{
 		return QueryStrategies(req);
 	}
-	if ("strategy_modify" == strCmd)
+	if (_TyRequest::STRATEGY_MODIFY == type)
 	{
 		return ModifyStrategy(req);
 	}
-	if ("strategy_delete" == strCmd)
+	if (_TyRequest::STRATEGY_DELETE == type)
 	{
 		return DeleteStrategy(req);
 	}
-	if ("strategy_runtime_query" == strCmd)
+	if (_TyRequest::STRATEGY_RUNTIME_QUERY == type)
 	{
 		return QueryRuntime(req);
 	}
-	if (("strategy_start" == strCmd) || ("strategy_pause" == strCmd) || ("strategy_stop" == strCmd))
+	if ((_TyRequest::STRATEGY_START == type) || (_TyRequest::STRATEGY_PAUSE == type) || (_TyRequest::STRATEGY_STOP == type))
 	{
 		return ControlStrategy(req);
 	}
-	net::SendError(req.GetConnectionId(), req, 1102, "unsupported strategy command");
+	net::SendError(req.GetConnectionId(), req, 1102, "unsupported strategy type");
 	return false;
 }
 
@@ -384,9 +383,8 @@ bool CStrategyEngine::AddStrategy(const CRequest& req)
 	}
 	CRequest response;
 	response.SetId(req.GetId());
-	response.SetType(CRequest::Type::STRATEGY);
-	response.SetCmd(req.GetCmd());
-	response.SetReturnData("status", "ok");
+	response.SetType(req.GetType());
+
 	info.set_strategy_id(id);
 	response.SetData(info);
 	return net::SendRequest(req.GetConnectionId(), response);
@@ -492,9 +490,8 @@ bool CStrategyEngine::ModifyStrategy(const CRequest& req)
 	}
 	CRequest response;
 	response.SetId(req.GetId());
-	response.SetType(CRequest::Type::STRATEGY);
-	response.SetCmd(req.GetCmd());
-	response.SetReturnData("status", "ok");
+	response.SetType(req.GetType());
+
 	response.SetData(info);
 	return net::SendRequest(req.GetConnectionId(), response);
 }
@@ -519,9 +516,8 @@ bool CStrategyEngine::QueryStrategies(const CRequest& req) const
 	}
 	CRequest response;
 	response.SetId(req.GetId());
-	response.SetType(CRequest::Type::STRATEGY);
-	response.SetCmd(req.GetCmd());
-	response.SetReturnData("status", "ok");
+	response.SetType(req.GetType());
+
 	response.SetData(strategies);
 	return net::SendRequest(req.GetConnectionId(), response);
 }
@@ -578,28 +574,26 @@ bool CStrategyEngine::QueryRuntime(const CRequest& req) const
 {
 	CRequest response;
 	response.SetId(req.GetId());
-	response.SetType(CRequest::Type::STRATEGY);
-	response.SetCmd(req.GetCmd());
-	response.SetReturnData("status", "ok");
+	response.SetType(req.GetType());
+
 	std::vector<CStrategySnapshot> snapshots = GetSnapshots();
 	if (10000 < snapshots.size())
 	{
 		net::SendError(req.GetConnectionId(), req, 1113, "too many strategy runtimes");
 		return false;
 	}
-	// RequestData.ret carries runtime_count and runtime_<index>_{id,state,market_available,queue_length,active_orders,last_error}.
-	response.SetReturnData("runtime_count", std::to_string(snapshots.size()));
-	for (std::size_t index = 0; index < snapshots.size(); ++index)
+	request::StrategyRuntimeList list;
+	for (const auto& snapshot : snapshots)
 	{
-		const CStrategySnapshot& snapshot = snapshots[index];
-		std::string prefix = "runtime_" + std::to_string(index) + "_";
-		response.SetReturnData(prefix + "id", std::to_string(snapshot.m_strategyId));
-		response.SetReturnData(prefix + "state", std::to_string(static_cast<int>(snapshot.m_state)));
-		response.SetReturnData(prefix + "market_available", snapshot.m_bMarketAvailable ? "1" : "0");
-		response.SetReturnData(prefix + "queue_length", std::to_string(snapshot.m_queueLength));
-		response.SetReturnData(prefix + "active_orders", std::to_string(snapshot.m_activeOrderCount));
-		response.SetReturnData(prefix + "last_error", snapshot.m_strLastError);
+		request::StrategyRuntimeRecord* pRecord = list.add_runtimes();
+		pRecord->set_strategy_id(snapshot.m_strategyId);
+		pRecord->set_state(static_cast<int>(snapshot.m_state));
+		pRecord->set_market_available(snapshot.m_bMarketAvailable);
+		pRecord->set_queue_length(snapshot.m_queueLength);
+		pRecord->set_active_orders(snapshot.m_activeOrderCount);
+		pRecord->set_last_error(snapshot.m_strLastError);
 	}
+	response.SetData(list);
 	return net::SendRequest(req.GetConnectionId(), response);
 }
 
@@ -616,14 +610,14 @@ bool CStrategyEngine::ControlStrategy(const CRequest& req)
 		net::SendError(req.GetConnectionId(), req, 1110, "enabled strategy runtime does not exist");
 		return false;
 	}
-	std::string command = req.GetCmd();
+	_TyRequest type = req.GetType();
 	std::shared_ptr<CStrategyRuntime> runtime = FindRuntime(id);
-	if (("strategy_start" == command) && (nullptr != runtime) && !m_trader->IsConnected(runtime->m_config.m_accountId))
+	if ((_TyRequest::STRATEGY_START == type) && (nullptr != runtime) && !m_trader->IsConnected(runtime->m_config.m_accountId))
 	{
 		net::SendError(req.GetConnectionId(), req, 1116, "交易账户未连接，请先连接账户");
 		return false;
 	}
-	bool success = ("strategy_start" == command) ? StartStrategy(id) : (("strategy_pause" == command) ? PauseStrategy(id) : StopStrategy(id));
+	bool success = (_TyRequest::STRATEGY_START == type) ? StartStrategy(id) : ((_TyRequest::STRATEGY_PAUSE == type) ? PauseStrategy(id) : StopStrategy(id));
 	if (!success)
 	{
 		net::SendError(req.GetConnectionId(), req, 1112, "strategy state does not allow this operation");
@@ -917,7 +911,7 @@ void CStrategyEngine::StopAll()
 
 void CStrategyEngine::OnHQMarketResponse(const CRequest& req)
 {
-	if (m_bStopping.load() || !m_bMarketAvailable.load() || (CRequest::Type::HQMARKET != req.GetType()))
+	if (m_bStopping.load() || !m_bMarketAvailable.load() || (!req.IsMarket()))
 	{
 		return;
 	}
@@ -1606,7 +1600,7 @@ bool CStrategyEngine::HandleAccountRequest(const CRequest& req, const std::strin
 {
 	std::lock_guard<std::mutex> operationLock(m_mtx_operations);
 	bool success = m_trader->HandleAccountRequest(req, actor);
-	if (success && ("account_connect" == req.GetCmd()))
+	if (success && (_TyRequest::TRADE_ACCOUNT_CONNECT == req.GetType()))
 	{
 		std::uint64_t accountId = 0;
 		if (ParseUnsigned(req.GetExtraData("account_id"), accountId))

@@ -76,8 +76,8 @@ void CSession::Stop()
 
 bool CSession::SendRequest(const CRequest& request)
 {
-	CRequest::Type t = request.GetType();
-	bool bAuthRequest = (CRequest::Type::QUERY_AUTH == t) || (CRequest::Type::UPDATE_AUTH == t) || ("auth" == request.GetCmd());
+	_TyRequest t = request.GetType();
+	bool bAuthRequest = (_TyRequest::AUTH_LOGIN == t) || (_TyRequest::AUTH_REGISTER == t);
 	if (!bAuthRequest && !IsAuthenticated())
 	{
 		return false;
@@ -229,7 +229,7 @@ int CSession::OnNetEvent(const net::CNetEvent& ev)
 
 bool CSession::HandleAuthRequest(const CRequest& req)
 {
-	if (req.GetReturnData("accepted") != "1")
+	if (req.GetErrorInfo().has_value())
 	{
 		bool bRetryWithCredentials = false;
 		{
@@ -246,20 +246,20 @@ bool CSession::HandleAuthRequest(const CRequest& req)
 			return false;
 		}
 		std::optional<std::pair<int, std::string>> errorInfo = req.GetErrorInfo();
-		NotifyState(SessionState::Connected, "HQMarket authentication failed: " + (errorInfo.has_value() ? errorInfo->second : req.GetReturnData("reason")));
+		NotifyState(SessionState::Connected, "HQMarket authentication failed: " + (errorInfo.has_value() ? errorInfo->second : req.GetExtraData("reason")));
 		return false;
 	}
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_auth);
 		if (m_auth.has_value())
 		{
-			m_auth->m_strToken = req.GetReturnData("token");
+			m_auth->m_strToken = req.GetExtraData("token");
 			m_login = std::move(m_auth);
 			m_auth.reset();
 		}
-		else if (m_login.has_value() && !req.GetReturnData("token").empty())
+		else if (m_login.has_value() && !req.GetExtraData("token").empty())
 		{
-			m_login->m_strToken = req.GetReturnData("token");
+			m_login->m_strToken = req.GetExtraData("token");
 		}
 	}
 	m_state.store(SessionState::Ready);

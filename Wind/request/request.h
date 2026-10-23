@@ -9,16 +9,51 @@
 #include <optional>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace request
 {
+	enum class types
+	{
+		UNKNOWN = 0,
+		AUTH_LOGIN = 1,
+		AUTH_REGISTER = 3,
+		HEARTBEAT = 6,
+		TRADE_ACCOUNT_LOGIN = 8,
+		TRADE_ACCOUNT_QUERY = 9,
+		TRADE_ACCOUNT_ADD = 10,
+		TRADE_ACCOUNT_MODIFY = 11,
+		TRADE_ACCOUNT_CONNECT = 12,
+		TRADE_ACCOUNT_DISCONNECT = 13,
+		TRADE_ACCOUNT_INFO_QUERY = 14,
+		TRADE_ACCOUNT_LOGS_QUERY = 15,
+		STRATEGY_ADD = 20,
+		STRATEGY_MODIFY = 21,
+		STRATEGY_QUERY = 22,
+		STRATEGY_DELETE = 23,
+		STRATEGY_RUNTIME_QUERY = 24,
+		STRATEGY_START = 25,
+		STRATEGY_PAUSE = 26,
+		STRATEGY_STOP = 27,
+		MARKET_SUBSCRIBE = 40,
+		MARKET_UNSUBSCRIBE = 41,
+		MARKET_QUOTE_QUERY = 42,
+		MARKET_BARS_QUERY = 43,
+		MARKET_SECURITIES_QUERY = 44,
+		MARKET_SECTORS_QUERY = 45,
+		MARKET_SECTOR_CONSTITUENTS_QUERY = 46,
+		MARKET_QUOTE_PUSH = 47,
+		MARKET_DEPTH_PUSH = 48,
+	};
+
 	class RequestData;
 	class StrategyInfo;
 	class StrategyList;
 	class TradeAccountRecord;
 	class TradeAccountList;
-	class TradingAccountSnapshot;
-	class TradingAccountLogs;
+	class TradeAccountInfoList;
+	class StrategyRuntimeList;
+	class TradeAccountLogList;
 } // namespace request
 
 namespace google::protobuf
@@ -26,28 +61,13 @@ namespace google::protobuf
 	class Arena;
 }
 
+using _TyRequest = request::types;
 using _TyRequestId = std::uint64_t;
 using _TyReqData = request::RequestData;
 using _TyStrategyInfo = request::StrategyInfo;
 using _TyStrategyList = request::StrategyList;
-
 class CRequest
 {
-	public:
-	enum class Type
-	{
-		UNKNOWN = 0,
-		QUERY_AUTH = 1,
-		QUERY_USERINFO = 2,
-		UPDATE_AUTH = 3,
-		STRATEGY = 4,
-		HQMARKET = 5,
-		HEARTBEAT = 6,
-		ACCOUNT = 7,
-		TRADE_ACCOUNT_LOGIN = 8,
-		TRADE_ACCOUNT_QUERY = 9
-	};
-
 	public:
 	CRequest();
 	~CRequest();
@@ -60,23 +80,24 @@ class CRequest
 	_TyRequestId GetId() const;
 	void SetId(_TyRequestId id);
 
-	Type GetType() const;
-	void SetType(Type t);
-
-	std::string GetCmd() const;
-	void SetCmd(const std::string& strCmd);
+	_TyRequest GetType() const;
+	void SetType(_TyRequest t);
+	bool IsMarket() const;
+	bool IsStrategy() const;
+	bool IsTradeAccount() const;
+	std::string GetTypeName() const;
 
 	std::string GetExtraData(const std::string& strKey) const;
 	std::unordered_map<std::string, std::string> GetExtraData() const;
 	void SetExtraData(const std::string& strKey, const std::string& strValue);
-
-	std::string GetReturnData(const std::string& strKey) const;
-	std::unordered_map<std::string, std::string> GetReturnData() const;
-	void SetReturnData(const std::string& strKey, const std::string& strValue);
+	using _TyExtraRows = std::vector<std::unordered_map<std::string, std::string>>;
+	void SetExtraData(const std::string& strKey, const std::vector<std::uint64_t>& values);
+	void SetExtraData(const std::string& strKey, const _TyExtraRows& rows);
+	bool GetExtraData(const std::string& strKey, std::vector<std::uint64_t>& values) const;
+	bool GetExtraData(const std::string& strKey, _TyExtraRows& rows) const;
 
 	void SetData(const _TySubscriptionAck& value);
-	void SetData(const _TySubscribeRequest& value);
-	void SetData(const _TyUnsubscribeRequest& value);
+
 	void SetData(const _TyQuoteData& value);
 	void SetData(const _TyDepthData& value);
 	void SetData(const _TyQueryResponse& value);
@@ -87,8 +108,9 @@ class CRequest
 	void SetData(const _TyStrategyList& value);
 	void SetData(const request::TradeAccountRecord& value);
 	void SetData(const request::TradeAccountList& value);
-	void SetData(const request::TradingAccountSnapshot& value);
-	void SetData(const request::TradingAccountLogs& value);
+	void SetData(const request::TradeAccountInfoList& value);
+	void SetData(const request::StrategyRuntimeList& value);
+	void SetData(const request::TradeAccountLogList& value);
 	const _TyReqData& GetData() const;
 
 	void SetConnectionId(net::_TyConnectionId id);

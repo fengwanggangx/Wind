@@ -1,4 +1,4 @@
-﻿#ifndef WIND_SYSTEM_CBROKERSERVICE_H
+#ifndef WIND_SYSTEM_CBROKERSERVICE_H
 #define WIND_SYSTEM_CBROKERSERVICE_H
 
 #include "../network/common_net.h"
@@ -41,11 +41,19 @@ class CBrokerService final
 		_TyRequestId m_requestId{ 0 };
 	};
 
+	struct CPendingSubscriptionBatch
+	{
+		CPendingQueryClient m_client;
+		_TyRequest m_type{ _TyRequest::UNKNOWN };
+		std::chrono::steady_clock::time_point m_deadline;
+		std::vector<CQuoteInfo> m_requested;
+		std::vector<CQuoteInfo> m_changed;
+	};
 	struct CPendingQuery
 	{
 		_TyRequestId m_router_id{ 0 };
 		std::string m_strKey;
-		std::string m_strCmd;
+		_TyRequest m_type{ _TyRequest::UNKNOWN };
 		std::chrono::steady_clock::time_point m_deadline;
 		std::vector<CPendingQueryClient> m_clients;
 	};
@@ -81,15 +89,15 @@ class CBrokerService final
 	private:
 	bool IsAuthenticated(net::_TyConnectionId id) const;
 	CQuoteInfo GetQuoteInfo(const CRequest& req) const;
-	void SendSubscriptionResponse(net::_TyConnectionId id, _TyRequestId requestId, bool bAccepted, const std::string& strReason) const;
+	void SendSubscriptionResponse(net::_TyConnectionId id, _TyRequestId requestId, bool bAccepted, const std::string& strReason, _TyRequest type = _TyRequest::MARKET_SUBSCRIBE, const std::vector<CQuoteInfo>& subscriptions = {}) const;
 	std::string GetMarketResponseKey(const CRequest& req) const;
 	std::string GetQueryKey(const CRequest& req) const;
-	void SendQueryError(const CPendingQueryClient& client, const std::string& strCmd, int nErrorCode, const std::string& strMessage) const;
+	void SendQueryError(const CPendingQueryClient& client, _TyRequest type, int nErrorCode, const std::string& strMessage) const;
 	void SendResponse(const CRequest& req, int nErrorCode, const std::string& strMessage) const;
 	bool Login(const CRequest& req, std::string& strToken);
 
 	private:
-	std::unordered_map<std::string, std::function<bool(net::_TyConnectionId, const CRequest&)>> m_handler;
+	std::unordered_map<_TyRequest, std::function<bool(net::_TyConnectionId, const CRequest&)>> m_handler;
 
 	mutable std::mutex m_mtx_state;
 	std::unordered_set<net::_TyConnectionId> m_auth_clients;
@@ -99,7 +107,7 @@ class CBrokerService final
 	std::unordered_map<std::string, std::string> m_tokenUsers;
 	CSubscriptionMgr m_subscriptions;
 	std::unordered_map<std::string, std::vector<PendingSubscription>> m_pending_subscriptions;
-	std::unordered_map<_TyRequestId, CPendingQueryClient> m_pending_batch_subscriptions;
+	std::unordered_map<_TyRequestId, CPendingSubscriptionBatch> m_pending_batch_subscriptions;
 	std::unordered_map<std::string, CPendingQuery> m_pending_queries;
 	std::atomic_uint64_t m_router_id{ std::uint64_t(1) << 63 };
 
