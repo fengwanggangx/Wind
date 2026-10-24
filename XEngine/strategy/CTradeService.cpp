@@ -65,7 +65,7 @@ bool CTradeService::Initialize(CSession&)
 	// Missing configuration keeps non-trading XEngine functions available.
 	if (!info.Valid())
 	{
-		m_strLastError = "Broker token or endpoint is not configured";
+		m_strLastError = "XBroker token or endpoint is not configured";
 		return true;
 	}
 	return m_broker->Start();
@@ -331,7 +331,7 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 	});
 	if (!bQueued)
 	{
-		net::SendError(req.GetConnectionId(), req, static_cast<int>(trade::Error::Unavailable), "Broker is unavailable");
+		net::SendError(req.GetConnectionId(), req, static_cast<int>(trade::Error::Unavailable), "XBroker is unavailable");
 	}
 	return bQueued;
 }
@@ -423,7 +423,7 @@ bool CTradeService::HandleTradingRequest(const CRequest& req)
 		std::uint64_t nAccountId = 0;
 		if (!ReadId(req.GetExtraData("account_id"), nAccountId) || !GetAccount(nAccountId).m_bReady)
 		{
-			net::SendError(req.GetConnectionId(), req, static_cast<int>(trade::Error::Unavailable), "Broker account is not synchronized");
+			net::SendError(req.GetConnectionId(), req, static_cast<int>(trade::Error::Unavailable), "XBroker account is not synchronized");
 			return false;
 		}
 	}
@@ -436,7 +436,7 @@ bool CTradeService::HandleTradingRequest(const CRequest& req)
 	});
 	if (!bQueued)
 	{
-		net::SendError(req.GetConnectionId(), req, static_cast<int>(trade::Error::Unavailable), "Broker is unavailable");
+		net::SendError(req.GetConnectionId(), req, static_cast<int>(trade::Error::Unavailable), "XBroker is unavailable");
 	}
 	return bQueued;
 }

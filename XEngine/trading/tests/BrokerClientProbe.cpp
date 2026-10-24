@@ -92,5 +92,5 @@ int main(int nArgs, char** pArgs)
 	{
 		return 8;
 	}
-	std::cout << "XEngine Broker client authentication, synchronization, async order correlation, events and shutdown passed\n";
+	std::cout << "XEngine XBroker client authentication, synchronization, async order correlation, events and shutdown passed\n";
 }

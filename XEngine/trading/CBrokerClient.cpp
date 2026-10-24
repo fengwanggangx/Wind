@@ -90,7 +90,7 @@ bool CBrokerClient::Forward(CRequest request, WireHandler handler)
 		CRequest response;
 		response.SetId(nId);
 		response.SetType(request.GetType());
-		response.SetErrorInfo(static_cast<int>(trade::Error::UnknownResult), "Broker write failed; reconcile before retry");
+		response.SetErrorInfo(static_cast<int>(trade::Error::UnknownResult), "XBroker write failed; reconcile before retry");
 		OnResponse(response);
 	}
 	return true;
@@ -106,7 +106,7 @@ trade::CResult CBrokerClient::Request(trade::CRequest request, ReplyHandler hand
 		trade::CReply reply;
 		if (!trade::protocol::ReadReply(response, reply))
 		{
-			reply.m_result = { trade::Error::Unavailable, "Invalid Broker response" };
+			reply.m_result = { trade::Error::Unavailable, "Invalid XBroker response" };
 		}
 		reply.m_requestId = nRequestId;
 		EventHandler eventHandler;
@@ -165,7 +165,7 @@ trade::CResult CBrokerClient::Request(trade::CRequest request, ReplyHandler hand
 			handler(reply);
 		}
 	});
-	return bQueued ? trade::CResult{} : trade::CResult{ trade::Error::Unavailable, "Broker is unavailable" };
+	return bQueued ? trade::CResult{} : trade::CResult{ trade::Error::Unavailable, "XBroker is unavailable" };
 }
 trade::CSnapshot CBrokerClient::Snapshot(trade::Id nAccountId, bool bHistory) const
 {
@@ -189,7 +189,7 @@ trade::CSnapshot CBrokerClient::Snapshot(trade::Id nAccountId, bool bHistory) co
 }
 std::vector<trade::Operation> CBrokerClient::Capabilities() const
 {
-	return {}; // Per-account capabilities are queried from Broker, never inferred here.
+	return {}; // Per-account capabilities are queried from XBroker, never inferred here.
 }
 void CBrokerClient::OnResponse(const CRequest& response)
 {
@@ -306,7 +306,7 @@ void CBrokerClient::FailPending()
 		CRequest response;
 		response.SetId(item.first);
 		response.SetType(item.second.m_type);
-		response.SetErrorInfo(static_cast<int>(trade::Error::UnknownResult), "Broker disconnected; reconcile before retry");
+		response.SetErrorInfo(static_cast<int>(trade::Error::UnknownResult), "XBroker disconnected; reconcile before retry");
 		if (nullptr != item.second.m_handler)
 		{
 			item.second.m_handler(response);
@@ -331,7 +331,7 @@ void CBrokerClient::Refresh()
 		CRequest response;
 		response.SetId(item.first);
 		response.SetType(item.second);
-		response.SetErrorInfo(static_cast<int>(trade::Error::UnknownResult), "Broker request timed out; reconcile before retry");
+		response.SetErrorInfo(static_cast<int>(trade::Error::UnknownResult), "XBroker request timed out; reconcile before retry");
 		OnResponse(response);
 	}
 	if (!m_session.IsAuthenticated())

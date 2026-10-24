@@ -57,8 +57,8 @@ hqMarket.SubscribeQuote("600519", market::Exchange::sse);
 `ret["data_type"]` 和 `ret["data"]`。错误响应另含 `error_code` 和 `error_message`。
 
 
-## 独立 Broker 交易服务
+## 独立 XBroker 交易服务
 
-模拟柜台、交易账户和券商登录管理已迁入同级 Broker 工程。XEngine 通过 `[Broker] host/port/token` 连接 Broker；未配置时非交易功能仍可启动。原模拟账本不迁移，旧策略需显式修改并重新选择 Broker 账户，账户来源标记由 XEngine 自动维护。具体构建、配置、数据切换和测试参见 `../Broker/README.md`。
+模拟柜台、交易账户和券商登录管理已迁入同级 XBroker 工程。XEngine 通过 `[Broker] host/port/token` 连接 XBroker；未配置时非交易功能仍可启动。原模拟账本不迁移，旧策略需显式修改并重新选择 XBroker 账户，账户来源标记由 XEngine 自动维护。具体构建、配置、数据切换和测试参见 `../XBroker/README.md`。
 
 Linux CMake 构建：`cmake -S XEngine/XEngine -B /tmp/xengine-build && cmake --build /tmp/xengine-build -j4`。协议转换测试使用 `ctest --test-dir /tmp/xengine-build`；运行时为现有二进制依赖设置 `LD_LIBRARY_PATH` 为本项目 `XEngine/libs/debug`。
