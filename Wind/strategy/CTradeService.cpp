@@ -60,6 +60,7 @@ bool CTradeService::Initialize(CSession& session)
 		return false;
 	}
 	const db::CTable& table = pDB->ExecQuery("SELECT account_id,name,account_type,initial_balance,created_at,updated_at,is_default,adapter_key,broker,site,external_account FROM table_trading_account ORDER BY account_id");
+	pDB.reset();
 	if (11 != table.m_columns.size())
 	{
 		m_strLastError = "Failed to load trading accounts";
@@ -98,7 +99,6 @@ bool CTradeService::Initialize(CSession& session)
 		}
 	}
 	std::string strRulesPath = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "Trade", "rules_path", std::string());
-	pDB.reset();
 	trade::CResult result = trade::InitializeCounter(m_accounts, strRulesPath, session, m_counter);
 	if (!result.Ok())
 	{
