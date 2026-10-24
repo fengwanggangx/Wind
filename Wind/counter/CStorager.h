@@ -2,7 +2,7 @@
 #include "ITradingGateway.h"
 #include "../database/IDataBase.h"
 
-namespace trading
+namespace trade
 {
 	class CStorager final : public ICounterStore
 	{

@@ -10,7 +10,7 @@
 #include <iterator>
 #include <chrono>
 #include <set>
-namespace trading
+namespace trade
 {
 	namespace
 	{
@@ -81,7 +81,7 @@ namespace trading
 			return {};
 		}
 	} // namespace
-	CResult InitializeCounter(const std::vector<CAccountRoute>& routes, const std::string& strRulesPath, CSession& session, std::shared_ptr<CInProcessGateway>& counter)
+	CResult InitializeCounter(const std::unordered_map<std::uint64_t, CTradeAccount>& accounts, const std::string& strRulesPath, CSession& session, std::shared_ptr<CInProcessGateway>& counter)
 	{
 		std::vector<CRule> rules;
 		std::vector<CCalendar> calendar;
@@ -92,15 +92,16 @@ namespace trading
 		}
 		std::unique_ptr<ICounterStore> store = std::make_unique<CStorager>(utility::MakeSaltHex());
 		std::shared_ptr<CInProcessGateway> gateway = std::make_shared<CInProcessGateway>(std::make_unique<CSimulatedCounter>(std::move(store)), Now);
-		std::vector<CAccount> accounts;
-		for (const auto& route : routes)
+		std::vector<CAccount> counterAccounts;
+		counterAccounts.reserve(accounts.size());
+		for (const auto& [accountId, account] : accounts)
 		{
-			if ("simulated" == route.m_strAdapter)
+			if ("simulated" == account.m_strAdapter)
 			{
-				accounts.push_back({ route.m_accountId, route.m_nInitialBalance, 0, false, true });
+				counterAccounts.push_back({ accountId, account.m_info.m_nInitialBalance, 0, false, true });
 			}
 		}
-		result = gateway->Start(accounts, rules, calendar);
+		result = gateway->Start(counterAccounts, rules, calendar);
 		if (!result.Ok())
 		{
 			return result;

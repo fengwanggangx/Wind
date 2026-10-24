@@ -1,7 +1,7 @@
 #include "CStorager.h"
 #include <charconv>
 #include "../database/CDBEngine.h"
-namespace trading
+namespace trade
 {
 	namespace
 	{

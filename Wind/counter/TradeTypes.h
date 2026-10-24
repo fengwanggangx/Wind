@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-namespace trading
+namespace trade
 {
 	using Id = std::uint64_t;
 	enum class Error

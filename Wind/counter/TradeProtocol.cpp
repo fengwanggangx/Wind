@@ -1,7 +1,7 @@
 #include "TradeProtocol.h"
-namespace trading::protocol
+namespace trade::protocol
 {
-	void WriteOrder(const trading::COrder& row, request::TradeOrderRecord& wire)
+	void WriteOrder(const trade::COrder& row, request::TradeOrderRecord& wire)
 	{
 		wire.set_account_id(row.m_accountId);
 		wire.set_client_order_id(row.m_clientId);
@@ -22,7 +22,7 @@ namespace trading::protocol
 		wire.set_time_ms(row.m_nTime);
 		wire.set_rule_version(row.m_strRuleVersion);
 	}
-	void WriteTrade(const trading::CTrade& row, request::TradeRecord& wire)
+	void WriteTrade(const trade::CTrade& row, request::TradeRecord& wire)
 	{
 		wire.set_account_id(row.m_accountId);
 		wire.set_trade_id(row.m_tradeId);
@@ -35,7 +35,7 @@ namespace trading::protocol
 		wire.set_fee(row.m_nFee);
 		wire.set_time_ms(row.m_nTime);
 	}
-	void WritePosition(const trading::CPosition& row, request::TradePositionRecord& wire)
+	void WritePosition(const trade::CPosition& row, request::TradePositionRecord& wire)
 	{
 		wire.set_account_id(row.m_accountId);
 		wire.set_security(row.m_strSecurity);
@@ -85,7 +85,7 @@ namespace trading::protocol
 	}
 	COrderEvent OrderEvent(const CEvent& event)
 	{
-		const trading::COrder& row = event.m_order;
+		const trade::COrder& row = event.m_order;
 		COrderEvent order;
 		order.m_sequence = event.m_sequence;
 		order.m_accountId = event.m_accountId;
@@ -99,19 +99,19 @@ namespace trading::protocol
 		order.m_eventTimeMs = row.m_nTime;
 		switch (row.m_status)
 		{
-		case trading::Status::Accepted:
+		case trade::Status::Accepted:
 			order.m_status = OrderStatus::Accepted;
 			break;
-		case trading::Status::PartiallyFilled:
+		case trade::Status::PartiallyFilled:
 			order.m_status = OrderStatus::PartiallyFilled;
 			break;
-		case trading::Status::Filled:
+		case trade::Status::Filled:
 			order.m_status = OrderStatus::Filled;
 			break;
-		case trading::Status::Cancelled:
+		case trade::Status::Cancelled:
 			order.m_status = OrderStatus::Cancelled;
 			break;
-		case trading::Status::Expired:
+		case trade::Status::Expired:
 			order.m_status = OrderStatus::Expired;
 			break;
 		default:
@@ -130,7 +130,7 @@ namespace trading::protocol
 		trade.m_orderId = event.m_order.m_orderId;
 		trade.m_strTradeId = std::to_string(event.m_trade.m_tradeId);
 		trade.m_security = Security(event.m_trade.m_strSecurity);
-		trade.m_side = trading::Side::Buy == event.m_trade.m_side ? OrderSide::Buy : OrderSide::Sell;
+		trade.m_side = trade::Side::Buy == event.m_trade.m_side ? OrderSide::Buy : OrderSide::Sell;
 		trade.m_price = event.m_trade.m_nPrice;
 		trade.m_nPriceScale = event.m_trade.m_nPriceScale;
 		trade.m_quantity = event.m_trade.m_nQuantity;
@@ -173,11 +173,11 @@ namespace trading::protocol
 		push.SetExtraData("account_id", std::to_string(event.m_accountId));
 		switch (event.m_kind)
 		{
-		case trading::EventKind::Session:
+		case trade::EventKind::Session:
 			push.SetType(_TyRequest::TRADE_ACCOUNT_STATE_PUSH);
 			push.SetData(AccountPayload(account));
 			break;
-		case trading::EventKind::Order:
+		case trade::EventKind::Order:
 		{
 			push.SetType(_TyRequest::TRADE_ORDER_PUSH);
 			request::TradeOrderList rows;
@@ -185,7 +185,7 @@ namespace trading::protocol
 			push.SetData(rows);
 		}
 		break;
-		case trading::EventKind::Trade:
+		case trade::EventKind::Trade:
 		{
 			push.SetType(_TyRequest::TRADE_TRADE_PUSH);
 			request::TradeList rows;
@@ -193,7 +193,7 @@ namespace trading::protocol
 			push.SetData(rows);
 		}
 		break;
-		case trading::EventKind::Funds:
+		case trade::EventKind::Funds:
 		{
 			push.SetType(_TyRequest::TRADE_ACCOUNT_INFO_PUSH);
 			request::TradeAccountInfoList rows;
@@ -201,7 +201,7 @@ namespace trading::protocol
 			push.SetData(rows);
 		}
 		break;
-		case trading::EventKind::Position:
+		case trade::EventKind::Position:
 		{
 			push.SetType(_TyRequest::TRADE_POSITION_PUSH);
 			request::TradePositionList rows;

@@ -1,6 +1,6 @@
 #include "CInProcessGateway.h"
 #include <future>
-namespace trading
+namespace trade
 {
 	CInProcessGateway::CInProcessGateway(std::unique_ptr<CSimulatedCounter> counter, Clock clock) : m_counter(std::move(counter)), m_clock(std::move(clock)) {}
 	CInProcessGateway::~CInProcessGateway()

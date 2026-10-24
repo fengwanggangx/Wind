@@ -1,7 +1,7 @@
 #pragma once
 #include "TradeTypes.h"
 
-namespace trading
+namespace trade
 {
 	// One command owns an undo journal. Only touched records are copied; history is append-only.
 	class CStateEdit final

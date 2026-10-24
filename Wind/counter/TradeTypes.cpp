@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <sstream>
 #include <type_traits>
-namespace trading
+namespace trade
 {
 	namespace
 	{

@@ -3,7 +3,7 @@
 #include <limits>
 #include <set>
 
-namespace trading
+namespace trade
 {
 	namespace
 	{

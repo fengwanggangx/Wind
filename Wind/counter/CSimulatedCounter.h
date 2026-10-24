@@ -3,7 +3,7 @@
 #include "CStateEdit.h"
 #include <memory>
 
-namespace trading
+namespace trade
 {
 	// Single-writer deterministic core. The host supplies serialization, time and market input.
 	class CSimulatedCounter final

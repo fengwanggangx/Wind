@@ -37,21 +37,21 @@ public:
 	const std::string& GetLastError() const;
 
 private:
-	std::shared_ptr<trading::ITradingGateway> FindService(std::uint64_t accountId) const;
+	std::shared_ptr<trade::ITradingGateway> FindService(std::uint64_t accountId) const;
 	mutable std::mutex m_mtx_accounts;
 	std::mutex m_mtx_operations;
 	std::unordered_map<std::uint64_t, CTradeAccount> m_accounts;
 	std::unordered_map<_TyOrderId, std::uint64_t> m_orderAccounts;
 	_TyOrderEventHandler m_orderHandler;
 	std::string m_strLastError;
-	std::shared_ptr<trading::CInProcessGateway> m_counter;
+	std::shared_ptr<trade::CInProcessGateway> m_counter;
 	using _TyTradeEventHandler = std::function<void(const CTradeEvent&)>;
 	_TyTradeEventHandler m_tradeHandler;
-	void OnEvent(const trading::CEvent& event);
+	void OnEvent(const trade::CEvent& event);
 
 public:
 	void SetTradeEventHandler(_TyTradeEventHandler&& handler);
-	std::vector<trading::COrder> GetOrders(std::uint64_t accountId) const;
+	std::vector<trade::COrder> GetOrders(std::uint64_t accountId) const;
 	void SetPushHandler(_TyPushHandler&& handler);
 	void SetAccountReadyHandler(_TyAccountReadyHandler&& handler);
 

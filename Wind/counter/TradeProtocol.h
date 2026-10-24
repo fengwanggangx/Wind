@@ -4,7 +4,7 @@
 #include "../strategy/AccountInfo.h"
 #include "TradeTypes.h"
 #include "TradingTypes.h"
-namespace trading::protocol
+namespace trade::protocol
 {
 	request::TradeAccountRecord AccountPayload(const CTradeAccountInfo& info);
 	void WriteOrder(const COrder& row, request::TradeOrderRecord& wire);

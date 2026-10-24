@@ -2,7 +2,7 @@
 #include "TradeTypes.h"
 #include <functional>
 
-namespace trading
+namespace trade
 {
 	class ITradingGateway
 	{

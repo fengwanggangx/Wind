@@ -755,7 +755,7 @@ bool CStrategyEngine::CreateStrategy(const CStrategyConfig& cfg)
 			std::lock_guard<std::mutex> lock(m_mtx_signals);
 			m_signals[{ cfg.m_strategyId, order.m_signalId }] = SignalState::Accepted;
 		}
-		if (trading::IsActive(order.m_status))
+		if (trade::IsActive(order.m_status))
 		{
 			{
 				std::lock_guard<std::mutex> lock(runtime->m_mtx_orders);

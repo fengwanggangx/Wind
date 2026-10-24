@@ -6,7 +6,7 @@
 #include <thread>
 #include <atomic>
 
-namespace trading
+namespace trade
 {
 	class CInProcessGateway final : public ITradingGateway, public IMarketInput
 	{
