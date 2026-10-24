@@ -144,7 +144,7 @@ void CSession::ConnectionLoop()
 			NotifyState(SessionState::Disconnected, "HQMarket login information is invalid");
 			break;
 		}
-		decltype(m_client) pClient = std::make_unique<net::CTcpClient>(info->m_host.m_strHost, static_cast<int>(info->m_host.m_nPort));
+		decltype(m_client) pClient = std::make_unique<net::CTcpClient>(info->m_host.m_strHost, static_cast<int>(info->m_host.m_nPort), info->m_bOrdered);
 		pClient->RegisterHandler(std::bind_front(&CSession::OnNetEvent, this));
 		int nRet = pClient->Initialize();
 		if (0 == nRet)

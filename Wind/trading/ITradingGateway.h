@@ -34,4 +34,4 @@ namespace trade
 		virtual void OnDepth(CDepth depth) = 0;
 		virtual void OnMarketState(bool bAvailable) = 0;
 	};
-} // namespace trading
+} // namespace trade

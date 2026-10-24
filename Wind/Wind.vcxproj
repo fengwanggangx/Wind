@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version='1.0' encoding='utf-8'?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="Current">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -91,9 +91,9 @@
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="basic\CDistributor.cpp" />
-	<ClCompile Include="system\CBrokerService.cpp" />
-	<ClCompile Include="system\CSubscriptionMgr.cpp" />
-	<ClCompile Include="request\RequestCenter.cpp" />
+    <ClCompile Include="system\CBrokerService.cpp" />
+    <ClCompile Include="system\CSubscriptionMgr.cpp" />
+    <ClCompile Include="request\RequestCenter.cpp" />
     <ClCompile Include="common\datetime.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\include\release\libevent;.\include\release\protobuf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -123,29 +123,20 @@
     <ClCompile Include="network\common_net.cpp" />
     <ClCompile Include="request\request.cpp" />
     <ClCompile Include="request\request.pb.cc" />
-	<ClCompile Include="strategy\CStrategyContext.cpp" />
-	<ClCompile Include="strategy\CStrategyEngine.cpp" />
-	<ClCompile Include="strategy\CTradeService.cpp" />
-    <ClCompile Include="counter\CInProcessGateway.cpp" />
-    <ClCompile Include="counter\CStorager.cpp" />
-    <ClCompile Include="counter\CSimulatedCounter.cpp" />
-    <ClCompile Include="counter\TradeTypes.cpp" />
-    <ClCompile Include="counter\TradeProtocol.cpp" />
-    <ClCompile Include="counter\TradingTypes.cpp" />
-    <ClCompile Include="counter\CounterSetup.cpp" />
-
-
-	<ClCompile Include="strategy\StrategyTypes.cpp" />
-	<ClCompile Include="strategy\strategies\CMovingAverageStrategy.cpp" />
+    <ClCompile Include="strategy\CStrategyContext.cpp" />
+    <ClCompile Include="strategy\CStrategyEngine.cpp" />
+    <ClCompile Include="strategy\CTradeService.cpp" />
+    <ClCompile Include="strategy\StrategyTypes.cpp" />
+    <ClCompile Include="strategy\strategies\CMovingAverageStrategy.cpp" />
     <ClCompile Include="system\CHostMgr.cpp" />
     <ClCompile Include="thread\CThreadPool.cpp" />
     <ClCompile Include="system\CBootLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basic\CDistributor.h" />
-	<ClInclude Include="request\RequestCenter.h" />
-	<ClInclude Include="system\CBrokerService.h" />
-	<ClInclude Include="system\CSubscriptionMgr.h" />
+    <ClInclude Include="request\RequestCenter.h" />
+    <ClInclude Include="system\CBrokerService.h" />
+    <ClInclude Include="system\CSubscriptionMgr.h" />
     <ClInclude Include="common\container.h" />
     <ClInclude Include="common\container_traits.h" />
     <ClInclude Include="common\datetime.h" />
@@ -178,35 +169,24 @@
     <ClInclude Include="network\common_net.h" />
     <ClInclude Include="request\request.h" />
     <ClInclude Include="request\request.pb.h" />
-	<ClInclude Include="strategy\CStrategyContext.h" />
-	<ClInclude Include="strategy\CStrategyEngine.h" />
-	<ClInclude Include="strategy\AccountInfo.h" />
-	<ClInclude Include="strategy\CTradeService.h" />
-    <ClInclude Include="counter\CInProcessGateway.h" />
-    <ClInclude Include="counter\CStorager.h" />
-    <ClInclude Include="counter\CSimulatedCounter.h" />
-    <ClInclude Include="counter\ITradingGateway.h" />
-    <ClInclude Include="counter\TradeTypes.h" />
-    <ClInclude Include="counter\TradeProtocol.h" />
-    <ClInclude Include="counter\CStateEdit.h" />
-    <ClInclude Include="counter\TradingTypes.h" />
-    <ClInclude Include="counter\CounterSetup.h" />
-
-
-	<ClInclude Include="strategy\ITradeService.h" />
-	<ClInclude Include="strategy\IStrategy.h" />
-	<ClInclude Include="strategy\IStrategyContext.h" />
-	<ClInclude Include="strategy\IStrategyOrderSink.h" />
-	<ClInclude Include="strategy\ITradingSnapshotProvider.h" />
-	<ClInclude Include="strategy\StrategyTypes.h" />
-	<ClInclude Include="strategy\strategies\CMovingAverageStrategy.h" />
+    <ClInclude Include="strategy\CStrategyContext.h" />
+    <ClInclude Include="strategy\CStrategyEngine.h" />
+    <ClInclude Include="strategy\AccountInfo.h" />
+    <ClInclude Include="strategy\CTradeService.h" />
+    <ClInclude Include="strategy\ITradeService.h" />
+    <ClInclude Include="strategy\IStrategy.h" />
+    <ClInclude Include="strategy\IStrategyContext.h" />
+    <ClInclude Include="strategy\IStrategyOrderSink.h" />
+    <ClInclude Include="strategy\ITradingSnapshotProvider.h" />
+    <ClInclude Include="strategy\StrategyTypes.h" />
+    <ClInclude Include="strategy\strategies\CMovingAverageStrategy.h" />
     <ClInclude Include="system\CHostMgr.h" />
     <ClInclude Include="thread\CThreadPool.h" />
     <ClInclude Include="system\CBootLoader.h" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="exec\debug\sql\table_create.sql" />
-	<None Include="exec\release\sql\table_create.sql" />
+    <None Include="exec\debug\sql\table_create.sql" />
+    <None Include="exec\release\sql\table_create.sql" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -244,4 +224,15 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
+  <ItemGroup>
+    <ClCompile Include="trading\CBrokerClient.cpp" />
+    <ClInclude Include="trading\CBrokerClient.h" />
+    <ClInclude Include="trading\ITradingGateway.h" />
+    <ClCompile Include="trading\TradeProtocol.cpp" />
+    <ClInclude Include="trading\TradeProtocol.h" />
+    <ClCompile Include="trading\TradeTypes.cpp" />
+    <ClInclude Include="trading\TradeTypes.h" />
+    <ClCompile Include="trading\TradingTypes.cpp" />
+    <ClInclude Include="trading\TradingTypes.h" />
+  </ItemGroup>
 </Project>

@@ -14,13 +14,13 @@
 #include <thread>
 #include <vector>
 
-
 struct CLoginInfo
 {
 	std::string m_strAccount;
 	std::string m_strPassword;
 	std::string m_strToken;
 	CHostInfo m_host;
+	bool m_bOrdered{ false };
 
 	bool Valid() const noexcept
 	{
@@ -32,16 +32,22 @@ namespace net
 {
 	class CTcpClient;
 	struct CNetEvent;
-}
+} // namespace net
 
 enum class SessionState
 {
-	Disconnected, Connecting, Connected, Authenticating, Ready, Reconnecting, Stopping
+	Disconnected,
+	Connecting,
+	Connected,
+	Authenticating,
+	Ready,
+	Reconnecting,
+	Stopping
 };
 
 class CSession final
 {
-public:
+	public:
 	using _TyResponseHandler = std::function<void(const CRequest&)>;
 	using _TyStateHandler = std::function<void(SessionState, const std::string&)>;
 
@@ -60,7 +66,7 @@ public:
 	bool IsConnected() const;
 	bool IsAuthenticated() const;
 
-private:
+	private:
 	void ConnectionLoop();
 	void MaintenanceLoop();
 	int OnNetEvent(const net::CNetEvent& ev);
@@ -70,11 +76,11 @@ private:
 	void NotifyState(SessionState state, const std::string& strMessage);
 	void Dispatch(const CRequest& req);
 
-private:
+	private:
 	std::mutex m_mtx_client;
 	std::unique_ptr<net::CTcpClient> m_client;
 
-private:
+	private:
 	std::atomic_bool m_bStopping{ false };
 	std::atomic<SessionState> m_state{ SessionState::Disconnected };
 

@@ -10,8 +10,16 @@
 
 namespace net
 {
-	CTcpClient::CTcpClient(const std::string& strAddr, int nPort) : m_dispatcher(std::make_unique<_TyDistributor>()), m_strAddr(strAddr), m_nPort(nPort)
+	CTcpClient::CTcpClient(const std::string& strAddr, int nPort, bool bOrdered) : m_strAddr(strAddr), m_nPort(nPort)
 	{
+		if (bOrdered)
+		{
+			m_orderedDispatcher = std::make_unique<_TyOrderedDistributor>();
+		}
+		else
+		{
+			m_dispatcher = std::make_unique<_TyDistributor>();
+		}
 	}
 
 	CTcpClient::~CTcpClient()
@@ -116,6 +124,11 @@ namespace net
 
 	void CTcpClient::RegisterHandler(_TyHandler&& handler)
 	{
+		if (nullptr != m_orderedDispatcher)
+		{
+			m_orderedDispatcher->RegisterHandler(std::move(handler));
+			return;
+		}
 		if (nullptr != m_dispatcher)
 		{
 			m_dispatcher->RegisterHandler(std::move(handler));
@@ -124,6 +137,10 @@ namespace net
 
 	void CTcpClient::ClearHandlers()
 	{
+		if (nullptr != m_orderedDispatcher)
+		{
+			m_orderedDispatcher->ClearHandlers();
+		}
 		if (nullptr != m_dispatcher)
 		{
 			m_dispatcher->ClearHandlers();
@@ -139,7 +156,7 @@ namespace net
 	{
 		std::vector<std::unique_ptr<CRequest>> reqs;
 		std::size_t sz = net::RequestFromBuffer(reqs, pEvent);
-		if (m_dispatcher != nullptr)
+		if (nullptr != m_dispatcher || nullptr != m_orderedDispatcher)
 		{
 			std::vector<CNetEvent> events;
 			events.reserve(reqs.size());
@@ -149,7 +166,7 @@ namespace net
 				auto& ev = events.back();
 				ev.m_request = std::move(v);
 			}
-			m_dispatcher->Dispatch(std::move(events));
+			Dispatch(std::move(events));
 		}
 		return sz;
 	}
@@ -162,11 +179,11 @@ namespace net
 		{
 			m_pEvent.release();
 		}
-		if (nullptr != m_dispatcher)
+		if (nullptr != m_dispatcher || nullptr != m_orderedDispatcher)
 		{
 			std::vector<CNetEvent> events;
 			events.emplace_back(em_event::connected);
-			m_dispatcher->Dispatch(std::move(events));
+			Dispatch(std::move(events));
 		}
 	}
 
@@ -184,12 +201,25 @@ namespace net
 		_TyConnectionId id = CNetPool::InstancePtr()->CloseAConnection(pEvent);
 		m_bConnected = false;
 		m_router_id = -1;
-		if ((id >= 0) && (nullptr != m_dispatcher))
+		if ((id >= 0) && (nullptr != m_dispatcher || nullptr != m_orderedDispatcher))
 		{
 			std::vector<CNetEvent> events;
 			events.emplace_back(em_event::disconnected, id);
-			m_dispatcher->Dispatch(std::move(events));
+			Dispatch(std::move(events));
 		}
 		ShutDown();
 	}
 } // namespace net
+
+void net::CTcpClient::Dispatch(std::vector<CNetEvent>&& events)
+{
+	// Ordered sessions consume stream messages on their network thread before the next frame.
+	if (nullptr != m_orderedDispatcher)
+	{
+		m_orderedDispatcher->Dispatch(std::move(events));
+	}
+	else if (nullptr != m_dispatcher)
+	{
+		m_dispatcher->Dispatch(std::move(events));
+	}
+}

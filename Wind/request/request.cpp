@@ -57,7 +57,6 @@ void CRequest::SetType(_TyRequest t)
 	m_data->set_type(static_cast<request::RequestType>(t));
 }
 
-
 std::string CRequest::GetExtraData(const std::string& strKey) const
 {
 	const auto mIter = m_data->extra().find(strKey);
@@ -73,7 +72,6 @@ void CRequest::SetExtraData(const std::string& strKey, const std::string& strVal
 {
 	(*m_data->mutable_extra())[strKey] = strValue;
 }
-
 
 void CRequest::SetData(const _TySubscriptionAck& value)
 {
@@ -187,10 +185,6 @@ bool CRequest::IsMarket() const
 bool CRequest::IsStrategy() const
 {
 	return (_TyRequest::STRATEGY_ADD <= GetType()) && (_TyRequest::STRATEGY_STOP >= GetType());
-}
-bool CRequest::IsTradeAccount() const
-{
-	return (_TyRequest::TRADE_ACCOUNT_LOGIN <= GetType()) && (_TyRequest::TRADE_ACCOUNT_LOGS_QUERY >= GetType());
 }
 std::string CRequest::GetTypeName() const
 {

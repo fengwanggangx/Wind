@@ -14,5 +14,8 @@ namespace trade::protocol
 	void WriteEvent(const CEvent& event, request::TradeEventRecord& wire);
 	COrderEvent OrderEvent(const CEvent& event);
 	CTradeEvent TradeEvent(const CEvent& event);
+	::CRequest WriteRequest(const CRequest& request);
+	bool ReadReply(const ::CRequest& response, CReply& reply);
+	bool ReadPush(const ::CRequest& response, CEvent& event);
 	::CRequest Push(const CEvent& event, const CTradeAccountInfo& account);
-} // namespace trading::protocol
+} // namespace trade::protocol

@@ -1,6 +1,6 @@
 #ifndef WIND_STRATEGY_CTRADESERVICE_H
 #define WIND_STRATEGY_CTRADESERVICE_H
-#include "../counter/CounterSetup.h"
+#include "../trading/CBrokerClient.h"
 #include "AccountInfo.h"
 #include "ITradeService.h"
 #include <memory>
@@ -12,7 +12,7 @@ class CSession;
 
 class CTradeService final : public IStrategyOrderSink, public ITradingSnapshotProvider
 {
-public:
+	public:
 	using _TyOrderEventHandler = ITradeService::_TyOrderEventHandler;
 	using _TyPushHandler = std::function<void(const CRequest&)>;
 	using _TyAccountReadyHandler = std::function<void(std::uint64_t)>;
@@ -36,7 +36,7 @@ public:
 	CAccountSnapshot GetAccount(std::uint64_t accountId) const;
 	const std::string& GetLastError() const;
 
-private:
+	private:
 	std::shared_ptr<trade::ITradingGateway> FindService(std::uint64_t accountId) const;
 	mutable std::mutex m_mtx_accounts;
 	std::mutex m_mtx_operations;
@@ -44,18 +44,18 @@ private:
 	std::unordered_map<_TyOrderId, std::uint64_t> m_orderAccounts;
 	_TyOrderEventHandler m_orderHandler;
 	std::string m_strLastError;
-	std::shared_ptr<trade::CInProcessGateway> m_counter;
+	std::shared_ptr<CBrokerClient> m_broker;
 	using _TyTradeEventHandler = std::function<void(const CTradeEvent&)>;
 	_TyTradeEventHandler m_tradeHandler;
 	void OnEvent(const trade::CEvent& event);
 
-public:
+	public:
 	void SetTradeEventHandler(_TyTradeEventHandler&& handler);
 	std::vector<trade::COrder> GetOrders(std::uint64_t accountId) const;
 	void SetPushHandler(_TyPushHandler&& handler);
 	void SetAccountReadyHandler(_TyAccountReadyHandler&& handler);
 
-private:
+	private:
 	_TyPushHandler m_pushHandler;
 	_TyAccountReadyHandler m_accountReadyHandler;
 	std::unordered_map<std::uint64_t, std::uint64_t> m_lastEventSequence;

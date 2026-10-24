@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version='1.0' encoding='utf-8'?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="common\datetime.cpp">
@@ -59,15 +59,15 @@
     <ClCompile Include="thread\CThreadPool.cpp">
       <Filter>thread</Filter>
     </ClCompile>
-	<ClCompile Include="system\CBrokerService.cpp">
-	  <Filter>system</Filter>
-	</ClCompile>
-	<ClCompile Include="system\CSubscriptionMgr.cpp">
-	  <Filter>system</Filter>
-	</ClCompile>
-	<ClCompile Include="request\RequestCenter.cpp">
-		<Filter>request</Filter>
-	</ClCompile>
+    <ClCompile Include="system\CBrokerService.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="system\CSubscriptionMgr.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="request\RequestCenter.cpp">
+      <Filter>request</Filter>
+    </ClCompile>
     <ClCompile Include="common\utility.cpp">
       <Filter>common</Filter>
     </ClCompile>
@@ -89,9 +89,9 @@
     <ClCompile Include="ini\CINIHandler.cpp">
       <Filter>ini</Filter>
     </ClCompile>
-		<ClCompile Include="system\CSession.cpp">
-			<Filter>system</Filter>
-		</ClCompile>
+    <ClCompile Include="system\CSession.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
     <ClCompile Include="request\MarketTypes.cpp">
       <Filter>request</Filter>
     </ClCompile>
@@ -107,9 +107,9 @@
     <ClCompile Include="strategy\CStrategyEngine.cpp">
       <Filter>strategy</Filter>
     </ClCompile>
-	<ClCompile Include="strategy\CTradeService.cpp">
-	  <Filter>strategy</Filter>
-	</ClCompile>
+    <ClCompile Include="strategy\CTradeService.cpp">
+      <Filter>strategy</Filter>
+    </ClCompile>
     <ClCompile Include="strategy\StrategyTypes.cpp">
       <Filter>strategy</Filter>
     </ClCompile>
@@ -216,15 +216,15 @@
     <ClInclude Include="common\defines.h">
       <Filter>common</Filter>
     </ClInclude>
-	<ClInclude Include="request\RequestCenter.h">
-		<Filter>request</Filter>
-	</ClInclude>
-	<ClInclude Include="system\CBrokerService.h">
-	  <Filter>system</Filter>
-	</ClInclude>
-	<ClInclude Include="system\CSubscriptionMgr.h">
-	  <Filter>system</Filter>
-	</ClInclude>
+    <ClInclude Include="request\RequestCenter.h">
+      <Filter>request</Filter>
+    </ClInclude>
+    <ClInclude Include="system\CBrokerService.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="system\CSubscriptionMgr.h">
+      <Filter>system</Filter>
+    </ClInclude>
     <ClInclude Include="basic\CDistributor.h">
       <Filter>basic</Filter>
     </ClInclude>
@@ -255,9 +255,9 @@
     <ClInclude Include="ini\CINIHandler.h">
       <Filter>ini</Filter>
     </ClInclude>
-		<ClInclude Include="system\CSession.h">
-			<Filter>system</Filter>
-		</ClInclude>
+    <ClInclude Include="system\CSession.h">
+      <Filter>system</Filter>
+    </ClInclude>
     <ClInclude Include="request\MarketTypes.h">
       <Filter>request</Filter>
     </ClInclude>
@@ -273,12 +273,12 @@
     <ClInclude Include="strategy\CStrategyEngine.h">
       <Filter>strategy</Filter>
     </ClInclude>
-	<ClInclude Include="strategy\AccountInfo.h">
-	  <Filter>strategy</Filter>
-	</ClInclude>
-	<ClInclude Include="strategy\CTradeService.h">
-	  <Filter>strategy</Filter>
-	</ClInclude>
+    <ClInclude Include="strategy\AccountInfo.h">
+      <Filter>strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="strategy\CTradeService.h">
+      <Filter>strategy</Filter>
+    </ClInclude>
     <ClInclude Include="strategy\IStrategy.h">
       <Filter>strategy</Filter>
     </ClInclude>
@@ -288,9 +288,9 @@
     <ClInclude Include="strategy\IStrategyOrderSink.h">
       <Filter>strategy</Filter>
     </ClInclude>
-	<ClInclude Include="strategy\ITradeService.h">
-	  <Filter>strategy</Filter>
-	</ClInclude>
+    <ClInclude Include="strategy\ITradeService.h">
+      <Filter>strategy</Filter>
+    </ClInclude>
     <ClInclude Include="strategy\ITradingSnapshotProvider.h">
       <Filter>strategy</Filter>
     </ClInclude>
@@ -302,31 +302,24 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-	<None Include="exec\debug\sql\table_create.sql">
-	  <Filter>sql</Filter>
-	</None>
-	<None Include="exec\release\sql\table_create.sql">
-	  <Filter>sql</Filter>
-	</None>
+    <None Include="exec\debug\sql\table_create.sql">
+      <Filter>sql</Filter>
+    </None>
+    <None Include="exec\release\sql\table_create.sql">
+      <Filter>sql</Filter>
+    </None>
   </ItemGroup>
-<ItemGroup>
-<ClCompile Include="counter\CInProcessGateway.cpp" />
-<ClCompile Include="counter\CStorager.cpp" />
-<ClCompile Include="counter\CSimulatedCounter.cpp" />
-<ClCompile Include="counter\TradeTypes.cpp" />
-<ClCompile Include="counter\TradingTypes.cpp" />
-<ClCompile Include="counter\CounterSetup.cpp" />
-<ClInclude Include="counter\CInProcessGateway.h" />
-<ClInclude Include="counter\CStorager.h" />
-<ClInclude Include="counter\CSimulatedCounter.h" />
-<ClInclude Include="counter\ITradingGateway.h" />
-<ClInclude Include="counter\TradeTypes.h" />
-<ClInclude Include="counter\TradingTypes.h" />
-<ClInclude Include="counter\CounterSetup.h" />
-</ItemGroup>
   <ItemGroup>
-    <ClInclude Include="counter\CStateEdit.h"></ClInclude>
-    <ClInclude Include="counter\TradeProtocol.h"></ClInclude>
-    <ClCompile Include="counter\TradeProtocol.cpp"></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="trading\CBrokerClient.cpp" />
+    <ClInclude Include="trading\CBrokerClient.h" />
+    <ClInclude Include="trading\ITradingGateway.h" />
+    <ClCompile Include="trading\TradeProtocol.cpp" />
+    <ClInclude Include="trading\TradeProtocol.h" />
+    <ClCompile Include="trading\TradeTypes.cpp" />
+    <ClInclude Include="trading\TradeTypes.h" />
+    <ClCompile Include="trading\TradingTypes.cpp" />
+    <ClInclude Include="trading\TradingTypes.h" />
   </ItemGroup>
 </Project>

@@ -168,4 +168,4 @@ namespace trade
 	bool IsActive(Status status);
 	std::string EncodeState(const CState& state);
 	bool DecodeState(const std::string& strData, CState& state);
-} // namespace trading
+} // namespace trade

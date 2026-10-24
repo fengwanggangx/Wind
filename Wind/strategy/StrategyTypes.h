@@ -1,7 +1,7 @@
 #ifndef WIND_STRATEGY_STRATEGYTYPES_H
 #define WIND_STRATEGY_STRATEGYTYPES_H
 
-#include "../counter/TradingTypes.h"
+#include "../trading/TradingTypes.h"
 #include "../request/v1/market.pb.h"
 
 #include <chrono>

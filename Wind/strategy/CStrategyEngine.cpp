@@ -256,8 +256,8 @@ bool CSignalKey::operator==(const CSignalKey& arg) const
 
 std::size_t CSignalKeyHash::operator()(const CSignalKey& key) const
 {
-	std::size_t strategyHash = std::hash<_TyStrategyId>{ }(key.m_strategyId);
-	std::size_t signalHash = std::hash<_TySignalId>{ }(key.m_signalId);
+	std::size_t strategyHash = std::hash<_TyStrategyId>{}(key.m_strategyId);
+	std::size_t signalHash = std::hash<_TySignalId>{}(key.m_signalId);
 	return strategyHash ^ (signalHash + 0x9e3779b9U + (strategyHash << 6) + (strategyHash >> 2));
 }
 
@@ -381,7 +381,7 @@ bool CStrategyEngine::AddStrategy(const CRequest& req)
 		net::SendError(req.GetConnectionId(), req, 1104, "strategy database is unavailable");
 		return false;
 	}
-	std::string strSQL = "INSERT INTO table_strategy(strategy_type,strategy_name,parameters,subscriptions,event_queue_limit,auto_start,enabled,account_id) VALUES(" + utility::Utf8Literal(info.strategy_type()) + "," + utility::Utf8Literal(info.strategy_name()) + "," + utility::Utf8Literal(SerializeParameters(info)) + "," + utility::Utf8Literal(SerializeSubscriptions(info)) + "," + std::to_string(info.event_queue_limit()) + "," + (info.auto_start() ? "1" : "0") + "," + (info.enabled() ? "1" : "0") + "," + std::to_string(info.account_id()) + ")";
+	std::string strSQL = "INSERT INTO table_strategy(strategy_type,strategy_name,parameters,subscriptions,event_queue_limit,auto_start,enabled,account_id,account_provider) VALUES(" + utility::Utf8Literal(info.strategy_type()) + "," + utility::Utf8Literal(info.strategy_name()) + "," + utility::Utf8Literal(SerializeParameters(info)) + "," + utility::Utf8Literal(SerializeSubscriptions(info)) + "," + std::to_string(info.event_queue_limit()) + "," + (info.auto_start() ? "1" : "0") + "," + (info.enabled() ? "1" : "0") + "," + std::to_string(info.account_id()) + ",'broker')";
 	if (0 != pDB->ExecUpdate(strSQL))
 	{
 		net::SendError(req.GetConnectionId(), req, 1105, "failed to add strategy");
@@ -493,7 +493,7 @@ bool CStrategyEngine::ModifyStrategy(const CRequest& req)
 		net::SendError(req.GetConnectionId(), req, 1107, "failed to create strategy runtime");
 		return false;
 	}
-	std::string strSQL = "UPDATE table_strategy SET strategy_type=" + utility::Utf8Literal(info.strategy_type()) + ",strategy_name=" + utility::Utf8Literal(info.strategy_name()) + ",parameters=" + utility::Utf8Literal(SerializeParameters(info)) + ",subscriptions=" + utility::Utf8Literal(SerializeSubscriptions(info)) + ",event_queue_limit=" + std::to_string(info.event_queue_limit()) + ",auto_start=" + (info.auto_start() ? "1" : "0") + ",enabled=" + (info.enabled() ? "1" : "0") + ",account_id=" + std::to_string(info.account_id()) + " WHERE strategy_id=" + std::to_string(cfg.m_strategyId);
+	std::string strSQL = "UPDATE table_strategy SET strategy_type=" + utility::Utf8Literal(info.strategy_type()) + ",strategy_name=" + utility::Utf8Literal(info.strategy_name()) + ",parameters=" + utility::Utf8Literal(SerializeParameters(info)) + ",subscriptions=" + utility::Utf8Literal(SerializeSubscriptions(info)) + ",event_queue_limit=" + std::to_string(info.event_queue_limit()) + ",auto_start=" + (info.auto_start() ? "1" : "0") + ",enabled=" + (info.enabled() ? "1" : "0") + ",account_id=" + std::to_string(info.account_id()) + ",account_provider='broker' WHERE strategy_id=" + std::to_string(cfg.m_strategyId);
 	if (0 != pDB->ExecUpdate(strSQL))
 	{
 		if (info.enabled())
@@ -524,7 +524,7 @@ bool CStrategyEngine::QueryStrategies(const CRequest& req) const
 		net::SendError(req.GetConnectionId(), req, 1104, "strategy database is unavailable");
 		return false;
 	}
-	const db::CTable& table = pDB->ExecQuery("SELECT strategy_id,strategy_type,strategy_name,parameters,subscriptions,event_queue_limit,auto_start,enabled,account_id FROM table_strategy ORDER BY strategy_id");
+	const db::CTable& table = pDB->ExecQuery("SELECT strategy_id,strategy_type,strategy_name,parameters,subscriptions,event_queue_limit,auto_start,enabled,IF(account_provider='broker',account_id,0) FROM table_strategy ORDER BY strategy_id");
 	request::StrategyList strategies;
 	for (const db::_TyRow& row : table.m_rows)
 	{
@@ -665,7 +665,7 @@ bool CStrategyEngine::LoadStrategies()
 		m_strLastError = "MySQL table_strategy does not exist";
 		return false;
 	}
-	const db::CTable& table = pDB->ExecQuery("SELECT strategy_id,strategy_type,strategy_name,parameters,subscriptions,event_queue_limit,auto_start,account_id FROM table_strategy WHERE enabled=1 ORDER BY strategy_id");
+	const db::CTable& table = pDB->ExecQuery("SELECT strategy_id,strategy_type,strategy_name,parameters,subscriptions,event_queue_limit,auto_start,IF(account_provider='broker',account_id,0) FROM table_strategy WHERE enabled=1 ORDER BY strategy_id");
 	for (const db::_TyRow& values : table.m_rows)
 	{
 		std::vector<std::string> row;
@@ -693,7 +693,7 @@ bool CStrategyEngine::LoadStrategies()
 		cfg.m_strName = row[2];
 		cfg.m_eventQueueLimit = static_cast<std::size_t>(eventQueueLimit);
 		cfg.m_bAutoStart = 0 != autoStart;
-		if (!ParseUnsigned(row[7], cfg.m_accountId) || !m_trader->HasAccount(cfg.m_accountId))
+		if (!ParseUnsigned(row[7], cfg.m_accountId))
 		{
 			m_strLastError = "Invalid strategy trading account";
 			return false;
@@ -1633,7 +1633,7 @@ std::string CStrategyEngine::GetMarketKey(const CRequest& req)
 		Channel channel = static_cast<Channel>(static_cast<int>(data.bar().channel()));
 		return MakeQuoteInfo(data.bar().security(), channel).String();
 	}
-	return { };
+	return {};
 }
 
 bool CStrategyEngine::IsFinishedOrderStatus(OrderStatus status)

@@ -40,7 +40,6 @@ struct CTradeAccountInfo
 struct CTradeAccount
 {
 	CTradeAccountInfo m_info;
-	std::string m_strAdapter, m_strBroker, m_strSite, m_strExternalAccount;
 	std::shared_ptr<trade::ITradingGateway> m_service;
 	std::unordered_set<std::uint64_t> m_runningStrategies;
 };

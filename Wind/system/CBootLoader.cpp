@@ -97,6 +97,14 @@ bool CBootLoader::Initialize()
 		return false;
 	}
 
+	const db::CTable& providerColumn = db->ExecQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='table_strategy' AND COLUMN_NAME='account_provider'");
+	if (providerColumn.m_rows.empty() && 0 != db->ExecUpdate("ALTER TABLE table_strategy ADD COLUMN account_provider VARCHAR(16) NOT NULL DEFAULT ''"))
+	{
+		m_nErrorCode = 7;
+		m_strLastError = "Failed to initialize strategy account provider";
+		return false;
+	}
+
 	int nTcpPort = hIni.GetValue(ini::Config::System, "System", "tcp_port", -1);
 	int nHttpPort = hIni.GetValue(ini::Config::System, "System", "http_port", -1);
 	if ((nTcpPort <= 0) || (nHttpPort <= 0))
@@ -133,7 +141,10 @@ bool CBootLoader::Run()
 		m_strLastError = "HTTP server initialization failed";
 		return false;
 	}
-	std::jthread tcpServerThread([this]() { m_pTcpServer->Start(true); });
+	std::jthread tcpServerThread([this]()
+	{
+		m_pTcpServer->Start(true);
+	});
 	m_pHttpServer->Start(true);
 	m_pTcpServer->ShutDown();
 	return true;

@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-template<bool bAsyn, class _Ty, class _TyHandler>
+template <bool bAsyn, class _Ty, class _TyHandler>
 class CDistributor;
 
 namespace net
@@ -21,44 +21,48 @@ namespace net
 
 		using _TyHandler = std::function<int(const CNetEvent&)>;
 		using _TyDistributor = CDistributor<true, std::vector<CNetEvent>, _TyHandler>;
+		using _TyOrderedDistributor = CDistributor<false, std::vector<CNetEvent>, _TyHandler>;
+
 		public:
-			explicit CTcpClient(const std::string& strAddr, int nPort);
-			~CTcpClient() override;
-			int Initialize();
+		explicit CTcpClient(const std::string& strAddr, int nPort, bool bOrdered = false);
+		~CTcpClient() override;
+		int Initialize();
 
-			bool IsConnected() const;
+		bool IsConnected() const;
 
-			bool SendRequest(const CRequest& req);
-			bool SetReadTimeout(int nSeconds);
+		bool SendRequest(const CRequest& req);
+		bool SetReadTimeout(int nSeconds);
 
-			void ClearHandlers();
-			void RegisterHandler(_TyHandler&& handler);
+		void ClearHandlers();
+		void RegisterHandler(_TyHandler&& handler);
 
-			void Release();
+		void Release();
 
-			net::_TyConnectionId GetId() const;
-		
-		private:
-			bool Send(const void* pData, std::size_t nLength);
-			void OnConnected(bufferevent* pEvent) override;
-			std::size_t OnRead(bufferevent* pEvent) override;
-			void OnEvent(bufferevent* pEvent, short events) override;
+		net::_TyConnectionId GetId() const;
 
 		private:
-			struct CBufferEventDeleter
-			{
-				void operator()(bufferevent* pEvent) const;
-			};
-
-			std::unique_ptr<bufferevent, CBufferEventDeleter> m_pEvent;
-			std::atomic_bool m_bConnected{false};
-			std::unique_ptr<_TyDistributor> m_dispatcher;
+		bool Send(const void* pData, std::size_t nLength);
+		void OnConnected(bufferevent* pEvent) override;
+		std::size_t OnRead(bufferevent* pEvent) override;
+		void OnEvent(bufferevent* pEvent, short events) override;
 
 		private:
-			std::string m_strAddr;
-			int m_nPort{ -1 };
+		struct CBufferEventDeleter
+		{
+			void operator()(bufferevent* pEvent) const;
+		};
 
-			net::_TyConnectionId m_router_id{ 0 };
+		std::unique_ptr<bufferevent, CBufferEventDeleter> m_pEvent;
+		std::atomic_bool m_bConnected{ false };
+		std::unique_ptr<_TyDistributor> m_dispatcher;
+		std::unique_ptr<_TyOrderedDistributor> m_orderedDispatcher;
+		void Dispatch(std::vector<CNetEvent>&& events);
+
+		private:
+		std::string m_strAddr;
+		int m_nPort{ -1 };
+
+		net::_TyConnectionId m_router_id{ 0 };
 	};
 } // namespace net
 #endif

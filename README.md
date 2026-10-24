@@ -51,3 +51,10 @@ hqMarket.SubscribeQuote("600519", market::Exchange::sse);
 用于关联请求。`CRequest::GetData()` 返回运行期 `CData` 指针，其中 `type` 标识具体
 行情结构，`payload` 是对应 Protobuf 的序列化内容；在线路上分别存放于
 `ret["data_type"]` 和 `ret["data"]`。错误响应另含 `error_code` 和 `error_message`。
+
+
+## 独立 Broker 交易服务
+
+模拟柜台、交易账户和券商登录管理已迁入同级 Broker 工程。Wind 通过 `[Broker] host/port/token` 连接 Broker；未配置时非交易功能仍可启动。原模拟账本不迁移，旧策略需显式修改并重新选择 Broker 账户，账户来源标记由 Wind 自动维护。具体构建、配置、数据切换和测试参见 `../Broker/README.md`。
+
+Linux CMake 构建：`cmake -S Wind/Wind -B /tmp/wind-build && cmake --build /tmp/wind-build -j4`。协议转换测试使用 `ctest --test-dir /tmp/wind-build`；运行时为现有二进制依赖设置 `LD_LIBRARY_PATH` 为本项目 `Wind/libs/debug`。

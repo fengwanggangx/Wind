@@ -56,7 +56,6 @@ namespace request
 		TRADE_POSITION_PUSH = 58,
 		TRADE_SYNC_QUERY = 59,
 		TRADE_CAPABILITIES_QUERY = 60,
-
 	};
 
 	class RequestData;
@@ -101,7 +100,6 @@ class CRequest
 	void SetType(_TyRequest t);
 	bool IsMarket() const;
 	bool IsStrategy() const;
-	bool IsTradeAccount() const;
 	std::string GetTypeName() const;
 
 	std::string GetExtraData(const std::string& strKey) const;

@@ -4,6 +4,11 @@
 #include <type_traits>
 namespace trade
 {
+	bool IsActive(Status status)
+	{
+		return (Status::Accepted == status) || (Status::PartiallyFilled == status);
+	}
+
 	namespace
 	{
 		template <class T>
@@ -506,4 +511,4 @@ namespace trade
 		}
 		state.m_events.insert(state.m_events.end(), changes.m_events.begin(), changes.m_events.end());
 	}
-} // namespace trading
+} // namespace trade
