@@ -7,7 +7,7 @@ class IStrategyContext;
 
 class IStrategy
 {
-	public:
+public:
 	virtual ~IStrategy() = default;
 
 	virtual bool Initialize(IStrategyContext& context, const CStrategyConfig& config) = 0;

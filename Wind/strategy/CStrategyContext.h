@@ -10,7 +10,7 @@ class CTradeService;
 
 class CStrategyContext final : public IStrategyContext
 {
-	public:
+public:
 	CStrategyContext(_TyStrategyId strategyId, std::uint64_t accountId, CStrategyEngine* pEngine, CTradeService* pSnapshotProvider);
 
 	COrderSubmitResult SubmitOrder(const COrderIntent& intent) override;
@@ -22,7 +22,7 @@ class CStrategyContext final : public IStrategyContext
 
 	void Disable();
 
-	private:
+private:
 	_TyStrategyId m_strategyId{ 0 };
 	CStrategyEngine* m_pEngine{ nullptr };
 	std::uint64_t m_accountId{ 1 };

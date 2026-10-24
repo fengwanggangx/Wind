@@ -8,7 +8,7 @@
 
 class ITradeService : public IStrategyOrderSink, public ITradingSnapshotProvider
 {
-	public:
+public:
 	using _TyOrderEventHandler = std::function<void(const COrderEvent&)>;
 
 	~ITradeService() override = default;

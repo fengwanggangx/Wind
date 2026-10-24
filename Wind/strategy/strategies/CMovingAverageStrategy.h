@@ -8,7 +8,7 @@
 
 class CMovingAverageStrategy final : public IStrategy
 {
-	public:
+public:
 	bool Initialize(IStrategyContext& context, const CStrategyConfig& config) override;
 	void OnStart() override;
 	void OnPause() override;
@@ -17,12 +17,12 @@ class CMovingAverageStrategy final : public IStrategy
 	void OnOrder(const COrderEvent& event) override;
 	void OnTrade(const CTradeEvent& event) override;
 
-	private:
+private:
 	void UpdatePrices(std::int64_t price);
 	void TryGenerateSignal(const _TyQuoteData& data);
 	static bool ReadWindow(const CStrategyConfig& config, const std::string& strName, std::size_t& window);
 
-	private:
+private:
 	IStrategyContext* m_pContext{ nullptr };
 	_TyStrategyId m_strategyId{ 0 };
 	std::deque<std::int64_t> m_prices;

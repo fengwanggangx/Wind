@@ -5,7 +5,7 @@
 
 class IStrategyContext
 {
-	public:
+public:
 	virtual ~IStrategyContext() = default;
 
 	virtual COrderSubmitResult SubmitOrder(const COrderIntent& intent) = 0;

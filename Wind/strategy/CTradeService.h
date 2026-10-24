@@ -12,7 +12,7 @@ class CSession;
 
 class CTradeService final : public IStrategyOrderSink, public ITradingSnapshotProvider
 {
-	public:
+public:
 	using _TyOrderEventHandler = ITradeService::_TyOrderEventHandler;
 	using _TyPushHandler = std::function<void(const CRequest&)>;
 	using _TyAccountReadyHandler = std::function<void(std::uint64_t)>;
@@ -36,7 +36,7 @@ class CTradeService final : public IStrategyOrderSink, public ITradingSnapshotPr
 	CAccountSnapshot GetAccount(std::uint64_t accountId) const;
 	const std::string& GetLastError() const;
 
-	private:
+private:
 	std::shared_ptr<trading::ITradingGateway> FindService(std::uint64_t accountId) const;
 	mutable std::mutex m_mtx_accounts;
 	std::mutex m_mtx_operations;
@@ -49,13 +49,13 @@ class CTradeService final : public IStrategyOrderSink, public ITradingSnapshotPr
 	_TyTradeEventHandler m_tradeHandler;
 	void OnEvent(const trading::CEvent& event);
 
-	public:
+public:
 	void SetTradeEventHandler(_TyTradeEventHandler&& handler);
 	std::vector<trading::COrder> GetOrders(std::uint64_t accountId) const;
 	void SetPushHandler(_TyPushHandler&& handler);
 	void SetAccountReadyHandler(_TyAccountReadyHandler&& handler);
 
-	private:
+private:
 	_TyPushHandler m_pushHandler;
 	_TyAccountReadyHandler m_accountReadyHandler;
 	std::unordered_map<std::uint64_t, std::uint64_t> m_lastEventSequence;

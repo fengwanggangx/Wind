@@ -110,13 +110,13 @@ class CStrategyEngine final
 	using _TyTradingPushHandler = std::function<void(const CRequest&)>;
 	using _TyStateHandler = std::function<void(const CStrategySnapshot&)>;
 
-	public:
+public:
 	explicit CStrategyEngine(CSession* pSession);
 	~CStrategyEngine();
 	CStrategyEngine(const CStrategyEngine& arg) = delete;
 	CStrategyEngine& operator=(const CStrategyEngine& arg) = delete;
 
-	public:
+public:
 	bool Initialize();
 	bool HandleStrategyRequest(const CRequest& req);
 	bool HandleTradingRequest(const CRequest& req);
@@ -129,25 +129,25 @@ class CStrategyEngine final
 
 	const std::string& GetLastError() const;
 
-	public:
+public:
 	bool StartStrategy(_TyStrategyId id);
 	bool PauseStrategy(_TyStrategyId id);
 	bool StopStrategy(_TyStrategyId id);
 	void StopAll();
 
-	public:
+public:
 	std::optional<CStrategySnapshot> GetSnapshot(_TyStrategyId id) const;
 	std::vector<CStrategySnapshot> GetSnapshots() const;
 	void RegisterStateHandler(_TyStateHandler&& handler);
 	bool IsMarketAvailable() const;
 
-	private:
+private:
 	void OnHQMarketResponse(const CRequest& req);
 	void OnHQMarketState(SessionState state, const std::string& strReason);
 	void OnOrderEvent(const COrderEvent& ev);
 	void OnTradeEvent(const CTradeEvent& ev);
 
-	private:
+private:
 	std::shared_ptr<CStrategyRuntime> FindRuntime(_TyStrategyId id) const;
 	bool ExecuteControl(_TyStrategyId id, StrategyEventType type);
 	bool EnqueueEvent(const std::shared_ptr<CStrategyRuntime>& runtime, CStrategyEvent&& ev);
@@ -175,7 +175,7 @@ class CStrategyEngine final
 	bool QueryRuntime(const CRequest& req) const;
 	bool ControlStrategy(const CRequest& req);
 
-	private:
+private:
 	std::mutex m_mtx_operations;
 	CSession* m_pSession{ nullptr };
 	std::unique_ptr<CTradeService> m_trader;
