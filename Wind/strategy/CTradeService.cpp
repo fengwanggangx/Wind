@@ -1,19 +1,21 @@
 #include "CTradeService.h"
-#include "../counter/CInProcessGateway.h"
-#include "../counter/TradeProtocol.h"
 #include "../common/container.h"
 #include "../common/utility.h"
+#include "../counter/CInProcessGateway.h"
+#include "../counter/TradeProtocol.h"
 #include "../database/CDBEngine.h"
 #include "../database/IDataBase.h"
 #include "../ini/CINIHandler.h"
 #include "../network/CNetTools.h"
+#include "../request/RequestCenter.h"
 #include "../request/request.h"
 #include "../system/CSession.h"
-#include "../request/RequestCenter.h"
+#include <algorithm>
 #include <atomic>
 #include <charconv>
 #include <chrono>
 #include <limits>
+#include <map>
 namespace
 {
 	using trading::protocol::WriteOrder;
@@ -32,13 +34,13 @@ namespace
 			return false;
 		}
 		bool visible = false;
-		for (unsigned char v : strName)
+		for (unsigned char character : strName)
 		{
-			if ((32 > v) || (127 == v))
+			if ((32 > character) || (127 == character))
 			{
 				return false;
 			}
-			visible = visible || (32 != v);
+			visible = visible || (32 != character);
 		}
 		return visible;
 	}
@@ -136,7 +138,7 @@ bool CTradeService::Initialize(CSession& session)
 			trading::CRequest request;
 			request.m_operation = trading::Operation::Connect;
 			request.m_accountId = item.first;
-			m_counter->Request(request, {});
+			m_counter->Request(request, { });
 		}
 	}
 	for (const auto& order : m_counter->Snapshot().m_orders)
@@ -165,7 +167,7 @@ void CTradeService::SetOrderEventHandler(_TyOrderEventHandler&& handler)
 	std::lock_guard<std::mutex> lock(m_mtx_accounts);
 	m_orderHandler = std::move(handler);
 }
-void CTradeService::SetTradeEventHandler(_TyTradeEventHandler handler)
+void CTradeService::SetTradeEventHandler(_TyTradeEventHandler&& handler)
 {
 	std::lock_guard<std::mutex> lock(m_mtx_accounts);
 	m_tradeHandler = std::move(handler);
@@ -271,12 +273,12 @@ bool CTradeService::Cancel(_TyStrategyId strategyId, _TyOrderId orderId)
 	std::uint64_t accountId = 0;
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_accounts);
-		auto iter = m_orderAccounts.find(orderId);
-		if (m_orderAccounts.end() == iter)
+		const auto mIter = m_orderAccounts.find(orderId);
+		if (m_orderAccounts.end() == mIter)
 		{
 			return false;
 		}
-		accountId = iter->second;
+		accountId = mIter->second;
 	}
 	std::shared_ptr<trading::ITradingGateway> service = FindService(accountId);
 	if (nullptr == service)
@@ -284,11 +286,10 @@ bool CTradeService::Cancel(_TyStrategyId strategyId, _TyOrderId orderId)
 		return false;
 	}
 	trading::CSnapshot snapshot = service->Snapshot(accountId);
-	auto order = std::find_if(snapshot.m_orders.begin(), snapshot.m_orders.end(), [orderId, strategyId](const trading::COrder& row)
+	if (!container::with(snapshot.m_orders, orderId, [strategyId](const trading::COrder& row, _TyOrderId id)
 	{
-		return orderId == row.m_orderId && strategyId == row.m_strategyId;
-	});
-	if (snapshot.m_orders.end() == order)
+		return id == row.m_orderId && strategyId == row.m_strategyId;
+	}))
 	{
 		return false;
 	}
@@ -296,7 +297,7 @@ bool CTradeService::Cancel(_TyStrategyId strategyId, _TyOrderId orderId)
 	request.m_operation = trading::Operation::Cancel;
 	request.m_accountId = accountId;
 	request.m_orderId = orderId;
-	return service->Request(request, {}).Ok();
+	return service->Request(request, { }).Ok();
 }
 CAccountSnapshot CTradeService::GetAccount() const
 {
@@ -399,10 +400,10 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 			ids.erase(std::unique(ids.begin(), ids.end()), ids.end());
 			for (std::uint64_t id : ids)
 			{
-				auto account = m_accounts.find(id);
-				if (m_accounts.end() != account && nullptr != account->second.m_service)
+				const auto mIter = m_accounts.find(id);
+				if (m_accounts.end() != mIter && nullptr != mIter->second.m_service)
 				{
-					groups[account->second.m_service].emplace_back(id);
+					groups[mIter->second.m_service].emplace_back(id);
 				}
 				else
 				{
@@ -441,7 +442,7 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 						request::TradeAccountInfo* row = batch->m_rows.add_accounts();
 						row->set_account_id(id);
 						row->set_server_time_ms(reply.m_snapshot.m_nTime);
-						auto account = std::find_if(reply.m_snapshot.m_accounts.begin(), reply.m_snapshot.m_accounts.end(), [id](const trading::CAccount& v)
+						const auto vIter = std::find_if(reply.m_snapshot.m_accounts.begin(), reply.m_snapshot.m_accounts.end(), [id](const trading::CAccount& v)
 						{
 							return id == v.m_accountId;
 						});
@@ -450,7 +451,7 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 							row->set_error_code(static_cast<int>(reply.m_result.m_error));
 							row->set_error_message(reply.m_result.m_strMessage);
 						}
-						else if (reply.m_snapshot.m_accounts.end() == account || !reply.m_snapshot.m_bReady || !account->m_bConnected)
+						else if (reply.m_snapshot.m_accounts.end() == vIter || !reply.m_snapshot.m_bReady || !vIter->m_bConnected)
 						{
 							row->set_error_code(1203);
 							row->set_error_message("account not synchronized");
@@ -458,9 +459,9 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 						else
 						{
 							row->set_available_snapshot(true);
-							row->set_balance(account->m_nBalance);
-							row->set_frozen(account->m_nFrozen);
-							row->set_available(account->m_nBalance - account->m_nFrozen);
+							row->set_balance(vIter->m_nBalance);
+							row->set_frozen(vIter->m_nFrozen);
+							row->set_available(vIter->m_nBalance - vIter->m_nFrozen);
 						}
 					}
 					bDone = 0 == --batch->m_nRemaining;
@@ -537,7 +538,7 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 		}
 		return queued.Ok();
 	}
-	pDB::_TyDBPtr pDB = CDBEngine::InstanceRef().GetDBPtr(pDB::em_database::mysql);
+	db::_TyDBPtr pDB = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
 	if (nullptr == pDB)
 	{
 		net::SendError(req.GetConnectionId(), req, 1201, "账户数据库不可用");
@@ -546,13 +547,13 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 	// Persist audit entries on the same borrowed DB connection to avoid exhausting a small pool.
 	auto fail = [&](const std::string& message)
 	{
-		db->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) VALUES(" + std::to_string(accountId) + "," + utility::Utf8Literal(actor) + "," + utility::Utf8Literal(strAction) + "," + utility::Utf8Literal(message) + ")");
+		pDB->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) VALUES(" + std::to_string(accountId) + "," + utility::Utf8Literal(actor) + "," + utility::Utf8Literal(strAction) + "," + utility::Utf8Literal(message) + ")");
 		net::SendError(req.GetConnectionId(), req, 1202, message);
 		return false;
 	};
 	auto audit = [&]()
 	{
-		db->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) VALUES(" + std::to_string(accountId) + "," + utility::Utf8Literal(actor) + "," + utility::Utf8Literal(strAction) + ",'成功')");
+		pDB->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) VALUES(" + std::to_string(accountId) + "," + utility::Utf8Literal(actor) + "," + utility::Utf8Literal(strAction) + ",'成功')");
 	};
 	if ((!req.IsTradeAccount()) && (_TyRequest::TRADE_ACCOUNT_QUERY != req.GetType()))
 	{
@@ -561,12 +562,12 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 	if (_TyRequest::TRADE_ACCOUNT_QUERY == type)
 	{
 		std::unordered_map<std::uint64_t, std::uint32_t> counts;
-		const pDB::CTable& rows = pDB->ExecQuery("SELECT account_id,COUNT(*) FROM table_strategy GROUP BY account_id");
-		for (const pDB::_TyRow& row : rows.m_rows)
+		const db::CTable& rows = pDB->ExecQuery("SELECT account_id,COUNT(*) FROM table_strategy GROUP BY account_id");
+		for (const db::_TyRow& row : rows.m_rows)
 		{
 			std::uint64_t id = 0;
 			std::uint64_t count = 0;
-			if ((2 == row.size()) && ReadId(pDB::to_string(row[0]), id) && ReadId(pDB::to_string(row[1]), count))
+			if ((2 == row.size()) && ReadId(db::to_string(row[0]), id) && ReadId(db::to_string(row[1]), count))
 			{
 				counts.emplace(id, static_cast<std::uint32_t>(count));
 			}
@@ -602,26 +603,26 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 		{
 			return fail("新增账户失败，请检查账户名称是否重复");
 		}
-		const pDB::CTable& ids = pDB->ExecQuery("SELECT LAST_INSERT_ID()");
-		if (ids.m_rows.empty() || ids.m_rows.front().empty() || !ReadId(pDB::to_string(ids.m_rows.front().front()), accountId))
+		const db::CTable& ids = pDB->ExecQuery("SELECT LAST_INSERT_ID()");
+		if (ids.m_rows.empty() || ids.m_rows.front().empty() || !ReadId(db::to_string(ids.m_rows.front().front()), accountId))
 		{
 			return fail("无法获取新账户编号");
 		}
 		CTradeAccount account;
 		account.m_info.m_strName = info.m_strName;
 		account.m_info.m_type = TradeAccountType::Simulated;
-		runtime.m_info.m_nInitialBalance = info.m_nInitialBalance;
-		runtime.m_info.m_accountId = accountId;
-		runtime.m_info.m_strNumber = "SIM-" + std::to_string(accountId);
-		runtime.m_info.m_state = TradeAccountState::Disconnected;
-		runtime.m_info.m_nStrategyCount = 0;
-		runtime.m_info.m_strLastError.clear();
-		runtime.m_info.m_bDefault = false;
-		const db::CTable& times = db->ExecQuery("SELECT created_at,updated_at FROM table_trading_account WHERE account_id=" + std::to_string(accountId));
+		account.m_info.m_nInitialBalance = info.m_nInitialBalance;
+		account.m_info.m_accountId = accountId;
+		account.m_info.m_strNumber = "SIM-" + std::to_string(accountId);
+		account.m_info.m_state = TradeAccountState::Disconnected;
+		account.m_info.m_nStrategyCount = 0;
+		account.m_info.m_strLastError.clear();
+		account.m_info.m_bDefault = false;
+		const db::CTable& times = pDB->ExecQuery("SELECT created_at,updated_at FROM table_trading_account WHERE account_id=" + std::to_string(accountId));
 		if (!times.m_rows.empty() && (2 == times.m_rows.front().size()))
 		{
-			account.m_info.m_strCreatedAt = pDB::to_string(times.m_rows.front()[0]);
-			account.m_info.m_strUpdatedAt = pDB::to_string(times.m_rows.front()[1]);
+			account.m_info.m_strCreatedAt = db::to_string(times.m_rows.front()[0]);
+			account.m_info.m_strUpdatedAt = db::to_string(times.m_rows.front()[1]);
 		}
 		pDB.reset();
 		trading::CResult provision = m_counter->AddAccount(accountId, info.m_nInitialBalance);
@@ -630,17 +631,17 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 			net::SendError(req.GetConnectionId(), req, 1203, provision.m_strMessage);
 			return false;
 		}
-		pDB = CDBEngine::InstanceRef().GetDBPtr(pDB::em_database::mysql);
+		pDB = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
 		if (nullptr == pDB)
 		{
 			net::SendError(req.GetConnectionId(), req, 1201, "account database unavailable");
 			return false;
 		}
 		account.m_service = m_counter;
-		runtime.m_strAdapter = "simulated";
-		runtime.m_strBroker = "wind_simulated";
-		runtime.m_strSite = "default";
-		runtime.m_strExternalAccount = account.m_info.m_strNumber;
+		account.m_strAdapter = "simulated";
+		account.m_strBroker = "wind_simulated";
+		account.m_strSite = "default";
+		account.m_strExternalAccount = account.m_info.m_strNumber;
 		response.SetData(trading::protocol::AccountPayload(account.m_info));
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_accounts);
@@ -669,11 +670,11 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 				std::lock_guard<std::mutex> lock(m_mtx_accounts);
 				m_accounts.at(accountId).m_info.m_strName = req.GetExtraData("name");
 			}
-			const pDB::CTable& times = pDB->ExecQuery("SELECT updated_at FROM table_trading_account WHERE account_id=" + std::to_string(accountId));
+			const db::CTable& times = pDB->ExecQuery("SELECT updated_at FROM table_trading_account WHERE account_id=" + std::to_string(accountId));
 			if (!times.m_rows.empty() && !times.m_rows.front().empty())
 			{
 				std::lock_guard<std::mutex> lock(m_mtx_accounts);
-				m_accounts.at(accountId).m_info.m_strUpdatedAt = pDB::to_string(times.m_rows.front().front());
+				m_accounts.at(accountId).m_info.m_strUpdatedAt = db::to_string(times.m_rows.front().front());
 			}
 			audit();
 		}
@@ -725,20 +726,20 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 		{
 			request::TradeAccountLogList logs;
 			logs.set_account_id(accountId);
-			const pDB::CTable& table = pDB->ExecQuery("SELECT created_at,actor,action,message FROM table_account_log WHERE account_id=" + std::to_string(accountId) + " ORDER BY log_id DESC LIMIT 100");
+			const db::CTable& table = pDB->ExecQuery("SELECT created_at,actor,action,message FROM table_account_log WHERE account_id=" + std::to_string(accountId) + " ORDER BY log_id DESC LIMIT 100");
 			if (4 != table.m_columns.size())
 			{
 				return fail("无法读取账户日志");
 			}
-			for (const pDB::_TyRow& row : table.m_rows)
+			for (const db::_TyRow& row : table.m_rows)
 			{
 				if (4 == row.size())
 				{
 					request::TradeAccountLog* log = logs.add_logs();
-					log->set_time(pDB::to_string(row[0]));
-					log->set_actor(pDB::to_string(row[1]));
-					log->set_action(pDB::to_string(row[2]));
-					log->set_message(pDB::to_string(row[3]));
+					log->set_time(db::to_string(row[0]));
+					log->set_actor(db::to_string(row[1]));
+					log->set_action(db::to_string(row[2]));
+					log->set_message(db::to_string(row[3]));
 				}
 			}
 			response.SetData(logs);
@@ -755,12 +756,12 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 	}
 	return net::SendRequest(req.GetConnectionId(), response);
 }
-void CTradeService::SetPushHandler(std::function<void(const CRequest&)> handler)
+void CTradeService::SetPushHandler(_TyPushHandler&& handler)
 {
 	std::lock_guard<std::mutex> lock(m_mtx_accounts);
 	m_pushHandler = std::move(handler);
 }
-void CTradeService::SetAccountReadyHandler(std::function<void(std::uint64_t)> handler)
+void CTradeService::SetAccountReadyHandler(_TyAccountReadyHandler&& handler)
 {
 	std::lock_guard<std::mutex> lock(m_mtx_accounts);
 	m_accountReadyHandler = std::move(handler);
@@ -769,8 +770,8 @@ void CTradeService::OnEvent(const trading::CEvent& event)
 {
 	_TyOrderEventHandler orderHandler;
 	_TyTradeEventHandler tradeHandler;
-	std::function<void(const CRequest&)> pushHandler;
-	std::function<void(std::uint64_t)> readyHandler;
+	_TyPushHandler pushHandler;
+	_TyAccountReadyHandler readyHandler;
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_accounts);
 		if (0 != event.m_sequence)
@@ -786,14 +787,14 @@ void CTradeService::OnEvent(const trading::CEvent& event)
 		tradeHandler = m_tradeHandler;
 		pushHandler = m_pushHandler;
 		readyHandler = m_accountReadyHandler;
-		auto account = m_accounts.find(event.m_accountId);
-		if (m_accounts.end() == account)
+		const auto mIter = m_accounts.find(event.m_accountId);
+		if (m_accounts.end() == mIter)
 		{
 			return;
 		}
 		if (trading::EventKind::Session == event.m_kind)
 		{
-			account->second.m_info.m_state = event.m_account.m_bConnected ? TradeAccountState::Connected : TradeAccountState::Disconnected;
+			mIter->second.m_info.m_state = event.m_account.m_bConnected ? TradeAccountState::Connected : TradeAccountState::Disconnected;
 		}
 		if (trading::EventKind::Order == event.m_kind)
 		{
@@ -848,10 +849,10 @@ bool CTradeService::HandleTradingRequest(const CRequest& req)
 	std::shared_ptr<trading::ITradingGateway> service;
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_accounts);
-		auto account = m_accounts.find(operation.m_accountId);
-		if (m_accounts.end() != account)
+		const auto mIter = m_accounts.find(operation.m_accountId);
+		if (m_accounts.end() != mIter)
 		{
-			service = account->second.m_service;
+			service = mIter->second.m_service;
 		}
 	}
 	if (nullptr == service)
@@ -1018,11 +1019,11 @@ std::vector<trading::COrder> CTradeService::GetOrders(std::uint64_t accountId) c
 	std::shared_ptr<trading::ITradingGateway> service;
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_accounts);
-		auto account = m_accounts.find(accountId);
-		if (m_accounts.end() != account)
+		const auto mIter = m_accounts.find(accountId);
+		if (m_accounts.end() != mIter)
 		{
-			service = account->second.m_service;
+			service = mIter->second.m_service;
 		}
 	}
-	return nullptr == service ? std::vector<trading::COrder>{} : service->Snapshot(accountId).m_orders;
+	return nullptr == service ? std::vector<trading::COrder>{ } : service->Snapshot(accountId).m_orders;
 }

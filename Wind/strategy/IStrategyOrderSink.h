@@ -5,7 +5,7 @@
 
 class IStrategyOrderSink
 {
-  public:
+	public:
 	virtual ~IStrategyOrderSink() = default;
 
 	virtual COrderSubmitResult Submit(const COrderIntent& intent) = 0;

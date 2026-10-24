@@ -14,6 +14,8 @@ class CTradeService final : public IStrategyOrderSink, public ITradingSnapshotPr
 {
 	public:
 	using _TyOrderEventHandler = ITradeService::_TyOrderEventHandler;
+	using _TyPushHandler = std::function<void(const CRequest&)>;
+	using _TyAccountReadyHandler = std::function<void(std::uint64_t)>;
 	CTradeService() = default;
 	~CTradeService();
 	bool Initialize(CSession& session);
@@ -48,14 +50,14 @@ class CTradeService final : public IStrategyOrderSink, public ITradingSnapshotPr
 	void OnEvent(const trading::CEvent& event);
 
 	public:
-	void SetTradeEventHandler(_TyTradeEventHandler handler);
+	void SetTradeEventHandler(_TyTradeEventHandler&& handler);
 	std::vector<trading::COrder> GetOrders(std::uint64_t accountId) const;
-	void SetPushHandler(std::function<void(const CRequest&)> handler);
-	void SetAccountReadyHandler(std::function<void(std::uint64_t)> handler);
+	void SetPushHandler(_TyPushHandler&& handler);
+	void SetAccountReadyHandler(_TyAccountReadyHandler&& handler);
 
 	private:
-	std::function<void(const CRequest&)> m_pushHandler;
-	std::function<void(std::uint64_t)> m_accountReadyHandler;
+	_TyPushHandler m_pushHandler;
+	_TyAccountReadyHandler m_accountReadyHandler;
 	std::unordered_map<std::uint64_t, std::uint64_t> m_lastEventSequence;
 };
 #endif

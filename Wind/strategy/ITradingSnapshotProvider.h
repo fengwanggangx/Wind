@@ -5,7 +5,7 @@
 
 class ITradingSnapshotProvider
 {
-  public:
+	public:
 	virtual ~ITradingSnapshotProvider() = default;
 
 	virtual CPositionSnapshot GetPosition(const CSecurity& security) const = 0;

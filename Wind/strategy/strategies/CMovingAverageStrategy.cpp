@@ -14,7 +14,7 @@ bool CMovingAverageStrategy::Initialize(IStrategyContext& context, const CStrate
 		return false;
 	}
 	m_pContext = &context;
-	m_strategyId = config.m_router_id;
+	m_strategyId = config.m_strategyId;
 	m_shortWindow = shortWindow;
 	m_longWindow = longWindow;
 	return true;
@@ -117,14 +117,14 @@ void CMovingAverageStrategy::TryGenerateSignal(const _TyQuoteData& data)
 
 bool CMovingAverageStrategy::ReadWindow(const CStrategyConfig& config, const std::string& strName, std::size_t& window)
 {
-	auto iter = config.m_parameters.find(strName);
-	if (config.m_parameters.end() == iter)
+	const auto mIter = config.m_parameters.find(strName);
+	if (config.m_parameters.end() == mIter)
 	{
 		return true;
 	}
 	std::size_t parsedWindow = 0;
-	const char* pBegin = iter->second.data();
-	const char* pEnd = pBegin + iter->second.size();
+	const char* pBegin = mIter->second.data();
+	const char* pEnd = pBegin + mIter->second.size();
 	std::from_chars_result result = std::from_chars(pBegin, pEnd, parsedWindow);
 	if ((std::errc{ } != result.ec) || (pEnd != result.ptr) || (0 == parsedWindow))
 	{

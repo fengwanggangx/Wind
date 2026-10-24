@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-CStrategyContext::CStrategyContext(_TyStrategyId strategyId, std::uint64_t accountId, CStrategyEngine* pEngine, CTradeService* pSnapshotProvider) : m_strategyId(strategyId), m_accountId(accountId), m_pEngine(pEngine), m_pSnapshotProvider(pSnapshotProvider)
+CStrategyContext::CStrategyContext(_TyStrategyId strategyId, std::uint64_t accountId, CStrategyEngine* pEngine, CTradeService* pSnapshotProvider) : m_strategyId(strategyId), m_pEngine(pEngine), m_accountId(accountId), m_pSnapshotProvider(pSnapshotProvider)
 {
 }
 
@@ -20,7 +20,7 @@ COrderSubmitResult CStrategyContext::SubmitOrder(const COrderIntent& intent)
 	{
 		normalizedIntent.m_strategyId = m_strategyId;
 	}
-	if (m_strategyId != normalizedIntent.m_strategyId)
+	if (normalizedIntent.m_strategyId != m_strategyId)
 	{
 		return { false, false, 0, 0, "Order intent belongs to another strategy" };
 	}
@@ -47,7 +47,7 @@ CAccountSnapshot CStrategyContext::GetAccount() const
 {
 	if (nullptr == m_pSnapshotProvider)
 	{
-		return {};
+		return { };
 	}
 	return m_pSnapshotProvider->GetAccount(m_accountId);
 }

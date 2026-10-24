@@ -45,7 +45,7 @@ enum class LogLevel
 struct CStrategyConfig
 {
 	std::uint64_t m_accountId{ 1 };
-	_TyStrategyId m_router_id{ 0 };
+	_TyStrategyId m_strategyId{ 0 };
 	std::string m_strType;
 	std::string m_strName;
 	std::unordered_map<std::string, std::string> m_parameters;

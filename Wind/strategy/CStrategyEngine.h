@@ -60,7 +60,7 @@ struct CStrategyRuntime
 	std::atomic_bool m_bRemoving{ false };
 
 	std::mutex m_mtx_events;
-	std::condition_variable m_cv_idle;
+	std::condition_variable m_cvIdle;
 	std::deque<CStrategyEvent> m_events;
 	bool m_bScheduled{ false };
 	bool m_bExecutingCallback{ false };
@@ -107,20 +107,21 @@ enum class SignalState
 class CStrategyEngine final
 {
 	friend class CStrategyContext;
+	using _TyTradingPushHandler = std::function<void(const CRequest&)>;
 	using _TyStateHandler = std::function<void(const CStrategySnapshot&)>;
 
 	public:
 	explicit CStrategyEngine(CSession* pSession);
 	~CStrategyEngine();
-	CStrategyEngine(const CStrategyEngine&) = delete;
-	CStrategyEngine& operator=(const CStrategyEngine&) = delete;
+	CStrategyEngine(const CStrategyEngine& arg) = delete;
+	CStrategyEngine& operator=(const CStrategyEngine& arg) = delete;
 
 	public:
 	bool Initialize();
 	bool HandleStrategyRequest(const CRequest& req);
 	bool HandleTradingRequest(const CRequest& req);
 	void StopTrading();
-	void SetTradingPushHandler(std::function<void(const CRequest&)> handler);
+	void SetTradingPushHandler(_TyTradingPushHandler&& handler);
 	bool HandleAccountRequest(const CRequest& req, const std::string& actor);
 	std::unique_ptr<IStrategy> CreateStrategy(const std::string& strType) const;
 	bool CreateStrategy(const CStrategyConfig& config);
@@ -154,7 +155,7 @@ class CStrategyEngine final
 	bool DispatchEvent(CStrategyRuntime& runtime, CStrategyEvent& ev);
 	void HandleStrategyException(CStrategyRuntime& runtime, const std::string& strError);
 	void RouteMarketEvent(const std::string& strKey, CStrategyEvent&& ev);
-	void AddRoutes(const CStrategyConfig& confcfgig);
+	void AddRoutes(const CStrategyConfig& cfg);
 	void RemoveRoutes(const CStrategyConfig& cfg);
 	void SubscribeRequiredQuotes(const CStrategyConfig& cfg);
 	void UnsubscribeUnusedQuotes(const CStrategyConfig& cfg);
