@@ -19,133 +19,100 @@ namespace
 	using trading::protocol::WriteOrder;
 	using trading::protocol::WritePosition;
 	using trading::protocol::WriteTrade;
-	bool ReadId(const std::string& text, std::uint64_t& value)
+	bool ReadId(const std::string& strText, std::uint64_t& nValue)
 	{
-		std::from_chars_result result = std::from_chars(text.data(), text.data() + text.size(), value);
-		return !text.empty() && (std::errc() == result.ec) && (text.data() + text.size() == result.ptr) && (0 != value);
+		std::from_chars_result result = std::from_chars(strText.data(), strText.data() + strText.size(), nValue);
+		return !strText.empty() && (std::errc() == result.ec) && (strText.data() + strText.size() == result.ptr) && (0 != nValue);
 	}
-	bool ValidName(const std::string& name)
+
+	bool IsNameValid(const std::string& strName)
 	{
-		if (name.empty() || (128 < name.size()))
+		if (strName.empty() || (128 < strName.size()))
 		{
 			return false;
 		}
 		bool visible = false;
-		for (unsigned char value : name)
+		for (unsigned char v : strName)
 		{
-			if ((32 > value) || (127 == value))
+			if ((32 > v) || (127 == v))
 			{
 				return false;
 			}
-			visible = visible || (32 != value);
+			visible = visible || (32 != v);
 		}
 		return visible;
 	}
 } // namespace
+
 CTradeService::~CTradeService()
 {
 	Stop();
 }
+
 bool CTradeService::Initialize(CSession& session)
 {
-	db::_TyDBPtr database = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
-	if (nullptr == database)
+	db::_TyDBPtr pDB = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
+	if (nullptr == pDB)
 	{
 		m_strLastError = "Account database is unavailable";
 		return false;
 	}
-	// Runtime migration also handles installations with an existing table_strategy.
-	for (const std::string& sql : std::vector<std::string>{
-			 "CREATE TABLE IF NOT EXISTS table_trading_account(account_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,name VARCHAR(128) NOT NULL,account_type INT NOT NULL DEFAULT 0,initial_balance BIGINT NOT NULL,is_default TINYINT NOT NULL DEFAULT 0,created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,PRIMARY KEY(account_id),UNIQUE KEY uk_account_name(name)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin",
-			 "CREATE TABLE IF NOT EXISTS table_account_log(log_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,account_id BIGINT UNSIGNED NOT NULL,actor VARCHAR(128) NOT NULL,action VARCHAR(64) NOT NULL,message TEXT NOT NULL,created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,PRIMARY KEY(log_id),KEY idx_account_log(account_id,log_id)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
-			 "INSERT IGNORE INTO table_trading_account(account_id,name,initial_balance,is_default) VALUES(1,'默认模拟账户',1000000000,1)" })
+	const db::CTable& table = pDB->ExecQuery("SELECT account_id,name,account_type,initial_balance,created_at,updated_at,is_default,adapter_key,broker,site,external_account FROM table_trading_account ORDER BY account_id");
+	if (11 != table.m_columns.size())
 	{
-		if (0 != database->ExecUpdate(sql))
-		{
-			m_strLastError = "Account schema migration failed";
-			return false;
-		}
-	}
-	if (0 != database->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) SELECT 1,'system','account_add','默认模拟账户初始化' WHERE NOT EXISTS(SELECT 1 FROM table_account_log WHERE account_id=1 AND actor='system' AND action='account_add')"))
-	{
-		m_strLastError = "Default account audit initialization failed";
+		m_strLastError = "Failed to load trading accounts";
 		return false;
 	}
-	const db::CQueryTable& columns = database->ExecQuery("SHOW COLUMNS FROM table_strategy LIKE 'account_id'");
-	if (columns.m_rows.empty() && (0 != database->ExecUpdate("ALTER TABLE table_strategy ADD COLUMN account_id BIGINT UNSIGNED NOT NULL DEFAULT 1")))
-	{
-		m_strLastError = "Strategy account migration failed";
-		return false;
-	}
-	for (const auto& column : std::vector<std::pair<std::string, std::string>>{ { "adapter_key", "VARCHAR(64) NOT NULL DEFAULT ''" }, { "broker", "VARCHAR(128) NOT NULL DEFAULT 'wind_simulated'" }, { "site", "VARCHAR(128) NOT NULL DEFAULT 'default'" }, { "external_account", "VARCHAR(128) NOT NULL DEFAULT ''" } })
-	{
-		const db::CQueryTable& existing = database->ExecQuery("SHOW COLUMNS FROM table_trading_account LIKE '" + column.first + "'");
-		if (existing.m_rows.empty() && 0 != database->ExecUpdate("ALTER TABLE table_trading_account ADD COLUMN " + column.first + " " + column.second))
-		{
-			m_strLastError = "Account routing migration failed";
-			return false;
-		}
-	}
-	if (0 != database->ExecUpdate("UPDATE table_trading_account SET adapter_key=IF(account_type=0,'simulated','unconfigured') WHERE adapter_key=''"))
-	{
-		m_strLastError = "Account routing initialization failed";
-		return false;
-	}
-	const db::CQueryTable& table = database->ExecQuery("SELECT account_id,name,account_type,initial_balance,created_at,updated_at,is_default,adapter_key,broker,site,external_account FROM table_trading_account ORDER BY account_id");
-	if (table.m_rows.empty() || (11 != table.m_columns.size()))
-	{
-		m_strLastError = "Default account is missing";
-		return false;
-	}
-	for (const db::_TyQueryRow& row : table.m_rows)
+	for (const auto& row : table.m_rows)
 	{
 		if (11 != row.size())
 		{
 			return false;
 		}
-		CAccountRuntime runtime;
+		CTradeAccount account;
 		std::uint64_t id = 0;
 		std::uint64_t balance = 0;
-		if (!ReadId(db::QueryValueToString(row[0]), id) || !ReadId(db::QueryValueToString(row[3]), balance) || (static_cast<std::uint64_t>(std::numeric_limits<std::int64_t>::max()) < balance))
+		if (!ReadId(db::to_string(row[0]), id) || !ReadId(db::to_string(row[3]), balance) || (static_cast<std::uint64_t>(std::numeric_limits<std::int64_t>::max()) < balance))
 		{
 			m_strLastError = "Invalid trading account row";
 			return false;
 		}
-		runtime.m_info.set_account_id(id);
-		runtime.m_info.set_name(db::QueryValueToString(row[1]));
-		runtime.m_info.set_account_type("0" == db::QueryValueToString(row[2]) ? request::ACCOUNT_SIMULATED : request::ACCOUNT_PRODUCTION);
-		runtime.m_info.set_initial_balance(static_cast<std::int64_t>(balance));
-		runtime.m_info.set_created_at(db::QueryValueToString(row[4]));
-		runtime.m_info.set_updated_at(db::QueryValueToString(row[5]));
-		runtime.m_info.set_is_default("1" == db::QueryValueToString(row[6]));
-		runtime.m_info.set_number("SIM-" + std::to_string(id));
-		runtime.m_strAdapter = db::QueryValueToString(row[7]);
-		runtime.m_strBroker = db::QueryValueToString(row[8]);
-		runtime.m_strSite = db::QueryValueToString(row[9]);
-		runtime.m_strExternalAccount = db::QueryValueToString(row[10]);
-		if (runtime.m_strExternalAccount.empty())
+
+		account.m_info.m_accountId = id;
+		account.m_info.m_strName = db::to_string(row[1]);
+		account.m_info.m_type = "0" == db::to_string(row[2]) ? TradeAccountType::Simulated : TradeAccountType::Production;
+		account.m_info.m_nInitialBalance = static_cast<std::int64_t>(balance);
+		account.m_info.m_strCreatedAt = db::to_string(row[4]);
+		account.m_info.m_strUpdatedAt = db::to_string(row[5]);
+		account.m_info.m_bDefault = "1" == db::to_string(row[6]);
+		account.m_info.m_strNumber = "SIM-" + std::to_string(id);
+		account.m_strAdapter = db::to_string(row[7]);
+		account.m_strBroker = db::to_string(row[8]);
+		account.m_strSite = db::to_string(row[9]);
+		account.m_strExternalAccount = db::to_string(row[10]);
+		if (account.m_strExternalAccount.empty())
 		{
-			runtime.m_strExternalAccount = runtime.m_info.number();
+			account.m_strExternalAccount = account.m_info.m_strNumber;
 		}
-		if (runtime.m_info.is_default() && (request::ACCOUNT_SIMULATED == runtime.m_info.account_type()))
+		if (account.m_info.m_bDefault && (TradeAccountType::Simulated == account.m_info.m_type))
 		{
 
-			runtime.m_info.set_state(request::ACCOUNT_CONNECTED);
-			if (0 != database->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) VALUES(" + std::to_string(id) + ",'system','account_connect','Wind 启动时连接')"))
+			account.m_info.m_state = TradeAccountState::Connected;
+			if (0 != pDB->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) VALUES(" + std::to_string(id) + ",'system','account_connect','Wind 启动时连接')"))
 			{
 				m_strLastError = "Default account connection audit failed";
 				return false;
 			}
 		}
-		m_accounts.emplace(id, std::move(runtime));
+		m_accounts.emplace(id, std::move(account));
 	}
 	std::vector<trading::CAccountRoute> routes;
 	for (const auto& item : m_accounts)
 	{
-		routes.push_back({ item.first, item.second.m_info.initial_balance(), item.second.m_strAdapter });
+		routes.push_back({ item.first, item.second.m_info.m_nInitialBalance, item.second.m_strAdapter });
 	}
 	std::string strRulesPath = ini::CINIHandler::InstanceRef().GetValue(ini::Config::System, "Trade", "rules_path", std::string());
-	database.reset();
+	pDB.reset();
 	trading::CResult result = trading::InitializeCounter(routes, strRulesPath, session, m_counter);
 	if (!result.Ok())
 	{
@@ -164,7 +131,7 @@ bool CTradeService::Initialize(CSession& session)
 			continue;
 		}
 		item.second.m_service = m_counter;
-		if (item.second.m_info.is_default())
+		if (item.second.m_info.m_bDefault)
 		{
 			trading::CRequest request;
 			request.m_operation = trading::Operation::Connect;
@@ -190,7 +157,7 @@ void CTradeService::Stop()
 	std::lock_guard<std::mutex> lock(m_mtx_accounts);
 	for (auto& item : m_accounts)
 	{
-		item.second.m_info.set_state(request::ACCOUNT_DISCONNECTED);
+		item.second.m_info.m_state = TradeAccountState::Disconnected;
 	}
 }
 void CTradeService::SetOrderEventHandler(_TyOrderEventHandler&& handler)
@@ -207,7 +174,7 @@ std::shared_ptr<trading::ITradingGateway> CTradeService::FindService(std::uint64
 {
 	std::lock_guard<std::mutex> lock(m_mtx_accounts);
 	const auto mIter = m_accounts.find(accountId);
-	return ((m_accounts.end() == mIter) || (request::ACCOUNT_CONNECTED != mIter->second.m_info.state())) ? nullptr : mIter->second.m_service;
+	return ((m_accounts.end() == mIter) || (TradeAccountState::Connected != mIter->second.m_info.m_state)) ? nullptr : mIter->second.m_service;
 }
 bool CTradeService::HasAccount(std::uint64_t accountId) const
 {
@@ -226,7 +193,7 @@ bool CTradeService::BeginStrategy(std::uint64_t accountId, _TyStrategyId strateg
 	}
 	std::lock_guard<std::mutex> lock(m_mtx_accounts);
 	const auto mIter = m_accounts.find(accountId);
-	if ((m_accounts.end() == mIter) || (request::ACCOUNT_CONNECTED != mIter->second.m_info.state()))
+	if ((m_accounts.end() == mIter) || (TradeAccountState::Connected != mIter->second.m_info.m_state))
 	{
 		return false;
 	}
@@ -474,9 +441,9 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 						request::TradeAccountInfo* row = batch->m_rows.add_accounts();
 						row->set_account_id(id);
 						row->set_server_time_ms(reply.m_snapshot.m_nTime);
-						auto account = std::find_if(reply.m_snapshot.m_accounts.begin(), reply.m_snapshot.m_accounts.end(), [id](const trading::CAccount& value)
+						auto account = std::find_if(reply.m_snapshot.m_accounts.begin(), reply.m_snapshot.m_accounts.end(), [id](const trading::CAccount& v)
 						{
-							return id == value.m_accountId;
+							return id == v.m_accountId;
 						});
 						if (!reply.m_result.Ok())
 						{
@@ -560,7 +527,7 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 			if (reply.m_result.Ok())
 			{
 				std::lock_guard<std::mutex> lock(m_mtx_accounts);
-				response.SetData(m_accounts.at(accountId).m_info);
+				response.SetData(trading::protocol::AccountPayload(m_accounts.at(accountId).m_info));
 			}
 			net::SendRequest(connection, response);
 		});
@@ -570,8 +537,8 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 		}
 		return queued.Ok();
 	}
-	db::_TyDBPtr database = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
-	if (nullptr == database)
+	pDB::_TyDBPtr pDB = CDBEngine::InstanceRef().GetDBPtr(pDB::em_database::mysql);
+	if (nullptr == pDB)
 	{
 		net::SendError(req.GetConnectionId(), req, 1201, "账户数据库不可用");
 		return false;
@@ -579,13 +546,13 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 	// Persist audit entries on the same borrowed DB connection to avoid exhausting a small pool.
 	auto fail = [&](const std::string& message)
 	{
-		database->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) VALUES(" + std::to_string(accountId) + "," + utility::Utf8Literal(actor) + "," + utility::Utf8Literal(strAction) + "," + utility::Utf8Literal(message) + ")");
+		db->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) VALUES(" + std::to_string(accountId) + "," + utility::Utf8Literal(actor) + "," + utility::Utf8Literal(strAction) + "," + utility::Utf8Literal(message) + ")");
 		net::SendError(req.GetConnectionId(), req, 1202, message);
 		return false;
 	};
 	auto audit = [&]()
 	{
-		database->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) VALUES(" + std::to_string(accountId) + "," + utility::Utf8Literal(actor) + "," + utility::Utf8Literal(strAction) + ",'成功')");
+		db->ExecUpdate("INSERT INTO table_account_log(account_id,actor,action,message) VALUES(" + std::to_string(accountId) + "," + utility::Utf8Literal(actor) + "," + utility::Utf8Literal(strAction) + ",'成功')");
 	};
 	if ((!req.IsTradeAccount()) && (_TyRequest::TRADE_ACCOUNT_QUERY != req.GetType()))
 	{
@@ -594,12 +561,12 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 	if (_TyRequest::TRADE_ACCOUNT_QUERY == type)
 	{
 		std::unordered_map<std::uint64_t, std::uint32_t> counts;
-		const db::CQueryTable& rows = database->ExecQuery("SELECT account_id,COUNT(*) FROM table_strategy GROUP BY account_id");
-		for (const db::_TyQueryRow& row : rows.m_rows)
+		const pDB::CTable& rows = pDB->ExecQuery("SELECT account_id,COUNT(*) FROM table_strategy GROUP BY account_id");
+		for (const pDB::_TyRow& row : rows.m_rows)
 		{
 			std::uint64_t id = 0;
 			std::uint64_t count = 0;
-			if ((2 == row.size()) && ReadId(db::QueryValueToString(row[0]), id) && ReadId(db::QueryValueToString(row[1]), count))
+			if ((2 == row.size()) && ReadId(pDB::to_string(row[0]), id) && ReadId(pDB::to_string(row[1]), count))
 			{
 				counts.emplace(id, static_cast<std::uint32_t>(count));
 			}
@@ -614,7 +581,7 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 			for (const auto& item : m_accounts)
 			{
 				request::TradeAccountRecord* info = list.add_accounts();
-				info->CopyFrom(item.second.m_info);
+				*info = trading::protocol::AccountPayload(item.second.m_info);
 				info->set_strategy_count(counts[item.first]);
 			}
 		}
@@ -622,62 +589,62 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 	}
 	else if (_TyRequest::TRADE_ACCOUNT_ADD == type)
 	{
-		request::TradeAccountRecord info;
-		info.set_name(req.GetExtraData("name"));
-		info.set_account_type(request::ACCOUNT_SIMULATED);
+		CTradeAccountInfo info;
+		info.m_strName = req.GetExtraData("name");
+		info.m_type = TradeAccountType::Simulated;
 		std::int64_t nBalance = 0;
-		if (!utility::to_number(req.GetExtraData("initial_balance"), nBalance) || !ValidName(info.name()) || (0 >= nBalance))
+		if (!utility::to_number(req.GetExtraData("initial_balance"), nBalance) || !IsNameValid(info.m_strName) || (0 >= nBalance))
 		{
 			return fail("账户名称或初始资金无效，当前仅支持模拟账户");
 		}
-		info.set_initial_balance(nBalance);
-		if (0 != database->ExecUpdate("INSERT INTO table_trading_account(name,initial_balance) VALUES(" + utility::Utf8Literal(info.name()) + "," + std::to_string(info.initial_balance()) + ")"))
+		info.m_nInitialBalance = nBalance;
+		if (0 != pDB->ExecUpdate("INSERT INTO table_trading_account(name,initial_balance) VALUES(" + utility::Utf8Literal(info.m_strName) + "," + std::to_string(info.m_nInitialBalance) + ")"))
 		{
 			return fail("新增账户失败，请检查账户名称是否重复");
 		}
-		const db::CQueryTable& ids = database->ExecQuery("SELECT LAST_INSERT_ID()");
-		if (ids.m_rows.empty() || ids.m_rows.front().empty() || !ReadId(db::QueryValueToString(ids.m_rows.front().front()), accountId))
+		const pDB::CTable& ids = pDB->ExecQuery("SELECT LAST_INSERT_ID()");
+		if (ids.m_rows.empty() || ids.m_rows.front().empty() || !ReadId(pDB::to_string(ids.m_rows.front().front()), accountId))
 		{
 			return fail("无法获取新账户编号");
 		}
-		CAccountRuntime runtime;
-		runtime.m_info.set_name(info.name());
-		runtime.m_info.set_account_type(request::ACCOUNT_SIMULATED);
-		runtime.m_info.set_initial_balance(info.initial_balance());
-		runtime.m_info.set_account_id(accountId);
-		runtime.m_info.set_number("SIM-" + std::to_string(accountId));
-		runtime.m_info.set_state(request::ACCOUNT_DISCONNECTED);
-		runtime.m_info.set_strategy_count(0);
-		runtime.m_info.clear_last_error();
-		runtime.m_info.set_is_default(false);
-		const db::CQueryTable& times = database->ExecQuery("SELECT created_at,updated_at FROM table_trading_account WHERE account_id=" + std::to_string(accountId));
+		CTradeAccount account;
+		account.m_info.m_strName = info.m_strName;
+		account.m_info.m_type = TradeAccountType::Simulated;
+		runtime.m_info.m_nInitialBalance = info.m_nInitialBalance;
+		runtime.m_info.m_accountId = accountId;
+		runtime.m_info.m_strNumber = "SIM-" + std::to_string(accountId);
+		runtime.m_info.m_state = TradeAccountState::Disconnected;
+		runtime.m_info.m_nStrategyCount = 0;
+		runtime.m_info.m_strLastError.clear();
+		runtime.m_info.m_bDefault = false;
+		const db::CTable& times = db->ExecQuery("SELECT created_at,updated_at FROM table_trading_account WHERE account_id=" + std::to_string(accountId));
 		if (!times.m_rows.empty() && (2 == times.m_rows.front().size()))
 		{
-			runtime.m_info.set_created_at(db::QueryValueToString(times.m_rows.front()[0]));
-			runtime.m_info.set_updated_at(db::QueryValueToString(times.m_rows.front()[1]));
+			account.m_info.m_strCreatedAt = pDB::to_string(times.m_rows.front()[0]);
+			account.m_info.m_strUpdatedAt = pDB::to_string(times.m_rows.front()[1]);
 		}
-		database.reset();
-		trading::CResult provision = m_counter->AddAccount(accountId, info.initial_balance());
+		pDB.reset();
+		trading::CResult provision = m_counter->AddAccount(accountId, info.m_nInitialBalance);
 		if (!provision.Ok())
 		{
 			net::SendError(req.GetConnectionId(), req, 1203, provision.m_strMessage);
 			return false;
 		}
-		database = CDBEngine::InstanceRef().GetDBPtr(db::em_database::mysql);
-		if (nullptr == database)
+		pDB = CDBEngine::InstanceRef().GetDBPtr(pDB::em_database::mysql);
+		if (nullptr == pDB)
 		{
 			net::SendError(req.GetConnectionId(), req, 1201, "account database unavailable");
 			return false;
 		}
-		runtime.m_service = m_counter;
+		account.m_service = m_counter;
 		runtime.m_strAdapter = "simulated";
 		runtime.m_strBroker = "wind_simulated";
 		runtime.m_strSite = "default";
-		runtime.m_strExternalAccount = runtime.m_info.number();
-		response.SetData(runtime.m_info);
+		runtime.m_strExternalAccount = account.m_info.m_strNumber;
+		response.SetData(trading::protocol::AccountPayload(account.m_info));
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_accounts);
-			m_accounts.emplace(accountId, std::move(runtime));
+			m_accounts.emplace(accountId, std::move(account));
 		}
 		audit();
 	}
@@ -690,23 +657,23 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 		}
 		if (_TyRequest::TRADE_ACCOUNT_MODIFY == type)
 		{
-			if (!ValidName(req.GetExtraData("name")))
+			if (!IsNameValid(req.GetExtraData("name")))
 			{
 				return fail("账户名称无效");
 			}
-			if (0 != database->ExecUpdate("UPDATE table_trading_account SET name=" + utility::Utf8Literal(req.GetExtraData("name")) + " WHERE account_id=" + std::to_string(accountId)))
+			if (0 != pDB->ExecUpdate("UPDATE table_trading_account SET name=" + utility::Utf8Literal(req.GetExtraData("name")) + " WHERE account_id=" + std::to_string(accountId)))
 			{
 				return fail("修改失败，请检查名称是否重复");
 			}
 			{
 				std::lock_guard<std::mutex> lock(m_mtx_accounts);
-				m_accounts.at(accountId).m_info.set_name(req.GetExtraData("name"));
+				m_accounts.at(accountId).m_info.m_strName = req.GetExtraData("name");
 			}
-			const db::CQueryTable& times = database->ExecQuery("SELECT updated_at FROM table_trading_account WHERE account_id=" + std::to_string(accountId));
+			const pDB::CTable& times = pDB->ExecQuery("SELECT updated_at FROM table_trading_account WHERE account_id=" + std::to_string(accountId));
 			if (!times.m_rows.empty() && !times.m_rows.front().empty())
 			{
 				std::lock_guard<std::mutex> lock(m_mtx_accounts);
-				m_accounts.at(accountId).m_info.set_updated_at(db::QueryValueToString(times.m_rows.front().front()));
+				m_accounts.at(accountId).m_info.m_strUpdatedAt = pDB::to_string(times.m_rows.front().front());
 			}
 			audit();
 		}
@@ -715,9 +682,9 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 			std::shared_ptr<trading::ITradingGateway> service;
 			{
 				std::lock_guard<std::mutex> lock(m_mtx_accounts);
-				CAccountRuntime& runtime = m_accounts.at(accountId);
-				service = runtime.m_service;
-				if ((_TyRequest::TRADE_ACCOUNT_DISCONNECT == type) && !runtime.m_runningStrategies.empty())
+				CTradeAccount& account = m_accounts.at(accountId);
+				service = account.m_service;
+				if ((_TyRequest::TRADE_ACCOUNT_DISCONNECT == type) && !account.m_runningStrategies.empty())
 				{
 					return fail("账户有运行策略，请先停止");
 				}
@@ -730,7 +697,7 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 			operation.m_operation = _TyRequest::TRADE_ACCOUNT_CONNECT == type ? trading::Operation::Connect : trading::Operation::Disconnect;
 			operation.m_requestId = req.GetId();
 			operation.m_accountId = accountId;
-			database.reset();
+			pDB.reset();
 			CRequest original = req;
 			trading::CResult queued = service->Request(operation, [this, original, accountId](const trading::CReply& reply)
 			{
@@ -744,7 +711,7 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 				response.SetType(original.GetType());
 				{
 					std::lock_guard<std::mutex> lock(m_mtx_accounts);
-					response.SetData(m_accounts.at(accountId).m_info);
+					response.SetData(trading::protocol::AccountPayload(m_accounts.at(accountId).m_info));
 				}
 				net::SendRequest(original.GetConnectionId(), response);
 			});
@@ -758,20 +725,20 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 		{
 			request::TradeAccountLogList logs;
 			logs.set_account_id(accountId);
-			const db::CQueryTable& table = database->ExecQuery("SELECT created_at,actor,action,message FROM table_account_log WHERE account_id=" + std::to_string(accountId) + " ORDER BY log_id DESC LIMIT 100");
+			const pDB::CTable& table = pDB->ExecQuery("SELECT created_at,actor,action,message FROM table_account_log WHERE account_id=" + std::to_string(accountId) + " ORDER BY log_id DESC LIMIT 100");
 			if (4 != table.m_columns.size())
 			{
 				return fail("无法读取账户日志");
 			}
-			for (const db::_TyQueryRow& row : table.m_rows)
+			for (const pDB::_TyRow& row : table.m_rows)
 			{
 				if (4 == row.size())
 				{
 					request::TradeAccountLog* log = logs.add_logs();
-					log->set_time(db::QueryValueToString(row[0]));
-					log->set_actor(db::QueryValueToString(row[1]));
-					log->set_action(db::QueryValueToString(row[2]));
-					log->set_message(db::QueryValueToString(row[3]));
+					log->set_time(pDB::to_string(row[0]));
+					log->set_actor(pDB::to_string(row[1]));
+					log->set_action(pDB::to_string(row[2]));
+					log->set_message(pDB::to_string(row[3]));
 				}
 			}
 			response.SetData(logs);
@@ -784,7 +751,7 @@ bool CTradeService::HandleAccountRequest(const CRequest& req, const std::string&
 	if ((_TyRequest::TRADE_ACCOUNT_MODIFY == type) || (_TyRequest::TRADE_ACCOUNT_CONNECT == type) || (_TyRequest::TRADE_ACCOUNT_DISCONNECT == type))
 	{
 		std::lock_guard<std::mutex> lock(m_mtx_accounts);
-		response.SetData(m_accounts.at(accountId).m_info);
+		response.SetData(trading::protocol::AccountPayload(m_accounts.at(accountId).m_info));
 	}
 	return net::SendRequest(req.GetConnectionId(), response);
 }
@@ -826,7 +793,7 @@ void CTradeService::OnEvent(const trading::CEvent& event)
 		}
 		if (trading::EventKind::Session == event.m_kind)
 		{
-			account->second.m_info.set_state(event.m_account.m_bConnected ? request::ACCOUNT_CONNECTED : request::ACCOUNT_DISCONNECTED);
+			account->second.m_info.m_state = event.m_account.m_bConnected ? TradeAccountState::Connected : TradeAccountState::Disconnected;
 		}
 		if (trading::EventKind::Order == event.m_kind)
 		{
@@ -855,7 +822,7 @@ void CTradeService::OnEvent(const trading::CEvent& event)
 	}
 	if (nullptr != pushHandler)
 	{
-		request::TradeAccountRecord account;
+		CTradeAccountInfo account;
 		if (trading::EventKind::Session == event.m_kind)
 		{
 			std::lock_guard<std::mutex> lock(m_mtx_accounts);

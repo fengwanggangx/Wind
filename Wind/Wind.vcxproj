@@ -180,6 +180,7 @@
     <ClInclude Include="request\request.pb.h" />
 	<ClInclude Include="strategy\CStrategyContext.h" />
 	<ClInclude Include="strategy\CStrategyEngine.h" />
+	<ClInclude Include="strategy\AccountInfo.h" />
 	<ClInclude Include="strategy\CTradeService.h" />
     <ClInclude Include="counter\CInProcessGateway.h" />
     <ClInclude Include="counter\CStorager.h" />

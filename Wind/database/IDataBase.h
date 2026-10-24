@@ -27,7 +27,7 @@ namespace db
 
 			virtual int ExecUpdate(const std::string& strSQL) = 0;
 			virtual int ExecScript(const std::string& strSQL);
-			virtual const CQueryTable& ExecQuery(const std::string& strSQL) = 0;
+			virtual const CTable& ExecQuery(const std::string& strSQL) = 0;
 
 			int ExecSqlFile(const std::filesystem::path& filePath);
 

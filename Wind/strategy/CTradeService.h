@@ -1,8 +1,8 @@
 #ifndef WIND_STRATEGY_CTRADESERVICE_H
 #define WIND_STRATEGY_CTRADESERVICE_H
-#include "../request/request.pb.h"
-#include "ITradeService.h"
 #include "../counter/CounterSetup.h"
+#include "AccountInfo.h"
+#include "ITradeService.h"
 #include <memory>
 #include <mutex>
 #include <unordered_map>
@@ -35,17 +35,10 @@ class CTradeService final : public IStrategyOrderSink, public ITradingSnapshotPr
 	const std::string& GetLastError() const;
 
 	private:
-	struct CAccountRuntime
-	{
-		request::TradeAccountRecord m_info;
-		std::string m_strAdapter, m_strBroker, m_strSite, m_strExternalAccount;
-		std::shared_ptr<trading::ITradingGateway> m_service;
-		std::unordered_set<_TyStrategyId> m_runningStrategies;
-	};
 	std::shared_ptr<trading::ITradingGateway> FindService(std::uint64_t accountId) const;
 	mutable std::mutex m_mtx_accounts;
 	std::mutex m_mtx_operations;
-	std::unordered_map<std::uint64_t, CAccountRuntime> m_accounts;
+	std::unordered_map<std::uint64_t, CTradeAccount> m_accounts;
 	std::unordered_map<_TyOrderId, std::uint64_t> m_orderAccounts;
 	_TyOrderEventHandler m_orderHandler;
 	std::string m_strLastError;

@@ -60,9 +60,9 @@ namespace db
 		return sqlite3_exec(static_cast<sqlite3*>(m_pDB), strSQL.c_str(), nullptr, nullptr, nullptr);
 	}
 
-	const CQueryTable& CSQLite3::ExecQuery(const std::string& strSQL)
+	const CTable& CSQLite3::ExecQuery(const std::string& strSQL)
 	{
-		thread_local CQueryTable table;
+		thread_local CTable table;
 		table.Clear();
 		if (nullptr == m_pDB)
 		{
@@ -82,7 +82,7 @@ namespace db
 		for (std::size_t i = 0; i < nCols; ++i)
 		{
 			table.m_columns.emplace_back();
-			CQueryColumn& column = table.m_columns.back();
+			CColumn& column = table.m_columns.back();
 			column.m_uId = i;
 			column.m_strName = sqlite3_column_name(statement.get(), i);
 		}
@@ -90,7 +90,7 @@ namespace db
 		while (SQLITE_ROW == sqlite3_step(statement.get()))
 		{
 			table.m_rows.emplace_back();
-			_TyQueryRow& row = table.m_rows.back();
+			_TyRow& row = table.m_rows.back();
 			row.reserve(nCols);
 			for (std::size_t i = 0; i < nCols; ++i)
 			{

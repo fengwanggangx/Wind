@@ -9,10 +9,10 @@
 
 namespace db
 {
-	using _TyQueryValue = std::variant<std::monostate, std::int64_t, double, std::string, std::vector<std::uint8_t>>;
-	using _TyQueryRow = std::vector<_TyQueryValue>;
+	using _TyCell = std::variant<std::monostate, std::int64_t, double, std::string, std::vector<std::uint8_t>>;
+	using _TyRow = std::vector<_TyCell>;
 
-	struct CQueryColumn
+	struct CColumn
 	{
 		unsigned int m_uId{ 0 };
 		std::string m_strName;
@@ -20,11 +20,11 @@ namespace db
 		int m_nDecimal{ -1 };
 	};
 
-	class CQueryTable final
+	class CTable final
 	{
 	  public:
-		using _TyColumns = std::vector<CQueryColumn>;
-		using _TyRows = std::vector<_TyQueryRow>;
+		using _TyColumns = std::vector<CColumn>;
+		using _TyRows = std::vector<_TyRow>;
 
 		void Clear()
 		{
@@ -41,7 +41,7 @@ namespace db
 		_TyRows m_rows;
 	};
 
-	inline std::string QueryValueToString(const _TyQueryValue& value)
+	inline std::string to_string(const _TyCell& value)
 	{
 		if (const std::string* pValue = std::get_if<std::string>(&value))
 		{

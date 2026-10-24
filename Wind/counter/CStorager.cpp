@@ -11,7 +11,7 @@ namespace trading
 		}
 		bool Query(db::IDataBase& database, const std::string& strSql, std::vector<std::vector<std::string>>& rows)
 		{
-			const db::CQueryTable& table = database.ExecQuery(strSql);
+			const db::CTable& table = database.ExecQuery(strSql);
 			if (table.m_columns.empty())
 			{
 				return false;
@@ -24,7 +24,7 @@ namespace trading
 				values.reserve(row.size());
 				for (const auto& value : row)
 				{
-					values.emplace_back(db::QueryValueToString(value));
+					values.emplace_back(db::to_string(value));
 				}
 				rows.emplace_back(std::move(values));
 			}

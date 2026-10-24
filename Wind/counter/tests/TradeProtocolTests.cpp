@@ -32,8 +32,26 @@ int main()
 		event.m_trade.m_strSecurity = "600000.SSE";
 		event.m_position.m_accountId = 7;
 		event.m_position.m_strSecurity = "600000.SSE";
-		request::TradeAccountRecord account;
-		account.set_account_id(7);
+		CTradeAccountInfo account;
+		account.m_accountId = 7;
+		account.m_strName = "test account";
+		account.m_type = TradeAccountType::Production;
+		account.m_nInitialBalance = 123456;
+		account.m_state = TradeAccountState::Connected;
+		account.m_strNumber = "SIM-7";
+		account.m_nStrategyCount = 3;
+		account.m_strLastError = "last error";
+		account.m_strCreatedAt = "2026-10-24 09:00:00";
+		account.m_strUpdatedAt = "2026-10-24 10:00:00";
+		account.m_bDefault = true;
+		request::TradeAccountRecord payload = trading::protocol::AccountPayload(account);
+		Check(7 == payload.account_id() && "test account" == payload.name() && request::ACCOUNT_PRODUCTION == payload.account_type() && 123456 == payload.initial_balance(), "account identity payload");
+		Check(request::ACCOUNT_CONNECTED == payload.state() && "SIM-7" == payload.number() && 3 == payload.strategy_count() && "last error" == payload.last_error(), "account runtime payload");
+		Check(account.m_strCreatedAt == payload.created_at() && account.m_strUpdatedAt == payload.updated_at() && payload.is_default(), "account metadata payload");
+		CTradeAccountInfo defaults;
+		Check(request::ACCOUNT_SIMULATED == trading::protocol::AccountPayload(defaults).account_type() && request::ACCOUNT_DISCONNECTED == trading::protocol::AccountPayload(defaults).state(), "account defaults payload");
+		defaults.m_state = TradeAccountState::Error;
+		Check(request::ACCOUNT_ERROR == trading::protocol::AccountPayload(defaults).state(), "account error state payload");
 		for (trading::EventKind kind : { trading::EventKind::Session, trading::EventKind::Order, trading::EventKind::Trade, trading::EventKind::Funds, trading::EventKind::Position })
 		{
 			event.m_kind = kind;
@@ -59,6 +77,7 @@ int main()
 				break;
 			case trading::EventKind::Session:
 				Check(_TyRequest::TRADE_ACCOUNT_STATE_PUSH == push.GetType(), "session push type");
+				Check(payload.SerializeAsString() == push.GetData().account().SerializeAsString(), "account session payload");
 				break;
 			}
 		}

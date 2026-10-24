@@ -137,7 +137,34 @@ namespace trading::protocol
 		trade.m_tradeTimeMs = event.m_trade.m_nTime;
 		return trade;
 	}
-	::CRequest Push(const CEvent& event, const request::TradeAccountRecord& account)
+	request::TradeAccountRecord AccountPayload(const CTradeAccountInfo& info)
+	{
+		request::TradeAccountRecord payload;
+		payload.set_account_id(info.m_accountId);
+		payload.set_name(info.m_strName);
+		payload.set_account_type(TradeAccountType::Simulated == info.m_type ? request::ACCOUNT_SIMULATED : request::ACCOUNT_PRODUCTION);
+		payload.set_initial_balance(info.m_nInitialBalance);
+		switch (info.m_state)
+		{
+		case TradeAccountState::Disconnected:
+			payload.set_state(request::ACCOUNT_DISCONNECTED);
+			break;
+		case TradeAccountState::Connected:
+			payload.set_state(request::ACCOUNT_CONNECTED);
+			break;
+		case TradeAccountState::Error:
+			payload.set_state(request::ACCOUNT_ERROR);
+			break;
+		}
+		payload.set_number(info.m_strNumber);
+		payload.set_strategy_count(info.m_nStrategyCount);
+		payload.set_last_error(info.m_strLastError);
+		payload.set_created_at(info.m_strCreatedAt);
+		payload.set_updated_at(info.m_strUpdatedAt);
+		payload.set_is_default(info.m_bDefault);
+		return payload;
+	}
+	::CRequest Push(const CEvent& event, const CTradeAccountInfo& account)
 	{
 		::CRequest push;
 		push.SetId(0);
@@ -148,7 +175,7 @@ namespace trading::protocol
 		{
 		case trading::EventKind::Session:
 			push.SetType(_TyRequest::TRADE_ACCOUNT_STATE_PUSH);
-			push.SetData(account);
+			push.SetData(AccountPayload(account));
 			break;
 		case trading::EventKind::Order:
 		{

@@ -185,13 +185,13 @@ namespace
 		return std::string(buffer.GetString(), buffer.GetSize());
 	}
 
-	bool FillStrategyInfo(const db::_TyQueryRow& values, request::StrategyInfo& info)
+	bool FillStrategyInfo(const db::_TyRow& values, request::StrategyInfo& info)
 	{
 		std::vector<std::string> row;
 		row.reserve(values.size());
-		for (const db::_TyQueryValue& value : values)
+		for (const db::_TyCell& value : values)
 		{
-			row.emplace_back(db::QueryValueToString(value));
+			row.emplace_back(db::to_string(value));
 		}
 		std::uint64_t id = 0;
 		std::uint64_t queueLimit = 0;
@@ -387,9 +387,9 @@ bool CStrategyEngine::AddStrategy(const CRequest& req)
 		net::SendError(req.GetConnectionId(), req, 1105, "failed to add strategy");
 		return false;
 	}
-	const db::CQueryTable& idTable = pDB->ExecQuery("SELECT LAST_INSERT_ID()");
+	const db::CTable& idTable = pDB->ExecQuery("SELECT LAST_INSERT_ID()");
 	std::uint64_t id = 0;
-	if (idTable.m_rows.empty() || idTable.m_rows.front().empty() || !ParseUnsigned(db::QueryValueToString(idTable.m_rows.front().front()), id))
+	if (idTable.m_rows.empty() || idTable.m_rows.front().empty() || !ParseUnsigned(db::to_string(idTable.m_rows.front().front()), id))
 	{
 		net::SendError(req.GetConnectionId(), req, 1106, "failed to obtain strategy id");
 		return false;
@@ -426,9 +426,9 @@ bool CStrategyEngine::ModifyStrategy(const CRequest& req)
 			net::SendError(req.GetConnectionId(), req, 1104, "strategy database is unavailable");
 			return false;
 		}
-		const db::CQueryTable& account = lookup->ExecQuery("SELECT account_id FROM table_strategy WHERE strategy_id=" + std::to_string(info.strategy_id()));
+		const db::CTable& account = lookup->ExecQuery("SELECT account_id FROM table_strategy WHERE strategy_id=" + std::to_string(info.strategy_id()));
 		std::uint64_t accountId = 0;
-		if (account.m_rows.empty() || account.m_rows.front().empty() || !ParseUnsigned(db::QueryValueToString(account.m_rows.front().front()), accountId))
+		if (account.m_rows.empty() || account.m_rows.front().empty() || !ParseUnsigned(db::to_string(account.m_rows.front().front()), accountId))
 		{
 			net::SendError(req.GetConnectionId(), req, 1110, "strategy does not exist");
 			return false;
@@ -456,7 +456,7 @@ bool CStrategyEngine::ModifyStrategy(const CRequest& req)
 		net::SendError(req.GetConnectionId(), req, 1104, "strategy database is unavailable");
 		return false;
 	}
-	const db::CQueryTable& existing = pDB->ExecQuery("SELECT strategy_id FROM table_strategy WHERE strategy_id=" + std::to_string(cfg.m_router_id));
+	const db::CTable& existing = pDB->ExecQuery("SELECT strategy_id FROM table_strategy WHERE strategy_id=" + std::to_string(cfg.m_router_id));
 	if (existing.m_rows.empty())
 	{
 		net::SendError(req.GetConnectionId(), req, 1110, "strategy does not exist");
@@ -524,9 +524,9 @@ bool CStrategyEngine::QueryStrategies(const CRequest& req) const
 		net::SendError(req.GetConnectionId(), req, 1104, "strategy database is unavailable");
 		return false;
 	}
-	const db::CQueryTable& table = pDB->ExecQuery("SELECT strategy_id,strategy_type,strategy_name,parameters,subscriptions,event_queue_limit,auto_start,enabled,account_id FROM table_strategy ORDER BY strategy_id");
+	const db::CTable& table = pDB->ExecQuery("SELECT strategy_id,strategy_type,strategy_name,parameters,subscriptions,event_queue_limit,auto_start,enabled,account_id FROM table_strategy ORDER BY strategy_id");
 	request::StrategyList strategies;
-	for (const db::_TyQueryRow& row : table.m_rows)
+	for (const db::_TyRow& row : table.m_rows)
 	{
 		request::StrategyInfo* pInfo = strategies.add_strategies();
 		if (!FillStrategyInfo(row, *pInfo))
@@ -556,7 +556,7 @@ bool CStrategyEngine::DeleteStrategy(const CRequest& req)
 		net::SendError(req.GetConnectionId(), req, 1104, "strategy database is unavailable");
 		return false;
 	}
-	const db::CQueryTable& existing = pDB->ExecQuery("SELECT strategy_id FROM table_strategy WHERE strategy_id=" + std::to_string(id));
+	const db::CTable& existing = pDB->ExecQuery("SELECT strategy_id FROM table_strategy WHERE strategy_id=" + std::to_string(id));
 	if (existing.m_rows.empty())
 	{
 		net::SendError(req.GetConnectionId(), req, 1110, "strategy does not exist");
@@ -659,20 +659,20 @@ bool CStrategyEngine::LoadStrategies()
 		m_strLastError = "Strategy database is unavailable";
 		return false;
 	}
-	const db::CQueryTable& tableExists = pDB->ExecQuery("SHOW TABLES LIKE 'table_strategy'");
+	const db::CTable& tableExists = pDB->ExecQuery("SHOW TABLES LIKE 'table_strategy'");
 	if (tableExists.m_rows.empty())
 	{
 		m_strLastError = "MySQL table_strategy does not exist";
 		return false;
 	}
-	const db::CQueryTable& table = pDB->ExecQuery("SELECT strategy_id,strategy_type,strategy_name,parameters,subscriptions,event_queue_limit,auto_start,account_id FROM table_strategy WHERE enabled=1 ORDER BY strategy_id");
-	for (const db::_TyQueryRow& values : table.m_rows)
+	const db::CTable& table = pDB->ExecQuery("SELECT strategy_id,strategy_type,strategy_name,parameters,subscriptions,event_queue_limit,auto_start,account_id FROM table_strategy WHERE enabled=1 ORDER BY strategy_id");
+	for (const db::_TyRow& values : table.m_rows)
 	{
 		std::vector<std::string> row;
 		row.reserve(values.size());
-		for (const db::_TyQueryValue& value : values)
+		for (const db::_TyCell& value : values)
 		{
-			row.emplace_back(db::QueryValueToString(value));
+			row.emplace_back(db::to_string(value));
 		}
 		if (8 != row.size())
 		{
