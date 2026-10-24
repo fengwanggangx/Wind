@@ -1,29 +1,33 @@
+# XEngine
+
+XTrade 的策略运行与执行服务，原项目名 Wind。解决方案为 `XEngine.sln`，Linux 输出程序为 `XEngine`。构建配置使用 `XENGINE_DEPS`、`XENGINE_MODE`。现有数据库名称及业务配置保持兼容。
+
 ## HQMarket 行情客户端
 
-`CBootLoader` 创建并运行 `CTcpClient`，作为 Wind 到 HQMarket 的 TCP 桥梁。
+`CBootLoader` 创建并运行 `CTcpClient`，作为 XEngine 到 HQMarket 的 TCP 桥梁。
 连接地址通过 `HQMARKET_HOST`、`HQMARKET_PORT` 配置，默认使用
 `127.0.0.1:9901`。
-Wind 自身的 TCP、HTTP 监听端口通过 `WIND_TCP_PORT`、`WIND_HTTP_PORT`
+XEngine 自身的 TCP、HTTP 监听端口通过 `XENGINE_TCP_PORT`、`XENGINE_HTTP_PORT`
 配置，默认使用 `9801`、`9802`，避免与本机 HQMarket 的 `9901/9902` 冲突。
 
-`Wind/hqmarket/CHQMarket` 使用传入的 `CTcpClient` 管理认证、协议收发和响应回调，
+`XEngine/hqmarket/CHQMarket` 使用传入的 `CTcpClient` 管理认证、协议收发和响应回调，
 不直接管理 libevent 对象或网络线程；业务请求由
 `CHQRequest` 独立组装，再交给 `CHQMarket::SendRequest()`。请求工厂包括
 `Subscribe()`、`Unsubscribe()`、`QueryQuote()`、`QueryBars()` 和
 `Heartbeat()`，返回类型均为 `CRequest*`。`CHQMarket::SendRequest()` 会接管并
 释放传入的请求指针，调用方不要再次释放。
 
-HQMarket 认证 Token 从 `Wind/ini/system.ini` 读取：
+HQMarket 认证 Token 从 `XEngine/ini/system.ini` 读取：
 
 ```ini
 [HQMarket]
 token=replace-with-your-token
 ```
 
-## Mary 登录与注册
+## XTrader 登录与注册
 
-Wind TCP 服务兼容 Mary 的 `auth` / `register` 请求，账号与密码字段分别为
-`user` / `password`。启动时 Wind 连接 MySQL 并自动创建 `table_user`；密码使用
+XEngine TCP 服务兼容 XTrader 的 `auth` / `register` 请求，账号与密码字段分别为
+`user` / `password`。启动时 XEngine 连接 MySQL 并自动创建 `table_user`；密码使用
 每用户随机盐和 SHA-256 摘要保存，不存储明文。
 
 在运行目录的 `ini/system.ini` 中配置数据库：
@@ -55,6 +59,6 @@ hqMarket.SubscribeQuote("600519", market::Exchange::sse);
 
 ## 独立 Broker 交易服务
 
-模拟柜台、交易账户和券商登录管理已迁入同级 Broker 工程。Wind 通过 `[Broker] host/port/token` 连接 Broker；未配置时非交易功能仍可启动。原模拟账本不迁移，旧策略需显式修改并重新选择 Broker 账户，账户来源标记由 Wind 自动维护。具体构建、配置、数据切换和测试参见 `../Broker/README.md`。
+模拟柜台、交易账户和券商登录管理已迁入同级 Broker 工程。XEngine 通过 `[Broker] host/port/token` 连接 Broker；未配置时非交易功能仍可启动。原模拟账本不迁移，旧策略需显式修改并重新选择 Broker 账户，账户来源标记由 XEngine 自动维护。具体构建、配置、数据切换和测试参见 `../Broker/README.md`。
 
-Linux CMake 构建：`cmake -S Wind/Wind -B /tmp/wind-build && cmake --build /tmp/wind-build -j4`。协议转换测试使用 `ctest --test-dir /tmp/wind-build`；运行时为现有二进制依赖设置 `LD_LIBRARY_PATH` 为本项目 `Wind/libs/debug`。
+Linux CMake 构建：`cmake -S XEngine/XEngine -B /tmp/xengine-build && cmake --build /tmp/xengine-build -j4`。协议转换测试使用 `ctest --test-dir /tmp/xengine-build`；运行时为现有二进制依赖设置 `LD_LIBRARY_PATH` 为本项目 `XEngine/libs/debug`。
